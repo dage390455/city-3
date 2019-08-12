@@ -12,6 +12,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
@@ -131,9 +132,22 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
         //
         final long requestTime = System.currentTimeMillis();
+        final Runnable overTime = new Runnable() {
+            @Override
+            public void run() {
+                //登录失败 3秒内没有登录进去 就认为超时直接进入登录界面
+                RxApiManager.getInstance().cancelAll();
+                Intent loginIntent = new Intent();
+                loginIntent.setClass(mContext, LoginActivity.class);
+                getView().startAC(loginIntent);
+                getView().finishAc();
+            }
+        };
+        handler.postDelayed(overTime, 3000);
         RetrofitServiceHelper.getInstance().getPermissionChangeInfo().retryWhen(new RetryWithDelay(2, 100)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(this) {
             @Override
             public void onCompleted(ResponseResult<UserInfo> loginRsp) {
+                handler.removeCallbacks(overTime);
                 UserInfo userInfo = loginRsp.getData();
                 EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, eventLoginData.phoneId);
 
@@ -169,6 +183,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             public void onErrorMsg(int errorCode, String errorMsg) {
                 //网络出错直接跳到登录界面并吐丝
                 //
+                handler.removeCallbacks(overTime);
                 long diff = System.currentTimeMillis() - requestTime;
                 getView().toastShort(errorMsg);
                 if (diff >= 500) {

@@ -72,7 +72,7 @@ public interface RetrofitService {
     //demo环境
     String SCOPE_DEMO = "https://city-demo-api.sensoro.com/";
     //测试环境
-    String SCOPE_TEST = "https://city-test-api.sensoro.com/";
+    String SCOPE_TEST = "https://city-test1-api.sensoro.com/";
     //预发布环境
     String SCOPE_PRE = "https://city-pre-api.sensoro.com/";
     //    String SCOPE_PRE = "http://xiaolai.ngrok.gkzyk.com/";
