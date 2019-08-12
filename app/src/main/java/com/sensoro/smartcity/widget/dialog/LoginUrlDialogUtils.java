@@ -2,7 +2,9 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,12 +23,14 @@ public class LoginUrlDialogUtils implements View.OnClickListener {
     private EditText mDialogEtInput;
     private ImageView mDialogImvClear;
     private TextView mDialogTvCancel;
+    private TextView tvMyBaseUrl;
     private TextView mDialogTvConfirm;
     private OnLoginUrlDialogListener onLoginUrlDialogListener;
 
     public LoginUrlDialogUtils(final Activity activity) {
-        View view = View.inflate(activity, R.layout.dialog_frag_deploy_device_add_tag, null);
+        View view = View.inflate(activity, R.layout.dialog_add_my_base_url, null);
         mDialogEtInput = view.findViewById(R.id.dialog_add_tag_et_input);
+        tvMyBaseUrl = view.findViewById(R.id.tv_my_base_url);
         mDialogTvTittle = view.findViewById(R.id.tv_title_dialog_add_tag);
         mDialogImvClear = view.findViewById(R.id.dialog_add_tag_imv_clear);
         mDialogTvCancel = view.findViewById(R.id.dialog_add_tag_tv_cancel);
@@ -46,6 +50,32 @@ public class LoginUrlDialogUtils implements View.OnClickListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
+        mDialogEtInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s)) {
+                    StringBuilder stringBuilder = new StringBuilder(s);
+                    stringBuilder.append("-api.sensoro.com/");
+                    if (tvMyBaseUrl != null) {
+                        tvMyBaseUrl.setText(stringBuilder);
+                    }
+                } else {
+                    if (tvMyBaseUrl != null) {
+                        tvMyBaseUrl.setText("请填写地址！");
+                    }
+                }
             }
         });
         mAddTagDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);

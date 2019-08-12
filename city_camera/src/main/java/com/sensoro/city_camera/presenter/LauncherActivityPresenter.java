@@ -65,7 +65,7 @@ public class LauncherActivityPresenter extends BasePresenter<ILauncherActivityVi
         init();
         PreferencesHelper.getInstance().getSessionId();
         PreferencesHelper.getInstance().getSessionToken();
-        PreferencesHelper.getInstance().saveMyBaseUrl("city-dev-api.sensoro.com/");
+        PreferencesHelper.getInstance().saveMyBaseUrl("city-dev");
         RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
         RetrofitServiceHelper.getInstance().getBaseUrlType();
     }

@@ -233,8 +233,7 @@ public class RetrofitServiceHelper {
                 BASE_URL = RetrofitService.SCOPE_DEVELOPER;
                 break;
             case 5:
-                //自定义
-                BASE_URL = "https://" + PreferencesHelper.getInstance().getMyBaseUrl();
+                BASE_URL = "https://" + PreferencesHelper.getInstance().getMyBaseUrl() + "-api.sensoro.com/";
                 break;
             default:
                 BASE_URL = RetrofitService.SCOPE_MASTER;
@@ -269,7 +268,7 @@ public class RetrofitServiceHelper {
                         break;
                     case 5:
                         //自定义
-                        BASE_URL = "https://" + PreferencesHelper.getInstance().getMyBaseUrl();
+                        BASE_URL = "https://" + PreferencesHelper.getInstance().getMyBaseUrl() + "-api.sensoro.com/";
                         break;
                     default:
                         BASE_URL = RetrofitService.SCOPE_MASTER;
@@ -507,19 +506,19 @@ public class RetrofitServiceHelper {
 
     public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(null,null,null, page, 20, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(null, null, null, page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
     public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(null,null,sns, page, 20, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(null, null, sns, page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
-    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(String  order,String sort,int page, String sensorTypes, String mergeTypes, Integer status, String
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(String order, String sort, int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(order,sort,null, page, 20, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(order, sort, null, page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 

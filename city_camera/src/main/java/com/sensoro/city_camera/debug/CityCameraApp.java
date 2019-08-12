@@ -31,7 +31,7 @@ public class CityCameraApp extends BaseApplication {
     private void login() {
         PreferencesHelper.getInstance().getSessionId();
         PreferencesHelper.getInstance().getSessionToken();
-        PreferencesHelper.getInstance().saveMyBaseUrl("city-dev-api.sensoro.com/");
+        PreferencesHelper.getInstance().saveMyBaseUrl("city-dev");
         RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
         RetrofitServiceHelper.getInstance().getBaseUrlType();
         RetrofitServiceHelper.getInstance().login("15110041945", "aa1111", "").subscribeOn
