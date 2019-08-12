@@ -532,11 +532,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void setUpdateButtonClickable(boolean canClick) {
         mAlarmPopUtils.setUpdateButtonClickable(canClick);
     }

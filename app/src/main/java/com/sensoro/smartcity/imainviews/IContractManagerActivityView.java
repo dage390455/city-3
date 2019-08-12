@@ -18,8 +18,6 @@ public interface IContractManagerActivityView extends IProgressDialog, IToast, I
 
     void updateContractList(List<ContractListInfo> data);
 
-    void showSmartRefreshNoMoreData();
-
     void smoothScrollToPosition(int position);
 
     void closeRefreshHeaderOrFooter();

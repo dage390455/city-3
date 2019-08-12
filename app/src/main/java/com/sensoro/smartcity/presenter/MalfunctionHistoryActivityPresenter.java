@@ -97,11 +97,10 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                         if (data == null || data.size() == 0) {
                             cur_page--;
                             getView().toastShort(mActivity.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, malfunctionListRsp);
-                            getView().onPullRefreshComplete();
                         }
+                        getView().onPullRefreshComplete();
                     }
                 });
                 break;

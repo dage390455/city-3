@@ -460,11 +460,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     }
 
     @Override
-    public void showSmartRefreshNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void smoothScrollToPosition(int position) {
 //        contractPtrList.setSmoothScrollbarEnabled(true);
         contractPtrList.smoothScrollToPosition(position);

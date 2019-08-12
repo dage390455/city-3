@@ -259,11 +259,6 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void onPullRefreshComplete() {
         refreshLayout.finishLoadMore();
         refreshLayout.finishRefresh();

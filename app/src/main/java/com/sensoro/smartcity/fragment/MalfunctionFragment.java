@@ -470,11 +470,6 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void setSearchButtonTextVisible(boolean b) {
         if (b) {
             tvTopSearchAlarmSearchCancel.setVisibility(View.VISIBLE);

@@ -76,11 +76,10 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
                 @Override
                 public void onCompleted(ResponseResult<InspectionTaskModel> inspectionTaskModel) {
                     List<InspectionIndexTaskInfo> tasks = inspectionTaskModel.getData().getTasks();
-                    if (tasks.size() > 0) {
+                    if (tasks != null && tasks.size() > 0) {
                         tempTasks.addAll(tasks);
                         getView().updateRcContent(tempTasks);
                     } else {
-                        getView().recycleViewRefreshCompleteNoMoreData();
                         getView().toastShort(mContext.getString(R.string.no_more_data));
                     }
                     getView().onPullRefreshCompleted();
@@ -106,7 +105,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         Object data = eventData.data;
         //上报异常结果成功
         switch (code) {
-                //刷新上报异常结果
+            //刷新上报异常结果
             case Constants.EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
                 //正常上报结果
             case Constants.EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:

@@ -569,11 +569,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void setBottomInspectionStateTitle(String finish, String unFinish) {
         acInspectionTaskTvNotInspectionCount.setText(unFinish);
         acInspectionTaskTvInspectionCount.setText(finish);

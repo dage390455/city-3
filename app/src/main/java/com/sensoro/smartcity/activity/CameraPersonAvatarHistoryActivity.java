@@ -233,11 +233,6 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void updateData(List<DeviceCameraPersonFaceBean> data) {
         if (data != null) {
             rvContentAdapter.updateData(data);

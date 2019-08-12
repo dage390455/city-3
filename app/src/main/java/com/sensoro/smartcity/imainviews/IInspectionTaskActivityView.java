@@ -21,8 +21,6 @@ public interface IInspectionTaskActivityView extends IToast, IProgressDialog, IA
 
     void onPullRefreshComplete();
 
-    void onPullRefreshCompleteNoMoreData();
-
     void setBottomInspectionStateTitle(String finish, String unFinish);
 
     void showSelectDeviceTypePop();

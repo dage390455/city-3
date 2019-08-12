@@ -507,11 +507,6 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void onPullRefreshComplete() {
         refreshLayout.finishLoadMore();
         refreshLayout.finishRefresh();

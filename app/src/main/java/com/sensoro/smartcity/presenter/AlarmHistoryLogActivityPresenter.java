@@ -261,11 +261,10 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                         if (data == null || data.size() == 0) {
                             cur_page--;
                             getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, deviceAlarmLogRsp);
-                            getView().onPullRefreshComplete();
                         }
+                        getView().onPullRefreshComplete();
                     }
                 });
                 break;

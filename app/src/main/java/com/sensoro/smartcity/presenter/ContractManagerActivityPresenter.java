@@ -41,8 +41,8 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     private final List<ContractListInfo> dataList = new ArrayList<>();
     private Integer requestDataType = null;
     private volatile int cur_page = 0;
-    List<InspectionStatusCountModel> mSelectStatuslist = new ArrayList<>();
-    List<InspectionStatusCountModel> mSelectTypelist = new ArrayList<>();
+    private final List<InspectionStatusCountModel> mSelectStatuslist = new ArrayList<>();
+    private final List<InspectionStatusCountModel> mSelectTypelist = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private Integer requestDataConfirmed = null;
     private String tempSearch;

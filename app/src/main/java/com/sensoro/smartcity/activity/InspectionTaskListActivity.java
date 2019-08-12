@@ -346,11 +346,6 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     }
 
     @Override
-    public void recycleViewRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void rcSmoothScrollToTop() {
         acInspectionTaskListRcContent.smoothScrollToPosition(0);
     }

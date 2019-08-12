@@ -359,11 +359,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         tvSelectTimeAcCameraDetail.setText(s);
     }
 
-    @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
 
     @Override
     public void offlineType(String mCameraName) {

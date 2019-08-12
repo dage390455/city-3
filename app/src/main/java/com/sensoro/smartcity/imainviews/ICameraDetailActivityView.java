@@ -37,8 +37,6 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     void setSelectedDateSearchText(String s);
 
-    void onPullRefreshCompleteNoMoreData();
-
     //播放失败
     void playError(int pos);
 

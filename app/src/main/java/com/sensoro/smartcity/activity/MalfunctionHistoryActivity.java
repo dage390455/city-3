@@ -238,11 +238,6 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void updateMalfunctionListAdapter(List<MalfunctionListInfo> mMalfunctionInfoList) {
         if (mMalfunctionInfoList != null && mMalfunctionInfoList.size() > 0) {
             mMalfunctionHistoryRcContentAdapter.updateAdapter(mMalfunctionInfoList);

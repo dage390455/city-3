@@ -61,7 +61,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
-    private final HashMap<String,BLEDevice> BLE_DEVICE_SET = new HashMap<String, BLEDevice>();
+    private final HashMap<String, BLEDevice> BLE_DEVICE_SET = new HashMap<String, BLEDevice>();
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
@@ -131,7 +131,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        BLE_DEVICE_SET.put(bleDevice.getSn(),bleDevice);
+        BLE_DEVICE_SET.put(bleDevice.getSn(), bleDevice);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         for (BLEDevice device : deviceList) {
             if (device != null) {
                 stringBuilder.append(device.getSn()).append(",");
-                BLE_DEVICE_SET.put(device.getSn(),device);
+                BLE_DEVICE_SET.put(device.getSn(), device);
             }
         }
         try {
@@ -327,14 +327,20 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskDeviceDetailModel>>(this) {
                     @Override
                     public void onCompleted(ResponseResult<InspectionTaskDeviceDetailModel> inspectionTaskDeviceDetailRsp) {
-                        if (inspectionTaskDeviceDetailRsp.getData().getDevices().size() == 0) {
-                            getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
-                            cur_page--;
+                        InspectionTaskDeviceDetailModel data = inspectionTaskDeviceDetailRsp.getData();
+                        if (data != null) {
+                            List<InspectionTaskDeviceDetail> devices = data.getDevices();
+                            if (devices == null || devices.size() == 0) {
+                                getView().toastShort(mContext.getString(R.string.no_more_data));
+                                cur_page--;
+                            } else {
+                                freshUI(direction, inspectionTaskDeviceDetailRsp);
+                            }
                         } else {
-                            freshUI(direction, inspectionTaskDeviceDetailRsp);
-                            getView().onPullRefreshComplete();
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
+                            cur_page--;
                         }
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         canFreshBle = true;
                     }

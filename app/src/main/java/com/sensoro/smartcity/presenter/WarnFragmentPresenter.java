@@ -250,12 +250,11 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                         List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
                         if (data == null || data.size() == 0) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
                             freshUI(direction, deviceAlarmLogRsp);
-                            getView().onPullRefreshComplete();
                         }
+                        getView().onPullRefreshComplete();
                     }
                 });
                 break;
@@ -279,7 +278,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(1, null, null, null, tempSearch, startTime, endTime,
+        cur_page = 1;
+        RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, startTime, endTime,
                 null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceAlarmLogInfo>>>(this) {
 
 
