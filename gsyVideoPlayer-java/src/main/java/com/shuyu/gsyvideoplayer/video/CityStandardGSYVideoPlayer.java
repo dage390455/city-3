@@ -86,6 +86,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
 
     private static boolean isAudioChecked;
+    /**
+     * 切换视频格式，不提示移动数据
+     */
+    private static boolean isChangeVideoFormat = false;
 
 
     private Button playAndRetryBtn;
@@ -545,7 +549,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 setCityPlayState(1);
                 return;
             }
-            if (!NetworkUtils.isWifiConnected(getContext())) {
+            /**
+             * 切换视频格式，不显示移动数据
+             */
+            if (!NetworkUtils.isWifiConnected(getContext()) && !isChangeVideoFormat) {
                 setCityPlayState(2);
                 return;
             }
@@ -557,6 +564,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         prepareVideo();
         startDismissControlViewTimer();
         cityPlayState = -1;
+        isChangeVideoFormat = false;
 
 
     }
@@ -1553,6 +1561,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
                     || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
 
+                isChangeVideoFormat = true;
                 String url = urlList.get(pos);
                 if (!TextUtils.isEmpty(url)) {
                     /**
