@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,7 +34,14 @@ public class LoginUrlDialogUtils implements View.OnClickListener {
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
         mDialogImvClear.setOnClickListener(this);
-        mDialogEtInput.setOnClickListener(this);
+        mDialogEtInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDialogEtInput.requestFocus();
+                mDialogEtInput.setCursorVisible(true);
+                return false;
+            }
+        });
         mDialogEtInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -95,10 +103,6 @@ public class LoginUrlDialogUtils implements View.OnClickListener {
                         onLoginUrlDialogListener.onConfirm(tag);
                     }
                 }
-                break;
-            case R.id.dialog_add_tag_et_input:
-                mDialogEtInput.requestFocus();
-                mDialogEtInput.setCursorVisible(true);
                 break;
             case R.id.dialog_add_tag_imv_clear:
                 if (mDialogEtInput != null) {

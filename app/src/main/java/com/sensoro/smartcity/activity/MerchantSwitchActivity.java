@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -52,6 +53,8 @@ import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
         , View.OnClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, MerchantSubAdapter.OnMerchantClickListener {
+    @BindView(R.id.rl_merchant_root)
+    RelativeLayout rlMerchantRoot;
     @BindView(R.id.ll_main_merchant)
     LinearLayout llMainMerchant;
     @BindView(R.id.tv_back_to_main_merchant)
@@ -251,9 +254,36 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 setSearchClearImvVisible(s.length() > 0);
             }
         });
+        AppUtils.getInputSoftStatus(rlMerchantRoot, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                mMerchantEtSearch.setCursorVisible(false);
+            }
 
+            @Override
+            public void onKeyBoardOpen() {
+                mMerchantEtSearch.setCursorVisible(true);
+            }
+        });
+        mMerchantEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mMerchantEtSearch.requestFocus();
+                mMerchantEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                setLlMainAccountVisible(false);
+                setTvCancelVisible(true);
+                return false;
+            }
+        });
         initClearHistoryDialog();
 
+    }
+
+    @Override
+    protected void onPause() {
+        AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
+        super.onPause();
     }
 
     private void initClearHistoryDialog() {
@@ -319,17 +349,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
 
-    @OnClick({R.id.merchant_frame_search, R.id.merchant_et_search, R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel, R.id.tv_back_to_main_merchant})
+    @OnClick({R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel, R.id.tv_back_to_main_merchant})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.merchant_frame_search:
-            case R.id.merchant_et_search:
-                mMerchantEtSearch.requestFocus();
-                mMerchantEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-                setLlMainAccountVisible(false);
-                setTvCancelVisible(true);
-                break;
             case R.id.btn_search_clear:
                 showHistoryClearDialog();
                 break;
@@ -456,12 +478,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     private boolean isRlTitleAccountVisible() {
         return llMainMerchant.getVisibility() == View.VISIBLE;
-    }
-
-    @Override
-    protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
-        super.onPause();
     }
 
     @Override

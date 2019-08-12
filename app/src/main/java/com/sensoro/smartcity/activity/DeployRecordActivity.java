@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -154,6 +155,16 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
             @Override
             public void onKeyBoardOpen() {
                 acDeployRecordEtSearch.setCursorVisible(true);
+            }
+        });
+        acDeployRecordEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                acDeployRecordEtSearch.requestFocus();
+                acDeployRecordEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                AppUtils.openInputMethodManager(mActivity, acDeployRecordEtSearch);
+                return false;
             }
         });
         initRcContent();
@@ -355,8 +366,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @OnClick({R.id.ac_deploy_record_imv_finish, R.id.ac_deploy_record_imv_calendar, R.id.ac_deploy_record_deploy_rl_new_device
             , R.id.alarm_return_top, R.id.ac_deploy_record_imv_date_close, R.id.tv_deploy_device_search_cancel,
-            R.id.ac_deploy_record_frame_search, R.id.ac_deploy_record_search_imv_clear, R.id.btn_search_clear
-            , R.id.ac_deploy_record_et_search})
+            R.id.ac_deploy_record_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_record_imv_finish:
@@ -382,13 +392,6 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                 doCancelSearch();
                 setSearchHistoryVisible(false);
                 AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
-                break;
-            case R.id.ac_deploy_record_frame_search:
-            case R.id.ac_deploy_record_et_search:
-                acDeployRecordEtSearch.requestFocus();
-                acDeployRecordEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-                AppUtils.openInputMethodManager(mActivity, acDeployRecordEtSearch);
                 break;
             case R.id.ac_deploy_record_search_imv_clear:
                 acDeployRecordEtSearch.getText().clear();

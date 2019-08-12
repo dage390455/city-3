@@ -117,7 +117,13 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         mKeywordEt.addTextChangedListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
-        mKeywordEt.setOnClickListener(this);
+        mKeywordEt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return false;
+            }
+        });
         AppUtils.getInputSoftStatus(searchDeviceLlRoot, new AppUtils.InputSoftStatusListener() {
             @Override
             public void onKeyBoardClose() {
