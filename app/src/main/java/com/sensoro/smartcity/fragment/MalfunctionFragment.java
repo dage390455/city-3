@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -149,7 +150,17 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 setSearchClearImvVisible(s.length() > 0);
             }
         });
-
+        fgMainTopSearchEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                fgMainTopSearchEtSearch.requestFocus();
+                fgMainTopSearchEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+//                setSearchButtonTextVisible(true);
+//                forceOpenSoftKeyboard();
+                return false;
+            }
+        });
         initRcContent();
         initRcSearchHistory();
         initClearHistoryDialog();
@@ -297,18 +308,10 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
         return new MalfunctionFragmentPresenter();
     }
 
-    @OnClick({R.id.fg_main_top_search_frame_search, R.id.fg_main_top_search_et_search, R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
+    @OnClick({R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
             R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top, R.id.fg_main_top_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.fg_main_top_search_frame_search:
-            case R.id.fg_main_top_search_et_search:
-                fgMainTopSearchEtSearch.requestFocus();
-                fgMainTopSearchEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-//                setSearchButtonTextVisible(true);
-//                forceOpenSoftKeyboard();
-                break;
             case R.id.fg_main_top_search_imv_calendar:
                 mPresenter.doCalendar(fgMainTopSearchTitleRoot);
                 AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainTopSearchEtSearch);

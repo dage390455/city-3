@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -193,7 +194,17 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         tvSelectType.setOnClickListener(this);
         tvSelectStatus.setOnClickListener(this);
         fgMainWarnFrameSearch.setOnClickListener(this);
-        fgMainWarnEtSearch.setOnClickListener(this);
+        fgMainWarnEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                fgMainWarnEtSearch.requestFocus();
+                fgMainWarnEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);
+//                forceOpenSoftKeyboard();
+                return false;
+            }
+        });
         tvWarnAlarmSearchCancel.setOnClickListener(this);
         fgMainWarnFragmentImvClear.setOnClickListener(this);
         fgMainWarnImvCalendar.setOnClickListener(this);
@@ -538,14 +549,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             case R.id.contract_tv_select_status:
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.doSelectStatusPop();
-                break;
-            case R.id.ac_contract_record_frame_search:
-            case R.id.ac_contract_record_et_search:
-                fgMainWarnEtSearch.requestFocus();
-                fgMainWarnEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-                AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);
-//                forceOpenSoftKeyboard();
                 break;
             case R.id.ac_contract_record_imv_calendar:
 //                mPresenter.doCalendar(fgMainWarnTitleRoot);

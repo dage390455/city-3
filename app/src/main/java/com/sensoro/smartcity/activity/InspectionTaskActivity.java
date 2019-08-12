@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -180,6 +181,15 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
         initSelectStatusPop();
         acInspectionTaskEtSearch.setCursorVisible(false);
+        acInspectionTaskEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                acInspectionTaskEtSearch.requestFocus();
+                acInspectionTaskEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                return false;
+            }
+        });
         initClearHistoryDialog();
     }
 
@@ -481,19 +491,12 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
 
-    @OnClick({R.id.ac_inspection_task_imv_arrows_left, R.id.ac_inspection_task_ll_search, R.id.ac_inspection_task_et_search,
-            R.id.ac_inspection_task_tv_state, R.id.ac_inspection_task_tv_type, R.id.ac_inspection_task_imv_scan, R.id.tv_inspection_task_search_cancel
+    @OnClick({R.id.ac_inspection_task_imv_arrows_left, R.id.ac_inspection_task_tv_state, R.id.ac_inspection_task_tv_type, R.id.ac_inspection_task_imv_scan, R.id.tv_inspection_task_search_cancel
             , R.id.ac_inspection_task_imv_map, R.id.fg_main_top_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_inspection_task_imv_arrows_left:
                 finishAc();
-                break;
-            case R.id.ac_inspection_task_ll_search:
-            case R.id.ac_inspection_task_et_search:
-                acInspectionTaskEtSearch.requestFocus();
-                acInspectionTaskEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
                 break;
             case R.id.ac_inspection_task_tv_state:
                 if (mSelectDeviceTypePop != null) {

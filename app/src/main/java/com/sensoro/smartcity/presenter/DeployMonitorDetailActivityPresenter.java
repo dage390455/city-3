@@ -100,7 +100,46 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private final Runnable signalTask = new Runnable() {
         @Override
         public void run() {
+            try {
+                com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 准备 freshSignalInfo updatedTime = " + deployAnalyzerModel.updatedTime + "，signal = " + deployAnalyzerModel.signal);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             freshSignalInfo();
+            //加入部署接口轮询
+            RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
+                    .retryWhen(new RetryWithDelay(2, 100))
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(DeployMonitorDetailActivityPresenter.this) {
+                @Override
+                public void onCompleted(final ResponseResult<DeviceInfo> data) {
+                    DeviceInfo deviceInfo = data.getData();
+                    if (deviceInfo != null) {
+                        deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                        String signal = deviceInfo.getSignal();
+                        if (TextUtils.isEmpty(signal)) {
+                            signal = "none";
+                        }
+                        deployAnalyzerModel.signal = String.copyValueOf(signal.toCharArray());
+                        try {
+                            com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 接口轮询刷新 freshSignalInfo updatedTime = " + deployAnalyzerModel.updatedTime + "，signal = " + deployAnalyzerModel.signal);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        mHandler.removeCallbacks(signalTask);
+                        freshSignalInfo();
+                        mHandler.postDelayed(signalTask, 2000);
+                    }
+                }
+
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    try {
+                        com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 接口轮询刷新 errorMsg = " + errorMsg);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+            });
             mHandler.postDelayed(signalTask, 2000);
         }
     };

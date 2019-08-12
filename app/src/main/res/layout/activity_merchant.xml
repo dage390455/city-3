@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_merchant_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
@@ -38,7 +39,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1"
-                android:background="@drawable/shape_bg_full_corner">
+                android:background="@drawable/shape_bg_full_corner"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <ImageView
                     android:id="@+id/merchant_imv_clear"
@@ -152,7 +155,7 @@
         </LinearLayout>
 
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -196,7 +199,7 @@
             <include layout="@layout/item_no_content" />
 
             <include layout="@layout/item_include_search_history_rv" />
-        </RelativeLayout>
+        </FrameLayout>
     </LinearLayout>
 
 
