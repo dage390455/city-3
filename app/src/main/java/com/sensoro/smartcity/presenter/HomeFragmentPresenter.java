@@ -379,6 +379,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
                     getView().dismissProgressDialog();
                     getView().dismissAlarmInfoView();
+
                 }
 
                 @Override
@@ -532,7 +533,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        int lastModelCount = mHomeTopModels.size();
+
+        StringBuffer sb_last_model=new StringBuffer();
+        for(HomeTopModel item:mHomeTopModels){
+            sb_last_model.append(item.status);
+        }
+
 
 
         int currentAlarmCount = alarmDeviceCountsBean.get_$0();
@@ -583,10 +589,20 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             inactiveModel.value = inactiveCount;
             mHomeTopModels.add(inactiveModel);
         }
-        //比较header数量是否发生变化
-        if (lastModelCount != mHomeTopModels.size()) {
-            needResetHeaderPosition = true;
-        }
+
+        needFreshAll = isNeedFresh;
+
+
+        //次数判断model集合状态是否发生变化，比较header状态拼接的字符串
+            StringBuffer sb_new_model=new StringBuffer();
+            for(HomeTopModel item:mHomeTopModels){
+                sb_new_model.append(item.status);
+            }
+            if(!sb_last_model.toString().equalsIgnoreCase(sb_new_model.toString())){
+                needResetHeaderPosition = true;
+                needFreshAll=true;
+            }
+
         try {
             LogUtils.loge("needResetHeaderPosition", needResetHeaderPosition + "");
         } catch (Throwable throwable) {
@@ -597,7 +613,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
 //        needRefreshHeader=isNeedFresh;
-        needFreshAll = isNeedFresh;
+
 
 
         try {
@@ -731,6 +747,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         getView().refreshContentData(false, false, mDeviceInfoList);
                         getView().recycleViewRefreshComplete();
                         getView().dismissProgressDialog();
+
+
+                        //此处容错，如果当前的model为空或者model中的设备数量小于等于一页的数量同时返回的列表数量与当前modeltop的设备数量不等，整体刷新
+                        if(mCurrentHomeTopModel==null||(mCurrentHomeTopModel.value<=Constants.pageSize&&mDeviceInfoList.size()!=mCurrentHomeTopModel.value)){
+                            needResetHeaderPosition=true;
+                            needFreshAll=true;
+                            requestInitData(true,true);
+                        }
                     }
 
                     @Override

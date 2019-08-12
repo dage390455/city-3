@@ -352,6 +352,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 }
             }, 1000);
             initSensoroSDK();
+            initBugLy();
             ThreadPoolManager.getInstance().execute(this);
         }
 
@@ -567,7 +568,6 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
 //        FMMapSDK.init(this);
         initImagePicker();
         locate();
-        initBugLy();
         //IBeacon相关
         SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
         IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
