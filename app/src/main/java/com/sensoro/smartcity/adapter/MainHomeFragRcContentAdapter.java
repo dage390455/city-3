@@ -1,11 +1,16 @@
 package com.sensoro.smartcity.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,6 +58,11 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 
     public MainHomeFragRcContentAdapter(Activity context) {
         mContext = context;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     public void updateData(final List<DeviceInfo> list) {
@@ -117,6 +127,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         notifyDataSetChanged();
     }
 
+
     public void addData(List<DeviceInfo> list) {
         mList.addAll(list);
     }
@@ -173,9 +184,13 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     private void setContentStatus(final MyViewHolder holder, final int position, int status, String mergeType) {
         String image = null;
         MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+
         if (mergeTypeStyles != null) {
             image = mergeTypeStyles.getImage();
         }
+
+
+
         int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
@@ -211,11 +226,17 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
         }
         final int colorResId = mContext.getResources().getColor(color);
+        try{
+            LogUtils.logd("imageUrl1",colorResId+"");
+        }catch (Throwable e){
 
+        }
         if ("smoke".equalsIgnoreCase(mergeType) && status == SENSOR_STATUS_ALARM) {
             holder.mainRcContentImvIcon.setImageResource(R.drawable.smoke_alarm_down);
             holder.mainRcContentImvIcon.setColorFilter(colorResId);
+
         } else {
+            holder.mainRcContentImvIcon.setColorFilter(colorResId);
             Glide.with(mContext)                             //配置上下文
                     .load(image).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.RESOURCE).centerCrop())    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                     .listener(new RequestListener<Drawable>() {
@@ -227,11 +248,15 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                             holder.mainRcContentImvIcon.setImageDrawable(resource);
-                            holder.mainRcContentImvIcon.setColorFilter(colorResId);
+                            //变色代码需要放到外面执行
+//                            holder.mainRcContentImvIcon.setColorFilter(colorResId);
                             return true;
                         }
+
                     }).into(holder.mainRcContentImvIcon);
         }
+
+
 
     }
 
@@ -292,8 +317,11 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 setContentName(holder, name, deviceInfo.getSn());
             }
             setListener(holder, position);
+
         }
     }
+
+
 
     @Override
     public int getItemCount() {

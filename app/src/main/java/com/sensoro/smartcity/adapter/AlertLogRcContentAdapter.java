@@ -449,7 +449,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             String name = recordInfo.getName();
             String category = recordInfo.getCategory();
             String source = recordInfo.getSource();
-            stringBuilder.append("【").append(name).append("】").append(" ").append(mContext.getString(R.string.by));
+            stringBuilder.append("【").append(name).append("】").append(" ").append(mContext.getString(R.string.by)).append(" ");
             if ("app".equals(source)) {
                 stringBuilder.append("APP");
             } else if ("platform".equals(source)) {
@@ -477,7 +477,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                         break;
                 }
             }
-            stringBuilder.append(" ").append(mContext.getString(R.string.msg_sbc_results)).append(" ");
+            stringBuilder.append(" ").append(mContext.getString(R.string.msg_sbc_results)).append(":").append(" ");
             Integer taskStatus = recordInfo.getTaskStatus();
             if (taskStatus == null) {
                 stringBuilder.append(mContext.getString(R.string.unknown));

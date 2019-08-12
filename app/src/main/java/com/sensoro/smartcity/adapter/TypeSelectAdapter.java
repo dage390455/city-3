@@ -176,8 +176,10 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     }
 
     public void updateDeviceTypList(List<String> list) {
+
         mDeviceTypeList.clear();
         mDeviceTypeList.addAll(list);
+        selectPosition=0;
         notifyDataSetChanged();
     }
 
