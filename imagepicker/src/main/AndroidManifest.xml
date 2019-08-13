@@ -1,0 +1,39 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+package="com.sensoro.imagepicker">
+
+<application
+android:allowBackup="true"
+android:supportsRtl="true"
+android:theme="@style/MyTheme"
+tools:replace="android:theme">
+
+    <activity android:name="com.sensoro.smartcity.widget.MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+<activity android:name="com.sensoro.smartcity.widget.imagepicker.ui.ImageBaseActivity" />
+<activity
+    android:name="com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity"
+    android:configChanges="orientation|screenSize"
+    android:theme="@style/ImagePickerTheme" />
+<activity
+    android:name="com.sensoro.smartcity.widget.imagepicker.ui.ImageCropActivity"
+    android:configChanges="orientation|screenSize"
+    android:hardwareAccelerated="false"
+    android:theme="@style/ImagePickerTheme" />
+<activity
+    android:name="com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewActivity"
+    android:configChanges="orientation|screenSize"
+    android:theme="@style/ImagePickerThemeFullScreen" />
+<activity
+    android:name="com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity"
+    android:configChanges="orientation|screenSize"
+    android:theme="@style/ImagePickerThemeFullScreen" />
+</application>
+
+</manifest>
