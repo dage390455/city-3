@@ -285,9 +285,9 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(':city_camera')
     }
-
-    implementation project(':imagepicker')
-
+    if (!isModule.toBoolean()) {
+        implementation project(':imagepicker')
+    }
     //个推
     implementation deps.getui
     //3D地图so及jar

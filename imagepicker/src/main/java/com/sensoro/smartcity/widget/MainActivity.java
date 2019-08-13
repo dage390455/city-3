@@ -9,9 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.sensoro.imagepicker.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
+import com.yanzhenjie.permission.runtime.Permission;
 
 public class MainActivity extends AppCompatActivity {
-
+    private final String[] requestPermissions = {Permission.READ_PHONE_STATE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION, Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.WRITE_CONTACTS, Permission.READ_CONTACTS, Permission.CAMERA, Permission.RECORD_AUDIO, Permission.CALL_PHONE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,4 +29,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+
 }
