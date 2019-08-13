@@ -2,6 +2,8 @@ package com.sensoro.smartcity.widget.imagepicker;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 
 import androidx.fragment.app.FragmentActivity;
@@ -9,6 +11,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.ImageFolder;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.R;
@@ -16,6 +19,8 @@ import com.sensoro.smartcity.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ================================================
@@ -61,7 +66,9 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
             bundle.putString("path", path);
             loaderManager.initLoader(LOADER_CATEGORY, bundle, this);
         }
+
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -79,73 +86,93 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 //        imageFolders.clear();
-        ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
-        imageFolders.clear();
-        if (data != null) {
-            ArrayList<ImageItem> allImages = new ArrayList<>();   //所有图片的集合,不分文件夹
-            while (data.moveToNext()) {
-                //查询数据
-                String imageName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
-                String imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
 
-                File file = new File(imagePath);
-                if (!file.exists() || file.length() <= 0) {
-                    continue;
+                ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
+                imageFolders.clear();
+                if (data != null) {
+                    ArrayList<ImageItem> allImages = new ArrayList<>();   //所有图片的集合,不分文件夹
+                    while (data.moveToNext()) {
+                        //查询数据
+                        String imageName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
+                        String imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+
+                        File file = new File(imagePath);
+                        if (!file.exists() || file.length() <= 0) {
+                            continue;
+                        }
+
+                        long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                        int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
+                        int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
+                        String imageMimeType = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
+                        long imageAddTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
+                        //封装实体
+                        ImageItem imageItem = new ImageItem();
+                        imageItem.name = imageName;
+                        imageItem.path = imagePath;
+                        imageItem.size = imageSize;
+                        imageItem.width = imageWidth;
+                        imageItem.height = imageHeight;
+                        imageItem.mimeType = imageMimeType;
+                        imageItem.addTime = imageAddTime;
+                        allImages.add(imageItem);
+                        //根据父路径分类存放图片
+                        File imageFile = new File(imagePath);
+                        File imageParentFile = imageFile.getParentFile();
+                        ImageFolder imageFolder = new ImageFolder();
+                        imageFolder.name = imageParentFile.getName();
+                        imageFolder.path = imageParentFile.getAbsolutePath();
+
+                        if (!imageFolders.contains(imageFolder)) {
+                            ArrayList<ImageItem> images = new ArrayList<>();
+                            images.add(imageItem);
+                            imageFolder.cover = imageItem;
+                            imageFolder.images = images;
+                            imageFolders.add(imageFolder);
+                        } else {
+                            imageFolders.get(imageFolders.indexOf(imageFolder)).images.add(imageItem);
+                        }
+                    }
+                    //防止没有图片报异常
+                    if (data.getCount() > 0 && allImages.size() > 0) {
+                        //构造所有图片的集合
+                        ImageFolder allImagesFolder = new ImageFolder();
+                        allImagesFolder.name = activity.getResources().getString(R.string.ip_all_images);
+                        allImagesFolder.path = "/";
+                        allImagesFolder.cover = allImages.get(0);
+                        allImagesFolder.images = allImages;
+                        imageFolders.add(0, allImagesFolder);  //确保第一条是所有图片
+                    } else {
+                        //TODO 暂时修改 在cursor为空时将清空放入内部，防止回退时出现数据为空问题
+                        //TODO 防止下次进入没有数据
+                        imageFolders.addAll(currentFolder);
+                    }
                 }
 
-                long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
-                int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
-                int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
-                String imageMimeType = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
-                long imageAddTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
-                //封装实体
-                ImageItem imageItem = new ImageItem();
-                imageItem.name = imageName;
-                imageItem.path = imagePath;
-                imageItem.size = imageSize;
-                imageItem.width = imageWidth;
-                imageItem.height = imageHeight;
-                imageItem.mimeType = imageMimeType;
-                imageItem.addTime = imageAddTime;
-                allImages.add(imageItem);
-                //根据父路径分类存放图片
-                File imageFile = new File(imagePath);
-                File imageParentFile = imageFile.getParentFile();
-                ImageFolder imageFolder = new ImageFolder();
-                imageFolder.name = imageParentFile.getName();
-                imageFolder.path = imageParentFile.getAbsolutePath();
+                mHandler.sendEmptyMessage(0);
 
-                if (!imageFolders.contains(imageFolder)) {
-                    ArrayList<ImageItem> images = new ArrayList<>();
-                    images.add(imageItem);
-                    imageFolder.cover = imageItem;
-                    imageFolder.images = images;
-                    imageFolders.add(imageFolder);
-                } else {
-                    imageFolders.get(imageFolders.indexOf(imageFolder)).images.add(imageItem);
-                }
             }
-            //防止没有图片报异常
-            if (data.getCount() > 0 && allImages.size() > 0) {
-                //构造所有图片的集合
-                ImageFolder allImagesFolder = new ImageFolder();
-                allImagesFolder.name = activity.getResources().getString(R.string.ip_all_images);
-                allImagesFolder.path = "/";
-                allImagesFolder.cover = allImages.get(0);
-                allImagesFolder.images = allImages;
-                imageFolders.add(0, allImagesFolder);  //确保第一条是所有图片
-            } else {
-                //TODO 暂时修改 在cursor为空时将清空放入内部，防止回退时出现数据为空问题
-                //TODO 防止下次进入没有数据
-                imageFolders.addAll(currentFolder);
-            }
-        }
+        });
 
-        //回调接口，通知图片数据准备完成
-        ImagePicker.getInstance().setImageFolders(imageFolders);
-        loadedListener.onImagesLoaded(imageFolders);
+//        //回调接口，通知图片数据准备完成
+//        ImagePicker.getInstance().setImageFolders(imageFolders);
+//        loadedListener.onImagesLoaded(imageFolders);
     }
 
+
+
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            //回调接口，通知图片数据准备完成
+            ImagePicker.getInstance().setImageFolders(imageFolders);
+            loadedListener.onImagesLoaded(imageFolders);
+        }
+    };
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         System.out.println("--------");

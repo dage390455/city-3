@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.model.ImageFolder;
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.ImageDataSource;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -70,6 +71,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     private RecyclerView mRecyclerView;
     private ImageRecyclerAdapter mRecyclerAdapter;
 
+
+    ProgressUtils  mProgressUtils ;
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -87,9 +90,12 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_grid);
 
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
+
+
         imagePicker = ImagePicker.getInstance();
         imagePicker.clear();
-        imagePicker.addOnImageSelectedListener(this);
+//        imagePicker.addOnImageSelectedListener(this);
 
         Intent data = getIntent();
         // 新增可直接拍照
@@ -130,17 +136,25 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         mImageFolderAdapter = new ImageFolderAdapter(this, null);
         mRecyclerAdapter = new ImageRecyclerAdapter(this, null);
 
-        onImageSelected(0, null, false);
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                new ImageDataSource(this, null, this);
+
+        if(!directPhoto) {
+
+            imagePicker.addOnImageSelectedListener(this);
+            onImageSelected(0, null, false);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    mProgressUtils.showProgress();
+                    new ImageDataSource(this, null, this);
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_PERMISSION_STORAGE);
+                }
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_PERMISSION_STORAGE);
+                mProgressUtils.showProgress();
+                new ImageDataSource(this, null, this);
             }
-        } else {
-            new ImageDataSource(this, null, this);
+
         }
     }
 
@@ -155,6 +169,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mProgressUtils.showProgress();
                 new ImageDataSource(this, null, this);
             } else {
                 showToast(getString(R.string.permission_forbbidden_not_selected_image));
@@ -170,6 +185,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
 
     @Override
     protected void onDestroy() {
+        mProgressUtils.destroyProgress();
         imagePicker.removeOnImageSelectedListener(this);
         super.onDestroy();
     }
@@ -276,6 +292,9 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
 
     @Override
     public void onImagesLoaded(List<ImageFolder> imageFolders) {
+        mProgressUtils.dismissProgress();
+
+        Log.d("onActivityResult","onImagesLoaded");
         Log.e("", "onImagesLoaded----->>" + imageFolders.size());
         this.mImageFolders = imageFolders;
         imagePicker.setImageFolders(imageFolders);
@@ -292,6 +311,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, Utils.dp2px(this, 2), false));
         mRecyclerView.setAdapter(mRecyclerAdapter);
         mImageFolderAdapter.refreshData(imageFolders);
+
     }
 
     @Override
@@ -335,6 +355,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @SuppressLint("StringFormatMatches")
     @Override
     public void onImageSelected(int position, ImageItem item, boolean isAdd) {
+        Log.d("onActivityResult","onImageSelected");
+
         if (imagePicker.getSelectImageCount() > 0) {
             mBtnOk.setText(getString(R.string.ip_select_complete, imagePicker.getSelectImageCount(), imagePicker
                     .getSelectLimit()));
@@ -366,6 +388,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("onActivityResult","onActivityResult");
+
         if (data != null && data.getExtras() != null) {
             if (resultCode == ImagePicker.RESULT_CODE_BACK) {
                 isOrigin = data.getBooleanExtra(ImagePreviewActivity.ISORIGIN, false);
