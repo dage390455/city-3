@@ -10,19 +10,21 @@
         android:layout_centerInParent="true"
         android:background="@drawable/bg_white"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
                 android:layout_margin="10dp"
-                android:src="@mipmap/ic_launcher"
-                />
+                android:layout_marginLeft="15dp"
+                android:src="@mipmap/ic_launcher" />
+
             <TextView
                 android:id="@+id/tv_upgrade_title"
                 android:layout_width="wrap_content"
@@ -86,11 +88,13 @@
                 android:id="@+id/tv_upgrade_cancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="10dp"
                 android:tag="beta_cancel_button"
                 android:text="cancel"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:textColor="@color/c_626262"
                 android:textSize="17dp" />
 
@@ -104,9 +108,11 @@
                 android:id="@+id/tv_upgrade_confirm"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:padding="10dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:tag="beta_confirm_button"
                 android:text="confirm"
                 android:textColor="@color/upload_btn_bg"
