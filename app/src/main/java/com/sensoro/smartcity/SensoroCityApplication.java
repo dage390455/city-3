@@ -1,11 +1,14 @@
 package com.sensoro.smartcity;
 
+import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -20,6 +23,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.sensoro.common.base.BaseApplication;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.IbeaconSettingData;
@@ -42,6 +46,8 @@ import com.sensoro.smartcity.widget.popup.GlideImageLoader;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
+import com.tencent.bugly.beta.ui.UILifecycleListener;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -385,7 +391,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 /**
                  * 设置升级检查周期为60s(默认检查周期为0s)，60s内SDK不重复向后台请求策略);
                  */
-                Beta.upgradeCheckPeriod = 60 * 1000;
+                Beta.upgradeCheckPeriod = 60 * 20 * 1000;
 
                 /**
                  * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
@@ -433,11 +439,8 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 Beta.canShowApkInfo = true;
                 //关闭热更新
                 Beta.enableHotfix = false;
-                strategy.setCrashHandleCallback(new CrashHandler());
-                // 统一初始化Bugly产品，包含Beta
-                Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
-                Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
-                Beta.init(getApplicationContext(), BuildConfig.DEBUG);
+
+                //
 //                Beta.upgradeListener = new UpgradeListener() {
 //                    @Override
 //                    public void onUpgrade(int i, UpgradeInfo upgradeInfo, boolean isManual, boolean isSilence) {
@@ -448,6 +451,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
 //                        }
 //                    }
 //                };
+                //
 //                Beta.upgradeStateListener = new UpgradeStateListener() {
 //                    @Override
 //                    public void onUpgradeFailed(boolean isManual) {
@@ -494,6 +498,98 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
 //                        }
 //                    }
 //                };
+                //
+                Beta.upgradeDialogLifecycleListener = new UILifecycleListener<UpgradeInfo>() {
+                    @Override
+                    public void onCreate(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onCreate");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        // 注：可通过这个回调方式获取布局的控件，如果设置了id，可通过findViewById方式获取，如果设置了tag，可以通过findViewWithTag，具体参考下面例子:
+
+                        // 通过id方式获取控件，并更改imageview图片
+                        TextView textView = (TextView) view.findViewById(R.id.tv_upgrade_info_url);
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    AppUtils.openNetPage(ActivityTaskManager.getInstance().getTopActivity(), "https://fir.im/g7jk");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+//                        imageView.setImageResource(R.mipmap.ic_launcher);
+//
+//                        // 通过tag方式获取控件，并更改布局内容
+//                        TextView textView = (TextView) view.findViewWithTag("textview");
+//                        textView.setText("my custom text");
+//
+//                        // 更多的操作：比如设置控件的点击事件
+//                        imageView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                startActivity(intent);
+//                            }
+//                        });
+                    }
+
+                    @Override
+                    public void onStart(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onStart");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onResume(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onResume");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onPause(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onPause");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onStop(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onStop");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onDestroy(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onDestory");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+                };
+                strategy.setCrashHandleCallback(new CrashHandler());
+                // 统一初始化Bugly产品，包含Beta
+                Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
+                Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
+                Beta.init(getApplicationContext(), BuildConfig.DEBUG);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

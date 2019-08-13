@@ -49,7 +49,6 @@ import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -588,7 +587,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                         netWorkStateModel.ping = pingNetCanUse;
                         EventBus.getDefault().post(netWorkStateModel);
                         //TODO 暂时去掉频繁后台请求
-                        Beta.checkUpgrade(false, false);
+//                        Beta.checkUpgrade(false, false);
 
                         LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                     } catch (Throwable throwable) {

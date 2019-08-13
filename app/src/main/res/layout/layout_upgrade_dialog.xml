@@ -45,6 +45,7 @@
             android:layout_height="@dimen/view_divider_height"
             android:background="@color/list_sep_color" />
 
+
         <TextView
             android:id="@+id/tv_upgrade_info"
             android:layout_width="wrap_content"
@@ -78,6 +79,22 @@
             android:layout_height="@dimen/view_divider_height"
             android:background="@color/list_sep_color" />
 
+        <TextView
+            android:id="@+id/tv_upgrade_info_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="若无法升级点击此处下载更新"
+            android:textColor="@color/c_fdc83b"
+            android:textSize="14dp" />
+
+
+        <View
+            android:id="@+id/view_line4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_divider_height"
+            android:background="@color/list_sep_color" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,12 +106,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="center"
                 android:padding="10dp"
                 android:tag="beta_cancel_button"
                 android:text="cancel"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:textColor="@color/c_626262"
                 android:textSize="17dp" />
 
@@ -109,15 +126,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:padding="10dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:padding="10dp"
                 android:tag="beta_confirm_button"
                 android:text="confirm"
                 android:textColor="@color/upload_btn_bg"
                 android:textSize="17dp" />
         </LinearLayout>
+
     </LinearLayout>
 
 
