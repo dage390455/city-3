@@ -24,16 +24,17 @@ import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.entity.IBeacon;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
+import com.sensoro.smartcity.activity.SplashActivity;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
@@ -349,10 +350,10 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 @Override
                 public void run() {
                     Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
+                    initBugLy();
                 }
             }, 1000);
             initSensoroSDK();
-            initBugLy();
             ThreadPoolManager.getInstance().execute(this);
         }
 
@@ -372,7 +373,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
              * 开发者如果担心sdk初始化影响app启动速度，可以设置为false，
              * 在后面某个时刻手动调用Beta.init(getApplicationContext(),false);
              */
-            Beta.autoInit = true;
+            Beta.autoInit = false;
 
             /**
              * true表示初始化时自动检查升级;
@@ -388,7 +389,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
             /**
              * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
              */
-            Beta.initDelay = 2 * 1000;
+            Beta.initDelay = 6 * 1000;
 
             /**
              * 设置通知栏大图标，largeIconId为项目中的图片资源;
@@ -422,8 +423,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
              * 只允许在MainActivity上显示更新弹窗，其他activity上不显示弹窗;
              * 不设置会默认所有activity都可以显示弹窗;
              */
-//            Beta.canShowUpgradeActs.add(MainActivity.class);
-//            Beta.canShowUpgradeActs.add(LoginActivity.class);
+            Beta.canNotShowUpgradeActs.add(SplashActivity.class);
             //设置是否显示消息通知
             Beta.enableNotification = true;
             //设置Wifi下自动下载
@@ -437,6 +437,62 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
             Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
             Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
             Beta.init(this.getApplicationContext(), BuildConfig.DEBUG);
+//            Beta.upgradeListener = new UpgradeListener() {
+//                @Override
+//                public void onUpgrade(int i, UpgradeInfo upgradeInfo, boolean isManual, boolean isSilence) {
+//                    try {
+//                        LogUtils.loge("Beta.upgrade onUpgrade i = " + i + ",upgradeInfo = " + upgradeInfo + ", isManual = " + isManual + ",isSilence = " + isSilence);
+//                    } catch (Throwable throwable) {
+//                        throwable.printStackTrace();
+//                    }
+//                }
+//            };
+//            Beta.upgradeStateListener = new UpgradeStateListener() {
+//                @Override
+//                public void onUpgradeFailed(boolean isManual) {
+//                    try {
+//                        LogUtils.loge("Beta.upgrade onUpgradeFailed isManual = " + isManual);
+//                    } catch (Throwable throwable) {
+//                        throwable.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onUpgradeSuccess(boolean isManual) {
+//                    try {
+//                        LogUtils.loge("Beta.upgrade onUpgradeSuccess isManual = " + isManual);
+//                    } catch (Throwable throwable) {
+//                        throwable.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onUpgradeNoVersion(boolean isManual) {
+//                    try {
+//                        LogUtils.loge("Beta.upgrade onUpgradeNoVersion isManual = " + isManual);
+//                    } catch (Throwable throwable) {
+//                        throwable.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onUpgrading(boolean isManual) {
+//                    try {
+//                        LogUtils.loge("Beta.upgrade onUpgrading isManual = " + isManual);
+//                    } catch (Throwable throwable) {
+//                        throwable.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onDownloadCompleted(boolean isManual) {
+//                    try {
+//                        LogUtils.loge("Beta.upgrade onDownloadCompleted isManual = " + isManual);
+//                    } catch (Throwable throwable) {
+//                        throwable.printStackTrace();
+//                    }
+//                }
+//            };
         } catch (Exception e) {
             e.printStackTrace();
         }

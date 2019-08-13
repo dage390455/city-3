@@ -39,7 +39,7 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployMapENActivityView;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

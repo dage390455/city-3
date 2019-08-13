@@ -56,7 +56,7 @@ import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;

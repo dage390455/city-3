@@ -1,16 +1,11 @@
 package com.sensoro.smartcity.adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +26,7 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;

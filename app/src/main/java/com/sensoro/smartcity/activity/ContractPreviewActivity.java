@@ -29,7 +29,7 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IContractPreviewActivityView;
 import com.sensoro.smartcity.presenter.ContractPreviewActivityPresenter;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -11,7 +11,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractResultActivityView;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.ImageFactory;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;

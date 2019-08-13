@@ -3,7 +3,7 @@ package com.sensoro.smartcity.callback;
 
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;

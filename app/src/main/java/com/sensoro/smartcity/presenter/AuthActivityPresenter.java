@@ -23,7 +23,7 @@ import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.sensoro.common.utils.AppUtils;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import java.util.Objects;
 

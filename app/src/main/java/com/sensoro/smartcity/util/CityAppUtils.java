@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.utils.GPSUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.SensoroCityApplication;
 
 import static com.sensoro.common.utils.AppUtils.isAppInstalled;

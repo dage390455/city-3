@@ -38,7 +38,7 @@ import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.temp.TestUpdateActivity;
 import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

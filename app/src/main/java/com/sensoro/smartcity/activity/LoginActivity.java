@@ -29,7 +29,7 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.presenter.LoginPresenter;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.dialog.LoginUrlDialogUtils;
 
 import java.util.Locale;

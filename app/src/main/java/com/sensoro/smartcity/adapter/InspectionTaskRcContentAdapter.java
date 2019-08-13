@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;

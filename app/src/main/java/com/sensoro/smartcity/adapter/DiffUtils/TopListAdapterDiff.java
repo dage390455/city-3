@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.adapter.DiffUtils;
 
 import com.sensoro.smartcity.model.HomeTopModel;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import java.util.HashMap;
 import java.util.List;

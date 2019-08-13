@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.bean.GrantsInfo;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import java.util.List;
 

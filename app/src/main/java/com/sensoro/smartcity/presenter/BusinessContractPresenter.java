@@ -27,7 +27,7 @@ import com.sensoro.smartcity.imainviews.IBusinessContractView;
 import com.sensoro.smartcity.model.BusinessLicenseData;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.util.FileUtil;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -40,7 +40,7 @@ import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.SortConditionModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.CustomVRecyclerView;
 import com.sensoro.smartcity.widget.SensoroHomeAlarmView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.sensoro.common.BuildConfig;
 
+
 public class LogUtils {
     private static boolean isShowLog = BuildConfig.DEBUG;
     private static String TAG = "sensoro_log";

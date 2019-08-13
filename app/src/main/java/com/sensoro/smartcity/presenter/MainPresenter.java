@@ -39,6 +39,7 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -47,8 +48,8 @@ import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -312,7 +313,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
 
                                 try {
-                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceInfoListener:"+json);
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceInfoListener:" + json);
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
@@ -401,7 +402,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     throwable.printStackTrace();
                                 }
                                 try {
-                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmCountListener:"+json);
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmCountListener:" + json);
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
@@ -444,7 +445,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                 }
 
                                 try {
-                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmDisplayStatusListener:"+json);
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmDisplayStatusListener:" + json);
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
@@ -507,7 +508,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             }
 
                             try {
-                                LogUtils.loge("AlarmDeviceCountsBean", "DeviceFlushListener:"+json);
+                                LogUtils.loge("AlarmDeviceCountsBean", "DeviceFlushListener:" + json);
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
                             }
@@ -587,7 +588,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                         netWorkStateModel.ping = pingNetCanUse;
                         EventBus.getDefault().post(netWorkStateModel);
                         //TODO 暂时去掉频繁后台请求
-//                            Beta.checkUpgrade(false, false);
+                        Beta.checkUpgrade(false, false);
 
                         LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                     } catch (Throwable throwable) {

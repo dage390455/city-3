@@ -31,7 +31,7 @@ import com.sensoro.smartcity.activity.ContractCreationSuccessActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
 import com.sensoro.smartcity.util.FileUtil;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
