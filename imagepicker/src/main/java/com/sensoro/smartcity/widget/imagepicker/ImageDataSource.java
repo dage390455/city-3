@@ -19,8 +19,6 @@ import com.sensoro.imagepicker.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * ================================================
@@ -89,7 +87,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-
+                try{
                 ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
                 imageFolders.clear();
                 if (data != null) {
@@ -153,6 +151,18 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                 }
 
                 mHandler.sendEmptyMessage(0);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }finally {
+                    try {
+                        if(data!=null){
+                            data.close();
+                        }
+                    }catch (Exception e){
+
+                    }
+                }
+
 
             }
         });
