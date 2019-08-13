@@ -91,7 +91,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (!setMyCurrentActivityOrientation()) {
+            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         Window win = getWindow();
         win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED //锁屏状态下显示
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD //解锁
@@ -153,6 +155,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     }
 
     public boolean setMyCurrentActivityTheme() {
+        return false;
+    }
+
+    public boolean setMyCurrentActivityOrientation() {
         return false;
     }
 

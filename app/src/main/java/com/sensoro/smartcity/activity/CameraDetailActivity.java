@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -125,6 +126,12 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(GONE);
 
+    }
+
+    @Override
+    public boolean setMyCurrentActivityOrientation() {
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        return true;
     }
 
     private void initRefreshLayout() {
