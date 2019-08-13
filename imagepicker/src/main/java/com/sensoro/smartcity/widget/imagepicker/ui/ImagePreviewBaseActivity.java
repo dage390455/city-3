@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.imagepicker.R;
 import com.sensoro.smartcity.widget.imagepicker.DataHolder;
@@ -14,6 +16,7 @@ import com.sensoro.smartcity.widget.imagepicker.adapter.ImagePageAdapter;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
 import com.sensoro.smartcity.widget.imagepicker.view.ViewPagerFixed;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 //import com.sensoro.smartcity.activity.VideoPlayActivity;
@@ -102,6 +105,12 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 //                    intent.putExtra("path_record", (Serializable) imageItem);
 //                    intent.putExtra("video_del", true);
 //                    startActivity(intent);
+
+                    ImageItem imageItem = mImageItems.get(position);
+                    ARouter.getInstance().build(ARouterConstants.ACTIVITY_VIDEP_PLAY)
+                            .withSerializable("path_record",(Serializable) imageItem).withBoolean("video_del", true).withTransition(R.anim.slide_left, R.anim.slide_out)
+                            .navigation(ImagePreviewBaseActivity.this);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

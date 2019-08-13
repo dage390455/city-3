@@ -21,7 +21,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -37,7 +39,7 @@ import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 /**
  * Created by zhaoshuang on 17/2/24.
  */
-
+@Route(path = ARouterConstants.ACTIVITY_VIDEP_PLAY)
 public class VideoPlayActivity extends AppCompatActivity implements View.OnClickListener, NavigationBarChangeListener.OnSoftInputStateChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
 
     private MyVideoView vv_play;
