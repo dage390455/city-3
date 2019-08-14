@@ -166,6 +166,37 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void initVideoOption() {
+
+
+        //增加title
+        getCurPlay().getTitleTextView().setVisibility(VISIBLE);
+        //设置返回键
+        getCurPlay().getBackButton().setVisibility(VISIBLE);
+
+        getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
+
+        getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
+
+        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //直接横屏
+                orientationUtils.resolveByClick();
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
+            }
+        });
+
+//        getCurPlay().startPlayLogic();
+
+
         getPlayView().setIsShowBackMaskTv(false);
 
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
@@ -243,34 +274,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 }
             }
         }).build(getCurPlay());
-
-        //增加title
-        getCurPlay().getTitleTextView().setVisibility(VISIBLE);
-        //设置返回键
-        getCurPlay().getBackButton().setVisibility(VISIBLE);
-
-        getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
-
-        getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
-
-        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //直接横屏
-                orientationUtils.resolveByClick();
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
-            }
-        });
-
-//        getCurPlay().startPlayLogic();
     }
 
     @Override
@@ -328,6 +331,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
+
 
     @Override
     public void setLiveState(boolean isLiveStream) {
@@ -644,7 +648,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         //如果旋转了就全屏
 
         try {
-            LogUtils.logd("==getCurrentState==" + gsyPlayerAcCameraDetail.getCurrentState());
+//            LogUtils.logd("==getCurrentState==" + gsyPlayerAcCameraDetail.getCurrentState());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -674,6 +678,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //        }
 
         if (isPlay && !isPause && orientationUtils.isEnable()) {
+
+            try {
+                LogUtils.logd("==onConfigurationChanged==" + gsyPlayerAcCameraDetail.getCurrentState());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }

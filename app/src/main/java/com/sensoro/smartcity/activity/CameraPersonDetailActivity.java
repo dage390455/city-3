@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -319,6 +320,12 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
         if (isPlay && !isPause && orientationUtils.isEnable()) {
+
+            try {
+                LogUtils.logd("==onConfigurationChanged=222222=====" + gsyPlayerAcCameraPersonDetail.getCurrentState());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
 
