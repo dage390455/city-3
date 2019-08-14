@@ -265,9 +265,13 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 rMobileData.setVisibility(VISIBLE);
                 playAndRetryBtn.setVisibility(VISIBLE);
                 playAndRetryBtn.setText(R.string.play);
+//                mTitleTextView.setText("");
+
                 rMobileData.setBackgroundColor(Color.TRANSPARENT);
+
+
                 maskFaceIv.setVisibility(VISIBLE);
-                maskTitleTv.setText(mTitle);
+//                maskTitleTv.setText(mTitle);
                 tiptv.setText(getResources().getString(R.string.mobile_network));
                 maskLayoutTop.setVisibility(VISIBLE);
                 playAndRetryBtn.setOnClickListener(v -> {
