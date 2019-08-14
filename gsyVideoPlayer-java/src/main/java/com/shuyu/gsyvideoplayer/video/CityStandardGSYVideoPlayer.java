@@ -1503,6 +1503,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void setNoVideo() {
         rMobileData.setVisibility(VISIBLE);
         tiptv.setText(getResources().getString(R.string.no_vido));
+        rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
+
         playAndRetryBtn.setVisibility(GONE);
     }
 
