@@ -157,6 +157,12 @@ public class CalendarPopUtils implements
         initAnimation();
     }
 
+    /**
+     * 隐藏日历
+     */
+    public  void  dismissNoAnimation(){
+        mPopupWindow.dismiss();
+    }
     private void initAnimation() {
         showTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0);
         dismissTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, -1);
@@ -187,6 +193,22 @@ public class CalendarPopUtils implements
     }
     private void setMonthYearText(int month) {
         acCalendarTvMonthYear.setText(mActivity.getString(MONTHS[month - 1]));
+    }
+
+    /**
+     * 根据年月显示一下月Arrawbtn状态
+     * @param year
+     * @param month
+     */
+    private void setNextBtnState(int year,int  month){
+        if(year==calendarView.getCurYear()&& month==calendarView.getCurMonth()){
+            acCalendarImvArrowRight.setEnabled(false);
+            acCalendarImvArrowRight.setImageResource(R.drawable.calendar_arrow_right_disabled);
+
+        }else{
+            acCalendarImvArrowRight.setEnabled(true);
+            acCalendarImvArrowRight.setImageResource(R.drawable.calendar_arrow_right);
+        }
     }
 
     private void setSelectTime(long startTime, long endTime) {
@@ -425,7 +447,7 @@ public class CalendarPopUtils implements
     @Override
     public void onMonthChange(int year, int month) {
         setMonthYearText(month);
-
+       setNextBtnState(year,month);
     }
 
 

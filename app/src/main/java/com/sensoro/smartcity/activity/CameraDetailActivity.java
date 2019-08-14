@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -302,7 +303,12 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         gsyVideoOption.setUrl(url1).setVideoTitle(title).build(getCurPlay());
         gsyPlayerAcCameraDetail.setIsLive(VISIBLE);
-        getCurPlay().startPlayLogic();
+        if(TextUtils.isEmpty(url1)){
+            gsyPlayerAcCameraDetail.setCityPlayState(3);
+        }else{
+            getCurPlay().startPlayLogic();
+        }
+
 //        orientationUtils.setEnable(true);
 //        }
     }
@@ -674,6 +680,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //        }
 
         if (isPlay && !isPause && orientationUtils.isEnable()) {
+            mPresenter.doDissmissCalendar();
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }

@@ -312,6 +312,12 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                         }
 
                     }
+                    else{
+                        itemUrl="";
+                        if (isAttachedView()) {
+                            getView().startPlayLogic(itemUrl, itemTitle);
+                        }
+                    }
 
                     if (isAttachedView()) {
                         getView().dismissProgressDialog();
@@ -330,6 +336,10 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
         }
     }
+    //无动画效果关闭日历弹框
+public void doDissmissCalendar(){
+    mCalendarPopUtils.dismissNoAnimation();
+}
 
     public void doCalendar(LinearLayout root) {
         long temp_startTime = -1;
