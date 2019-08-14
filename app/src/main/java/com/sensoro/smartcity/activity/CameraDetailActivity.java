@@ -701,13 +701,16 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //            gsyPlayerAcCameraDetail.setRotateWithSystem(false);
 //
 //        }
+//        mPresenter.doDissmissCalendar();
 //        if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
 //            getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
 //        }
 
+        mPresenter.doDissmissCalendar();
         if (isPlay && !isPause && orientationUtils.isEnable()) {
-            mPresenter.doDissmissCalendar();
-            getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
+            if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
+            }
         }
     }
 
