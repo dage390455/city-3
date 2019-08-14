@@ -161,7 +161,9 @@ public class CalendarPopUtils implements
      * 隐藏日历
      */
     public  void  dismissNoAnimation(){
-        mPopupWindow.dismiss();
+        if(mPopupWindow!=null){
+            mPopupWindow.dismiss();
+        }
     }
     private void initAnimation() {
         showTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0);
