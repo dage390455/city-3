@@ -3,6 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
@@ -506,16 +511,37 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     private void loadCover(ImageView imageView, String url) {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+
+        Glide.with(mActivity).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+                imageView.setImageBitmap(resource);
+
+//                gsyPlayerAcCameraDetail.setMobileFace(bitmapDrawable);
+
+            }
+        });
 //        imageView.setImageResource(R.drawable.camera_detail_mask);
-        Glide.with(this.getApplicationContext())
-                .setDefaultRequestOptions(
-                        new RequestOptions()
-                                .frame(3000000)
-                                .centerCrop()
-                                .error(R.drawable.camera_detail_mask)
-                )
-                .load(url)
-                .into(imageView);
+//        Glide.with(this.getApplicationContext())
+//                .setDefaultRequestOptions(
+//                        new RequestOptions()
+//                                .frame(3000000)
+//                                .centerCrop()
+//                                .error(R.drawable.camera_detail_mask)
+//                )
+//                .load(url)
+//                . (new SimpleTarget<Bitmap>() {
+//            @Override
+//            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+//
+//                imageView.setImageBitmap(resource);
+//            }
+//        })
+
+        ;
     }
 
     @Override
