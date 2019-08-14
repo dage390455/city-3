@@ -175,7 +175,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
 
-
     private void requestData(String cid, final int direction) {
         if (direction == Constants.DIRECTION_DOWN) {
             minId = null;
@@ -218,11 +217,19 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                                 getView().updateCameraList(mLists);
                             }
                         }
-                    } else if (direction == Constants.DIRECTION_UP) {
+                    } else {
+                        mLists.clear();
                         if (isAttachedView()) {
-                            getView().toastShort(mActivity.getString(R.string.no_more_data));
+                            getView().onPullRefreshComplete();
+                            getView().updateCameraList(data);
+                        }
+                        if (direction == Constants.DIRECTION_UP) {
+                            if (isAttachedView()) {
+                                getView().toastShort(mActivity.getString(R.string.no_more_data));
+                            }
                         }
                     }
+
 
                 }
                 if (isAttachedView()) {
@@ -292,6 +299,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(this) {
                 @Override
                 public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
+                    if (index != getView().getCurrentClickPosition()) {
+                        return;
+                    }
                     List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
                     if (data != null && data.size() > 0) {
                         DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
@@ -399,7 +409,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             doLive();
         } else {
             if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                GSYVideoManager.onResume(true);
+                GSYVideoManager.onResume(false);
             } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_AUTO_COMPLETE) {
 
                 getView().startPlayLogic(itemUrl, itemTitle);

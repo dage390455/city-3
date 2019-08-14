@@ -64,4 +64,5 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     public void loadCoverImage(String url);
 
+    int getCurrentClickPosition();
 }

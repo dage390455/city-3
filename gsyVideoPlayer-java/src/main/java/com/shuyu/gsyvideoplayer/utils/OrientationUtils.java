@@ -1,11 +1,12 @@
 package com.shuyu.gsyvideoplayer.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.OrientationEventListener;
 
+import com.sensoro.common.utils.LogUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 
 /**
@@ -39,10 +40,44 @@ public class OrientationUtils {
         init();
     }
 
+    public static boolean isOpenSensor(Context context) {
+        boolean isOpen = false;
+        if (getSensorState(context) == 1) {
+            isOpen = true;
+        } else if (getSensorState(context) == 0) {
+            isOpen = false;
+        }
+        return isOpen;
+    }
+
+    public static int getSensorState(Context context) {
+        int sensorState = 0;
+        try {
+            sensorState = Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
+            return sensorState;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return sensorState;
+    }
+
     private void init() {
         orientationEventListener = new OrientationEventListener(activity.getApplicationContext()) {
             @Override
             public void onOrientationChanged(int rotation) {
+                try {
+                    LogUtils.logd("==rotation==" + rotation);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+
+//                if (!isOpenSensor(activity)) {
+//                    return;
+//                }
+//
+//                if (gsyVideoPlayer.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+//                    return;
+//                }
                 boolean autoRotateOn = (Settings.System.getInt(activity.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1);
                 if (!autoRotateOn && mRotateWithSystem) {
                     return;
@@ -51,7 +86,7 @@ public class OrientationUtils {
                     return;
                 }
 
-                if(rotation == -1){
+                if (rotation == -1) {
                     return;
                 }
                 // 设置竖屏
@@ -81,7 +116,7 @@ public class OrientationUtils {
                     }
                 }
                 // 设置横屏
-                else if ((rotation >180/*) && (rotation <= 270)*/)) {
+                else if ((rotation > 180/*) && (rotation <= 270)*/)) {
                     if (mClick) {
                         if (!(mIsLand == 1) && !mClickPort) {
                             return;
@@ -103,7 +138,7 @@ public class OrientationUtils {
                     }
                 }
                 // 设置反向横屏
-                else  {
+                else {
                     if (mClick) {
                         if (!(mIsLand == 2) && !mClickPort) {
                             return;

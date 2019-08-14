@@ -60,10 +60,10 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     protected int mSeekEndOffset;
 
     //退出全屏显示的案件图片
-    protected int mShrinkImageRes = -1;
+    protected int mShrinkImageRes = R.drawable.video_shrink;
 
     //全屏显示的案件图片
-    protected int mEnlargeImageRes = -1;
+    protected int mEnlargeImageRes = R.drawable.ic_camera_full_screen;
 
     //触摸显示后隐藏的时间
     protected int mDismissControlTime = 2500;
