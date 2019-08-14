@@ -218,14 +218,17 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                             }
                         }
                     } else {
-                        mLists.clear();
-                        if (isAttachedView()) {
-                            getView().onPullRefreshComplete();
-                            getView().updateCameraList(data);
-                        }
+
                         if (direction == Constants.DIRECTION_UP) {
                             if (isAttachedView()) {
+                                getView().onPullRefreshComplete();
                                 getView().toastShort(mActivity.getString(R.string.no_more_data));
+                            }
+                        }else{
+                            mLists.clear();
+                            if (isAttachedView()) {
+                                getView().onPullRefreshComplete();
+                                getView().updateCameraList(mLists);
                             }
                         }
                     }
