@@ -188,9 +188,10 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         layoutParams.width = AppUtils.dp2px(mActivity, 64);
         layoutParams.height = AppUtils.dp2px(mActivity, 80);
         imageView.setBackgroundResource(R.drawable.person_locus_avatar_bg);
-        imageView.setScaleType(ImageView.ScaleType.FIT_START);
-        int dp8 = AppUtils.dp2px(mActivity, 8);
-        imageView.setPadding(dp8, AppUtils.dp2px(mActivity, 4), dp8, AppUtils.dp2px(mActivity, 12));
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        int dp8 = AppUtils.dp2px(mActivity, 10);
+        imageView.setPadding(dp8, -AppUtils.dp2px(mActivity, 4), dp8, AppUtils.dp2px(mActivity, 12));
+//        imageView.setPadding(dp8, dp8, dp8, dp8);
 
         imageView.setImageResource(R.drawable.person_locus_placeholder);
         mAvatarPlaceholder = getViewBitmap(imageView);
