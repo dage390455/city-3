@@ -30,6 +30,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.sensoro.common.utils.Repause;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
@@ -49,7 +50,7 @@ import moe.codeest.enviews.ENPlayView;
  * AI layout布局存在下载和截图逻辑，不处理视频格式切换
  */
 
-public class CityAIStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
+public class CityAIStandardGSYVideoPlayer extends StandardGSYVideoPlayer implements Repause.Listener {
 
     public ImageView backMaskTv;
     private RelativeLayout maskLayoutTop;
@@ -407,6 +408,21 @@ public class CityAIStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         getContext().registerReceiver(mVolumeReceiver, filter);
+    }
+
+    @Override
+    public void onApplicationResumed() {
+
+    }
+
+    @Override
+    public void onApplicationPaused() {
+        if (mOrientationUtils != null) {
+            mOrientationUtils.backToProtVideo();
+        }
+        if (GSYVideoManager.backFromWindowFull(mContext)) {
+            return;
+        }
     }
 
     private class MyVolumeReceiver extends BroadcastReceiver {
@@ -1621,8 +1637,8 @@ public class CityAIStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void releaseVideos() {
         super.releaseVideos();
+        Repause.unregisterListener(this);
 
     }
-
 
 }

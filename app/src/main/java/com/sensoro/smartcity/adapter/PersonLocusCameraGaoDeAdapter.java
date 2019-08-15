@@ -85,7 +85,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         if (imageView == null) {
             imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setImageResource(R.drawable.camera_detail_mask);
         }
 
 

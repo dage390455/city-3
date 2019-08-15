@@ -34,7 +34,6 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -183,7 +182,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
         if (ivGsyCover == null) {
             ivGsyCover = new ImageView(this);
             ivGsyCover.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
+            ivGsyCover.setImageResource(R.drawable.camera_detail_mask);
         }
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(ivGsyCover)
@@ -465,9 +464,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
 
     @Override
     public void doPlayLive(ArrayList<String> urlList) {
-        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
-            orientationUtils.setEnable(false);
-        }
+        orientationUtils.setEnable(false);
         gsyPlayerAcAlarmCameraLiveDetail.setCityURl(urlList, "");
         getCurPlay().startPlayLogic();
 

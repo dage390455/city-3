@@ -123,7 +123,7 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
         if (imageView == null) {
             imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setImageResource(R.drawable.camera_detail_mask);
         }
 
 
@@ -220,7 +220,7 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
         gsyPlayerAcDeployCameraLiveDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcDeployCameraLiveDetail.setIsShowMaskTopBack(false);
         getCurPlay().startPlayLogic();
-        orientationUtils.setEnable(true);
+        orientationUtils.setEnable(false);
 
 
     }
