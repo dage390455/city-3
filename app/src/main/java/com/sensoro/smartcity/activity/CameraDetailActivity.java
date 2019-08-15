@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
@@ -34,7 +34,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.utils.LogUtils;
-import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -45,7 +44,6 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
@@ -196,7 +194,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setCacheWithPlay(false)
 //                .setVideoTitle(cameraName)
 
-
                 .setVideoAllCallBack(new GSYSampleCallBack() {
 
 
@@ -218,7 +215,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
                         orientationUtils.setEnable(false);
-
                         backFromWindowFull();
                     }
 
@@ -440,11 +436,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void doPlayerResume() {
-        getCurPlay().onVideoResume();
-    }
-
-    @Override
     public void doPlayLive(final ArrayList<String> urlList, String cameraName, final boolean isLive) {
 
         orientationUtils.setEnable(false);
@@ -478,13 +469,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
-    }
-
-    @Override
-    public void onVideoPause() {
-
-        onPause();
-
     }
 
     @Override
@@ -711,9 +695,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         mPresenter.doDissmissCalendar();
         if (isPlay && !isPause && orientationUtils.isEnable()) {
-            if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
-            }
+//            if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                getCurPlay().(this, newConfig, orientationUtils, true, true);
+//            }
         }
     }
 

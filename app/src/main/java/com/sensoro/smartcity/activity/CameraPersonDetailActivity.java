@@ -264,15 +264,6 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
         }
     }
 
-    @Override
-    public void onVideoResume() {
-        onResume();
-    }
-
-    @Override
-    public void onVideoPause() {
-        onPause();
-    }
 
     @Override
     protected CameraPersonDetailActivityPresenter createPresenter() {

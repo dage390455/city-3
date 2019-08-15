@@ -553,7 +553,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     public void onConfigurationChanged(Activity activity, Configuration newConfig, OrientationUtils orientationUtils, boolean hideActionBar, boolean hideStatusBar) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_USER) {
+        if (/*newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||*/newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_USER) {
             if (!isIfCurrentIsFullscreen()) {
                 startWindowFullscreen(activity, hideActionBar, hideStatusBar);
             }

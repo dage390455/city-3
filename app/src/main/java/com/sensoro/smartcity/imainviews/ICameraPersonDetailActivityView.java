@@ -22,8 +22,4 @@ public interface ICameraPersonDetailActivityView extends IActivityIntent, IToast
     void setVerOrientationUtil(boolean b);
 
     void backFromWindowFull();
-
-    void onVideoResume();
-
-    void onVideoPause();
 }
