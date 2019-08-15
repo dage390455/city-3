@@ -573,12 +573,14 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
      */
     @Override
     public void startPlayLogic() {
+//        GSYVideoManager.instance().setTimeOut(3, true);
+
         setViewShowState(mBottomContainer, INVISIBLE);
 //        setRotateViewAuto(false);
 //        if (null != mOrientationUtils) {
 //            mOrientationUtils.setEnable(false);
 //        }
-
+//        GSYVideoManager.instance().startTimeOutBuffer();
         try {
             LogUtils.loge(mUrl);
         } catch (Throwable throwable) {
@@ -1741,8 +1743,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
     @Override
     public void onError(int what, int extra) {
         super.onError(what, extra);
+        Debuger.printfError("cityplayer============time out for error listener");
 
 
+        GSYVideoManager.instance().pause();
         setCityPlayState(3);
 
 
