@@ -308,9 +308,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         gsyVideoOption.setUrl(url1).setVideoTitle(title).build(getCurPlay());
         gsyPlayerAcCameraDetail.setIsLive(VISIBLE);
-        if(TextUtils.isEmpty(url1)){
+        if (TextUtils.isEmpty(url1)) {
             gsyPlayerAcCameraDetail.setCityPlayState(3);
-        }else{
+        } else {
             getCurPlay().startPlayLogic();
         }
 
@@ -512,13 +512,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
 
     private void loadCover(ImageView imageView, String url) {
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-
-        Glide.with(mActivity).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+        Glide.with(mActivity).asBitmap().apply(new RequestOptions().frame(3000000)
+                .centerCrop()
+                .error(R.drawable.camera_detail_mask).dontAnimate()).load(url).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
                 imageView.setImageBitmap(resource);
 
 //                gsyPlayerAcCameraDetail.setMobileFace(bitmapDrawable);
