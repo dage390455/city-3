@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
@@ -137,11 +136,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
-    @Override
-    public boolean setMyCurrentActivityOrientation() {
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-        return true;
-    }
+//    @Override
+//    public boolean setMyCurrentActivityOrientation() {
+////        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+//        return false;
+//    }
 
     private void initRefreshLayout() {
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
@@ -202,27 +201,27 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setVideoAllCallBack(new GSYSampleCallBack() {
 
 
-//                    @Override
-//                    public void onPlayError(final String url, Object... objects) {
-//
-//                        gsyPlayerAcCameraDetail.setCityPlayState(3);
-//                        orientationUtils.setEnable(false);
-//                        backFromWindowFull();
-//                        gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                gsyVideoOption.setUrl(url).build(getCurPlay());
-//                                getCurPlay().startPlayLogic();
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onAutoComplete(final String url, Object... objects) {
-//                        orientationUtils.setEnable(false);
-//
-//                        backFromWindowFull();
-//                    }
+                    @Override
+                    public void onPlayError(final String url, Object... objects) {
+
+                        gsyPlayerAcCameraDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                        gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onAutoComplete(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
+
+                        backFromWindowFull();
+                    }
 
                     @Override
                     public void onPrepared(String url, Object... objects) {
@@ -234,8 +233,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     }
 
                     @Override
+                    public void onEnterFullscreen(String url, Object... objects) {
+                        super.onEnterFullscreen(url, objects);
+//                        orientationUtils.setEnable(true);
+                    }
+
+                    @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+//                        orientationUtils.setEnable(false);
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -308,9 +314,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         gsyVideoOption.setUrl(url1).setVideoTitle(title).build(getCurPlay());
         gsyPlayerAcCameraDetail.setIsLive(VISIBLE);
-        if(TextUtils.isEmpty(url1)){
+        if (TextUtils.isEmpty(url1)) {
             gsyPlayerAcCameraDetail.setCityPlayState(3);
-        }else{
+        } else {
             getCurPlay().startPlayLogic();
         }
 
