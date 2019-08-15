@@ -696,7 +696,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         mPresenter.doDissmissCalendar();
         if (isPlay && !isPause && orientationUtils.isEnable()) {
 //            if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                getCurPlay().(this, newConfig, orientationUtils, true, true);
+                getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
 //            }
         }
     }
