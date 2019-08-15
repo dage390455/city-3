@@ -37,6 +37,7 @@ import android.widget.ToggleButton;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.SelectDialog;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.R;
@@ -61,7 +62,7 @@ import moe.codeest.enviews.ENPlayView;
  * Created by shuyu on 2016/11/11.
  */
 
-public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
+public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implements Repause.Listener {
 
     /**
      * 自定义横屏时候的封面
@@ -424,6 +425,22 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         getContext().registerReceiver(mVolumeReceiver, filter);
     }
 
+    @Override
+    public void onApplicationResumed() {
+
+    }
+
+    @Override
+    public void onApplicationPaused() {
+
+        if (mOrientationUtils != null) {
+            mOrientationUtils.backToProtVideo();
+        }
+        if (GSYVideoManager.backFromWindowFull(mContext)) {
+            return;
+        }
+    }
+
     private class MyVolumeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -457,6 +474,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         mCoverImage = (ImageView) findViewById(R.id.thumbImage);
 //        mOrientationUtils = new OrientationUtils((Activity) mContext, this);
 
+        Repause.registerListener(this);
 
         currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
@@ -1062,11 +1080,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void changeUiToPlayingShow() {
 
 //        setRotateViewAuto(true);
-//        if (null != mOrientationUtils) {
-//            mOrientationUtils.setEnable(false);
-//
-//            mOrientationUtils.setRotateWithSystem(false);
-//        }
+        if (null != mOrientationUtils) {
+            mOrientationUtils.setEnable(true);
+
+        }
 //        openSensor(mContext);
 
 //        setRotateWithSystem(true);
@@ -1746,6 +1763,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void releaseVideos() {
         super.releaseVideos();
+        Repause.unregisterListener(this);
 
     }
 

@@ -179,8 +179,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
     private void requestData(String cid, final int direction) {
 
-        minId = null;
         if (direction == Constants.DIRECTION_DOWN) {
+            minId = null;
             if (isAttachedView() && TextUtils.isEmpty(itemUrl)) {
                 getView().setLiveState(true);
                 doLive();

@@ -384,7 +384,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".activity.AlarmCameraVideoDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.SelfCheckActivity" />
         <activity android:name=".activity.FrequencyPointActivity" />
         <activity android:name=".activity.NetWorkInfoActivity" />

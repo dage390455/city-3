@@ -65,7 +65,7 @@ import static android.view.View.VISIBLE;
  * 简单详情实现模式2
  */
 public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView, CameraDetailActivityPresenter>
-        implements ICameraDetailActivityView, Repause.Listener {
+        implements ICameraDetailActivityView {
 
 
     @BindView(R.id.gsy_player_ac_camera_detail)
@@ -110,7 +110,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
-        Repause.registerListener(this);
 
     }
 
@@ -320,7 +319,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             getCurPlay().startPlayLogic();
         }
 
-//        orientationUtils.setEnable(true);
+        orientationUtils.setEnable(false);
 //        }
     }
 
@@ -448,9 +447,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     @Override
     public void doPlayLive(final ArrayList<String> urlList, String cameraName, final boolean isLive) {
 
-        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
-            orientationUtils.setEnable(false);
-        }
+        orientationUtils.setEnable(false);
 //        gsyVideoOption.setUrl(urlList.get(0)).setVideoTitle(cameraName).build(getCurPlay());
         gsyPlayerAcCameraDetail.setCityURl(urlList, cameraName);
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
@@ -822,21 +819,4 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
-
-    @Override
-    public void onApplicationResumed() {
-//        getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
-
-    }
-
-    @Override
-    public void onApplicationPaused() {
-
-        if (orientationUtils != null) {
-            orientationUtils.backToProtVideo();
-        }
-        if (GSYVideoManager.backFromWindowFull(this)) {
-            return;
-        }
-    }
 }

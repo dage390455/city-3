@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.provider.Settings;
 import android.view.OrientationEventListener;
 
-import com.sensoro.common.utils.LogUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 
 /**
@@ -65,11 +64,6 @@ public class OrientationUtils {
         orientationEventListener = new OrientationEventListener(activity.getApplicationContext()) {
             @Override
             public void onOrientationChanged(int rotation) {
-                try {
-                    LogUtils.logd("==rotation==" + rotation);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
 
 //                if (!isOpenSensor(activity)) {
 //                    return;
