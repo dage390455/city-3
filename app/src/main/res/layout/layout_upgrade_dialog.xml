@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="若无法升级点击此处下载更新"
+            android:text="@string/update_dialog_tips"
             android:textColor="@color/c_fdc83b"
             android:textSize="14dp" />
 

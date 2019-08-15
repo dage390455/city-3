@@ -1218,5 +1218,6 @@
     <string name="operator">Operator</string>
     <string name="by">by</string>
 
+    <string name="update_dialog_tips">If you cant upgrade click here to download the update</string>
 
 </resources>
