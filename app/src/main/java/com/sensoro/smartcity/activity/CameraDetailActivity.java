@@ -227,7 +227,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
                         //开始播放了才能旋转和全屏
-                        orientationUtils.setEnable(true);
+//                        orientationUtils.setEnable(true);
                         isPlay = true;
                         isPause = false;
                     }
@@ -235,13 +235,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     @Override
                     public void onEnterFullscreen(String url, Object... objects) {
                         super.onEnterFullscreen(url, objects);
-//                        orientationUtils.setEnable(true);
+                        orientationUtils.setEnable(true);
                     }
 
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
-//                        orientationUtils.setEnable(false);
+                        orientationUtils.setEnable(false);
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -398,6 +398,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         orientationUtils.setEnable(false);
 
         gsyPlayerAcCameraDetail.maskTitleTv.setText(mCameraName);
+//        gsyPlayerAcCameraDetail.getTitleTextView().setText(mCameraName);
         gsyPlayerAcCameraDetail.setCityPlayState(5);
         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -454,6 +455,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         gsyPlayerAcCameraDetail.setCityURl(urlList, cameraName);
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();
+        getCurPlay().onVideoResume();
 
 
     }

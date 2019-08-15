@@ -76,6 +76,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private RelativeLayout rMobileData;
 
 
+    /**
+     * 录播是 View.VISIBLE
+     */
     private static int isLive;
     private int currVolume;
     private int lastVolume;
@@ -241,7 +244,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void setCityPlayState(int cityState) {
         dismissProgressDialog();
         cityPlayState = cityState;
-
+        isShowMaskTopBack = true;
         setIsShowMaskTopBack(isShowMaskTopBack);
 
         switch (cityPlayState) {
@@ -301,20 +304,23 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 maskTitleTv.setText(mTitle);
                 break;
             case 4:
-                setViewShowState(mBottomContainer, View.INVISIBLE);
+                //录播才会执行播放完成
+                if (isLive == View.VISIBLE) {
+                    setViewShowState(mBottomContainer, View.INVISIBLE);
 
-                tiptv.setText(getResources().getString(R.string.played));
-                playAndRetryBtn.setText(getResources().getString(R.string.replay));
-                playAndRetryBtn.setVisibility(VISIBLE);
-                rMobileData.setVisibility(VISIBLE);
-                maskFaceIv.setVisibility(GONE);
-                rMobileData.setBackground(null);
-                rMobileData.setBackgroundColor(getResources().getColor(R.color.c_66000000));
-                playAndRetryBtn.setOnClickListener(v -> {
-                    setIsLive(View.VISIBLE);
-                    startPlayLogic();
+                    tiptv.setText(getResources().getString(R.string.played));
+                    playAndRetryBtn.setText(getResources().getString(R.string.replay));
+                    playAndRetryBtn.setVisibility(VISIBLE);
+                    rMobileData.setVisibility(VISIBLE);
+                    maskFaceIv.setVisibility(GONE);
+                    rMobileData.setBackground(null);
+                    rMobileData.setBackgroundColor(getResources().getColor(R.color.c_66000000));
+                    playAndRetryBtn.setOnClickListener(v -> {
+                        setIsLive(View.VISIBLE);
+                        startPlayLogic();
 
-                });
+                    });
+                }
 
 
                 break;
@@ -328,7 +334,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
                 tiptv.setText(getResources().getString(R.string.cameroffline));
                 maskLayoutTop.setVisibility(VISIBLE);
-                maskTitleTv.setText(mTitle);
                 break;
             case 6:
                 break;
@@ -399,6 +404,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         CityStandardGSYVideoPlayer.isShowMaskTopBack = isShowMaskTopBack;
         if (!isShowMaskTopBack) {
             backMaskTv.setVisibility(GONE);
+        } else {
+            backMaskTv.setVisibility(VISIBLE);
+
         }
 
 

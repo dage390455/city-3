@@ -166,6 +166,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         }
 
         getView().showProgressDialog();
+        getView().setLiveState(true);
+        doLive();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
         mCalendarPopUtils.setMonthStatus(1)
@@ -176,11 +178,15 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
 
     private void requestData(String cid, final int direction) {
+
+        minId = null;
         if (direction == Constants.DIRECTION_DOWN) {
-            minId = null;
-            getView().setLiveState(true);
-            doLive();
-            getView().clearClickPosition();
+            if (isAttachedView() && TextUtils.isEmpty(itemUrl)) {
+                getView().setLiveState(true);
+                doLive();
+                getView().clearClickPosition();
+            }
+
         }
         ArrayList<String> strings = new ArrayList<>();
         strings.add(cid);
@@ -224,7 +230,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                                 getView().onPullRefreshComplete();
                                 getView().toastShort(mActivity.getString(R.string.no_more_data));
                             }
-                        }else{
+                        } else {
                             mLists.clear();
                             if (isAttachedView()) {
                                 getView().onPullRefreshComplete();
@@ -314,9 +320,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                             getView().startPlayLogic(itemUrl, itemTitle);
                         }
 
-                    }
-                    else{
-                        itemUrl="";
+                    } else {
+                        itemUrl = "";
                         if (isAttachedView()) {
                             getView().startPlayLogic(itemUrl, itemTitle);
                         }
@@ -339,10 +344,11 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
         }
     }
+
     //无动画效果关闭日历弹框
-public void doDissmissCalendar(){
-    mCalendarPopUtils.dismissNoAnimation();
-}
+    public void doDissmissCalendar() {
+        mCalendarPopUtils.dismissNoAnimation();
+    }
 
     public void doCalendar(LinearLayout root) {
         long temp_startTime = -1;
@@ -366,18 +372,20 @@ public void doDissmissCalendar(){
     }
 
     public void doLive() {
-
-        if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-            getView().offlineType(mCameraName);
-        } else {
+        if (isAttachedView()) {
 
 
-            getView().doPlayLive(urlList, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
+            if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
+                getView().offlineType(mCameraName);
+            } else {
+                getView().doPlayLive(urlList, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
 
+                getView().loadCoverImage(lastCover);
 
 //            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
-            itemUrl = null;
-            itemTitle = null;
+                itemUrl = null;
+                itemTitle = null;
+            }
         }
     }
 
@@ -451,7 +459,13 @@ public void doDissmissCalendar(){
 //                    getLastCoverImage(lastCover);
                     deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-                        getView().offlineType(mCameraName);
+                        if (!TextUtils.isEmpty(itemTitle)) {
+                            getView().offlineType(itemTitle);
+
+                        } else {
+                            getView().offlineType(mCameraName);
+
+                        }
                     } else {
                         doLive();
                     }
