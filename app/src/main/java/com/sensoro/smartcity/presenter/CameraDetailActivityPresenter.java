@@ -276,27 +276,31 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
     public void onCameraItemClick(final int index) {
 //        GSYVideoManager.instance().setTimeOut(1, true);
+<<<<<<< HEAD
         if(!isAttachedView())
             return;
+=======
+        if (isAttachedView()) {
+            List<DeviceCameraFacePic> rvListData = getView().getRvListData();
+            if (rvListData != null) {
+>>>>>>> v338
 
-        List<DeviceCameraFacePic> rvListData = getView().getRvListData();
-        if (rvListData != null) {
-
-            DeviceCameraFacePic model = rvListData.get(index);
-            String captureTime1 = model.getCaptureTime();
+                DeviceCameraFacePic model = rvListData.get(index);
+                String captureTime1 = model.getCaptureTime();
 
 //            setLastCover(model);
 
-            getView().loadCoverImage(model.getSceneUrl());
-            long time;
-            try {
-                time = Long.parseLong(captureTime1);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                getView().toastShort(mActivity.getString(R.string.time_parse_error));
-                return;
-            }
+                getView().loadCoverImage(model.getSceneUrl());
+                long time;
+                try {
+                    time = Long.parseLong(captureTime1);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    getView().toastShort(mActivity.getString(R.string.time_parse_error));
+                    return;
+                }
 
+<<<<<<< HEAD
             //7天以外没有视频，所以显示没有视频，
             if (System.currentTimeMillis() - 24 * 3600 * 1000 * 7L > time) {
                 getView().setGsyVideoNoVideo();
@@ -320,33 +324,57 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     if (data != null && data.size() > 0) {
                         DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
                         itemUrl = deviceCameraHistoryBean.getUrl();
+=======
+                //7天以外没有视频，所以显示没有视频，
+                if (System.currentTimeMillis() - 24 * 3600 * 1000 * 7L > time) {
+                    getView().setGsyVideoNoVideo();
+                    return;
+                }
+                itemTitle = DateUtil.getStrTime_MM_dd_hms(time);
+                time = time / 1000;
 
-                        if (isAttachedView()) {
-                            getView().startPlayLogic(itemUrl, itemTitle);
+                String beginTime = String.valueOf(time - 15);
+                String endTime = String.valueOf(time + 15);
+                getView().showProgressDialog();
+                RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(this) {
+                    @Override
+                    public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
+                        if (index != getView().getCurrentClickPosition()) {
+                            return;
+                        }
+                        List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
+                        if (data != null && data.size() > 0) {
+                            DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
+                            itemUrl = deviceCameraHistoryBean.getUrl();
+>>>>>>> v338
+
+                            if (isAttachedView()) {
+                                getView().startPlayLogic(itemUrl, itemTitle);
+                            }
+
+                        } else {
+                            itemUrl = "";
+                            if (isAttachedView()) {
+                                getView().startPlayLogic(itemUrl, itemTitle);
+                            }
                         }
 
-                    } else {
-                        itemUrl = "";
                         if (isAttachedView()) {
-                            getView().startPlayLogic(itemUrl, itemTitle);
+                            getView().dismissProgressDialog();
                         }
                     }
 
-                    if (isAttachedView()) {
-                        getView().dismissProgressDialog();
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (isAttachedView()) {
+                            getView().playError(index);
+                            getView().dismissProgressDialog();
+                        }
                     }
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-                    if (isAttachedView()) {
-                        getView().playError(index);
-                        getView().dismissProgressDialog();
-                    }
-                }
-            });
+                });
 
 
+            }
         }
 
     }

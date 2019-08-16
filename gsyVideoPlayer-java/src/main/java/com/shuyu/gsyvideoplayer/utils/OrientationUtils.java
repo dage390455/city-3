@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.view.OrientationEventListener;
 
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 /**
  * 处理屏幕旋转的的逻辑
@@ -69,9 +70,7 @@ public class OrientationUtils {
 //                    return;
 //                }
 //
-//                if (gsyVideoPlayer.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
-//                    return;
-//                }
+
                 boolean autoRotateOn = (Settings.System.getInt(activity.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1);
                 if (!autoRotateOn && mRotateWithSystem) {
                     return;

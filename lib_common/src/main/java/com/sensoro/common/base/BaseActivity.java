@@ -179,24 +179,24 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (isDestroyed) {
             return;
         }
+        mHandler.removeCallbacksAndMessages(null);
+        SensoroToast.getInstance().cancelToast();
         if (permissionDialogUtils != null) {
             permissionDialogUtils.destroy();
         }
         mPresenter.onDestroy();
         mPresenter.detachView();
-        SensoroToast.getInstance().cancelToast();
 //        if (immersionBar != null) {
 //            immersionBar.destroy();
 //        }
-        mHandler.removeCallbacksAndMessages(null);
         ActivityTaskManager.getInstance().popActivity(this);
         isDestroyed = true;
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         destroy();
+        super.onDestroy();
     }
 
     @Override

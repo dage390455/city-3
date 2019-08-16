@@ -13,10 +13,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -475,7 +472,15 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
 //        mOrientationUtils = new OrientationUtils((Activity) mContext, this);
 
         Repause.registerListener(this);
-
+        //设置超时时间
+        GSYVideoManager.instance().setTimeOut(20 * 1000, true);
+        boolean needTimeOutOther = GSYVideoManager.instance().isNeedTimeOutOther();
+        int timeOut = GSYVideoManager.instance().getTimeOut();
+        try {
+            LogUtils.loge("GSYVideoManager needTimeOutOther = " + needTimeOutOther + ",timeOut = " + timeOut);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         lastVolume = currVolume;
@@ -1018,44 +1023,32 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
         }
     }
 
-    public void closeSensor(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (Settings.System.canWrite(mContext)) {
-
-                Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
-            } else {
-
-                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
-                        Uri.parse("package:" + mContext.getPackageName()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
-
-
-            }
-        }
-    }
-
-    public void openSensor(Context context) {
-        Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
-    }
+//    public void closeSensor(Context context) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (Settings.System.canWrite(mContext)) {
+//
+//                Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
+//            } else {
+//
+//                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
+//                        Uri.parse("package:" + mContext.getPackageName()));
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                mContext.startActivity(intent);
+//
+//
+//            }
+//        }
+//    }
+//
+//    public void openSensor(Context context) {
+//        Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 1);
+//    }
 
     //    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void changeUiToPreparingShow() {
-//        taskShotPic(bitmap -> {
-//            if (null != bitmap) {
-//                mCoverImage.setImageBitmap(bitmap);
-//                mCoverImage.setVisibility(VISIBLE);
-//            }
-//
-//        });
-//        closeSensor(mContext);
-
-//        setRotateViewAuto(false);
-//        setRotateWithSystem(true);
         if (null != mOrientationUtils) {
             mOrientationUtils.setEnable(false);
-//            mOrientationUtils.setRotateWithSystem(false);
         }
         Debuger.printfLog("changeUiToPreparingShow");
 
@@ -1745,11 +1738,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
         super.onError(what, extra);
         Debuger.printfError("cityplayer============time out for error listener");
 
-
         GSYVideoManager.instance().pause();
         setCityPlayState(3);
-
-
     }
 
     @Override

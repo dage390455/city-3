@@ -37,6 +37,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 
@@ -120,6 +121,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
             @Override
             public void OnAlarmCameraLiveItemClick(int position) {
                 mPresenter.doItemClick(position);
+                orientationUtils.setEnable(false);
+
             }
         });
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
@@ -198,12 +201,23 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPlayError(final String url, Object... objects) {
-
+                        gsyPlayerAcAlarmCameraLiveDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                        gsyPlayerAcAlarmCameraLiveDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
                     }
+
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
-
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
 //
                     }
 
@@ -218,6 +232,10 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+
+                        if (gsyPlayerAcAlarmCameraLiveDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }

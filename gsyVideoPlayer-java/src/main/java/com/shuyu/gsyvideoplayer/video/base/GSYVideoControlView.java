@@ -343,7 +343,8 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 if (isCurrentMediaListener()) {
                     Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ dismiss CURRENT_STATE_NORMAL");
                     cancelProgressTimer();
-                    getGSYVideoManager().releaseMediaPlayer();
+                    //TODO 暂时去掉，使超时设置生效，后续如果有问题需要回归
+//                    getGSYVideoManager().releaseMediaPlayer();
                     releasePauseCover();
                     mBufferPoint = 0;
                     mSaveChangeViewTIme = 0;

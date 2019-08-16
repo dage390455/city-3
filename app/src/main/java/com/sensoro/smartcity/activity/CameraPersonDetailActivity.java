@@ -27,6 +27,7 @@ import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -148,6 +149,19 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
                     }
 
                     @Override
+                    public void onPlayError(final String url, Object... objects) {
+                        gsyPlayerAcCameraPersonDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                        gsyPlayerAcCameraPersonDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
+                    @Override
                     public void onAutoComplete(String url, Object... objects) {
                         super.onAutoComplete(url, objects);
                         orientationUtils.setEnable(false);
@@ -158,6 +172,9 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+                        if (gsyPlayerAcCameraPersonDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
