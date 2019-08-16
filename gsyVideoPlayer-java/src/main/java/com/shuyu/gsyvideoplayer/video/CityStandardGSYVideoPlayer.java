@@ -1540,6 +1540,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
         rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
 
         playAndRetryBtn.setVisibility(GONE);
+        backMaskTv.setVisibility(VISIBLE);
+        maskLayoutTop.setVisibility(VISIBLE);
+
     }
 
 
