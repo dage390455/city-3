@@ -154,8 +154,13 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
     private boolean mHideActionBar = false;
     private MyVolumeReceiver mVolumeReceiver;
 
-//    private ImageView mCoverImage;
-//    private String mCoverOriginUrl;
+    private ICityChangeUiVideoPlayerListener iCityChangeUiVideoPlayerListener;
+
+    public void setICityChangeUiVideoPlayerListener(ICityChangeUiVideoPlayerListener listener) {
+        this.iCityChangeUiVideoPlayerListener = listener;
+
+    }
+
 
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
@@ -1082,7 +1087,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
 //        openSensor(mContext);
 
 //        setRotateWithSystem(true);
-
+        if (null != iCityChangeUiVideoPlayerListener) {
+            iCityChangeUiVideoPlayerListener.OnCityChangeUiToPlayingShow();
+        }
         Debuger.printfLog("changeUiToPlayingShow");
 
         setViewShowState(mTopContainer, VISIBLE);
@@ -1139,6 +1146,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
 
     @Override
     protected void changeUiToPlayingBufferingShow() {
+        if (null != iCityChangeUiVideoPlayerListener) {
+            iCityChangeUiVideoPlayerListener.OnCityChangeUiToPlayingBufferingShow();
+        }
         Debuger.printfLog("changeUiToPlayingBufferingShow");
 
         setViewShowState(mTopContainer, VISIBLE);
@@ -1640,6 +1650,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
             if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
                     || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
 
+                if (null != iCityChangeUiVideoPlayerListener) {
+                    iCityChangeUiVideoPlayerListener.OnchangeVideoFormat();
+                }
                 isChangeVideoFormat = true;
                 String url = urlList.get(pos);
                 if (!TextUtils.isEmpty(url)) {
@@ -1766,5 +1779,16 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
         super.showPauseCover();
     }
 
+
+    /**
+     * 监听播放中，缓冲,切换视频流
+     */
+    public interface ICityChangeUiVideoPlayerListener {
+        void OnCityChangeUiToPlayingShow();
+
+        void OnchangeVideoFormat();
+
+        void OnCityChangeUiToPlayingBufferingShow();
+    }
 
 }

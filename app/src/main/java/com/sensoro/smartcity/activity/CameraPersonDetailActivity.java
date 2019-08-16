@@ -118,7 +118,24 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 
     public void initVideoOption() {
         gsyPlayerAcCameraPersonDetail.setIsLive(View.VISIBLE);
+        gsyPlayerAcCameraPersonDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
 
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         //增加封面
         if (imageView == null) {
             imageView = new ImageView(this);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private ImageView imageView;
     private Animation returnTopAnimation;
 
+    protected Handler mainThreadHandler;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -109,6 +111,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+        mainThreadHandler = new Handler();
 
     }
 
@@ -176,6 +179,25 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setBackgroundResource(R.drawable.camera_detail_mask);
         }
+
+        gsyPlayerAcCameraDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
+
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(imageView)
 
@@ -228,10 +250,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
-                        //开始播放了才能旋转和全屏
-                        orientationUtils.setEnable(true);
-                        isPlay = true;
-                        isPause = false;
+
+
+                        mainThreadHandler.postDelayed(() -> {
+                            //开始播放了才能旋转和全屏
+                            orientationUtils.setEnable(true);
+                            isPlay = true;
+                            isPause = false;
+                        }, 500);
+
                     }
 
                     @Override
@@ -243,7 +270,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
-                        if (gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+
+                        if ((gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING)
+                                && (gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PAUSE)) {
                             orientationUtils.setEnable(false);
                         }
                         if (orientationUtils != null) {
@@ -570,11 +599,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         deviceCameraListAdapter.setOnCameraDetailListClickListener(new CameraDetailListAdapter.CameraDetailListClickListener() {
             @Override
             public void onItemClick(int position) {
+                orientationUtils.setEnable(false);
                 onChangedVideoUrl();
                 GSYVideoManager.onPause();
                 setLiveState(false);
                 mPresenter.onCameraItemClick(position);
-                orientationUtils.setEnable(false);
 
             }
 

@@ -88,7 +88,24 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageResource(R.drawable.camera_detail_mask);
         }
+        player.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
 
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
 
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption

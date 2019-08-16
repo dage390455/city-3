@@ -180,13 +180,48 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
         gsyPlayerAcAlarmCameraLiveDetail.setIsLive(View.INVISIBLE);
+        gsyPlayerAcAlarmCameraLiveDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
 
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         //增加封面
         if (ivGsyCover == null) {
             ivGsyCover = new ImageView(this);
             ivGsyCover.setScaleType(ImageView.ScaleType.CENTER_CROP);
             ivGsyCover.setImageResource(R.drawable.camera_detail_mask);
         }
+        gsyPlayerAcAlarmCameraLiveDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
+
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(ivGsyCover)
                 .setIsTouchWiget(true)
@@ -233,7 +268,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
 
-                        if (gsyPlayerAcAlarmCameraLiveDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                        if ((gsyPlayerAcAlarmCameraLiveDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING)
+                                && (gsyPlayerAcAlarmCameraLiveDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PAUSE)) {
                             orientationUtils.setEnable(false);
                         }
                         if (orientationUtils != null) {
