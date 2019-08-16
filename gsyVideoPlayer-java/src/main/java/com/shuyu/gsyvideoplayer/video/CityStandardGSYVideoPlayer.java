@@ -475,7 +475,15 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
 //        mOrientationUtils = new OrientationUtils((Activity) mContext, this);
 
         Repause.registerListener(this);
-
+        //设置超时时间
+        GSYVideoManager.instance().setTimeOut(20 * 1000, true);
+        boolean needTimeOutOther = GSYVideoManager.instance().isNeedTimeOutOther();
+        int timeOut = GSYVideoManager.instance().getTimeOut();
+        try {
+            LogUtils.loge("GSYVideoManager needTimeOutOther = " + needTimeOutOther + ",timeOut = " + timeOut);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         lastVolume = currVolume;
