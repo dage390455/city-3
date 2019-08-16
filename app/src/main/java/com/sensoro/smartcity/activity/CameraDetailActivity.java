@@ -47,6 +47,7 @@ import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,6 +194,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
 
                     @Override
+                    public void onClickSeekbar(String url, Object... objects) {
+                        super.onClickSeekbar(url, objects);
+                        orientationUtils.setEnable(false);
+
+                    }
+
+
+                    @Override
                     public void onPlayError(final String url, Object... objects) {
 
                         gsyPlayerAcCameraDetail.setCityPlayState(3);
@@ -234,7 +243,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
-//                        orientationUtils.setEnable(false);
+                        if (gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -309,6 +320,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (TextUtils.isEmpty(url1)) {
             gsyPlayerAcCameraDetail.setCityPlayState(3);
         } else {
+            GSYVideoManager.onResume(false);
             getCurPlay().startPlayLogic();
         }
 
@@ -559,9 +571,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             @Override
             public void onItemClick(int position) {
                 onChangedVideoUrl();
-                GSYVideoManager.onResume();
+                GSYVideoManager.onPause();
                 setLiveState(false);
                 mPresenter.onCameraItemClick(position);
+                orientationUtils.setEnable(false);
+
             }
 
             @Override
@@ -694,7 +708,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         mPresenter.doDissmissCalendar();
         if (isPlay && !isPause && orientationUtils.isEnable()) {
 //            if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
+            getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
 //            }
         }
     }
@@ -756,6 +770,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 mPresenter.doRequestData();
                 break;
             case R.id.ll_live_ac_camera_detail:
+                orientationUtils.setEnable(false);
 
                 onChangedVideoUrl();
                 clearClickPosition();

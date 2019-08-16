@@ -477,8 +477,8 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         boolean isVertical = false;
         int videoHeight = getCurrentVideoHeight();
         int videoWidth = getCurrentVideoWidth();
-        Debuger.printfLog("GSYVideoBase isVerticalVideo  videoHeight " + videoHeight + " videoWidth " + videoWidth);
-        Debuger.printfLog("GSYVideoBase isVerticalVideo  mRotate " + mRotate);
+//        Debuger.printfLog("GSYVideoBase isVerticalVideo  videoHeight " + videoHeight + " videoWidth " + videoWidth);
+//        Debuger.printfLog("GSYVideoBase isVerticalVideo  mRotate " + mRotate);
         if (videoHeight > 0 && videoWidth > 0) {
             if (mRotate == 90 || mRotate == 270) {
                 isVertical = videoWidth > videoHeight;

@@ -25,6 +25,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 
@@ -148,8 +149,30 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
                     }
 
                     @Override
+                    public void onAutoComplete(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                    }
+
+                    @Override
+                    public void onPlayError(final String url, Object... objects) {
+                        gsyPlayerAcDeployCameraLiveDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                        gsyPlayerAcDeployCameraLiveDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
+                    @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+                        if (gsyPlayerAcDeployCameraLiveDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }

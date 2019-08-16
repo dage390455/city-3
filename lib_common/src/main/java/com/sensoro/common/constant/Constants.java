@@ -337,6 +337,7 @@ public interface Constants {
     int EVENT_DATA_SEARCH_NAMEPLATE = 0x64;
     int EVENT_DATA_PERMISSIONCHANGE = 0x65;
 
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");

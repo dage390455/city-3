@@ -17,6 +17,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
     private final Activity mContext;
@@ -111,6 +112,21 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
                     }
 
                     @Override
+                    public void onPlayError(final String url, Object... objects) {
+
+                        player.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                        player.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
+
+                    @Override
                     public void onAutoComplete(String url, Object... objects) {
                         super.onAutoComplete(url, objects);
                         orientationUtils.setEnable(false);
@@ -122,6 +138,9 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+                        if (player.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -186,7 +205,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
-        orientationUtils.setEnable(true);
+        orientationUtils.setEnable(false);
         player.setIsLive(View.VISIBLE);
         player.setIsShowMaskTopBack(false);
     }

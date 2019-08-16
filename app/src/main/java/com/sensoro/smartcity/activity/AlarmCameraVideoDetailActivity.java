@@ -39,6 +39,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 
@@ -157,9 +158,16 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPlayError(final String url, Object... objects) {
+                        gsyPlayerAcAlarmCameraVideoDetail.setCityPlayState(3);
                         orientationUtils.setEnable(false);
-
                         backFromWindowFull();
+                        gsyPlayerAcAlarmCameraVideoDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
                     }
 
                     @Override
@@ -181,6 +189,10 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+
+                        if (gsyPlayerAcAlarmCameraVideoDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -250,6 +262,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             @Override
             public void OnAlarmCameraVideoItemClick(AlarmCloudVideoBean.MediasBean bean) {
                 mPresenter.doItemClick(bean);
+                orientationUtils.setEnable(false);
+
             }
 
             @Override
