@@ -275,6 +275,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 //    }
 
     public void onCameraItemClick(final int index) {
+//        GSYVideoManager.instance().setTimeOut(1, true);
+
         List<DeviceCameraFacePic> rvListData = getView().getRvListData();
         if (rvListData != null) {
 

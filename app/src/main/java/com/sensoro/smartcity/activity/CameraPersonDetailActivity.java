@@ -148,6 +148,14 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
                     }
 
                     @Override
+                    public void onAutoComplete(String url, Object... objects) {
+                        super.onAutoComplete(url, objects);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+
+
+                    }
+                    @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
                         if (orientationUtils != null) {
