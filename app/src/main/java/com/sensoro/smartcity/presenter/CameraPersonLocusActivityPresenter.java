@@ -198,7 +198,8 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     private void requestData(String faceId) {
-
+        if (!isAttachedView())
+            return;
         getView().setSelectDayBg(day);
         Long endTime = System.currentTimeMillis();
         Long startTime = endTime - 24 * 60 * 60 * 1000L * day;
