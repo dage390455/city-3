@@ -1742,10 +1742,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
     public void onError(int what, int extra) {
         super.onError(what, extra);
 
-
         setCityPlayState(3);
-
-
     }
 
     @Override

@@ -133,12 +133,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
-//    @Override
-//    public boolean setMyCurrentActivityOrientation() {
-////        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-//        return false;
-//    }
-
     private void initRefreshLayout() {
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
         refreshLayout.setEnableLoadMore(true);
@@ -168,6 +162,106 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void initVideoOption() {
+//        GSYVideoManager.changeManager();
+        GSYVideoManager.instance().setTimeOut(10000,true);
+        boolean needTimeOutOther = GSYVideoManager.instance().isNeedTimeOutOther();
+        int timeOut = GSYVideoManager.instance().getTimeOut();
+        try {
+            LogUtils.loge("GSYVideoManager needTimeOutOther = "+needTimeOutOther+",timeOut = "+timeOut);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+//        GSYVideoManager.instance().setListener(new GSYVideoPlayer() {
+//            @Override
+//            protected void showWifiDialog() {
+//
+//            }
+//
+//            @Override
+//            protected void showProgressDialog(float deltaX, String seekTime, int seekTimePosition, String totalTime, int totalTimeDuration) {
+//
+//            }
+//
+//            @Override
+//            protected void dismissProgressDialog() {
+//
+//            }
+//
+//            @Override
+//            protected void showVolumeDialog(float deltaY, int volumePercent) {
+//
+//            }
+//
+//            @Override
+//            protected void dismissVolumeDialog() {
+//
+//            }
+//
+//            @Override
+//            protected void showBrightnessDialog(float percent) {
+//
+//            }
+//
+//            @Override
+//            protected void dismissBrightnessDialog() {
+//
+//            }
+//
+//            @Override
+//            protected void onClickUiToggle() {
+//
+//            }
+//
+//            @Override
+//            protected void hideAllWidget() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToNormal() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToPreparingShow() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToPlayingShow() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToPauseShow() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToError() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToCompleteShow() {
+//
+//            }
+//
+//            @Override
+//            protected void changeUiToPlayingBufferingShow() {
+//
+//            }
+//
+//            @Override
+//            public int getLayoutId() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public void startPlayLogic() {
+//
+//            }
+//        });
         getPlayView().setIsShowBackMaskTv(false);
 
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
@@ -276,7 +370,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
             }
         });
-
 //        getCurPlay().startPlayLogic();
     }
 
@@ -572,6 +665,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 mPresenter.doPersonAvatarHistory(position);
             }
         });
+
         rvDeviceCameraAcCameraDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
