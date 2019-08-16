@@ -206,7 +206,6 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
         msg.obj = fb;
         sendMessage(msg);
         if (needTimeOutOther) {
-
             startTimeOutBuffer();
         }
     }
