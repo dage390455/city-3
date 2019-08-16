@@ -276,13 +276,14 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
     public void onCameraItemClick(final int index) {
 //        GSYVideoManager.instance().setTimeOut(1, true);
+        if(!isAttachedView())
+            return;
 
         List<DeviceCameraFacePic> rvListData = getView().getRvListData();
         if (rvListData != null) {
 
             DeviceCameraFacePic model = rvListData.get(index);
             String captureTime1 = model.getCaptureTime();
-
 
 //            setLastCover(model);
 
@@ -310,6 +311,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(this) {
                 @Override
                 public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
+                    if(!isAttachedView())
+                        return;
                     if (index != getView().getCurrentClickPosition()) {
                         return;
                     }
@@ -345,6 +348,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
 
         }
+
     }
 
     //无动画效果关闭日历弹框
