@@ -10,9 +10,11 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -49,6 +51,20 @@ public class ImageBaseActivity extends AppCompatActivity {
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.color.ip_color_primary_dark);  //设置上方状态栏的颜色
         ActivityTaskManager.getInstance().pushActivity(this);
+
+
+
+        //取消bar
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.hide();
+        }
+//        设置状态栏
+        ImmersionBar  immersionBar = ImmersionBar.with(this);
+        immersionBar.fitsSystemWindows(true, com.sensoro.common.R.color.white)
+                .statusBarColor(com.sensoro.common.R.color.white)
+                .statusBarDarkFont(true)
+                .init();
     }
 
     @TargetApi(19)
