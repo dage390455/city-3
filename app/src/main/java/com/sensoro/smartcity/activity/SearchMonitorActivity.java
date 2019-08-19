@@ -238,7 +238,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList != null) {
-            Collections.sort(dataList);
             mSearchRcContentAdapter.updateData(dataList);
         }
         setIndexListLayoutVisible(true);
@@ -371,7 +370,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setSearchHistoryLayoutVisible(boolean isVisible) {
         mSearchHistoryLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
-        mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
     @Override
