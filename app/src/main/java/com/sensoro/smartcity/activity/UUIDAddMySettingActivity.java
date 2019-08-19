@@ -45,7 +45,7 @@ public class UUIDAddMySettingActivity extends BaseActivity<IUUIDAddMySettingActi
 
     private void initView() {
         includeTextTitleTvSubtitle.setText("添加");
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1dbb99));
         includeTextTitleTvTitle.setText("添加UUID");
     }
 

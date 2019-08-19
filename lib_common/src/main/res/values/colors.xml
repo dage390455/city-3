@@ -31,7 +31,6 @@
     <color name="sensor_detail_bg">#efeff4</color>
     <color name="text_sensoro_edit">#4a4a4a</color>
     <color name="radius_color">#4990e2</color>
-    <color name="c_ffffff">#ffffff</color>
     <color name="c_999999">#999999</color>
     <color name="c_979797">#979797</color>
     <color name="c_dddddd">#dddddd</color>
@@ -117,8 +116,6 @@
     <color name="c_11705C">#11705C</color>
 
     <color name="c_f35a58">#F35A58</color>
-
-    <color name="c_1DBB99">#1DBB99</color>
 
     <color name="black20">#33000000</color>
     <color name="f2252525">#f2252525</color>

@@ -51,7 +51,7 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
 
     private void initView() {
         mFireSecurityWarnPageAdapter = new FireSecurityWarnPageAdapter(mRootFragment.getFragmentManager());
-        mIndicatorView.setScrollBar(new SensoroTextWidthColorBar(getContext(), mIndicatorView, ContextCompat.getColor(getContext(), R.color.c_1DBB99), AppUtils.dp2px(getContext(), 2F)));
+        mIndicatorView.setScrollBar(new SensoroTextWidthColorBar(getContext(), mIndicatorView, ContextCompat.getColor(getContext(), R.color.c_1dbb99), AppUtils.dp2px(getContext(), 2F)));
         mIndicatorView.setSplitMethod(FixedIndicatorView.SPLITMETHOD_EQUALS);
         IndicatorViewPager indicatorViewPager = new IndicatorViewPager(mIndicatorView, mContentViewPager);
         indicatorViewPager.setAdapter(mFireSecurityWarnPageAdapter);

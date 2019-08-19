@@ -101,7 +101,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     private void initView() {
         includeTextTitleImvArrowsLeft.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1dbb99));
         initTipDialog();
         initOperatingDialog();
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.initial_configuration));
