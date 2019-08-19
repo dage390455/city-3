@@ -71,12 +71,13 @@ dependencies {
     api deps.rxjava2
     api deps.rx_android
     api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
     //消息组件
     api deps.event_bus
-
-    api(deps.immersionbar) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
+    //透明状态栏
+    api deps.immersionbar
+    //fragment透明状态栏
+    api 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta05'
     //七牛sdk
     api 'com.qiniu:qiniu-android-sdk:7.3.+'
     //微信
