@@ -31,7 +31,7 @@ public class ViewFinderView extends RelativeLayout implements IViewFinder {
     //    private static final int[] laserAlpha = {0, 64, 128, 192, 255, 192, 128, 64};
 //    private int laserAlphaIndex;
 //    private static final long animationDelay = 80l;
-    private final int laserColor = Color.parseColor("#ff29C093");
+    private final int laserColor = Color.parseColor("#1DBB99");
 
     private final int maskColor = Color.parseColor("#7D000000");
     private final int borderColor = Color.parseColor("#ffffffff");

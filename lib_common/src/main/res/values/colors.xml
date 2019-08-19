@@ -11,12 +11,11 @@
     <color name="item_text_color">#0d0d0d</color>
     <color name="item_sensor_line">#D8D8D8</color>
     <color name="search_color">#f2f2f2</color>
-    <color name="pager_bg">#50e3c2</color>
     <color name="search_text_color">#1d1d26</color>
     <color name="upload_btn_bg">#48b0f7</color>
     <color name="sensoro_peper">#6D5ACE</color>
     <color name="sensoro_white">#25FFFFFF</color>
-    <color name="sensoro_normal">#10CFBD</color>
+    <color name="sensoro_normal">#1DBB99</color>
     <color name="sensoro_normal_alpha">#5010CFBD</color>
     <color name="sensoro_alarm">#f55753</color>
     <color name="sensoro_alarm_alpha">#50f55753</color>
@@ -86,7 +85,6 @@
     <color name="ip_color_primary_trans">#002f3335</color>
     <color name="ip_color_press">#ffe0e0e0</color>
     <color name="ip_camera_pre">#353535</color>
-    <color name="ip_color_accent">#29C093</color>
     <color name="ip_text_secondary_inverted">#66ffffff</color>
     <color name="ip_text_primary_inverted">#ff5d5d5d</color>
     <color name="c_bf000000">#BF000000</color>

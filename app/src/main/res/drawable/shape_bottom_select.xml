@@ -6,5 +6,5 @@
         android:color="@color/ip_color_primary_trans"/>
     <stroke
         android:width="3dp"
-        android:color="@color/ip_color_accent" />
+        android:color="@color/c_1dbb99" />
 </shape>
