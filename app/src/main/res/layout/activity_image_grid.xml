@@ -1,18 +1,12 @@
-<LinearLayout android:id="@+id/content"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#ffffff"
-              android:orientation="vertical">
-
-    <include
-        android:id="@+id/top_bar"
-        layout="@layout/include_top_bar"/>
-
-    <RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#f4f4f4">
+
+        <include
+            android:id="@+id/top_bar"
+            layout="@layout/include_top_bar"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
@@ -22,7 +16,8 @@
             android:paddingBottom="50dp"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
-            android:paddingTop="2dp"/>
+            android:paddingTop="2dp"
+            android:layout_below="@+id/top_bar"/>
 
         <RelativeLayout
             android:id="@+id/footer_bar"
@@ -78,5 +73,4 @@
                 android:textSize="16dp"/>
 
         </RelativeLayout>
-    </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

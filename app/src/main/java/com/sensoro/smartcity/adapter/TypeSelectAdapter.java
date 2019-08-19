@@ -39,6 +39,15 @@ import butterknife.ButterKnife;
 
 public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.TypeSelectHolder> {
     private final Context mContext;
+
+    public int getSelectPosition() {
+        return selectPosition;
+    }
+
+    public void setSelectPosition(int selectPosition) {
+        this.selectPosition = selectPosition;
+    }
+
     private int selectPosition = 0;
     private int oldSelectPosition = 0;
     private RecycleViewItemClickListener mListener;
@@ -179,7 +188,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
         mDeviceTypeList.clear();
         mDeviceTypeList.addAll(list);
-        selectPosition=0;
+//        selectPosition=0;
         notifyDataSetChanged();
     }
 

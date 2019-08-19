@@ -198,6 +198,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public  void resetTypeAndSortCondition(){
 
         //重置类型
+        mSelectDeviceTypePop.resetDeviceTypeList();
         Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
         fgMainHomeTvSelectType.setText(R.string.all_types);
         fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));

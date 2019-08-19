@@ -103,7 +103,11 @@ public class SelectDeviceTypePopUtils {
         });
 
     }
-
+    public void resetDeviceTypeList(){
+            if(mTypeSelectAdapter!=null){
+                mTypeSelectAdapter.setSelectPosition(0);
+            }
+    }
     public void updateSelectDeviceTypeList(List<String> list) {
         mTypeSelectAdapter.updateDeviceTypList(list);
     }

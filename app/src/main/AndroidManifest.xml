@@ -326,7 +326,7 @@
         <activity
             android:name=".widget.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ImagePickerTheme" />
+            android:theme="@style/ImagePickerThemeFullScreen" />
         <activity
             android:name=".widget.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"

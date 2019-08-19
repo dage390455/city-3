@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -63,6 +64,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     private View mllDir; //文件夹切换按钮
     private TextView mtvDir; //显示当前文件夹
     private TextView mBtnPre;      //预览按钮
+    protected View topBar;
     private ImageFolderAdapter mImageFolderAdapter;    //图片文件夹的适配器
     private FolderPopUpWindow mFolderPopupWindow;  //ImageSet的PopupWindow
     private List<ImageFolder> mImageFolders;   //所有的图片文件夹
@@ -155,6 +157,15 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
                 new ImageDataSource(this, null, this);
             }
 
+        }
+
+
+        //因为状态栏透明后，布局整体会上移，所以给头部加上状态栏的margin值，保证头部不会被覆盖
+        topBar = findViewById(R.id.top_bar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) topBar.getLayoutParams();
+            params.topMargin = Utils.getStatusHeight(this);
+            topBar.setLayoutParams(params);
         }
     }
 
