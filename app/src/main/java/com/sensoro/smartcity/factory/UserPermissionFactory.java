@@ -72,7 +72,12 @@ public class UserPermissionFactory {
         eventLoginData.hasMonitorTaskConfirm = getHasMonitorTaskConfirm(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
-        eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
+        if("admin".equalsIgnoreCase(eventLoginData.roles)){
+            eventLoginData.hasControllerAid = false;
+        }else{
+            eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
+        }
+
         try {
             LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
         } catch (Throwable throwable) {
