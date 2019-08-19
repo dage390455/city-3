@@ -149,8 +149,14 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                 handler.removeCallbacks(overTime);
                 UserInfo userInfo = loginRsp.getData();
+                try {
+                    LogUtils.loge("userInfo = " + userInfo.getControllerAid());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                final boolean hasControllerAid = eventLoginData.hasControllerAid;
                 EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, eventLoginData.phoneId);
-
+                loginData.hasControllerAid = hasControllerAid;
                 //
                 long diff = System.currentTimeMillis() - requestTime;
                 try {
@@ -158,6 +164,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
+
                 if (diff >= 500) {
                     Intent mainIntent = new Intent();
                     mainIntent.setClass(mContext, MainActivity.class);

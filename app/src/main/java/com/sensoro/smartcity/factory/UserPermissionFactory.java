@@ -10,7 +10,7 @@ import com.sensoro.common.utils.LogUtils;
 import java.util.List;
 
 public class UserPermissionFactory {
-    public static EventLoginData createLoginData(UserInfo userInfo, String phoneId) {
+    public static EventLoginData /**/createLoginData(UserInfo userInfo, String phoneId) {
         final EventLoginData eventLoginData = new EventLoginData();
         GrantsInfo grants = userInfo.getGrants();
         //
