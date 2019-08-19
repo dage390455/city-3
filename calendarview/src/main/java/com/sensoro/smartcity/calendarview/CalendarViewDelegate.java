@@ -393,7 +393,7 @@ final class CalendarViewDelegate {
         mCurDayLunarTextColor = array.getColor(R.styleable.CalendarView_current_day_lunar_text_color, Color.RED);
 
         mSelectedThemeColor = array.getColor(R.styleable.CalendarView_selected_theme_color, 0x50CFCFCF);
-        mSelectedLastThemeColor = array.getColor(R.styleable.CalendarView_selected_last_theme_color, 0x29C093);
+        mSelectedLastThemeColor = array.getColor(R.styleable.CalendarView_selected_last_theme_color, 0x1DBB99);
 
         mSelectedTextColor = array.getColor(R.styleable.CalendarView_selected_text_color, 0xFF111111);
 
