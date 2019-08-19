@@ -1220,4 +1220,6 @@
 
     <string name="update_dialog_tips">If you cant upgrade click here to download the update</string>
 
+    <string name="result">Result</string>
+
 </resources>

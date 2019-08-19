@@ -1199,4 +1199,7 @@
 
     <string name="update_dialog_tips">若无法升级点击此处下载更新</string>
 
+
+    <string name="result">结果</string>
+
 </resources>
