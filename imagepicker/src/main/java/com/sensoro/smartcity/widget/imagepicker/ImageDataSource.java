@@ -88,20 +88,6 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
             @Override
             public void run() {
                 try{
-<<<<<<< HEAD:imagepicker/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
-                ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
-                imageFolders.clear();
-                if (data != null) {
-                    ArrayList<ImageItem> allImages = new ArrayList<>();   //所有图片的集合,不分文件夹
-                    while (data.moveToNext()) {
-                        //查询数据
-                        String imageName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
-                        String imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-
-                        File file = new File(imagePath);
-                        if (!file.exists() || file.length() <= 0) {
-                            continue;
-=======
                     ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
                     imageFolders.clear();
                     if (data != null) {
@@ -147,7 +133,6 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                             } else {
                                 imageFolders.get(imageFolders.indexOf(imageFolder)).images.add(imageItem);
                             }
->>>>>>> v338:app/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
                         }
                         //防止没有图片报异常
                         if (data.getCount() > 0 && allImages.size() > 0) {
@@ -178,22 +163,6 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                     }
                 }
 
-<<<<<<< HEAD:imagepicker/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
-                mHandler.sendEmptyMessage(0);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }finally {
-                    try {
-                        if(data!=null){
-                            data.close();
-                        }
-                    }catch (Exception e){
-
-                    }
-                }
-
-=======
->>>>>>> v338:app/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
 
             }
         });
