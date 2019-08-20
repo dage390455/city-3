@@ -114,7 +114,7 @@ public class CalendarPopUtils implements
     }
     private void init() {
         mPopupWindow = new PopupWindow(mActivity);
-        view = LayoutInflater.from(mActivity).inflate(R2.layout.activity_calendar_test, null);
+        view = LayoutInflater.from(mActivity).inflate(R.layout.activity_calendar_test, null);
         ButterKnife.bind(this, view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
