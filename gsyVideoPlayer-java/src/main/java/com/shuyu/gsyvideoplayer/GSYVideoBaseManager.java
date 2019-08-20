@@ -107,7 +107,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
     /**
      * 播放超时
      */
-    protected int timeOut = 8 * 1000;
+    protected int timeOut = 20 * 1000;
 
     /**
      * 是否需要静音
@@ -117,7 +117,7 @@ public abstract class GSYVideoBaseManager implements IMediaPlayer.OnPreparedList
     /**
      * 是否需要外部超时判断
      */
-    protected boolean needTimeOutOther;
+    protected boolean needTimeOutOther = true;
 
     /**
      * 删除默认所有缓存文件

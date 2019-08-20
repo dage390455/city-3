@@ -588,7 +588,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 acBasestationTvState.setTextColor(getResources().getColor(R.color.c_a6a6a6));
             } else {
                 acBasestationTvState.setText(mActivity.getResources().getString(R.string.normal));
-                acBasestationTvState.setTextColor(getResources().getColor(R.color.c_1DBB99));
+                acBasestationTvState.setTextColor(getResources().getColor(R.color.c_1dbb99));
 
             }
         }

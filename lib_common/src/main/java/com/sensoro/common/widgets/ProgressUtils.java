@@ -94,7 +94,7 @@ public class ProgressUtils {
             Window window = progressDialog.getWindow();
             if (window != null) {
 //                window.setType(WindowManager.LayoutParams.TYPE_TOAST);
-                window.setDimAmount(0f);
+//                window.setDimAmount(0f);
             }
             return this;
         }

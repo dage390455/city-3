@@ -51,15 +51,14 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         mPref = mContext.getSharedPreferences(Constants.PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         String history = mPref.getString(Constants.PREFERENCE_KEY_DEVICE, null);
+        mHistoryKeywords.clear();
         if (!TextUtils.isEmpty(history)) {
-            mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
+        //默认显示最近搜索
+        getView().setSearchHistoryLayoutVisible(true);
         if (mHistoryKeywords.size() > 0) {
-            getView().setSearchHistoryLayoutVisible(true);
             getView().updateSearchHistoryData(mHistoryKeywords);
-        } else {
-            getView().setSearchHistoryLayoutVisible(false);
         }
 
     }

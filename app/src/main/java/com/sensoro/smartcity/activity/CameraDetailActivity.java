@@ -1,9 +1,11 @@
 package com.sensoro.smartcity.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,11 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
@@ -28,6 +33,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -38,10 +44,11 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +103,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private ImageView imageView;
     private Animation returnTopAnimation;
 
+    protected Handler mainThreadHandler;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -103,6 +111,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+        mainThreadHandler = new Handler();
+
     }
 
     private void initView() {
@@ -156,7 +166,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void initVideoOption() {
-        getPlayView().setIsShowBackMaskTv(true);
+//        GSYVideoManager.changeManager();
+        getPlayView().setIsShowBackMaskTv(false);
 
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcCameraDetail.setHideActionBar(true);
@@ -166,21 +177,52 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
             imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setBackgroundResource(R.drawable.camera_detail_mask);
         }
+
+        gsyPlayerAcCameraDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
+
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(imageView)
+
+
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
                 .setLockLand(false)
                 .setAutoFullWithSize(false)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
-                .setHideKey(false)
 //                .setUrl(url)
                 .setCacheWithPlay(false)
 //                .setVideoTitle(cameraName)
+
                 .setVideoAllCallBack(new GSYSampleCallBack() {
+
+
+                    @Override
+                    public void onClickSeekbar(String url, Object... objects) {
+                        super.onClickSeekbar(url, objects);
+                        orientationUtils.setEnable(false);
+
+                    }
+
+
                     @Override
                     public void onPlayError(final String url, Object... objects) {
 
@@ -190,6 +232,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                Debuger.printfError("onPlayError============time out for error listener");
+
+
                                 gsyVideoOption.setUrl(url).build(getCurPlay());
                                 getCurPlay().startPlayLogic();
                             }
@@ -200,20 +245,36 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     public void onAutoComplete(final String url, Object... objects) {
                         orientationUtils.setEnable(false);
                         backFromWindowFull();
-//
                     }
 
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
-                        //开始播放了才能旋转和全屏
-                        orientationUtils.setEnable(true);
-                        isPlay = true;
+
+
+                        mainThreadHandler.postDelayed(() -> {
+                            //开始播放了才能旋转和全屏
+                            orientationUtils.setEnable(true);
+                            isPlay = true;
+                            isPause = false;
+                        }, 500);
+
+                    }
+
+                    @Override
+                    public void onEnterFullscreen(String url, Object... objects) {
+                        super.onEnterFullscreen(url, objects);
+//                        orientationUtils.setEnable(true);
                     }
 
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+
+                        if ((gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING)
+                                && (gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PAUSE)) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -265,7 +326,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         setNoContentVisible(data == null || data.size() < 1);
     }
 
-    @SuppressLint("RestrictedApi")
     public void setNoContentVisible(boolean isVisible) {
 
 
@@ -285,9 +345,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
 
         gsyVideoOption.setUrl(url1).setVideoTitle(title).build(getCurPlay());
-        getCurPlay().startPlayLogic();
-        orientationUtils.setEnable(true);
         gsyPlayerAcCameraDetail.setIsLive(VISIBLE);
+        if (TextUtils.isEmpty(url1)) {
+            gsyPlayerAcCameraDetail.setCityPlayState(3);
+        } else {
+            GSYVideoManager.onResume(false);
+            getCurPlay().startPlayLogic();
+        }
+
+        orientationUtils.setEnable(false);
 //        }
     }
 
@@ -365,6 +431,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         orientationUtils.setEnable(false);
 
         gsyPlayerAcCameraDetail.maskTitleTv.setText(mCameraName);
+//        gsyPlayerAcCameraDetail.getTitleTextView().setText(mCameraName);
         gsyPlayerAcCameraDetail.setCityPlayState(5);
         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -407,20 +474,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void doPlayerResume() {
-        getCurPlay().onVideoResume();
-    }
-
-    @Override
     public void doPlayLive(final ArrayList<String> urlList, String cameraName, final boolean isLive) {
 
-        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
-            orientationUtils.setEnable(false);
-        }
+        orientationUtils.setEnable(false);
 //        gsyVideoOption.setUrl(urlList.get(0)).setVideoTitle(cameraName).build(getCurPlay());
         gsyPlayerAcCameraDetail.setCityURl(urlList, cameraName);
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();
+        getCurPlay().onVideoResume();
 
 
     }
@@ -441,18 +502,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void backFromWindowFull() {
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
+            orientationUtils.setEnable(false);
         }
-        orientationUtils.setEnable(false);
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
-    }
-
-    @Override
-    public void onVideoPause() {
-
-        onPause();
-
     }
 
     @Override
@@ -476,25 +530,64 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
+    @Override
+    public int getCurrentClickPosition() {
+
+
+        return deviceCameraListAdapter.getmClickPosition();
+    }
+
+
     private void loadCover(ImageView imageView, String url) {
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Glide.with(mActivity).asBitmap().apply(new RequestOptions().frame(3000000)
+                .centerCrop()
+                .error(R.drawable.camera_detail_mask).dontAnimate()).load(url).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                imageView.setImageBitmap(resource);
+
+//                gsyPlayerAcCameraDetail.setMobileFace(bitmapDrawable);
+
+            }
+        });
 //        imageView.setImageResource(R.drawable.camera_detail_mask);
-        Glide.with(this.getApplicationContext())
-                .setDefaultRequestOptions(
-                        new RequestOptions()
-                                .frame(3000000)
-                                .centerCrop()
-                                .error(R.drawable.camera_detail_mask)
-                )
-                .load(url)
-                .into(imageView);
+//        Glide.with(this.getApplicationContext())
+//                .setDefaultRequestOptions(
+//                        new RequestOptions()
+//                                .frame(3000000)
+//                                .centerCrop()
+//                                .error(R.drawable.camera_detail_mask)
+//                )
+//                .load(url)
+//                . (new SimpleTarget<Bitmap>() {
+//            @Override
+//            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+//
+//                imageView.setImageBitmap(resource);
+//            }
+//        })
+
+        ;
     }
 
     @Override
-    public void setVerOrientationUtilEnable(boolean enable) {
-        if (orientationUtils != null) {
-            orientationUtils.setEnable(enable);
+    public void setVerOrientationUtilEnable(boolean b) {
+
+        if (!b) {
+            isPause = true;
+        } else {
+            isPause = false;
+
         }
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(b);
+        }
+    }
+
+    private void onChangedVideoUrl() {
+        isPause = true;
+        GSYVideoManager.onPause();
     }
 
     private void initRvCameraList() {
@@ -506,8 +599,12 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         deviceCameraListAdapter.setOnCameraDetailListClickListener(new CameraDetailListAdapter.CameraDetailListClickListener() {
             @Override
             public void onItemClick(int position) {
+                orientationUtils.setEnable(false);
+                onChangedVideoUrl();
+                GSYVideoManager.onPause();
                 setLiveState(false);
                 mPresenter.onCameraItemClick(position);
+
             }
 
             @Override
@@ -515,6 +612,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 mPresenter.doPersonAvatarHistory(position);
             }
         });
+
         rvDeviceCameraAcCameraDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -603,10 +701,44 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
+
+        try {
+            LogUtils.logd("==getCurrentState==" + gsyPlayerAcCameraDetail.getCurrentState());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+
+//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//
+//            onBackPressed();
+//
+//        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            orientationUtils.resolveByClick();
+//            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+//            getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
+//
+//        }
+
+        super.onConfigurationChanged(newConfig);
+
+//        if (gsyPlayerAcCameraDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+//
+//            gsyPlayerAcCameraDetail.setRotateViewAuto(false);
+//            gsyPlayerAcCameraDetail.setRotateWithSystem(false);
+//
+//        }
+//        mPresenter.doDissmissCalendar();
+//        if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+//            getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
+//        }
+
+        mPresenter.doDissmissCalendar();
         if (isPlay && !isPause && orientationUtils.isEnable()) {
+//            if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
+//            }
         }
     }
 
@@ -667,6 +799,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 mPresenter.doRequestData();
                 break;
             case R.id.ll_live_ac_camera_detail:
+                orientationUtils.setEnable(false);
+
+                onChangedVideoUrl();
                 clearClickPosition();
                 setLiveState(true);
                 mPresenter.doLive();
@@ -707,6 +842,5 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void setIntentResult(int resultCode, Intent data) {
 
     }
-
 
 }

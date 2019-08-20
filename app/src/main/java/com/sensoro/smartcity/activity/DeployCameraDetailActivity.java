@@ -427,7 +427,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
             switch (status) {
                 case "1":
                     //在线
-                    tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_1DBB99));
+                    tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
                     Drawable drawableOnline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_f1dbb99);
                     drawableOnline.setBounds(0, 0, drawableOnline.getMinimumWidth(), drawableOnline.getMinimumHeight());
                     tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_online));

@@ -32,6 +32,11 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
     private final Context mContext;
     private final List<DeviceCameraFacePic> mList = new ArrayList<>();
     private CameraDetailListClickListener mListener;
+
+    public int getmClickPosition() {
+        return mClickPosition;
+    }
+
     private int mClickPosition = -1;
 
     public CameraDetailListAdapter(Context context) {

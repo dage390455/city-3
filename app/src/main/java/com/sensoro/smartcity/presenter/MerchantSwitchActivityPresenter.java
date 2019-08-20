@@ -265,7 +265,18 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 String token = loginRsp.getData().getToken();
                 RetrofitServiceHelper.getInstance().saveSessionId(sessionID, token);
                 UserInfo userInfo = loginRsp.getData();
+                try {
+                    LogUtils.loge("切换登录---->>> " + eventLoginData.toString());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
+                try {
+                    LogUtils.loge("切换登录---->>> getControllerAid = " + userInfo.getControllerAid());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                eventLoginData.hasControllerAid = false;
                 try {
                     LogUtils.loge("切换登录---->>> " + eventLoginData.toString());
                 } catch (Throwable throwable) {

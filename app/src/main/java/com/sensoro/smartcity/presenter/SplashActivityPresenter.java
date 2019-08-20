@@ -21,6 +21,7 @@ import com.sensoro.common.server.RetryWithDelay;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.smartcity.R;
@@ -31,7 +32,6 @@ import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
-import com.sensoro.common.utils.LogUtils;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Rationale;
@@ -149,8 +149,14 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                 handler.removeCallbacks(overTime);
                 UserInfo userInfo = loginRsp.getData();
+                try {
+                    LogUtils.loge("userInfo = " + userInfo.getControllerAid());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                final boolean hasControllerAid = eventLoginData.hasControllerAid;
                 EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, eventLoginData.phoneId);
-
+                loginData.hasControllerAid = hasControllerAid;
                 //
                 long diff = System.currentTimeMillis() - requestTime;
                 try {
@@ -158,6 +164,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
+
                 if (diff >= 500) {
                     Intent mainIntent = new Intent();
                     mainIntent.setClass(mContext, MainActivity.class);
@@ -289,6 +296,22 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                     public void onAction(List<String> data) {
                         // 用户同意授权
                         if (isAttachedView()) {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                if (Settings.System.canWrite(mContext)) {
+//                                    initPushSDK();
+//                                    checkLoginState();
+//                                    try {
+//                                        LogUtils.loge("SplashActivityPresenter 进入界面 ");
+//                                    } catch (Throwable throwable) {
+//                                        throwable.printStackTrace();
+//                                    }
+//                                } else {
+//                                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
+//                                            Uri.parse("package:" + mContext.getPackageName()));
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    mContext.startActivity(intent);
+//                                }
+//                            }else {
                             initPushSDK();
                             checkLoginState();
                             try {
@@ -296,6 +319,9 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
                             }
+//                            }
+
+
                         }
                     }
                 })

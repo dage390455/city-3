@@ -477,7 +477,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                         break;
                 }
             }
-            stringBuilder.append(" ").append(mContext.getString(R.string.msg_sbc_results)).append(":").append(" ");
+            stringBuilder.append(" ").append(mContext.getString(R.string.result)).append(":").append(" ");
             Integer taskStatus = recordInfo.getTaskStatus();
             if (taskStatus == null) {
                 stringBuilder.append(mContext.getString(R.string.unknown));

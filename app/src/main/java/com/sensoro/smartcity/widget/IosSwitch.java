@@ -23,7 +23,7 @@ public class IosSwitch extends View implements View.OnClickListener {
     private final int BORDER_WIDTH = 2;//边框宽度
 
     private int mBasePlaneColor = Color.parseColor("#A6A6A6");//底盘颜色,布局描边颜色
-    private int mOpenSlotColor = Color.parseColor("#29C093");//开启时手柄滑动槽的颜色
+    private int mOpenSlotColor = Color.parseColor("#1DBB99");//开启时手柄滑动槽的颜色
     private int mOffSlotColor = Color.parseColor("#EEEEEE");//关闭时手柄滑动槽的颜色
 
     private int mSlotColor;

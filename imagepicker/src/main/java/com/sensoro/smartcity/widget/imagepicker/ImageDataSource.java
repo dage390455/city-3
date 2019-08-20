@@ -88,6 +88,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
             @Override
             public void run() {
                 try{
+<<<<<<< HEAD:imagepicker/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
                 ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
                 imageFolders.clear();
                 if (data != null) {
@@ -100,56 +101,84 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                         File file = new File(imagePath);
                         if (!file.exists() || file.length() <= 0) {
                             continue;
+=======
+                    ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
+                    imageFolders.clear();
+                    if (data != null) {
+                        ArrayList<ImageItem> allImages = new ArrayList<>();   //所有图片的集合,不分文件夹
+                        while (data.moveToNext()) {
+                            //查询数据
+                            String imageName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
+                            String imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+
+                            File file = new File(imagePath);
+                            if (!file.exists() || file.length() <= 0) {
+                                continue;
+                            }
+
+                            long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                            int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
+                            int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
+                            String imageMimeType = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
+                            long imageAddTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
+                            //封装实体
+                            ImageItem imageItem = new ImageItem();
+                            imageItem.name = imageName;
+                            imageItem.path = imagePath;
+                            imageItem.size = imageSize;
+                            imageItem.width = imageWidth;
+                            imageItem.height = imageHeight;
+                            imageItem.mimeType = imageMimeType;
+                            imageItem.addTime = imageAddTime;
+                            allImages.add(imageItem);
+                            //根据父路径分类存放图片
+                            File imageFile = new File(imagePath);
+                            File imageParentFile = imageFile.getParentFile();
+                            ImageFolder imageFolder = new ImageFolder();
+                            imageFolder.name = imageParentFile.getName();
+                            imageFolder.path = imageParentFile.getAbsolutePath();
+
+                            if (!imageFolders.contains(imageFolder)) {
+                                ArrayList<ImageItem> images = new ArrayList<>();
+                                images.add(imageItem);
+                                imageFolder.cover = imageItem;
+                                imageFolder.images = images;
+                                imageFolders.add(imageFolder);
+                            } else {
+                                imageFolders.get(imageFolders.indexOf(imageFolder)).images.add(imageItem);
+                            }
+>>>>>>> v338:app/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
                         }
-
-                        long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
-                        int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
-                        int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
-                        String imageMimeType = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
-                        long imageAddTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
-                        //封装实体
-                        ImageItem imageItem = new ImageItem();
-                        imageItem.name = imageName;
-                        imageItem.path = imagePath;
-                        imageItem.size = imageSize;
-                        imageItem.width = imageWidth;
-                        imageItem.height = imageHeight;
-                        imageItem.mimeType = imageMimeType;
-                        imageItem.addTime = imageAddTime;
-                        allImages.add(imageItem);
-                        //根据父路径分类存放图片
-                        File imageFile = new File(imagePath);
-                        File imageParentFile = imageFile.getParentFile();
-                        ImageFolder imageFolder = new ImageFolder();
-                        imageFolder.name = imageParentFile.getName();
-                        imageFolder.path = imageParentFile.getAbsolutePath();
-
-                        if (!imageFolders.contains(imageFolder)) {
-                            ArrayList<ImageItem> images = new ArrayList<>();
-                            images.add(imageItem);
-                            imageFolder.cover = imageItem;
-                            imageFolder.images = images;
-                            imageFolders.add(imageFolder);
+                        //防止没有图片报异常
+                        if (data.getCount() > 0 && allImages.size() > 0) {
+                            //构造所有图片的集合
+                            ImageFolder allImagesFolder = new ImageFolder();
+                            allImagesFolder.name = activity.getResources().getString(R.string.ip_all_images);
+                            allImagesFolder.path = "/";
+                            allImagesFolder.cover = allImages.get(0);
+                            allImagesFolder.images = allImages;
+                            imageFolders.add(0, allImagesFolder);  //确保第一条是所有图片
                         } else {
-                            imageFolders.get(imageFolders.indexOf(imageFolder)).images.add(imageItem);
+                            //TODO 暂时修改 在cursor为空时将清空放入内部，防止回退时出现数据为空问题
+                            //TODO 防止下次进入没有数据
+                            imageFolders.addAll(currentFolder);
                         }
                     }
-                    //防止没有图片报异常
-                    if (data.getCount() > 0 && allImages.size() > 0) {
-                        //构造所有图片的集合
-                        ImageFolder allImagesFolder = new ImageFolder();
-                        allImagesFolder.name = activity.getResources().getString(R.string.ip_all_images);
-                        allImagesFolder.path = "/";
-                        allImagesFolder.cover = allImages.get(0);
-                        allImagesFolder.images = allImages;
-                        imageFolders.add(0, allImagesFolder);  //确保第一条是所有图片
-                    } else {
-                        //TODO 暂时修改 在cursor为空时将清空放入内部，防止回退时出现数据为空问题
-                        //TODO 防止下次进入没有数据
-                        imageFolders.addAll(currentFolder);
+
+                    mHandler.sendEmptyMessage(0);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }finally {
+                    try {
+                        if(data!=null){
+                            data.close();
+                        }
+                    }catch (Exception e){
+
                     }
                 }
 
+<<<<<<< HEAD:imagepicker/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
                 mHandler.sendEmptyMessage(0);
                 }catch(Exception e){
                     e.printStackTrace();
@@ -163,6 +192,8 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                     }
                 }
 
+=======
+>>>>>>> v338:app/src/main/java/com/sensoro/smartcity/widget/imagepicker/ImageDataSource.java
 
             }
         });

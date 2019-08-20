@@ -166,6 +166,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         }
 
         getView().showProgressDialog();
+        getView().setLiveState(true);
+        doLive();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
         mCalendarPopUtils.setMonthStatus(1)
@@ -175,13 +177,16 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
 
-
     private void requestData(String cid, final int direction) {
+
         if (direction == Constants.DIRECTION_DOWN) {
             minId = null;
-            getView().setLiveState(true);
-            doLive();
-            getView().clearClickPosition();
+            if (isAttachedView() && TextUtils.isEmpty(itemUrl)) {
+                getView().setLiveState(true);
+                doLive();
+                getView().clearClickPosition();
+            }
+
         }
         ArrayList<String> strings = new ArrayList<>();
         strings.add(cid);
@@ -218,11 +223,22 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                                 getView().updateCameraList(mLists);
                             }
                         }
-                    } else if (direction == Constants.DIRECTION_UP) {
-                        if (isAttachedView()) {
-                            getView().toastShort(mActivity.getString(R.string.no_more_data));
+                    } else {
+
+                        if (direction == Constants.DIRECTION_UP) {
+                            if (isAttachedView()) {
+                                getView().onPullRefreshComplete();
+                                getView().toastShort(mActivity.getString(R.string.no_more_data));
+                            }
+                        } else {
+                            mLists.clear();
+                            if (isAttachedView()) {
+                                getView().onPullRefreshComplete();
+                                getView().updateCameraList(mLists);
+                            }
                         }
                     }
+
 
                 }
                 if (isAttachedView()) {
@@ -259,66 +275,82 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 //    }
 
     public void onCameraItemClick(final int index) {
-        List<DeviceCameraFacePic> rvListData = getView().getRvListData();
-        if (rvListData != null) {
+//        GSYVideoManager.instance().setTimeOut(1, true);
+        if (isAttachedView()) {
+            List<DeviceCameraFacePic> rvListData = getView().getRvListData();
+            if (rvListData != null) {
 
-            DeviceCameraFacePic model = rvListData.get(index);
-            String captureTime1 = model.getCaptureTime();
+                DeviceCameraFacePic model = rvListData.get(index);
+                String captureTime1 = model.getCaptureTime();
 
 
 //            setLastCover(model);
 
-            getView().loadCoverImage(model.getSceneUrl());
-            long time;
-            try {
-                time = Long.parseLong(captureTime1);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                getView().toastShort(mActivity.getString(R.string.time_parse_error));
-                return;
-            }
+                getView().loadCoverImage(model.getSceneUrl());
+                long time;
+                try {
+                    time = Long.parseLong(captureTime1);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    getView().toastShort(mActivity.getString(R.string.time_parse_error));
+                    return;
+                }
 
-            //7天以外没有视频，所以显示没有视频，
-            if (System.currentTimeMillis() - 24 * 3600 * 1000 * 7L > time) {
-                getView().setGsyVideoNoVideo();
-                return;
-            }
-            itemTitle = DateUtil.getStrTime_MM_dd_hms(time);
-            time = time / 1000;
+                //7天以外没有视频，所以显示没有视频，
+                if (System.currentTimeMillis() - 24 * 3600 * 1000 * 7L > time) {
+                    getView().setGsyVideoNoVideo();
+                    return;
+                }
+                itemTitle = DateUtil.getStrTime_MM_dd_hms(time);
+                time = time / 1000;
 
-            String beginTime = String.valueOf(time - 15);
-            String endTime = String.valueOf(time + 15);
-            getView().showProgressDialog();
-            RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(this) {
-                @Override
-                public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
-                    List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
-                    if (data != null && data.size() > 0) {
-                        DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
-                        itemUrl = deviceCameraHistoryBean.getUrl();
+                String beginTime = String.valueOf(time - 15);
+                String endTime = String.valueOf(time + 15);
+                getView().showProgressDialog();
+                RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(this) {
+                    @Override
+                    public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
+                        if (index != getView().getCurrentClickPosition()) {
+                            return;
+                        }
+                        List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
+                        if (data != null && data.size() > 0) {
+                            DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
+                            itemUrl = deviceCameraHistoryBean.getUrl();
 
-                        if (isAttachedView()) {
-                            getView().startPlayLogic(itemUrl, itemTitle);
+                            if (isAttachedView()) {
+                                getView().startPlayLogic(itemUrl, itemTitle);
+                            }
+
+                        } else {
+                            itemUrl = "";
+                            if (isAttachedView()) {
+                                getView().startPlayLogic(itemUrl, itemTitle);
+                            }
                         }
 
+                        if (isAttachedView()) {
+                            getView().dismissProgressDialog();
+                        }
                     }
 
-                    if (isAttachedView()) {
-                        getView().dismissProgressDialog();
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (isAttachedView()) {
+                            getView().playError(index);
+                            getView().dismissProgressDialog();
+                        }
                     }
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-                    if (isAttachedView()) {
-                        getView().playError(index);
-                        getView().dismissProgressDialog();
-                    }
-                }
-            });
+                });
 
 
+            }
         }
+    }
+
+    //无动画效果关闭日历弹框
+    public void doDissmissCalendar() {
+        mCalendarPopUtils.dismissNoAnimation();
     }
 
     public void doCalendar(LinearLayout root) {
@@ -343,18 +375,20 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     public void doLive() {
-
-        if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-            getView().offlineType(mCameraName);
-        } else {
+        if (isAttachedView()) {
 
 
-            getView().doPlayLive(urlList, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
+            if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
+                getView().offlineType(mCameraName);
+            } else {
+                getView().doPlayLive(urlList, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
 
+                getView().loadCoverImage(lastCover);
 
 //            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
-            itemUrl = null;
-            itemTitle = null;
+                itemUrl = null;
+                itemTitle = null;
+            }
         }
     }
 
@@ -399,7 +433,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             doLive();
         } else {
             if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                GSYVideoManager.onResume(true);
+                GSYVideoManager.onResume(false);
             } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_AUTO_COMPLETE) {
 
                 getView().startPlayLogic(itemUrl, itemTitle);
@@ -428,7 +462,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 //                    getLastCoverImage(lastCover);
                     deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-                        getView().offlineType(mCameraName);
+                        if (!TextUtils.isEmpty(itemTitle)) {
+                            getView().offlineType(itemTitle);
+
+                        } else {
+                            getView().offlineType(mCameraName);
+
+                        }
                     } else {
                         doLive();
                     }

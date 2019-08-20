@@ -10,7 +10,7 @@ import com.sensoro.common.utils.LogUtils;
 import java.util.List;
 
 public class UserPermissionFactory {
-    public static EventLoginData createLoginData(UserInfo userInfo, String phoneId) {
+    public static EventLoginData /**/createLoginData(UserInfo userInfo, String phoneId) {
         final EventLoginData eventLoginData = new EventLoginData();
         GrantsInfo grants = userInfo.getGrants();
         //
@@ -72,6 +72,11 @@ public class UserPermissionFactory {
         eventLoginData.hasMonitorTaskConfirm = getHasMonitorTaskConfirm(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
+//        if("admin".equalsIgnoreCase(eventLoginData.roles)){
+//            eventLoginData.hasControllerAid = false;
+//        }else{
+//            eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
+//        }
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
         try {
             LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());

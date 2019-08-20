@@ -28,6 +28,7 @@ import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -38,9 +39,9 @@ import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -315,6 +316,12 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     }
 
     private void doLive() {
+
+        if ((!NetworkUtils.isAvailable(mActivity))) {
+            SensoroToast.getInstance().makeText(mActivity.getResources().getString(R.string.disconnected_from_network), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         Intent intent = new Intent(mActivity, AlarmCameraLiveDetailActivity.class);
         ArrayList<String> cameras = new ArrayList<>(mDeviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
@@ -322,6 +329,11 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     }
 
     private void doVideo() {
+        if ((!NetworkUtils.isAvailable(mActivity))) {
+            SensoroToast.getInstance().makeText(mActivity.getResources().getString(R.string.disconnected_from_network), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         Intent intent = new Intent(mActivity, AlarmCameraVideoDetailActivity.class);
         intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
         mActivity.startActivity(intent);

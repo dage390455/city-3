@@ -46,8 +46,6 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     ImageView getImageView();
 
-    void doPlayerResume();
-
     void doPlayLive(ArrayList<String> urlList, String cameraName, boolean b);
 
     void setGsyVideoNoVideo();
@@ -58,10 +56,9 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     void backFromWindowFull();
 
-    void onVideoPause();
-
     void onVideoResume(boolean isLive);
 
-    public void loadCoverImage(String url);
+    void loadCoverImage(String url);
 
+    int getCurrentClickPosition();
 }

@@ -25,6 +25,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 
@@ -118,14 +119,48 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
 
     public void initVideoOption() {
         gsyPlayerAcDeployCameraLiveDetail.setIsLive(View.VISIBLE);
+        gsyPlayerAcDeployCameraLiveDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
 
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         //增加封面
         if (imageView == null) {
             imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setImageResource(R.drawable.camera_detail_mask);
         }
+        gsyPlayerAcDeployCameraLiveDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
 
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
 
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(imageView)
@@ -148,8 +183,30 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
                     }
 
                     @Override
+                    public void onAutoComplete(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                    }
+
+                    @Override
+                    public void onPlayError(final String url, Object... objects) {
+                        gsyPlayerAcDeployCameraLiveDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
+                        gsyPlayerAcDeployCameraLiveDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
+                    @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+                        if (gsyPlayerAcDeployCameraLiveDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -220,7 +277,7 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
         gsyPlayerAcDeployCameraLiveDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcDeployCameraLiveDetail.setIsShowMaskTopBack(false);
         getCurPlay().startPlayLogic();
-        orientationUtils.setEnable(true);
+        orientationUtils.setEnable(false);
 
 
     }

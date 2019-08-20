@@ -91,7 +91,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (!setMyCurrentActivityOrientation()) {
+            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         Window win = getWindow();
         win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED //锁屏状态下显示
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD //解锁
@@ -156,6 +158,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         return false;
     }
 
+    public boolean setMyCurrentActivityOrientation() {
+        return false;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -173,24 +179,24 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (isDestroyed) {
             return;
         }
+        mHandler.removeCallbacksAndMessages(null);
+        SensoroToast.getInstance().cancelToast();
         if (permissionDialogUtils != null) {
             permissionDialogUtils.destroy();
         }
         mPresenter.onDestroy();
         mPresenter.detachView();
-        SensoroToast.getInstance().cancelToast();
 //        if (immersionBar != null) {
 //            immersionBar.destroy();
 //        }
-        mHandler.removeCallbacksAndMessages(null);
         ActivityTaskManager.getInstance().popActivity(this);
         isDestroyed = true;
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         destroy();
+        super.onDestroy();
     }
 
     @Override

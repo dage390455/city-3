@@ -2,6 +2,8 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,6 +53,27 @@ public class TagDialogUtils implements View.OnClickListener {
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
+        mDialogEtInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().length()==0){
+                    mDialogImvClear.setVisibility(View.GONE);
+                }else{
+                    mDialogImvClear.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         mAddTagDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);

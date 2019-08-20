@@ -36,10 +36,10 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
 
 import java.util.ArrayList;
 
@@ -91,6 +91,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+
     }
 
     private void initView() {
@@ -136,12 +137,29 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         orientationUtils = new OrientationUtils(this, gsyPlayerAcAlarmCameraVideoDetail);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
+        gsyPlayerAcAlarmCameraVideoDetail.setICityChangeUiVideoPlayerListener(new CityStandardGSYVideoPlayer.ICityChangeUiVideoPlayerListener() {
+            @Override
+            public void OnCityChangeUiToPlayingShow() {
+                orientationUtils.setEnable(true);
 
+            }
+
+            @Override
+            public void OnCityChangeUiToPlayingBufferingShow() {
+                orientationUtils.setEnable(false);
+
+            }
+
+            @Override
+            public void OnchangeVideoFormat() {
+                orientationUtils.setEnable(false);
+            }
+        });
         //增加封面
         if (ivGsyCover == null) {
             ivGsyCover = new ImageView(this);
             ivGsyCover.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
+            ivGsyCover.setImageResource(R.drawable.camera_detail_mask);
         }
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(ivGsyCover)
@@ -157,9 +175,16 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPlayError(final String url, Object... objects) {
+                        gsyPlayerAcAlarmCameraVideoDetail.setCityPlayState(3);
                         orientationUtils.setEnable(false);
-
                         backFromWindowFull();
+                        gsyPlayerAcAlarmCameraVideoDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
                     }
 
                     @Override
@@ -181,6 +206,11 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                     @Override
                     public void onQuitFullscreen(String url, Object... objects) {
                         super.onQuitFullscreen(url, objects);
+
+                        if ((gsyPlayerAcAlarmCameraVideoDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING)
+                                && (gsyPlayerAcAlarmCameraVideoDetail.getCurrentState() != GSYVideoView.CURRENT_STATE_PAUSE)) {
+                            orientationUtils.setEnable(false);
+                        }
                         if (orientationUtils != null) {
                             orientationUtils.backToProtVideo();
                         }
@@ -250,6 +280,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             @Override
             public void OnAlarmCameraVideoItemClick(AlarmCloudVideoBean.MediasBean bean) {
                 mPresenter.doItemClick(bean);
+                orientationUtils.setEnable(false);
+
             }
 
             @Override
@@ -444,9 +476,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     @Override
     public void doPlayLive(final String url) {
 
-        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
-            setVerOrientationUtil(false);
-        }
+        orientationUtils.setEnable(false);
 
         gsyVideoOption.setUrl(url).build(getCurPlay());
         getCurPlay().startPlayLogic();
@@ -502,7 +532,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 //        getCurPlay().onVideoResume();
         super.onResume();
         isPause = false;
-        GSYVideoManager.onResume();
+        GSYVideoManager.onResume(false);
 
         Log.d("======", "onResume");
 
@@ -562,6 +592,5 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     public void onConfirmClick() {
         mPresenter.doDownload();
     }
-
 
 }
