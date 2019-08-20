@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.imagepicker.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.util.BitmapUtil;
 import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
 

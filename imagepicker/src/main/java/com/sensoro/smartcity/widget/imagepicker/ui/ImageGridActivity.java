@@ -156,6 +156,10 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             }
 
         }
+
+
+        //因为状态栏透明后，布局整体会上移，所以给头部加上状态栏的margin值，保证头部不会被覆盖
+
     }
 
     @Override
