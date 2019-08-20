@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.common.R;
+
 import com.sensoro.common.R2;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.CalendarDateModel;
@@ -112,18 +112,18 @@ public class CalendarPopUtils implements
     }
     private void init() {
         mPopupWindow = new PopupWindow(mActivity);
-        view = LayoutInflater.from(mActivity).inflate(R.layout.activity_calendar_test, null);
+        view = LayoutInflater.from(mActivity).inflate(R2.layout.activity_calendar_test, null);
         ButterKnife.bind(this, view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R2.color.c_aa000000)));
 //        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
-//        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B3000000)));
-        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
+//        mPopupWindow.setAnimationStyle(R2.style.DialogFragmentDropDownAnim);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R2.color.c_B3000000)));
+        mPopupWindow.setAnimationStyle(R2.style.DialogFragmentDropDownAnim);
         initView();
         mPopupWindow.setContentView(view);
 
@@ -156,6 +156,14 @@ public class CalendarPopUtils implements
         initAnimation();
     }
 
+    /**
+     * 隐藏日历
+     */
+    public  void  dismissNoAnimation(){
+        if(mPopupWindow!=null){
+            mPopupWindow.dismiss();
+        }
+    }
     private void initAnimation() {
         showTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0);
         dismissTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, -1);
@@ -185,7 +193,23 @@ public class CalendarPopUtils implements
 
     }
     private void setMonthYearText(int month) {
-        acCalendarTvMonthYear.setText(mActivity.getString(Constants.MONTHS[month - 1]));
+        acCalendarTvMonthYeaR2.setText(mActivity.getString(MONTHS[month - 1]));
+    }
+
+    /**
+     * 根据年月显示一下月Arrawbtn状态
+     * @param year
+     * @param month
+     */
+    private void setNextBtnState(int year,int  month){
+        if(year==calendarView.getCurYear()&& month==calendarView.getCurMonth()){
+            acCalendarImvArrowRight.setEnabled(false);
+            acCalendarImvArrowRight.setImageResource(R2.drawable.calendar_arrow_right_disabled);
+
+        }else{
+            acCalendarImvArrowRight.setEnabled(true);
+            acCalendarImvArrowRight.setImageResource(R2.drawable.calendar_arrow_right);
+        }
     }
 
     private void setSelectTime(long startTime, long endTime) {
@@ -219,7 +243,7 @@ public class CalendarPopUtils implements
             endDate = DateUtil.getDateByOtherFormat(endTime);
 
 
-//            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//            new Handler(LoopeR2.getMainLooper()).postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
 //                    Calendar instance = Calendar.getInstance();
@@ -278,19 +302,38 @@ public class CalendarPopUtils implements
 
     @OnClick({R2.id.ac_calendar_tv_cancel, R2.id.ac_calendar_tv_save, R2.id.ac_calendar_view_dismiss, R2.id.ac_calendar_imv_arrow_left, R2.id.ac_calendar_imv_arrow_right})
     public void onViewClicked(View view) {
-        int i = view.getId();
-        if (i == R.id.ac_calendar_tv_cancel) {
-            calendarViewLl.startAnimation(dismissTranslateAnimation);
+        int id=view.getId();
+        if(id==R2.id.ac_calendar_tv_cancel){
+
+        }else  if(id==R2.id.ac_calendar_tv_save){
+
+        }else if(id==R2.id.ac_calendar_view_dismiss){
+
+        }else if(id==R2.id.ac_calendar_imv_arrow_left){
+
+        }else if(id==R2.id.ac_calendar_imv_arrow_right){
+
+        }
+
+
+            switch (view.getId()) {
+            case R.id.ac_calendar_tv_cancel:
+                calendarViewLl.startAnimation(dismissTranslateAnimation);
 //                mPopupWindow.dismiss();
-        } else if (i == R.id.ac_calendar_tv_save) {
-            saveDate();
-        } else if (i == R.id.ac_calendar_view_dismiss) {
-            calendarViewLl.startAnimation(dismissTranslateAnimation);
+                break;
+            case R2.id.ac_calendar_tv_save:
+                saveDate();
+                break;
+            case R2.id.ac_calendar_view_dismiss:
+                calendarViewLl.startAnimation(dismissTranslateAnimation);
 //                mPopupWindow.dismiss();
-        } else if (i == R.id.ac_calendar_imv_arrow_left) {
-            calendarView.scrollToPre();
-        } else if (i == R.id.ac_calendar_imv_arrow_right) {
-            calendarView.scrollToNext();
+                break;
+            case R2.id.ac_calendar_imv_arrow_left:
+                calendarView.scrollToPre();
+                break;
+            case R2.id.ac_calendar_imv_arrow_right:
+                calendarView.scrollToNext();
+                break;
         }
     }
 
@@ -303,7 +346,7 @@ public class CalendarPopUtils implements
 //            mPopupWindow.dismiss();
             calendarViewLl.startAnimation(dismissTranslateAnimation);
         } else {
-            SensoroToast.getInstance().makeText(mActivity.getString(R.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
+            SensoroToast.getInstance().makeText(mActivity.getString(R2.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -398,19 +441,19 @@ public class CalendarPopUtils implements
     public void onCalendarRangeSelect(com.sensoro.smartcity.calendarview.Calendar calendar, boolean isEnd) {
 
         if (isEnd) {
-            endDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
+            endDate = Calendar.getYear() + "/" + Calendar.getMonth() + "/" + Calendar.getDay();
             if (AppUtils.isChineseLanguage()) {
-                setEndDate(calendar.getMonth() + "月" + calendar.getDay()+"日", String.valueOf(calendar.getYear()));
+                setEndDate(Calendar.getMonth() + "月" + Calendar.getDay()+"日", String.valueOf(Calendar.getYear()));
             }else{
-                setEndDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
+                setEndDate(Calendar.getMonth() + "." + Calendar.getDay(), String.valueOf(Calendar.getYear()));
             }
         } else {
-            startDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
+            startDate = Calendar.getYear() + "/" + Calendar.getMonth() + "/" + Calendar.getDay();
             endDate = startDate;
             if (AppUtils.isChineseLanguage()) {
-                setStartDate(calendar.getMonth() + "月" + calendar.getDay()+"日", String.valueOf(calendar.getYear()));
+                setStartDate(Calendar.getMonth() + "月" + Calendar.getDay()+"日", String.valueOf(Calendar.getYear()));
             }else{
-                setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
+                setStartDate(Calendar.getMonth() + "." + Calendar.getDay(), String.valueOf(Calendar.getYear()));
             }
 
         }
@@ -419,7 +462,7 @@ public class CalendarPopUtils implements
     @Override
     public void onMonthChange(int year, int month) {
         setMonthYearText(month);
-
+       setNextBtnState(year,month);
     }
 
 

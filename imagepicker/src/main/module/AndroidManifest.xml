@@ -75,6 +75,7 @@
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
         android:protectionLevel="normal" />
+
     <application
         android:name="com.sensoro.smartcity.widget.Imagepickerapplication"
         android:allowBackup="true"
