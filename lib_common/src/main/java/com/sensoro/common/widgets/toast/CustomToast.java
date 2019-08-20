@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.toast;
+package com.sensoro.common.widgets.toast;
 
 import android.annotation.TargetApi;
 import android.content.Context;

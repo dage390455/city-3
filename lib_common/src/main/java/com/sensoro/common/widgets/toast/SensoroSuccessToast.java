@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.toast;
+package com.sensoro.common.widgets.toast;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.imagepicker.R;
+import com.sensoro.common.R;
+
 
 /**
  * Created by sensoro on 17/12/6.

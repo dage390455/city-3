@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.statusbar;
+package com.sensoro.common.widgets.statusbar;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
