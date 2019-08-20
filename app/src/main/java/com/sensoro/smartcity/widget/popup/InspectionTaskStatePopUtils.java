@@ -28,7 +28,7 @@ public class InspectionTaskStatePopUtils {
     private final Activity mActivity;
     private final InspectionTaskStateSelectAdapter mSelectStateAdapter;
     private final PopupWindow mPopupWindow;
-    private InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener listener;
+    private SelectDeviceTypeItemClickListener listener;
     private TranslateAnimation showTranslateAnimation;
     private TranslateAnimation dismissTranslateAnimation;
     private final LinearLayout mll;
@@ -94,7 +94,7 @@ public class InspectionTaskStatePopUtils {
     public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> list){
         mSelectStateAdapter.updateDeviceTypList(list);
     }
-    public void setSelectDeviceTypeItemClickListener(InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener listener){
+    public void setSelectDeviceTypeItemClickListener(SelectDeviceTypeItemClickListener listener){
         this.listener = listener;
     }
 

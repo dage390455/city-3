@@ -29,4 +29,7 @@ public interface ARouterConstants {
     String FRAGMENT_CAMERA_LIST = "/city_camera/fragment/CameraListFragment";
 
     String FRAGMENT_CAMERA_WARN_LIST = "/city_camera/fragment/CameraWarnListFragment";
+
+
+    String ACTIVITY_VIDEP_PLAY = "/app/activity/VideoPlayActivity";
 }
