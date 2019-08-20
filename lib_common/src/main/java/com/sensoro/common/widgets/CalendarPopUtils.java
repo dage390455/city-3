@@ -28,6 +28,8 @@ import com.sensoro.smartcity.calendarview.customview.CustomCircleRangeMonthView;
 import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
 
 
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -116,13 +118,13 @@ public class CalendarPopUtils implements
         ButterKnife.bind(this, view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R2.color.c_aa000000)));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
 //        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
 //        mPopupWindow.setAnimationStyle(R2.style.DialogFragmentDropDownAnim);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R2.color.c_B3000000)));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B3000000)));
         mPopupWindow.setAnimationStyle(R2.style.DialogFragmentDropDownAnim);
         initView();
         mPopupWindow.setContentView(view);
@@ -303,15 +305,15 @@ public class CalendarPopUtils implements
     @OnClick({R2.id.ac_calendar_tv_cancel, R2.id.ac_calendar_tv_save, R2.id.ac_calendar_view_dismiss, R2.id.ac_calendar_imv_arrow_left, R2.id.ac_calendar_imv_arrow_right})
     public void onViewClicked(View view) {
         int id=view.getId();
-        if(id==R2.id.ac_calendar_tv_cancel){
+        if(id==R.id.ac_calendar_tv_cancel){
             calendarViewLl.startAnimation(dismissTranslateAnimation);
-        }else  if(id==R2.id.ac_calendar_tv_save){
+        }else  if(id==R.id.ac_calendar_tv_save){
             saveDate();
-        }else if(id==R2.id.ac_calendar_view_dismiss){
+        }else if(id==R.id.ac_calendar_view_dismiss){
             calendarViewLl.startAnimation(dismissTranslateAnimation);
-        }else if(id==R2.id.ac_calendar_imv_arrow_left){
+        }else if(id==R.id.ac_calendar_imv_arrow_left){
             calendarView.scrollToPre();
-        }else if(id==R2.id.ac_calendar_imv_arrow_right){
+        }else if(id==R.id.ac_calendar_imv_arrow_right){
             calendarView.scrollToNext();
         }
 
@@ -326,7 +328,7 @@ public class CalendarPopUtils implements
 //            mPopupWindow.dismiss();
             calendarViewLl.startAnimation(dismissTranslateAnimation);
         } else {
-            SensoroToast.getInstance().makeText(mActivity.getString(R2.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
+            SensoroToast.getInstance().makeText(mActivity.getString(R.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -421,19 +423,19 @@ public class CalendarPopUtils implements
     public void onCalendarRangeSelect(com.sensoro.smartcity.calendarview.Calendar calendar, boolean isEnd) {
 
         if (isEnd) {
-            endDate = Calendar.getYear() + "/" + Calendar.getMonth() + "/" + Calendar.getDay();
+            endDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
             if (AppUtils.isChineseLanguage()) {
-                setEndDate(Calendar.getMonth() + "月" + Calendar.getDay()+"日", String.valueOf(Calendar.getYear()));
+                setEndDate(calendar.getMonth() + "月" + calendar.getDay()+"日", String.valueOf(calendar.getYear()));
             }else{
-                setEndDate(Calendar.getMonth() + "." + Calendar.getDay(), String.valueOf(Calendar.getYear()));
+                setEndDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
             }
         } else {
-            startDate = Calendar.getYear() + "/" + Calendar.getMonth() + "/" + Calendar.getDay();
+            startDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
             endDate = startDate;
             if (AppUtils.isChineseLanguage()) {
-                setStartDate(Calendar.getMonth() + "月" + Calendar.getDay()+"日", String.valueOf(Calendar.getYear()));
+                setStartDate(calendar.getMonth() + "月" + calendar.getDay()+"日", String.valueOf(calendar.getYear()));
             }else{
-                setStartDate(Calendar.getMonth() + "." + Calendar.getDay(), String.valueOf(Calendar.getYear()));
+                setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
             }
 
         }
