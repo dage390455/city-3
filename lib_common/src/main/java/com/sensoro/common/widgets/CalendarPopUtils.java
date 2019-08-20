@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.sensoro.common.R;
 import com.sensoro.common.R2;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.CalendarDateModel;
@@ -26,7 +27,6 @@ import com.sensoro.smartcity.calendarview.CalendarView;
 import com.sensoro.smartcity.calendarview.customview.CustomCircleRangeMonthView;
 import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
 
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -193,7 +193,7 @@ public class CalendarPopUtils implements
 
     }
     private void setMonthYearText(int month) {
-        acCalendarTvMonthYeaR2.setText(mActivity.getString(MONTHS[month - 1]));
+        acCalendarTvMonthYear.setText(mActivity.getString(MONTHS[month - 1]));
     }
 
     /**
@@ -204,11 +204,11 @@ public class CalendarPopUtils implements
     private void setNextBtnState(int year,int  month){
         if(year==calendarView.getCurYear()&& month==calendarView.getCurMonth()){
             acCalendarImvArrowRight.setEnabled(false);
-            acCalendarImvArrowRight.setImageResource(R2.drawable.calendar_arrow_right_disabled);
+            acCalendarImvArrowRight.setImageResource(R.drawable.calendar_arrow_right_disabled);
 
         }else{
             acCalendarImvArrowRight.setEnabled(true);
-            acCalendarImvArrowRight.setImageResource(R2.drawable.calendar_arrow_right);
+            acCalendarImvArrowRight.setImageResource(R.drawable.calendar_arrow_right);
         }
     }
 
@@ -304,37 +304,17 @@ public class CalendarPopUtils implements
     public void onViewClicked(View view) {
         int id=view.getId();
         if(id==R2.id.ac_calendar_tv_cancel){
-
+            calendarViewLl.startAnimation(dismissTranslateAnimation);
         }else  if(id==R2.id.ac_calendar_tv_save){
-
+            saveDate();
         }else if(id==R2.id.ac_calendar_view_dismiss){
-
+            calendarViewLl.startAnimation(dismissTranslateAnimation);
         }else if(id==R2.id.ac_calendar_imv_arrow_left){
-
+            calendarView.scrollToPre();
         }else if(id==R2.id.ac_calendar_imv_arrow_right){
-
+            calendarView.scrollToNext();
         }
 
-
-            switch (view.getId()) {
-            case R.id.ac_calendar_tv_cancel:
-                calendarViewLl.startAnimation(dismissTranslateAnimation);
-//                mPopupWindow.dismiss();
-                break;
-            case R2.id.ac_calendar_tv_save:
-                saveDate();
-                break;
-            case R2.id.ac_calendar_view_dismiss:
-                calendarViewLl.startAnimation(dismissTranslateAnimation);
-//                mPopupWindow.dismiss();
-                break;
-            case R2.id.ac_calendar_imv_arrow_left:
-                calendarView.scrollToPre();
-                break;
-            case R2.id.ac_calendar_imv_arrow_right:
-                calendarView.scrollToNext();
-                break;
-        }
     }
 
     private void saveDate() {
