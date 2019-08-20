@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,10 +30,10 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmHistoryLogRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IAlarmHistoryLogActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.AlarmHistoryLogActivityPresenter;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import java.util.List;
 

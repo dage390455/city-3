@@ -34,9 +34,9 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskAdapter;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.InspectionTaskListActivityPresenter;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import java.util.List;
 

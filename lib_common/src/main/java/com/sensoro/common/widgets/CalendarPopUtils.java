@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.sensoro.common.R;
 import com.sensoro.common.R2;
 import com.sensoro.common.constant.Constants;
@@ -26,7 +25,6 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.calendarview.CalendarView;
 import com.sensoro.smartcity.calendarview.customview.CustomCircleRangeMonthView;
 import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
-
 
 import java.util.Calendar;
 

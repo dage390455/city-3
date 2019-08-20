@@ -21,8 +21,8 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.model.CalendarDateModel;
+import com.sensoro.common.widgets.CalendarPopUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.greenrobot.eventbus.EventBus;
