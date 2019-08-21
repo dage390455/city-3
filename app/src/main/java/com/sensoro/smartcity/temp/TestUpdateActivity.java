@@ -11,6 +11,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.entity.SensoroDevice;
@@ -25,6 +27,7 @@ import java.io.OutputStream;
  * Created by fangping on 2016/7/14.
  */
 
+@Route(path = ARouterConstants.ACTIVITY_TEST_UPDATE)
 public class TestUpdateActivity extends Activity {
 
     private static final String EXTERN_DIRECTORY_NAME = "ddong1031";

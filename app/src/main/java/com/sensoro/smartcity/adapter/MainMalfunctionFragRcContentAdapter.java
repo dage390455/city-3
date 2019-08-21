@@ -15,7 +15,7 @@ import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;

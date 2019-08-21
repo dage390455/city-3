@@ -29,7 +29,7 @@ import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.HtmlImageSpan;
 import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 

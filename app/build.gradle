@@ -257,6 +257,7 @@ dependencies {
     implementation project(':calendarview')
     //
     implementation project(path: ':pickerview')
+
     //
     implementation(deps.mapbox) {
         transitive = true
@@ -278,6 +279,8 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
+
+    implementation project(':imagepicker')
     //
     if (!isModule.toBoolean()) {
         implementation project(':nameplate')
@@ -286,16 +289,20 @@ dependencies {
         implementation project(':city_camera')
     }
     if (!isModule.toBoolean()) {
-        implementation project(':imagepicker')
+        implementation project(path: ':inspectiontask')
     }
+
+
+
+
     //个推
     implementation deps.getui
-    //3D地图so及jar
-    implementation deps.amap_3dmap
-    //定位功能
-    implementation deps.amap_location
-    //搜索功能
-    implementation deps.amap_search
+//    //3D地图so及jar
+//    implementation deps.amap_3dmap
+//    //定位功能
+//    implementation deps.amap_location
+//    //搜索功能
+//    implementation deps.amap_search
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 

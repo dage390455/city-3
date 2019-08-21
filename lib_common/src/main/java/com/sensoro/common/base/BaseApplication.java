@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.amap.api.location.AMapLocationClient;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
@@ -25,6 +26,7 @@ import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.utils.DynamicTimeFormat;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 
 import java.util.Locale;
 
@@ -52,6 +54,13 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     public static BaseApplication getInstance() {
         return sInstance;
     }
+
+
+    public AMapLocationClient mLocationClient;
+    public BLEDeviceManager bleDeviceManager;
+
+
+
 
     private final Runnable initTask = new Runnable() {
         @Override

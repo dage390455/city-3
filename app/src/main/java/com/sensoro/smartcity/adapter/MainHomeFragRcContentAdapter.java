@@ -27,7 +27,7 @@ import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

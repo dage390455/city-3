@@ -8,7 +8,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployRecordConfigCommonElectActivityView;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 public class DeployRecordConfigCommonElectActivityPresenter extends BasePresenter<IDeployRecordConfigCommonElectActivityView> {
     private Activity mActivity;

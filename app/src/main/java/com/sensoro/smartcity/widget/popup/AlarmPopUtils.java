@@ -44,7 +44,7 @@ import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.model.AlarmPopModel;
+import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -66,6 +66,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+
 
 public class AlarmPopUtils implements Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {

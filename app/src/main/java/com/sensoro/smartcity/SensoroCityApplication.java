@@ -69,8 +69,8 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
     private final Handler taskHandler = new Handler(Looper.getMainLooper());
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH;
-    public AMapLocationClient mLocationClient;
-    public BLEDeviceManager bleDeviceManager;
+
+//    public BLEDeviceManager bleDeviceManager;
     private final Runnable iBeaconTask = new Runnable() {
         private boolean noStateOut = true;
         private boolean noStateIn = true;

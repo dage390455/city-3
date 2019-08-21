@@ -27,7 +27,7 @@ import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;

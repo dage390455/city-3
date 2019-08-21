@@ -25,8 +25,8 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
-import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.CityAppUtils;
+import com.sensoro.common.utils.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

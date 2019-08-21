@@ -236,19 +236,6 @@
         <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.DeployMapActivity" />
         <activity android:name=".activity.MonitorPointMapActivity" />
-        <activity android:name=".activity.InspectionTaskListActivity" />
-        <activity android:name=".activity.InspectionTaskDetailActivity" />
-        <activity android:name=".activity.InspectionInstructionActivity" />
-        <activity
-            android:name=".activity.InspectionTaskActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.InspectionActivity" />
-        <activity android:name=".activity.InspectionExceptionDetailActivity" />
-        <activity
-            android:name=".activity.InspectionUploadExceptionActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".activity.AlarmHistoryLogActivity" />
 
         <service android:name="com.sensoro.libbleserver.ble.service.BLEDeviceService" />

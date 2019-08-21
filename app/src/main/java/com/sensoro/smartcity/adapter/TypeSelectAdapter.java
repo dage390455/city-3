@@ -29,7 +29,7 @@ import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;

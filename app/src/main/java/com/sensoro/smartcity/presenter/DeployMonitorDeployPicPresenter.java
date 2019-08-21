@@ -17,7 +17,7 @@ import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.common.model.ImageItem;

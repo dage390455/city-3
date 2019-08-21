@@ -11,11 +11,11 @@ import com.sensoro.common.server.bean.DisplayOptionsBean;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
+import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.common.constant.MonitorPointOperationCode;
-import com.sensoro.smartcity.model.Elect3DetailModel;
+import com.sensoro.common.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import java.util.HashMap;
 import java.util.List;

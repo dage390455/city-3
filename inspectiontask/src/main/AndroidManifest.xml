@@ -1,2 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sensoro.inspectiontask" />
+    package="com.sensoro.inspectiontask" >
+
+
+    <application>
+
+        <activity android:name="com.sensoro.smartcity.activity.InspectionTaskListActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.InspectionTaskDetailActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.InspectionInstructionActivity" />
+        <activity
+            android:name="com.sensoro.smartcity.activity.InspectionTaskActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name="com.sensoro.smartcity.activity.InspectionActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.InspectionExceptionDetailActivity" />
+        <activity
+            android:name="com.sensoro.smartcity.activity.InspectionUploadExceptionActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
+
+    </application>
+
+</manifest>

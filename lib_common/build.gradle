@@ -98,4 +98,14 @@ dependencies {
     annotationProcessor deps.arouter_compiler
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     api project(path: ':calendarview')
+
+
+    //
+    implementation project(':sensor-kit')
+    //3D地图so及jar
+    api deps.amap_3dmap
+    //定位功能
+    api deps.amap_location
+    //搜索功能
+    api deps.amap_search
 }

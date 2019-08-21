@@ -32,4 +32,13 @@ public interface ARouterConstants {
 
 
     String ACTIVITY_VIDEP_PLAY = "/app/activity/VideoPlayActivity";
+
+    String ACTIVITY_TEST_UPDATE = "/app/activity/TestUpdateActivity";
+
+    String ACTIVITY_TAKE_RECORD = "/app/activity/TakeRecordActivity";
+
+
+
+    String PROVIDER_ALARM_POP_UTILS = "/app/utils/AlarmPopUtils";
+
 }

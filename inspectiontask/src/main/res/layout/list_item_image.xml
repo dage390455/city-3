@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="84dp"
+    android:layout_height="84dp"
+    >
+
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="5dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_add"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/shape_item_image_picker_bg"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@null"
+            android:src="@mipmap/pic_add" />
+
+        <TextView
+            android:id="@+id/tv_add_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/camera_photo"
+            android:textColor="@color/c_252525"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/picture_del"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_record_play"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/item_icon_play"
+        android:contentDescription="@null"
+        android:visibility="gone" />
+
+</RelativeLayout>

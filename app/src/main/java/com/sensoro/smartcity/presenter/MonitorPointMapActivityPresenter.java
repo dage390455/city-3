@@ -34,7 +34,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.smartcity.util.CityAppUtils;
+import com.sensoro.common.utils.CityAppUtils;
 import com.sensoro.common.utils.LogUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
