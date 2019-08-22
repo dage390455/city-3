@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.PermissionDialogUtils;
@@ -18,7 +20,6 @@ import com.yanzhenjie.permission.RequestExecutor;
 import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
-import com.sensoro.logintest.LoginTestActivity;
 import butterknife.ButterKnife;
 
 public class InspectionTestActivity extends Activity {
@@ -36,7 +37,9 @@ public class InspectionTestActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(getApplicationContext(), LoginTestActivity.class));
+                ARouter.getInstance().build(ARouterConstants.ACTIVITY_LOGIN_TEST)
+                        .withTransition(R.anim.slide_left, R.anim.slide_out)
+                        .navigation(InspectionTestActivity.this);
             }
         });
 

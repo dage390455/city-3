@@ -48,7 +48,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-@Route(path = ARouterConstants.ACTIVITY_InspectionTask_List)
+@Route(path = ARouterConstants.ACTIVITY_INSPECTIONTASK_List)
 public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskListActivityView, InspectionTaskListActivityPresenter>
         implements IInspectionTaskListActivityView, CalendarPopUtils.OnCalendarPopupCallbackListener, Constants {
     @BindView(R2.id.include_text_title_imv_arrows_left)

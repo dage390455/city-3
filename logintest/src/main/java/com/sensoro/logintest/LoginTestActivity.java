@@ -20,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.utils.DateUtil;
@@ -38,6 +40,8 @@ import butterknife.OnClick;
  * Created by sensoro on 17/7/24.
  */
 
+
+@Route(path = ARouterConstants.ACTIVITY_LOGIN_TEST)
 public class LoginTestActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView, LoginUrlDialogUtils.OnLoginUrlDialogListener {
 
     @BindView(R2.id.login_btn)

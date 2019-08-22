@@ -39,9 +39,12 @@ public interface ARouterConstants {
 
 
 
-    String ACTIVITY_InspectionTask_List = "/inspectiontask/activity/InspectionTaskListActivity";
+    String ACTIVITY_INSPECTIONTASK_List = "/inspectiontask/activity/InspectionTaskListActivity";
 
 
+
+    //组件化模拟登录过程使用
+    String ACTIVITY_LOGIN_TEST = "/logintest/activity/LoginTestActivity";
 
 
 }

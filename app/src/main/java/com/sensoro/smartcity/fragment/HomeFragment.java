@@ -239,6 +239,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 } catch (Exception e) {
                     e.printStackTrace();
                     //TODO 可以考虑异常刷新所有 并重置
+                    mPresenter.requestInitData(true,true);
                 }
 
             }
