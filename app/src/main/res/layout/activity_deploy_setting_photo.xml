@@ -3,26 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/deploy_setting_photo_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y200"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_vertical">
 
+        <!--<ImageView-->
+            <!--android:id="@+id/deploy_setting_photo_back"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="@dimen/x10"-->
+            <!--android:adjustViewBounds="true"-->
+            <!--android:cropToPadding="true"-->
+            <!--android:padding="15dp"-->
+            <!--android:src="@drawable/arrows_left" />-->
         <ImageView
             android:id="@+id/deploy_setting_photo_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/x10"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="15dp"
-            android:src="@drawable/arrows_left" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="6dp"
+        android:contentDescription="@null"
+        android:padding="10dp"
+        android:src="@drawable/arrows_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/deploy_setting_photo_title"

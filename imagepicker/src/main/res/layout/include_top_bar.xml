@@ -2,29 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:background="#ffffff"
     android:clickable="true">
+
+    <!--<ImageView-->
+        <!--android:id="@+id/btn_back"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="2dp"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:cropToPadding="true"-->
+        <!--android:padding="15dp"-->
+        <!--app:srcCompat="@drawable/arrows_left" />-->
 
     <ImageView
         android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="2dp"
-        android:adjustViewBounds="true"
-        android:cropToPadding="true"
-        android:padding="15dp"
-        app:srcCompat="@mipmap/arrows_left" />
-
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:contentDescription="@null"
+        android:padding="10dp"
+        android:src="@drawable/arrows_left"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_des"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/btn_back"
         android:text="@string/top_bar_image"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
