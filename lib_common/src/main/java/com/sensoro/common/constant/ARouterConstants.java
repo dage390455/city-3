@@ -39,6 +39,9 @@ public interface ARouterConstants {
 
 
 
-    String PROVIDER_ALARM_POP_UTILS = "/app/utils/AlarmPopUtils";
+    String ACTIVITY_InspectionTask_List = "/inspectiontask/activity/InspectionTaskListActivity";
+
+
+
 
 }

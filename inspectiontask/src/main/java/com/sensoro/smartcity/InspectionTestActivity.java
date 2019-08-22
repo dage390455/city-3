@@ -18,7 +18,7 @@ import com.yanzhenjie.permission.RequestExecutor;
 import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
-
+import com.sensoro.logintest.LoginTestActivity;
 import butterknife.ButterKnife;
 
 public class InspectionTestActivity extends Activity {
@@ -36,7 +36,7 @@ public class InspectionTestActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(getApplicationContext(), InspectionTaskListActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginTestActivity.class));
             }
         });
 
