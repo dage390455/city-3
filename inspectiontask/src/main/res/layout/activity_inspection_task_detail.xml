@@ -16,7 +16,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_bg_corner_29c_shadow"
+        android:background="@drawable/shape_bg_inspectiontask_corner_29c_shadow"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

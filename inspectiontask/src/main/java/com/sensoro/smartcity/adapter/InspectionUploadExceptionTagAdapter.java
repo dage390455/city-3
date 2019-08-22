@@ -46,7 +46,7 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
     public void onBindViewHolder(InspectionUploadExceptionTagHolder holder, final int position) {
         holder.itemAdapterInspectionUploadExceptionTv.setText(tags.get(position));
         Resources resources = mContext.getResources();
-        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_bg_inspection_upload_exception_tag_full_corner);
+        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_bg_inspectiontask_upload_exception_tag_full_corner);
         gd.setBounds(0, 0, gd.getMinimumWidth(), gd.getMinimumHeight());
         if (selectedTags.contains(position)) {
             holder.itemAdapterInspectionUploadExceptionTv.setTextColor(Color.WHITE);

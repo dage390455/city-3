@@ -208,7 +208,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     @NonNull
     private void changeIconColor(TypeSelectHolder holder, boolean isWhite) {
-        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_corner_29c_shadow);
+        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_inspectiontask_corner_29c_shadow);
         holder.itemPopSelectTvTypeName.setTextColor(isWhite ? mContext.getResources().getColor(R.color.c_252525) : Color.WHITE);
         Drawable drawable = holder.itemPopSelectImvTypeIcon.getDrawable();
 //        Drawable.ConstantState statusTitle = drawable.getConstantState();

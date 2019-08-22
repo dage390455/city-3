@@ -39,10 +39,10 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
     @Override
     public void onBindViewHolder(InspectionInstructionTabHolder holder, final int position) {
         if (position == selectPosition) {
-            holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_29c_full_corner);
+            holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_inspectiontask_solid_29c_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(Color.WHITE);
         } else {
-            holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_transparent_full_corner);
+            holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_inspectiontask_solid_transparent_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
         }
 

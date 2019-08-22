@@ -53,7 +53,7 @@ public class InspectionTaskStateSelectAdapter extends RecyclerView.Adapter<Inspe
         holder.itemPopTvSelectState.setText(ic.statusTitle);
 
         holder.itemPopSelectLlRoot.setBackgroundResource(position != selectPosition ? R.drawable.shape_bg_solid_ff_stroke_df_corner
-        : R.drawable.shape_bg_corner_29c_shadow);
+        : R.drawable.shape_bg_inspectiontask_corner_29c_shadow);
         holder.itemPopTvSelectCount.setTextColor(resources.getColor(position != selectPosition ? R.color.c_a6a6a6: R.color.white));
         holder.itemPopTvSelectState.setTextColor(resources.getColor(position != selectPosition ? R.color.c_252525: R.color.white));
 

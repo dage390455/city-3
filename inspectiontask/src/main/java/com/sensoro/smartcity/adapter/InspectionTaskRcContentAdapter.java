@@ -147,7 +147,7 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
                 holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
                 holder.itemAdapterInspectionTaskTvInspection.setText(R.string.inspection);
                 holder.itemAdapterInspectionTaskTvInspection.setTextColor(mContext.getResources().getColor(R.color.white));
-                holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
+                holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_inspectiontask_corner_2dp_29c_shadow);
                 break;
             case 1:
                 setState(holder, R.color.c_1dbb99, mContext.getString(R.string.normal_inspection));

@@ -24,7 +24,7 @@
                 android:id="@+id/ac_inspection_task_list_rb_current"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_contract_title_bg_select"
+                android:background="@drawable/selector_inspectiontask_contract_title_bg_select"
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center"
@@ -33,14 +33,14 @@
                 android:paddingStart="20dp"
                 android:paddingTop="8dp"
                 android:text="@string/inspection_task_list_undone"
-                android:textColor="@drawable/selector_contract_title_text_select"
+                android:textColor="@drawable/selector_inspectiontask_contract_title_text_select"
                 android:textSize="14dp" />
 
             <RadioButton
                 android:id="@+id/ac_inspection_task_list_rb_history"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_contract_title_bg_select"
+                android:background="@drawable/selector_inspectiontask_contract_title_bg_select"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingBottom="8dp"
@@ -48,7 +48,7 @@
                 android:paddingStart="20dp"
                 android:paddingTop="8dp"
                 android:text="@string/inspection_task_list_complete"
-                android:textColor="@drawable/selector_contract_title_text_select"
+                android:textColor="@drawable/selector_inspectiontask_contract_title_text_select"
                 android:textSize="14dp" />
         </RadioGroup>
 

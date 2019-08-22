@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
+            android:background="@drawable/shape_bg_inspectiontask_corner_2dp_29c_shadow"
             android:paddingStart="20dp"
             android:paddingTop="6dp"
             android:paddingEnd="20dp"

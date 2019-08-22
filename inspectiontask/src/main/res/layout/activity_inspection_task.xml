@@ -89,7 +89,7 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_bg_solid_f7_full_corner">
+                    android:background="@drawable/shape_bg_inspectiontask_solid_f7_full_corner">
 
                     <ImageView
                         android:id="@+id/fg_main_top_search_imv_clear"
