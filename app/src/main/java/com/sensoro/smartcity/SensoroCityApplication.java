@@ -356,7 +356,10 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 @Override
                 public void run() {
                     Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
-                    initBugLy();
+                    //只收集release版本的日志信息，升级也只针对release版本
+                    if (!BuildConfig.DEBUG) {
+                        initBugLy();
+                    }
                 }
             }, 1000);
             initSensoroSDK();
