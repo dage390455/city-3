@@ -190,9 +190,8 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
         }else if(viewID==R.id.ac_contract_detail_tv_contract_preview){
             mPresenter.doPreviewActivity();
         }else if(viewID==R.id.ac_contract_detail_tv_create_qr_code){
-            Log.d("code==","查看二维码");
+            mPresenter.doViewContractQrCode();
         }else if(viewID==R.id.ac_contract_detail_ll_contract_look_qr_code){
-            Log.d("code==","合同预览");
             mPresenter.doViewContractQrCode();
         }else if(viewID==R.id.ac_contract_detail_tv_contract_more){
             doMore();
