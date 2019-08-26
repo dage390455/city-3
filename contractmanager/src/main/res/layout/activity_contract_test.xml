@@ -6,5 +6,5 @@
     <Button android:id="@+id/btn_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="打开"/>
+        android:text="合同管理组件化测试"/>
 </LinearLayout>

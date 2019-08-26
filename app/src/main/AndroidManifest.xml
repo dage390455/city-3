@@ -343,8 +343,7 @@
         <activity android:name=".activity.SecurityRiskTagManagerActivity" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
-        <activity android:name=".activity.BaseStationListActivity" />
-        <activity android:name=".activity.BaseStationDetailActivity" />
+
         <activity
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -365,9 +364,7 @@
             android:name=".activity.AlarmCameraVideoDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.SelfCheckActivity" />
-        <activity android:name=".activity.FrequencyPointActivity" />
-        <activity android:name=".activity.NetWorkInfoActivity" />
+
         <activity
             android:name=".activity.DeployCameraLiveDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

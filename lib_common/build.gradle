@@ -101,7 +101,8 @@ dependencies {
 
     api files('libs/ocr-sdk.jar')
 
-
+    //mp表格组件
+    api deps.MPAndroidChart
 
 
     //  更改扫描二维码为maven库

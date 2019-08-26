@@ -267,8 +267,7 @@ dependencies {
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }
-    //mp表格组件
-    implementation deps.MPAndroidChart
+
 
     //播放器
     implementation project(path: ':gsyVideoPlayer-base')
@@ -290,6 +289,11 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(path: ':contractmanager')
     }
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':basestation')
+    }
+
+
 
 
 

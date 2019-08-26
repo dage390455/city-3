@@ -40,8 +40,13 @@ public interface ARouterConstants {
 
 
     String ACTIVITY_INSPECTIONTASK_List = "/inspectiontask/activity/InspectionTaskListActivity";
-    String ACTIVITY_CONTRACT_MANAGER = "/inspectiontask/activity/ContractManagerActivity";
+    String ACTIVITY_CONTRACT_MANAGER = "/contractmanager/activity/ContractManagerActivity";
+    String ACTIVITY_BASESTATION_LIST= "/basestation/activity/BaseStationListActivity";
 
+
+
+    String ACTIVITY_MonitorPointMap_Activity="/smartcity/activity/MonitorPointMapActivity";
+    String ACTIVITY_MonitorPointMap_ENActivity="/smartcity/activity/MonitorPointMapENActivity";
 
 
 
