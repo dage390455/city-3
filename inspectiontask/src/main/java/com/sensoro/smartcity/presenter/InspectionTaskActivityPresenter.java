@@ -37,7 +37,7 @@ import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.common.model.StatusCountModel;
 import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -209,18 +209,18 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                                 break;
                         }
                     }
-                    List<InspectionStatusCountModel> list = new ArrayList<>();
-                    InspectionStatusCountModel sc1 = new InspectionStatusCountModel();
+                    List<StatusCountModel> list = new ArrayList<>();
+                    StatusCountModel sc1 = new StatusCountModel();
                     sc1.count = uncheck + normalNum + abnormalNum;
                     sc1.statusTitle = mContext.getString(R.string.all_states);
                     sc1.status = 2;
                     list.add(sc1);
-                    InspectionStatusCountModel sc2 = new InspectionStatusCountModel();
+                    StatusCountModel sc2 = new StatusCountModel();
                     sc2.count = uncheck;
                     sc2.statusTitle = mContext.getString(R.string.not_inspected);
                     sc2.status = 0;
                     list.add(sc2);
-                    InspectionStatusCountModel sc3 = new InspectionStatusCountModel();
+                    StatusCountModel sc3 = new StatusCountModel();
                     int check = normalNum + abnormalNum;
                     sc3.count = check;
                     sc3.statusTitle = mContext.getString(R.string.has_inspected);
@@ -435,7 +435,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         return BLE_DEVICE_SET.containsKey(inspectionTaskDeviceDetail.getSn());
     }
 
-    public void doSelectStatusDevice(InspectionStatusCountModel item, String searchText) {
+    public void doSelectStatusDevice(StatusCountModel item, String searchText) {
         this.finish = item.status;
         requestSearchData(Constants.DIRECTION_DOWN, searchText);
     }

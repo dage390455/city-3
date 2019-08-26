@@ -62,12 +62,12 @@ import java.util.LinkedHashMap;
  */
 
 public class SensoroCityApplication extends BaseApplication implements SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
-    public IWXAPI api;
+
     private static volatile SensoroCityApplication instance;
     public static NotificationUtils mNotificationUtils;
     private static PushHandler pushHandler;
     private final Handler taskHandler = new Handler(Looper.getMainLooper());
-    public volatile boolean hasGotToken = false;
+
     public static String VIDEO_PATH;
 
 //    public BLEDeviceManager bleDeviceManager;

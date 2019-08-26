@@ -9,6 +9,8 @@ import androidx.multidex.MultiDexApplication;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.location.AMapLocationClient;
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.AccessToken;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
@@ -27,6 +29,7 @@ import com.sensoro.common.utils.DynamicTimeFormat;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 
 import java.util.Locale;
 
@@ -56,6 +59,8 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     }
 
 
+    public IWXAPI api;
+    public volatile boolean hasGotToken = false;
     public AMapLocationClient mLocationClient;
     public BLEDeviceManager bleDeviceManager;
 
@@ -255,5 +260,31 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     protected abstract void onMyApplicationResumed();
 
     protected abstract void onMyApplicationPaused();
+
+
+
+//    public  void   setHasGotToken(AccessToken result){
+//        // 调用成功，返回AccessToken对象
+//        String token = result.getAccessToken();
+//        hasGotToken = true;
+//        try {
+//            LogUtils.loge(this, "初始化QCR成功 ： token = " + token);
+//        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+//        }
+//    }
+//
+//
+//    public void setHasGotTokenError(OCRError error){
+//        // 调用失败，返回OCRError子类SDKError对象
+//        hasGotToken = false;
+//        String message = error.getMessage();
+//        try {
+//            LogUtils.loge(this, message);
+//        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+//        }
+//    }
+
 
 }

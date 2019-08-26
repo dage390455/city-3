@@ -203,12 +203,7 @@
         <activity
             android:name=".temp.FMMapBasic"
             android:configChanges="orientation|keyboardHidden" />
-        <activity android:name=".activity.ContractIndexActivity" />
-        <activity
-            android:name=".activity.ContractServiceActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity android:name=".activity.ContractInfoActivity" />
-        <activity android:name=".activity.ContractResultActivity" />
+
         <activity android:name=".activity.ScanLoginResultActivity" />
         <activity android:name=".activity.DeployMonitorSettingPhotoActivity" />
         <activity android:name=".activity.TakeRecordActivity" />
@@ -223,7 +218,7 @@
         <activity android:name=".activity.DeployDeviceTagActivity" />
         <activity android:name=".activity.AlarmDetailLogActivity" />
         <activity android:name=".activity.ScanActivity" />
-        <activity android:name=".activity.ContractManagerActivity" />
+
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
@@ -340,10 +335,7 @@
         <activity android:name=".activity.MonitorPointMapENActivity" />
         <activity android:name=".activity.MonitorPointElectricDetailActivity" />
         <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
-        <activity android:name=".activity.ContractEditorActivity" />
-        <activity android:name=".activity.ContractCreationSuccessActivity" />
-        <activity android:name=".activity.ContractDetailActivity" />
-        <activity android:name=".activity.ContractPreviewActivity" />
+
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />

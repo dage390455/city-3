@@ -247,8 +247,14 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
 //        getView().finishAc();
 
 
+        //巡检任务组件化测试
+//        ARouter.getInstance().build(ARouterConstants.ACTIVITY_INSPECTIONTASK_List)
+//                .withTransition(R.anim.slide_left, R.anim.slide_out)
+//                .navigation(mContext);
+//        getView().finishAc();
 
-        ARouter.getInstance().build(ARouterConstants.ACTIVITY_INSPECTIONTASK_List)
+        //合同管理模块化测试
+        ARouter.getInstance().build(ARouterConstants.ACTIVITY_CONTRACT_MANAGER)
                 .withTransition(R.anim.slide_left, R.anim.slide_out)
                 .navigation(mContext);
         getView().finishAc();

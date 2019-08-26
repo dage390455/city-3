@@ -48,9 +48,9 @@ import com.sensoro.inspectiontask.R2;
 import com.sensoro.smartcity.adapter.InspectionTaskRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.common.model.StatusCountModel;
 import com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter;
-import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
+import com.sensoro.common.widgets.StatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
 
 import java.util.List;
@@ -101,7 +101,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     private InspectionTaskRcContentAdapter mContentAdapter;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;
-    private InspectionTaskStatePopUtils mSelectStatusPop;
+    private StatePopUtils mSelectStatusPop;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private TipBleDialogUtils tipBleDialogUtils;
@@ -314,14 +314,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     private void initSelectStatusPop() {
-        mSelectStatusPop = new InspectionTaskStatePopUtils(mActivity);
-        mSelectStatusPop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
+        mSelectStatusPop = new StatePopUtils(mActivity);
+        mSelectStatusPop.setSelectDeviceTypeItemClickListener(new StatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
                 //选择类型的pop点击事件
                 setSearchHistoryVisible(false);
                 dismissInputMethodManager(acInspectionTaskEtSearch);
-                InspectionStatusCountModel item = mSelectStatusPop.getItem(position);
+                StatusCountModel item = mSelectStatusPop.getItem(position);
                 acInspectionTaskTvState.setText(item.statusTitle);
                 mPresenter.doSelectStatusDevice(item, acInspectionTaskEtSearch.getText().toString());
                 Resources resources = mActivity.getResources();
@@ -578,7 +578,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     @Override
-    public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> data) {
+    public void updateSelectDeviceStatusList(List<StatusCountModel> data) {
         if (mSelectStatusPop != null) {
             dismissInputMethodManager(acInspectionTaskEtSearch);
             mSelectStatusPop.updateSelectDeviceStatusList(data);

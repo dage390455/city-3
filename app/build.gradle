@@ -235,8 +235,7 @@ dependencies {
     }
     debugImplementation deps.leakcanary_debug
     releaseImplementation deps.leakcanary_release
-    //  更改扫描二维码为maven库
-    implementation deps.bga_qrcode_zxing
+
     //
     //protobuf
     implementation deps.protobuf
@@ -247,7 +246,7 @@ dependencies {
     debugImplementation deps.blockcanary_debug
     releaseImplementation deps.blockcanary_release
     //
-    implementation files('libs/ocr-sdk.jar')
+//    implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
     //
     implementation project(':sensor-kit')
@@ -270,10 +269,7 @@ dependencies {
     }
     //mp表格组件
     implementation deps.MPAndroidChart
-    //二维码扫描
-    api(project(':simplescanner')) {
-        exclude group: "com.amap.api"
-    }
+
     //播放器
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
@@ -291,7 +287,9 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(path: ':inspectiontask')
     }
-
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':contractmanager')
+    }
 
 
 

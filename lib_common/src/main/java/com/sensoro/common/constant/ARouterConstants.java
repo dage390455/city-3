@@ -40,6 +40,8 @@ public interface ARouterConstants {
 
 
     String ACTIVITY_INSPECTIONTASK_List = "/inspectiontask/activity/InspectionTaskListActivity";
+    String ACTIVITY_CONTRACT_MANAGER = "/inspectiontask/activity/ContractManagerActivity";
+
 
 
 

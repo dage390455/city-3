@@ -99,6 +99,17 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     api project(path: ':calendarview')
 
+    api files('libs/ocr-sdk.jar')
+
+
+
+
+    //  更改扫描二维码为maven库
+    api deps.bga_qrcode_zxing
+    //二维码扫描
+    api(project(':simplescanner')) {
+        exclude group: "com.amap.api"
+    }
 
     //
     implementation project(':sensor-kit')
