@@ -132,7 +132,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     public void onViewClicked(View view) {
         int viewID=view.getId();
         if(viewID==R.id.include_text_title_imv_arrows_left){
-
+            finishAc();
         }else if(viewID==R.id.include_text_title_tv_subtitle){
             finishAc();
         }else if(viewID==R.id.ac_contract_editor_personal_contract){
