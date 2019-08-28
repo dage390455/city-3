@@ -1,4 +1,4 @@
-package com.sensoro.smartcity;
+package com.sensoro.smartcity.debug;
 
 import android.os.Environment;
 import android.os.Handler;

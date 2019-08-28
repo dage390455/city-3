@@ -72,7 +72,7 @@
 
 
     <application
-        android:name="com.sensoro.smartcity.ContractTestApplication"
+        android:name="com.sensoro.smartcity.debug.ContractTestApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:label="@string/app_name"
@@ -84,7 +84,7 @@
 
 
         <activity
-            android:name="com.sensoro.smartcity.ContractTestActivity"
+            android:name="com.sensoro.smartcity.debug.ContractTestActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

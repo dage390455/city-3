@@ -1,18 +1,17 @@
-package com.sensoro.smartcity;
+package com.sensoro.smartcity.debug;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.inspectiontask.R;
-import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Rationale;
@@ -20,7 +19,6 @@ import com.yanzhenjie.permission.RequestExecutor;
 import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
-import butterknife.ButterKnife;
 
 public class InspectionTestActivity extends Activity {
 
@@ -38,6 +36,7 @@ public class InspectionTestActivity extends Activity {
             public void onClick(View view) {
 
                 ARouter.getInstance().build(ARouterConstants.ACTIVITY_LOGIN_TEST)
+                        .withString(Constants.ROUTEPATH,ARouterConstants.ACTIVITY_INSPECTIONTASK_List)
                         .withTransition(R.anim.slide_left, R.anim.slide_out)
                         .navigation(InspectionTestActivity.this);
             }

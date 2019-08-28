@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface Constants {
+     String ROUTEPATH = "routerpath";
     //
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
@@ -647,5 +648,8 @@ public interface Constants {
 //            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
 //            "magnetic", "tracker", "distance", "light"
 //    };
+
+
+
 }
 

@@ -51,7 +51,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCreate {
     private Activity mContext;
-
+    String TargetActivity;
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -65,6 +65,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
         numberList.add("(0570)2296646");
         numberList.add("(010)53876304");
         AppUtils.addToPhoneContact(mContext, nameList, numberList);
+
+        TargetActivity=mContext.getIntent().getStringExtra(Constants.ROUTEPATH);
     }
 
     private void readLoginData() {
@@ -234,34 +236,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
     private void openNextActivity(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
         mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
-//        if (eventLoginData.needAuth) {
-//            mainIntent.setClass(mContext, AuthActivity.class);
-//            getView().startAC(mainIntent);
-//        } else {
-//            mainIntent.setClass(mContext, InspectionTaskListActivity.class);
-//            getView().startAC(mainIntent);
-//            getView().finishAc();
-//        }
-//        mainIntent.setClass(mContext, InspectionTaskListActivity.class);
-//        getView().startAC(mainIntent);
-//        getView().finishAc();
 
-
-        //巡检任务组件化测试
-//        ARouter.getInstance().build(ARouterConstants.ACTIVITY_INSPECTIONTASK_List)
-//                .withTransition(R.anim.slide_left, R.anim.slide_out)
-//                .navigation(mContext);
-//        getView().finishAc();
-
-        //合同管理组件化测试
-//        ARouter.getInstance().build(ARouterConstants.ACTIVITY_CONTRACT_MANAGER)
-//                .withTransition(R.anim.slide_left, R.anim.slide_out)
-//                .navigation(mContext);
-//        getView().finishAc();
-
-
-        //基站管理组件化测试
-        ARouter.getInstance().build(ARouterConstants.ACTIVITY_BASESTATION_LIST)
+        ARouter.getInstance().build(TargetActivity)
                 .withTransition(R.anim.slide_left, R.anim.slide_out)
                 .navigation(mContext);
         getView().finishAc();

@@ -1,11 +1,20 @@
 package com.sensoro.common.widgets;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.Settings;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +31,12 @@ import com.sensoro.common.R;
 import com.sensoro.common.adapter.StateSelectAdapter;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.model.StatusCountModel;
+import com.sensoro.common.utils.ScreenUtils;
 
+import java.lang.reflect.Method;
 import java.util.List;
+
+
 
 public class StatePopUtils {
     private final Activity mActivity;
@@ -59,10 +72,21 @@ public class StatePopUtils {
 
             }
         });
+
+
         mPopupWindow = new PopupWindow(activity);
         mPopupWindow.setContentView(view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+//        if (Build.VERSION.SDK_INT < 24) {
+//        } else {  // 适配 android 7.0
+//            int[] location = new int[2];
+//            view.getLocationOnScreen(location);
+//            Point point = new Point();
+//            mActivity.getWindowManager().getDefaultDisplay().getSize(point);
+//            mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+//        }
+
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
 //        mPopupWindow.setFocusable(true);
@@ -113,15 +137,21 @@ public class StatePopUtils {
         } else {  // 适配 android 7.0
             int[] location = new int[2];
             view.getLocationOnScreen(location);
+
+
             Point point = new Point();
             mActivity.getWindowManager().getDefaultDisplay().getSize(point);
             int tempHeight = mPopupWindow.getHeight();
             if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
-                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+                mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ ScreenUtils.getBottomStatusHeight(mActivity));
+//                mPopupWindow.setHeight(mActivity.getResources().getDisplayMetrics().heightPixels - location[1] - view.getHeight());
+                Log.d("screenHeight==","point.y=="+point.y);
+                Log.d("screenHeight==","bottomheightPixels=="+ScreenUtils.getBottomStatusHeight(mActivity));
+
             }
+
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
         }
-        mPopupWindow.showAsDropDown(view);
         int i = mSelectStateAdapter.getItemCount() / 3;
         i *= 100;
         if(i<300){
@@ -154,4 +184,9 @@ public class StatePopUtils {
     public interface SelectDeviceTypeItemClickListener{
         void onSelectDeviceTypeItemClick(View view, int position);
     }
+
+
+
+
+
 }
