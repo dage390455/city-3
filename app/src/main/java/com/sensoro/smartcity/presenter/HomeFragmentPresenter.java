@@ -32,6 +32,7 @@ import com.sensoro.common.server.bean.DeviceTypeCount;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
@@ -41,7 +42,6 @@ import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.SortConditionModel;
-import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils.DialogDisplayStatusListener;
 
