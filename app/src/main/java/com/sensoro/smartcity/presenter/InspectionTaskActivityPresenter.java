@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
@@ -25,20 +27,19 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
 import com.sensoro.common.server.bean.InspectionTaskExecutionModel;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
-import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.temp.TestUpdateActivity;
 import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -500,10 +501,10 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionScan() {
-        Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
-        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-        getView().startAC(intent);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
+        bundle.putSerializable(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mContext);
     }
 
     public void doSelectTypeDevice(DeviceTypeModel deviceTypeModel, String searchText) {
