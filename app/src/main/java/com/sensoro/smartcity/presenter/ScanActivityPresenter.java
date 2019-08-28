@@ -39,7 +39,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
     private MediaPlayer mediaPlayer;
-    public int scanType = -1;
+    private int scanType = -1;
     private InspectionTaskDeviceDetail mDeviceDetail;
     private InspectionIndexTaskInfo mTaskInfo;
 
@@ -47,9 +47,18 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        scanType = mContext.getIntent().getIntExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, -1);
-        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
-        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO);
+        Object intExtra = getBundleValue(mContext, Constants.EXTRA_SCAN_ORIGIN_TYPE);
+        if (intExtra instanceof Integer) {
+            scanType = (int) intExtra;
+        }
+        Object deviceDetail = getBundleValue(mContext, Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
+        if (deviceDetail instanceof InspectionTaskDeviceDetail) {
+            mDeviceDetail = (InspectionTaskDeviceDetail) deviceDetail;
+        }
+        Object taskInfo = getBundleValue(mContext, Constants.EXTRA_INSPECTION_INDEX_TASK_INFO);
+        if (taskInfo instanceof InspectionIndexTaskInfo) {
+            mTaskInfo = (InspectionIndexTaskInfo) taskInfo;
+        }
         mediaPlayer = buildMediaPlayer(mContext);
         updateTitle();
     }

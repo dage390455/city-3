@@ -3,11 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
@@ -20,7 +22,6 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
-import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.widgets.CalendarPopUtils;
@@ -163,9 +164,12 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     }
 
     public void doDeployNewDevice() {
-        Intent intent = new Intent(mActivity, ScanActivity.class);
-        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
-        getView().startAC(intent);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mActivity);
+//        Intent intent = new Intent(mActivity, ScanActivity.class);
+//        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+//        getView().startAC(intent);
     }
 
     public void doCalendar(LinearLayout acDeployRecordTitleRoot) {

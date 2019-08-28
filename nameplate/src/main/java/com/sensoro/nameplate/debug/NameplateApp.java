@@ -34,6 +34,7 @@ public class NameplateApp extends BaseApplication {
         PreferencesHelper.getInstance().saveMyBaseUrl("city-dev");
         RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
         RetrofitServiceHelper.getInstance().getBaseUrlType();
+        //
         RetrofitServiceHelper.getInstance().login("15110041945", "aa1111", "").subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(null) {
             @Override
