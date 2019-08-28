@@ -568,23 +568,6 @@ public class DeployAnalyzerUtils {
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-//                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                    listener.onError(errorCode, null, errorMsg);
-//                } else if (errorCode == 4013101 || errorCode == 4000013) {
-//                    //TODO 控制逻辑
-//                    doStation();
-//                } else {
-//                    //TODO 控制逻辑
-//                    Intent intent = new Intent();
-//                    intent.setClass(activity, DeployResultActivity.class);
-//                    DeployResultModel deployResultModel = new DeployResultModel();
-//                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
-//                    deployResultModel.sn = scanSerialNumber;
-//                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                    deployResultModel.errorMsg = errorMsg;
-//                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                    listener.onError(errorCode, intent, errorMsg);
-//                }
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                     listener.onError(errorCode, null, errorMsg);
                 } else {
@@ -599,33 +582,6 @@ public class DeployAnalyzerUtils {
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeployStationInfo>>(presenter) {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-//                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                            listener.onError(errorCode, null, errorMsg);
-//                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-//                            if (AppUtils.isChineseLanguage() && PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
-//                                doCamera();
-//                            } else {
-//                                //不在账户下
-//                                Intent intent = new Intent();
-//                                intent.setClass(activity, DeployResultActivity.class);
-//                                DeployResultModel deployResultModel = new DeployResultModel();
-//                                deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-//                                deployResultModel.sn = scanSerialNumber;
-//                                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                                listener.onError(errorCode, intent, errorMsg);
-//                            }
-//                        } else {
-//                            Intent intent = new Intent();
-//                            intent.setClass(activity, DeployResultActivity.class);
-//                            DeployResultModel deployResultModel = new DeployResultModel();
-//                            deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
-//                            deployResultModel.sn = scanSerialNumber;
-//                            deployResultModel.errorMsg = errorMsg;
-//                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                            listener.onError(errorCode, intent, errorMsg);
-//                        }
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             listener.onError(errorCode, null, errorMsg);
                         } else {
@@ -767,29 +723,6 @@ public class DeployAnalyzerUtils {
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
-//                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                                    listener.onError(errorCode, null, errorMsg);
-//                                } else if (errorCode == 4013101 || errorCode == 4000013 || errorCode == 4029003) {
-//                                    //不在账户下
-//                                    Intent intent = new Intent();
-//                                    intent.setClass(activity, DeployResultActivity.class);
-//                                    DeployResultModel deployResultModel = new DeployResultModel();
-//                                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-//                                    deployResultModel.sn = scanSerialNumber;
-//                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                                    listener.onError(errorCode, intent, errorMsg);
-//                                } else {
-//                                    Intent intent = new Intent();
-//                                    intent.setClass(activity, DeployResultActivity.class);
-//                                    DeployResultModel deployResultModel = new DeployResultModel();
-//                                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
-//                                    deployResultModel.sn = scanSerialNumber;
-//                                    deployResultModel.errorMsg = errorMsg;
-//                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                                    listener.onError(errorCode, intent, errorMsg);
-//                                }
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     listener.onError(errorCode, null, errorMsg);
                                 } else {
@@ -952,23 +885,6 @@ public class DeployAnalyzerUtils {
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-//                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                            listener.onError(errorCode, null, errorMsg);
-//                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-//                            //TODO 控制逻辑
-//                            doStation();
-//                        } else {
-//                            //TODO 控制逻辑
-//                            Intent intent = new Intent();
-//                            intent.setClass(activity, DeployResultActivity.class);
-//                            DeployResultModel deployResultModel = new DeployResultModel();
-//                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
-//                            deployResultModel.sn = scanSerialNumber;
-//                            deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                            deployResultModel.errorMsg = errorMsg;
-//                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                            listener.onError(errorCode, intent, errorMsg);
-//                        }
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             listener.onError(errorCode, null, errorMsg);
                         } else {
@@ -1043,30 +959,6 @@ public class DeployAnalyzerUtils {
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-//                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                            listener.onError(errorCode, null, errorMsg);
-//                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-//                            //TODO 控制逻辑
-//                            Intent intent = new Intent();
-//                            intent.setClass(activity, DeployResultActivity.class);
-//                            DeployResultModel deployResultModel = new DeployResultModel();
-//                            deployResultModel.scanType = scanType;
-//                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-//                            deployResultModel.sn = scanSerialNumber;
-//                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                            listener.onError(errorCode, intent, errorMsg);
-//                        } else {
-//                            //TODO 控制逻辑
-//                            Intent intent = new Intent();
-//                            intent.setClass(activity, DeployResultActivity.class);
-//                            DeployResultModel deployResultModel = new DeployResultModel();
-//                            deployResultModel.scanType = scanType;
-//                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
-//                            deployResultModel.sn = scanSerialNumber;
-//                            deployResultModel.errorMsg = errorMsg;
-//                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                            listener.onError(errorCode, intent, errorMsg);
-//                        }
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             listener.onError(errorCode, null, errorMsg);
                         } else {
