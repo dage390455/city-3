@@ -114,14 +114,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                     break;
 
-                default:
-                    if (isAttachedView()) {
-
-
-                        getView().backFromWindowFull();
-                        getView().getPlayView().setCityPlayState(1);
-                    }
-                    break;
 
 
             }
@@ -266,25 +258,14 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         EventBus.getDefault().unregister(this);
     }
 
-//    private void setLastCover(DeviceCameraFacePic model) {
-//        Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
-//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-//                //缓存全尺寸
-//                .into(getView().getImageView());
-//
-//    }
 
     public void onCameraItemClick(final int index) {
-//        GSYVideoManager.instance().setTimeOut(1, true);
         if (isAttachedView()) {
             List<DeviceCameraFacePic> rvListData = getView().getRvListData();
             if (rvListData != null) {
 
                 DeviceCameraFacePic model = rvListData.get(index);
                 String captureTime1 = model.getCaptureTime();
-
-
-//            setLastCover(model);
 
                 getView().loadCoverImage(model.getSceneUrl());
                 long time;
@@ -385,7 +366,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                 getView().loadCoverImage(lastCover);
 
-//            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
                 itemUrl = null;
                 itemTitle = null;
             }
@@ -438,7 +418,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                 getView().startPlayLogic(itemUrl, itemTitle);
 
-//                getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
             }
         }
     }
@@ -459,7 +438,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     url = hls;
 
                     getView().loadCoverImage(lastCover);
-//                    getLastCoverImage(lastCover);
                     deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
                         if (!TextUtils.isEmpty(itemTitle)) {
