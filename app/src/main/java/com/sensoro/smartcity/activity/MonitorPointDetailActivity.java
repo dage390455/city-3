@@ -38,10 +38,10 @@ import com.sensoro.smartcity.adapter.MonitoringPointRcMalfunctionContentAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.common.constant.MonitorPointOperationCode;
-import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
+import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.smartcity.presenter.MonitorPointElectricDetailActivityPresenter;
+import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointDemoDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
@@ -56,8 +56,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPointElectricDetailActivityView,
-        MonitorPointElectricDetailActivityPresenter> implements IMonitorPointElectricDetailActivityView, TipOperationDialogUtils.TipDialogUtilsClickListener, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener, EarlyWarningThresholdDialogUtils.DialogUtilsChangeClickListener {
+public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetailActivityView,
+        MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, TipOperationDialogUtils.TipDialogUtilsClickListener, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener, EarlyWarningThresholdDialogUtils.DialogUtilsChangeClickListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -371,8 +371,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    protected MonitorPointElectricDetailActivityPresenter createPresenter() {
-        return new MonitorPointElectricDetailActivityPresenter();
+    protected MonitorPointDetailActivityPresenter createPresenter() {
+        return new MonitorPointDetailActivityPresenter();
     }
 
     @Override

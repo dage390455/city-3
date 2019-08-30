@@ -367,7 +367,7 @@ public interface RetrofitService {
      * @return
      */
     @GET("cameras")
-    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraList(@Query("DEFAULT_PAGE_SIZE") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
 
     /**
@@ -388,7 +388,7 @@ public interface RetrofitService {
     Observable<ResponseResult<List<DeviceCameraHistoryBean>>> getDeviceCameraPlayHistoryAddress(@Body RequestBody requestBody);
 
     @GET("cameras/group/bind")
-    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceGroupCameraList(@Query("_id") String _id, @Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceGroupCameraList(@Query("_id") String _id, @Query("DEFAULT_PAGE_SIZE") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
     @POST("picture/getFaceListById")
     Observable<ResponseResult<List<DeviceCameraPersonFaceBean>>> getDeviceCameraPersonFace(@Body RequestBody requestBody);
@@ -405,10 +405,10 @@ public interface RetrofitService {
     Observable<ResponseResult<List<CameraFilterModel>>> getStationFilter();
 
     @GET("cameras")
-    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(@Query("DEFAULT_PAGE_SIZE") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
     @GET("stations")
-    Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(@Query("DEFAULT_PAGE_SIZE") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
 
     @POST("qiniu/getCloudMediaByEventId")
@@ -432,7 +432,7 @@ public interface RetrofitService {
 
 
     @GET("nameplates")
-    Observable<ResponseResult<List<NamePlateInfo>>> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @Query("deviceFlag") String deviceFlag);
+    Observable<ResponseResult<List<NamePlateInfo>>> getNameplateList(@Query("DEFAULT_PAGE_SIZE") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @Query("deviceFlag") String deviceFlag);
 
 
     @DELETE("nameplate/{nameplateId}")

@@ -125,7 +125,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, curPage, search, selectedHashMap).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getBaseStationListByFilter(Constants.DEFAULT_PAGE_SIZE, curPage, search, selectedHashMap).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<BaseStationInfo>>>(this) {
                     @Override
                     public void onCompleted(ResponseResult<List<BaseStationInfo>> deviceCameraListRsp) {
@@ -157,7 +157,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, curPage, search, selectedHashMap).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getBaseStationListByFilter(Constants.DEFAULT_PAGE_SIZE, curPage, search, selectedHashMap).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<BaseStationInfo>>>(this) {
                     @Override
                     public void onCompleted(ResponseResult<List<BaseStationInfo>> deviceCameraListRsp) {
@@ -264,7 +264,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, curPage, searchText, selectedHashMap).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getBaseStationListByFilter(Constants.DEFAULT_PAGE_SIZE, curPage, searchText, selectedHashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<BaseStationInfo>>>(this) {
             @Override
             public void onCompleted(ResponseResult<List<BaseStationInfo>> deviceCameraListRsp) {
@@ -312,7 +312,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, curPage, searchText, selectedHashMap).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getBaseStationListByFilter(Constants.DEFAULT_PAGE_SIZE, curPage, searchText, selectedHashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<BaseStationInfo>>>(this) {
             @Override
             public void onCompleted(ResponseResult<List<BaseStationInfo>> deviceCameraListRsp) {

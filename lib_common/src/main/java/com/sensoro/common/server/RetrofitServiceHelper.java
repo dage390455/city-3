@@ -468,7 +468,7 @@ public class RetrofitServiceHelper {
      */
     public Observable<ResponseResult<List<DeviceAlarmLogInfo>>> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone
             , String search, Long beginTime, Long endTime, String unionTypes) {
-        return retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
+        return retrofitService.getDeviceAlarmLogList(Constants.DEFAULT_PAGE_SIZE, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
     }
 
     /**
@@ -483,7 +483,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<ResponseResult<List<MalfunctionListInfo>>> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
-        return retrofitService.getDeviceMalfunctionLogList(20, page, sn, deviceName, search, beginTime, endTime);
+        return retrofitService.getDeviceMalfunctionLogList(Constants.DEFAULT_PAGE_SIZE, page, sn, deviceName, search, beginTime, endTime);
     }
 
     /**
@@ -507,19 +507,19 @@ public class RetrofitServiceHelper {
 
     public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(null, null, null, page, Constants.pageSize, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(null, null, null, page, Constants.DEFAULT_PAGE_SIZE, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
     public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(null, null, sns, page, Constants.pageSize, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(null, null, sns, page, Constants.DEFAULT_PAGE_SIZE, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
     public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(String order, String sort, int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(order, sort, null, page, Constants.pageSize, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(order, sort, null, page, Constants.DEFAULT_PAGE_SIZE, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
@@ -539,7 +539,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<ResponseResult<List<UserInfo>>> getUserAccountList(String search, Integer page, Integer offset, Integer limit) {
-        return retrofitService.getUserAccountList(search, page, 20, offset, limit);
+        return retrofitService.getUserAccountList(search, page, Constants.DEFAULT_PAGE_SIZE, offset, limit);
     }
 
     /**
@@ -2113,7 +2113,7 @@ public class RetrofitServiceHelper {
                 jsonObject.put("cids", jsonArray);
             }
             if (pageSize != null) {
-                jsonObject.put("pageSize", pageSize);
+                jsonObject.put("DEFAULT_PAGE_SIZE", pageSize);
             }
             if (limit != null) {
                 jsonObject.put("limit", limit);
