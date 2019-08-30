@@ -81,11 +81,13 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
     private int currVolume;
     private int lastVolume;
     private static boolean isShowMaskTopBack = true;
-//    private static OrientationUtils mOrientationUtils;
     /**
      * 1没网,2移动数据 3加载失败重试 4 播放完成重播 5 离线 6直播 7 录像
      */
     private static int cityPlayState;
+    /**
+     * 切换视频流
+     */
     private static ArrayList<String> urlList = new ArrayList<>();
     /**
      * 当前视频格式
@@ -1596,8 +1598,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
             swVideoFormatTv.setVisibility(GONE);
 
         }
-
-
     }
 
 
