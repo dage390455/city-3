@@ -78,7 +78,7 @@ import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
-import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
+import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
 import com.sensoro.common.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
@@ -107,7 +107,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, IOnResume,
+public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnCreate, IOnResume,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
         , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
@@ -657,8 +657,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList && AppUtils.isChineseLanguage()) {
                     String id = mDeviceInfo.getDeviceGroup();
                     if (!TextUtils.isEmpty(id)) {
-                        RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
-                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(MonitorPointElectricDetailActivityPresenter.this) {
+                        RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, Constants.DEFAULT_PAGE_SIZE, 1, null).subscribeOn(Schedulers.io()).observeOn
+                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(MonitorPointDetailActivityPresenter.this) {
                             @Override
                             public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
                                 deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
@@ -1966,7 +1966,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 getView().updateDialogProgress(mContext.getString(R.string.sending_upgrade_version), -1, 2);
                                 RetrofitServiceHelper.getInstance().upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
                                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
-                                        subscribe(new CityObserver<ResponseResult>(MonitorPointElectricDetailActivityPresenter.this) {
+                                        subscribe(new CityObserver<ResponseResult>(MonitorPointDetailActivityPresenter.this) {
                                             @Override
                                             public void onCompleted(ResponseResult responseBase) {
                                                 try {

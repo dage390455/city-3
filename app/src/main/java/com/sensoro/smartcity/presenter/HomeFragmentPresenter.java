@@ -35,7 +35,7 @@ import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
@@ -480,7 +480,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         try {
             DeviceInfo deviceInfo = mDeviceInfoList.get(position);
             Intent intent = new Intent();
-            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
+            intent.setClass(mContext, MonitorPointDetailActivity.class);
             intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(Constants.EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(Constants.EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -751,7 +751,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
                         //此处容错，如果当前的model为空或者model中的设备数量小于等于一页的数量同时返回的列表数量与当前modeltop的设备数量不等，整体刷新
-                        if(mCurrentHomeTopModel==null||(mCurrentHomeTopModel.value<=Constants.pageSize&&mDeviceInfoList.size()!=mCurrentHomeTopModel.value)){
+                        if(mCurrentHomeTopModel==null||(mCurrentHomeTopModel.value<=Constants.DEFAULT_PAGE_SIZE &&mDeviceInfoList.size()!=mCurrentHomeTopModel.value)){
                             needResetHeaderPosition=true;
                             needFreshAll=true;
                             requestInitData(true,true);

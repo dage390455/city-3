@@ -333,7 +333,7 @@
         <activity android:name=".activity.DeployMonitorConfigurationActivity" />
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />
-        <activity android:name=".activity.MonitorPointElectricDetailActivity" />
+        <activity android:name=".activity.MonitorPointDetailActivity" />
         <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
 
         <activity android:name=".temp.TestUpdateActivity" />
