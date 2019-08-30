@@ -2113,7 +2113,7 @@ public class RetrofitServiceHelper {
                 jsonObject.put("cids", jsonArray);
             }
             if (pageSize != null) {
-                jsonObject.put("DEFAULT_PAGE_SIZE", pageSize);
+                jsonObject.put("pageSize", pageSize);
             }
             if (limit != null) {
                 jsonObject.put("limit", limit);
