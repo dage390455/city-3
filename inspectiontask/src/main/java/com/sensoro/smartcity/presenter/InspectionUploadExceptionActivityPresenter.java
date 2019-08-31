@@ -114,8 +114,8 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
 
                 Bundle bundle=new Bundle();
-                bundle.putSerializable("path_record",imageItem);
-                bundle.putBoolean("video_del",true);
+                bundle.putSerializable(Constants.EXTRA_PATH_RECORD,imageItem);
+                bundle.putBoolean(Constants.EXTRA_VIDEO_DEL,true);
                 startActivityForResult(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext,Constants.REQUEST_CODE_PLAY_RECORD);
 
             } else {

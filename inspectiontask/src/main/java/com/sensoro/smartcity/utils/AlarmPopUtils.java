@@ -53,7 +53,7 @@ public class AlarmPopUtils implements Constants{
         } else if (resultCode == RESULT_CODE_RECORD) {
             //拍视频
             if (data != null && requestCode == REQUEST_CODE_RECORD) {
-                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
+                ImageItem imageItem = (ImageItem) data.getSerializableExtra(Constants.EXTRA_PATH_RECORD);
                 if (imageItem != null) {
                     try {
                         LogUtils.loge("--- 从视频返回  path = " + imageItem.path);

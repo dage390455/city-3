@@ -500,8 +500,8 @@ public class AlarmPopUtils implements Constants,
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 mActivity.startActivityForResult(intent, REQUEST_CODE_PLAY_RECORD);
             } else {
                 Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
@@ -776,7 +776,7 @@ public class AlarmPopUtils implements Constants,
         } else if (resultCode == RESULT_CODE_RECORD) {
             //拍视频
             if (data != null && requestCode == REQUEST_CODE_RECORD) {
-                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
+                ImageItem imageItem = (ImageItem) data.getSerializableExtra(Constants.EXTRA_PATH_RECORD);
                 if (imageItem != null) {
                     try {
                         LogUtils.loge("--- 从视频返回  path = " + imageItem.path);

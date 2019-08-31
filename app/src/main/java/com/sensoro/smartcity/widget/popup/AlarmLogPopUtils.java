@@ -428,8 +428,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 mActivity.startActivity(intent);
             } else {
                 //

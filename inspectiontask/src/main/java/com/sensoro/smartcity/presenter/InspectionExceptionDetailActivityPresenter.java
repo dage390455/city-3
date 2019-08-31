@@ -133,8 +133,8 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
 
 
         Bundle bundle=new Bundle();
-        bundle.putSerializable("path_record",imageItem);;
-        bundle.putBoolean("video_del",true);
+        bundle.putSerializable(Constants.EXTRA_PATH_RECORD,imageItem);;
+        bundle.putBoolean(Constants.EXTRA_VIDEO_DEL,true);
         startActivity(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext);
     }
 }

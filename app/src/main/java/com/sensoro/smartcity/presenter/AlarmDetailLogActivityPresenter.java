@@ -290,8 +290,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mContext, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 if (isAttachedView()) {
                     getView().startAC(intent);
                 }

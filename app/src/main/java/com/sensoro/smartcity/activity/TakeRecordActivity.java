@@ -20,6 +20,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.SensoroToast;
@@ -86,7 +87,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
                 imageItem.path = videoPath;
                 imageItem.thumbPath = videoThumbPath;
                 imageItem.name = videoPath.substring(videoPath.lastIndexOf("/") + 1);
-                intent.putExtra("path_record", (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
                 setFinishResult(RESULT_CODE_RECORD, intent);
                 finishAc();
 
