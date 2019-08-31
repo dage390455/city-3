@@ -11,7 +11,9 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.contractmanager.R;
 import com.sensoro.contractmanager.R2;
@@ -24,6 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
+@Route(path = ARouterConstants.ACTIVITY_CONTRACT_EDITOR)
 public class ContractEditorActivity extends BaseActivity<IContractEditorView, ContractEditorPresenter>
         implements IContractEditorView, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R2.id.include_text_title_imv_arrows_left)

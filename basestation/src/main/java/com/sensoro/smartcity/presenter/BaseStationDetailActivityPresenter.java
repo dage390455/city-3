@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.sensoro.basestation.R;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -33,9 +34,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.basestation.R;
 import com.sensoro.smartcity.activity.FrequencyPointActivity;
-
 import com.sensoro.smartcity.activity.NetWorkInfoActivity;
 import com.sensoro.smartcity.activity.SelfCheckActivity;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
@@ -479,14 +478,13 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION);
         mDeviceInfo.setSn(sn);
 
+        Bundle bundle=new Bundle();
+        bundle.putSerializable(Constants.EXTRA_DEVICE_INFO,mDeviceInfo);
+
         if (AppUtils.isChineseLanguage()) {
-            ARouter.getInstance().build(ARouterConstants.ACTIVITY_MonitorPointMap_Activity)
-                    .withSerializable(Constants.EXTRA_DEVICE_INFO,mDeviceInfo).withTransition(R.anim.slide_left, R.anim.slide_out)
-                    .navigation(mContext);
+            startActivity(ARouterConstants.ACTIVITY_MonitorPointMap_Activity,bundle,mContext);
         } else {
-            ARouter.getInstance().build(ARouterConstants.ACTIVITY_MonitorPointMap_ENActivity)
-                    .withSerializable(Constants.EXTRA_DEVICE_INFO,mDeviceInfo).withTransition(R.anim.slide_left, R.anim.slide_out)
-                    .navigation(mContext);
+            startActivity(ARouterConstants.ACTIVITY_MonitorPointMap_ENActivity,bundle,mContext);
         }
 
 

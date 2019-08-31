@@ -20,9 +20,7 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
-import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
@@ -154,8 +152,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContract) {
-                Intent intent = new Intent(mContext, ContractManagerActivity.class);
-                getView().startAC(intent);
+                startActivity(ARouterConstants.ACTIVITY_CONTRACT_MANAGER,null,mContext);
                 return;
             }
         }
@@ -204,8 +201,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doInspection() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasInspectionTaskList) {
-                Intent intent = new Intent(mContext, InspectionTaskListActivity.class);
-                getView().startAC(intent);
+                startActivity(ARouterConstants.ACTIVITY_INSPECTIONTASK_List,null,mContext);
                 return;
             }
         }
@@ -267,5 +263,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     public void doManageNameplate() {
         startActivity(ARouterConstants.ACTIVITY_NAMEPLATE_LIST, null, mContext);
+    }
+
+    public void doBaseStationList() {
+        startActivity(ARouterConstants.ACTIVITY_BASESTATION_LIST, null, mContext);
     }
 }

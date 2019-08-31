@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.basestation.R;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
@@ -15,7 +16,6 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.common.server.response.ResponseResult;
-import com.sensoro.basestation.R;
 import com.sensoro.smartcity.activity.BaseStationDetailActivity;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 

@@ -3,10 +3,10 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -19,12 +19,12 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.smartcity.constant.InspectionConstant;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
-import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.utils.AlarmPopUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -113,11 +112,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //                intent.putExtra("video_del", true);
 //                mContext.startActivityForResult(intent, Constants.REQUEST_CODE_PLAY_RECORD);
 
-                ARouter.getInstance().build(ARouterConstants.ACTIVITY_VIDEP_PLAY)
-                        .withSerializable("path_record",imageItem)
-                        .withBoolean("video_del", true)
-                        .withTransition(R.anim.slide_left, R.anim.slide_out)
-                        .navigation(mContext,Constants.REQUEST_CODE_PLAY_RECORD);
+
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("path_record",imageItem);
+                bundle.putBoolean("video_del",true);
+                startActivityForResult(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext,Constants.REQUEST_CODE_PLAY_RECORD);
 
             } else {
                 Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
@@ -166,12 +165,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
 //        getView().startAC(intent);
 
-        ARouter.getInstance().build(ARouterConstants.ACTIVITY_SCAN)
-                .withSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO,mDeviceDetail)
-                .withInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE)
-                .withTransition(R.anim.slide_left, R.anim.slide_out)
-                .navigation(mContext);
 
+        Bundle bundle=new Bundle();
+        bundle.putSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO,mDeviceDetail);
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE,Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
+        startActivity(ARouterConstants.ACTIVITY_SCAN,bundle,mContext);
 
     }
 
@@ -309,10 +307,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //                mContext.startActivityForResult(intent2, Constants.REQUEST_CODE_RECORD);
 
 
-                ARouter.getInstance().build(ARouterConstants.ACTIVITY_TAKE_RECORD)
-                        .withTransition(R.anim.slide_left, R.anim.slide_out)
-                        .navigation(mContext,Constants.REQUEST_CODE_RECORD);
-
+                startActivityForResult(ARouterConstants.ACTIVITY_TAKE_RECORD,null,mContext,Constants.REQUEST_CODE_RECORD);
                 break;
             default:
                 break;

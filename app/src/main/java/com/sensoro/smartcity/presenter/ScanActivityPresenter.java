@@ -228,7 +228,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     @Override
                     public void onSuccess(Intent intent) {
                         getView().dismissProgressDialog();
-                        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))) {
+                        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH_NAMEPLATE))) {
                             Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
                             if (serializableExtra instanceof DeployAnalyzerModel) {
                                 DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
@@ -246,7 +246,9 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                             } else {
                                 getView().toastShort(mContext.getResources().getString(R.string.please_re_scan_try_again));
                             }
-                        } else {
+                        } else  if(intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))){
+                            startActivity(ARouterConstants.AROUTER_PATH,intent.getExtras(), mContext);
+                        }else {
                             getView().startAC(intent);
                         }
 //

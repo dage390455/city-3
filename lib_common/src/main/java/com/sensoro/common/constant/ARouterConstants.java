@@ -21,6 +21,7 @@ public interface ARouterConstants {
     String ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST = "/nameplate/activity/DeployNameplateAddSensorFromListActivity";
 
     String AROUTER_PATH = "arouter_path";
+    String AROUTER_PATH_NAMEPLATE = "AROUTER_PATH_NAMEPLATE";
 
     String ACTIVITY_DEPLOY_NAMEPLATE = "/nameplate/activity/DeployNameplateActivity";
 
@@ -40,8 +41,16 @@ public interface ARouterConstants {
 
 
     String ACTIVITY_INSPECTIONTASK_List = "/inspectiontask/activity/InspectionTaskListActivity";
+    String ACTIVITY_INSPECTION = "/inspectiontask/activity/InspectionActivity";
+    String ACTIVITY_INSPECTION_EXCEPTION_DETAIL = "/inspectiontask/activity/InspectionExceptionDetailActivity";
+
+
+
     String ACTIVITY_CONTRACT_MANAGER = "/contractmanager/activity/ContractManagerActivity";
+    String ACTIVITY_CONTRACT_EDITOR="/contractmanager/activity/ContractEditorActivity";
     String ACTIVITY_BASESTATION_LIST= "/basestation/activity/BaseStationListActivity";
+
+
 
 
 

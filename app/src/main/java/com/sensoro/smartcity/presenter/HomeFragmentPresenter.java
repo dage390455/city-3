@@ -12,6 +12,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -34,7 +35,6 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
@@ -1027,9 +1027,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContractCreate) {
-                Intent intent = new Intent(mContext, ContractEditorActivity.class);
-                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
-                getView().startAC(intent);
+//                Intent intent = new Intent(mContext, ContractEditorActivity.class);
+//                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
+//                getView().startAC(intent);
+
+                Bundle bundle=new Bundle();
+                bundle.putInt(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
+                startActivity(ARouterConstants.ACTIVITY_CONTRACT_EDITOR,bundle,mContext);
                 return;
             }
         }

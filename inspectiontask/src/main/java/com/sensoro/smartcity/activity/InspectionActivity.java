@@ -10,8 +10,10 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -27,7 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
+@Route(path= ARouterConstants.ACTIVITY_INSPECTION)
 public class InspectionActivity extends BaseActivity<IInspectionActivityView, InspectionActivityPresenter>
         implements IInspectionActivityView, TipDialogUtils.TipDialogUtilsClickListener {
     @BindView(R2.id.include_text_title_imv_arrows_left)

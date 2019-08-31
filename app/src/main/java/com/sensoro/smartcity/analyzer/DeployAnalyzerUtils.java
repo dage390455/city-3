@@ -25,16 +25,14 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployCameraDetailActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
-import com.sensoro.smartcity.activity.InspectionActivity;
-import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.activity.SignalCheckActivity;
-import com.sensoro.common.utils.LogUtils;
-import com.sensoro.common.utils.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -402,7 +400,7 @@ public class DeployAnalyzerUtils {
                     Intent intent = new Intent();
                     deployAnalyzerModel.deployType = scanType;
                     intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-                    intent.putExtra(ARouterConstants.AROUTER_PATH, "path");
+                    intent.putExtra(ARouterConstants.AROUTER_PATH_NAMEPLATE, "path");
                     listener.onSuccess(intent);
                 }
             }
@@ -532,10 +530,12 @@ public class DeployAnalyzerUtils {
                     InspectionTaskDeviceDetail deviceDetail = devices.get(0);
                     Intent intent = new Intent();
                     int status = deviceDetail.getStatus();
+
                     switch (status) {
                         case 0:
                             if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
-                                intent.setClass(activity, InspectionActivity.class);
+//                                intent.setClass(activity, InspectionActivity.class);
+                                intent.putExtra(ARouterConstants.AROUTER_PATH,ARouterConstants.ACTIVITY_INSPECTION);
                             } else {
                                 listener.onError(0, null, activity.getString(R.string.account_no_patrol_device_permissions));
                                 return;
@@ -545,7 +545,8 @@ public class DeployAnalyzerUtils {
                             listener.onError(0, null, activity.getString(R.string.device_patrolled_status_normal));
                             return;
                         case 2:
-                            intent.setClass(activity, InspectionExceptionDetailActivity.class);
+//                            intent.setClass(activity, InspectionExceptionDetailActivity.class);
+                            intent.putExtra(ARouterConstants.AROUTER_PATH,ARouterConstants.ACTIVITY_INSPECTION_EXCEPTION_DETAIL);
                             break;
                     }
                     intent.putExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);

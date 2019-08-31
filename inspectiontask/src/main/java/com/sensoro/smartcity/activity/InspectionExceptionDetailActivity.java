@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -29,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Route(path = ARouterConstants.ACTIVITY_INSPECTION_EXCEPTION_DETAIL)
 public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionExceptionDetailActivityView,
         InspectionExceptionDetailActivityPresenter> implements IInspectionExceptionDetailActivityView {
     @BindView(R2.id.include_text_title_imv_arrows_left)

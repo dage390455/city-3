@@ -3,8 +3,8 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -21,7 +21,6 @@ import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,8 +130,11 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
         imageItem.isRecord = true;
         imageItem.thumbPath = item.thumbUrl;
         imageItem.path = item.url;
-        ARouter.getInstance().build(ARouterConstants.ACTIVITY_VIDEP_PLAY)
-                .withSerializable("path_record",(Serializable) imageItem).withBoolean("video_del", true).withSerializable("path_record", (Serializable) imageItem).withTransition(R.anim.slide_left, R.anim.slide_out)
-                .navigation(mContext);
+
+
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("path_record",imageItem);;
+        bundle.putBoolean("video_del",true);
+        startActivity(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext);
     }
 }
