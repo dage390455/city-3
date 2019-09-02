@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.utils.ScreenUtils;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.model.DeviceTypeModel;
@@ -146,7 +147,7 @@ public class SelectDeviceTypePopUtils {
             mActivity.getWindowManager().getDefaultDisplay().getSize(point);
             int tempHeight = mPopupWindow.getHeight();
             if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
-                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+                mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ ScreenUtils.getBottomStatusHeight(mActivity));
             }
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
         }
