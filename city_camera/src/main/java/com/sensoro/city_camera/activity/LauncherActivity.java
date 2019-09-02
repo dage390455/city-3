@@ -76,11 +76,9 @@ public class LauncherActivity extends BaseActivity<ILauncherActivityView, Launch
     private void initBottomBar() {
         warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, mActivity.getString(R.string.main_page_warn));
         warnItem.setBadgeItem(new TextBadgeItem());
-        BottomNavigationItem cameraItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, getString(R.string.main_page_camera));
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
                 .addItem(warnItem)
-                .addItem(cameraItem)
                 .setFirstSelectedPosition(0)
                 .initialise();
         warnItem.getBadgeItem().hide(false);
