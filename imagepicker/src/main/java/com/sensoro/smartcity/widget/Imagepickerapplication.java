@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.utils.Repause;
@@ -14,6 +15,8 @@ public  class Imagepickerapplication extends Application implements Repause.List
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Log.d("Imagepickerapplication","Imagepickerapplication onCreate");
         sInstance = this;
         ContextUtils.init(this);
         Repause.init(Imagepickerapplication.this);

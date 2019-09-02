@@ -103,12 +103,14 @@ class PictureVertifyView extends AppCompatImageView {
         // 实例化阴影画笔
         mMaskShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mMaskShadowPaint.setColor(Color.parseColor("#222222"));
-        mMaskShadowPaint.setStrokeWidth(10);
-        mMaskShadowPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
+        mMaskShadowPaint.setStrokeWidth(50);
+        mMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
 
         mTargetMaskShadowPaint= new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mTargetMaskShadowPaint.setColor(Color.parseColor("#222222"));
-        mTargetMaskShadowPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.SOLID));
+        mTargetMaskShadowPaint.setColor(Color.parseColor("#000000"));
+        mTargetMaskShadowPaint.setAlpha(200);
+
+        mTargetMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
 
     }
 

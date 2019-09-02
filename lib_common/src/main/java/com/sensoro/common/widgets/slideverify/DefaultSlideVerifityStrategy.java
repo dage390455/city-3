@@ -78,7 +78,7 @@ public class DefaultSlideVerifityStrategy extends SlideVerifityStrategy {
     public Paint getBlockShadowPaint() {
         Paint shadowPaint = new Paint();
         shadowPaint.setColor(Color.parseColor("#000000"));
-        shadowPaint.setAlpha(40);
+        shadowPaint.setAlpha(80);
         shadowPaint.setShadowLayer(10,2,2,Color.parseColor("#000000"));
         return shadowPaint;
     }

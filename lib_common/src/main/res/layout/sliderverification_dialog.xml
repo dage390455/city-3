@@ -29,7 +29,7 @@
             android:lineSpacingExtra="4dp"
             android:text=""
             android:textColor="#252525"
-            android:textSize="16dp"
+            android:textSize="14dp"
             />
 
     <com.sensoro.common.widgets.slideverify.SlideVerifity
