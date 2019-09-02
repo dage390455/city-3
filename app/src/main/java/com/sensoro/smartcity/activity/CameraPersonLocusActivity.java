@@ -344,7 +344,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar.transparentStatusBar().statusBarDarkFont(true).init();
         return true;

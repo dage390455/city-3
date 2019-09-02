@@ -106,7 +106,7 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .transparentStatusBar()

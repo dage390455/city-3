@@ -104,7 +104,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
 
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar.transparentStatusBar().init();
         return true;

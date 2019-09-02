@@ -49,7 +49,7 @@ public class PermissionChangeActivity extends BaseActivity<IPermissionChangeActi
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .transparentStatusBar()

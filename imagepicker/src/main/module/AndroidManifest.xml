@@ -77,13 +77,13 @@
         android:protectionLevel="normal" />
 
     <application
-        android:name="com.sensoro.smartcity.widget.Imagepickerapplication"
+        android:name="com.sensoro.smartcity.widget.debug.Imagepickerapplication"
         android:allowBackup="true"
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         tools:replace="android:theme">
 
-        <activity android:name="com.sensoro.smartcity.widget.MainActivity">
+        <activity android:name="com.sensoro.smartcity.widget.debug.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

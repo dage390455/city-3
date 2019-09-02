@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget;
+package com.sensoro.smartcity.widget.debug;
 
 import android.content.Context;
 import android.content.Intent;

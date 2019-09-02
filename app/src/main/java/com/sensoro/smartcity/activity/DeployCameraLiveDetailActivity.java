@@ -246,7 +246,7 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .statusBarColor(R.color.white)

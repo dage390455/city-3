@@ -216,7 +216,7 @@ public class LauncherActivity extends BaseActivity<ILauncherActivityView, Launch
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .transparentStatusBar()

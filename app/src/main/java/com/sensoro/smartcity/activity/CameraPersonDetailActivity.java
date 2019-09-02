@@ -231,7 +231,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .statusBarColor(R.color.white)
