@@ -87,7 +87,7 @@ public class StatePopUtils {
 //            mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
 //        }
 
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B3000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
 //        mPopupWindow.setFocusable(true);
         initAnimation();
