@@ -47,20 +47,12 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
         //
         boolean hasMonitorTaskList = PreferencesHelper.getInstance().getUserData().hasMonitorTaskList;
         if (isModel) {
-            Object fragmentCameraList = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_LIST).navigation(mActivity);
+            Object fragmentCameraList = ARouter.getInstance().build(ARouterConstants.FRAGMENT_FIRE_WARN_FRAGMENT).navigation(mActivity);
             if (fragmentCameraList instanceof Fragment) {
                 mFragmentList.add((Fragment) fragmentCameraList);
                 mFragmentTitleList.add(context.getString(R.string.fire_warn_title));
             }
-            if (hasMonitorTaskList) {
-                Object cameraWarn = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_WARN_LIST).navigation(mActivity);
-
-                if (cameraWarn instanceof Fragment) {
-                    Fragment fragment = (Fragment) cameraWarn;
-                    mFragmentList.add(fragment);
-                    mFragmentTitleList.add(context.getString(com.sensoro.common.R.string.security_warn_title));
-                }
-            }
+            getView().setHasFireSecurityView(false);
         } else {
             Object fireWarnFragment = ARouter.getInstance().build(ARouterConstants.FRAGMENT_FIRE_WARN_FRAGMENT).navigation(mActivity);
             if (fireWarnFragment instanceof Fragment) {
@@ -75,10 +67,9 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
                     mFragmentTitleList.add(context.getString(com.sensoro.common.R.string.security_warn_title));
                 }
             }
+            getView().setHasFireSecurityView(hasMonitorTaskList);
         }
         // 控制显示安防预警列表查看权限
-
-        getView().setHasFireSecurityView(hasMonitorTaskList);
         getView().updateFireSecurityPageAdapterData(mFragmentTitleList, mFragmentList);
     }
 
