@@ -47,7 +47,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
-import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
+import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindow;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CameraListActivity extends BaseActivity<ICameraListActivityView, CameraListActivityPresenter>
-        implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, CameraListFilterPopupWindowTest.OnCameraListFilterPopupWindowListener {
+        implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, CameraListFilterPopupWindow.OnCameraListFilterPopupWindowListener {
 
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -94,7 +94,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     private DeviceCameraContentAdapter mDeviceCameraContentAdapter;
     private Animation returnTopAnimation;
 
-    private CameraListFilterPopupWindowTest mCameraListFilterPopupWindow;
+    private CameraListFilterPopupWindow mCameraListFilterPopupWindow;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
@@ -177,7 +177,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(mActivity);
+        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity);
         mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
