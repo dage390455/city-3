@@ -1201,5 +1201,6 @@
 
 
     <string name="result">结果</string>
+    <string name="time_out">超时</string>
 
 </resources>
