@@ -24,12 +24,7 @@ public class SlidePopUtils {
 
     }
 
-    public static SlidePopUtils getInstance() {
-        return SlidePopUtilsHolder.instance;
-    }
-    private static class SlidePopUtilsHolder {
-        private static final SlidePopUtils instance = new SlidePopUtils();
-    }
+
 
 
     public  void showDialog(Activity mActivity) {

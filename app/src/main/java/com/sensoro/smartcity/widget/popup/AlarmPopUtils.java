@@ -366,7 +366,7 @@ public class AlarmPopUtils implements Constants,
         });
 
 
-        mSlidePopUtils = SlidePopUtils.getInstance();
+        mSlidePopUtils = new SlidePopUtils();
         mSlidePopUtils.setTitle("确认真实火警")
                 .setDesc("在现场有明火或者浓烟，且有蔓延趋势的情况下确认真实火警；\n" +
                         "确认真实火警后，所有应急联系人及辖区领导都会接到电活通知赶往现场处置")
