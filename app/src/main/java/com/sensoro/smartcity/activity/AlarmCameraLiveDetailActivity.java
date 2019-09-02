@@ -406,7 +406,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
 
         immersionBar.statusBarDarkFont(true).statusBarColor(R.color.white).init();

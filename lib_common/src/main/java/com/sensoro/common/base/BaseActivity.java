@@ -3,7 +3,6 @@ package com.sensoro.common.base;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -95,10 +94,12 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         Window win = getWindow();
-        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED //锁屏状态下显示
-                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD //解锁
-                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON //保持屏幕长亮
-                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON); //打开屏幕
+        win.addFlags(
+//                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED //锁屏状态下显示
+//                |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD //解锁
+                        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON //保持屏幕长亮
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON); //打开屏幕
         //
         mPresenter = createPresenter();
         mPresenter.attachView((V) this);
@@ -121,11 +122,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (supportActionBar != null) {
             supportActionBar.hide();
         }
-//        CustomDensityUtils.SetCustomDensity(this, ContextUtils.getContext());
-        //控制顶部状态栏显示
-//        StatusBarCompat.translucentStatusBar(thi®s);
-//        StatusBarCompat.setStatusBarIconDark(this,true);
-//        boolean darkmode = true;
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(BuildConfig.DEBUG);
         ARouter.getInstance().inject(this);
@@ -136,7 +132,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * 处理顶部的StatusBar
      */
     private void handleStatusBar() {
-        if (!isActivityOverrideStatusBar()) {
+        if (!setMyCurrentStatusBar()) {
             immersionBar = ImmersionBar.with(this);
             immersionBar.fitsSystemWindows(true, R.color.white)
                     .statusBarColor(R.color.white)
@@ -150,14 +146,24 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      *
      * @return
      */
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         return false;
     }
 
+    /**
+     * 设置单独的主题
+     *
+     * @return
+     */
     public boolean setMyCurrentActivityTheme() {
         return false;
     }
 
+    /**
+     * 设置单独的旋转方向
+     *
+     * @return
+     */
     public boolean setMyCurrentActivityOrientation() {
         return false;
     }
@@ -186,9 +192,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         mPresenter.onDestroy();
         mPresenter.detachView();
-//        if (immersionBar != null) {
-//            immersionBar.destroy();
-//        }
         ActivityTaskManager.getInstance().popActivity(this);
         isDestroyed = true;
     }
@@ -348,8 +351,4 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
 }

@@ -90,7 +90,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar.transparentStatusBar().init();
         return true;
