@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget;
+package com.sensoro.smartcity.widget.debug;
 
 import com.sensoro.common.base.BaseApplication;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
