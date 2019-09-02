@@ -67,4 +67,10 @@ dependencies {
     //
     implementation deps.bga_qrcode_zxing
 
+
+    //组件调用需要集成登录测试module
+    if(isModule.toBoolean()){
+        implementation project(path: ':logintest')
+    }
+
 }
