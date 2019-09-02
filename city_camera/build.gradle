@@ -102,4 +102,10 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
     implementation project(path: ':bottomnavigation')
+
+    //组件调用需要集成登录测试module
+    if(isModule.toBoolean()){
+        implementation project(path: ':logintest')
+    }
+
 }
