@@ -23,6 +23,7 @@ import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
@@ -86,8 +87,14 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         if (deviceNotifications.isEmpty()) {
             getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-            dialogUtil.show(deviceNotifications);
+            if (deviceNotifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(deviceNotifications);
+            } else {
+                DeviceNotificationBean deviceNotificationBean = deviceNotifications.get(0);
+                String content = deviceNotificationBean.getContent();
+                AppUtils.diallPhone(content, mContext);
+            }
         }
 
     }
