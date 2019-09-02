@@ -1,24 +1,28 @@
 package com.sensoro.smartcity.widget;
 
-import android.app.Application;
-
-import com.sensoro.common.base.ContextUtils;
-import com.sensoro.common.utils.Repause;
+import com.sensoro.common.base.BaseApplication;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
 import com.sensoro.smartcity.widget.popup.GlideImageLoader;
 
-public  class Imagepickerapplication extends Application implements Repause.Listener{
+public  class Imagepickerapplication extends BaseApplication{
 
     public static Imagepickerapplication sInstance;
     @Override
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        ContextUtils.init(this);
-        Repause.init(Imagepickerapplication.this);
-        Repause.registerListener(Imagepickerapplication.this);
         initImagePicker();
+    }
+
+    @Override
+    protected void onMyApplicationResumed() {
+
+    }
+
+    @Override
+    protected void onMyApplicationPaused() {
+
     }
 
     private void initImagePicker() {
@@ -35,25 +39,6 @@ public  class Imagepickerapplication extends Application implements Repause.List
         imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         imagePicker.setOutPutX(1000);                         //保存文件的宽度。单位像素
         imagePicker.setOutPutY(1000);                         //保存文件的高度。单位像素
-    }
-
-    @Override
-    public void onApplicationResumed() {
-        onMyApplicationResumed();
-    }
-
-    @Override
-    public void onApplicationPaused() {
-        onMyApplicationPaused();
-    }
-
-
-    protected void onMyApplicationResumed() {
-
-    }
-
-    protected void onMyApplicationPaused() {
-
     }
 
 }
