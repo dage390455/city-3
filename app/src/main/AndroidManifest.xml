@@ -76,7 +76,6 @@
         <activity android:name=".activity.DeployDeviceTagActivity" />
         <activity android:name=".activity.AlarmDetailLogActivity" />
         <activity android:name=".activity.ScanActivity" />
-
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
@@ -170,7 +169,6 @@
         <!-- </intent-filter> -->
         <!-- </receiver> -->
         <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
-
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
@@ -178,7 +176,6 @@
         <activity android:name=".activity.SecurityRiskTagManagerActivity" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
-
         <activity
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -199,7 +196,6 @@
             android:name=".activity.AlarmCameraVideoDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.DeployCameraLiveDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

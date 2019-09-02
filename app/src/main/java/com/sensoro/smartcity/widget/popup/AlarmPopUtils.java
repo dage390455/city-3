@@ -33,6 +33,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.slideverify.SlidePopUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
@@ -138,6 +139,12 @@ public class AlarmPopUtils implements Constants,
             mRealFireDialog.destory();
             mRealFireDialog = null;
         }
+
+        if(mSlidePopUtils!=null){
+            mSlidePopUtils.destroySlideVerifyDialog();
+            mSlidePopUtils=null;
+        }
+
         if (bind != null) {
             bind.unbind();
             bind = null;
@@ -337,6 +344,8 @@ public class AlarmPopUtils implements Constants,
         });
     }
 
+    SlidePopUtils mSlidePopUtils;
+
     private void initRealFireDialog() {
         mRealFireDialog = new TipDialogUtils(mActivity);
         mRealFireDialog.setTipMessageText(mActivity.getString(R.string.confirm_upload_real_fire));
@@ -355,6 +364,35 @@ public class AlarmPopUtils implements Constants,
                 doCommit();
             }
         });
+
+
+        mSlidePopUtils = SlidePopUtils.getInstance();
+        mSlidePopUtils.setTitle("确认真实火警")
+                .setDesc("在现场有明火或者浓烟，且有蔓延趋势的情况下确认真实火警；\n" +
+                        "确认真实火警后，所有应急联系人及辖区领导都会接到电活通知赶往现场处置")
+                .setListener(new SlidePopUtils.VerifityResultListener() {
+            @Override
+            public void onAccess(long time) {
+                Toast.makeText(mActivity, "验证成功", Toast.LENGTH_SHORT).show();
+                mSlidePopUtils.dismissDialog();
+                doCommit();
+            }
+
+            @Override
+            public void onFailed(int failCount) {
+                mSlidePopUtils.dismissDialog();
+                Toast.makeText(mActivity, "验证失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onMaxFailed() {
+                mSlidePopUtils.dismissDialog();
+                Toast.makeText(mActivity, "验证超过最大次数", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
     public void show(final AlarmPopupModel alarmPopupModel) {
@@ -439,7 +477,8 @@ public class AlarmPopUtils implements Constants,
             return;
         }
         if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
-            mRealFireDialog.show();
+//            mRealFireDialog.show();
+            mSlidePopUtils.showDialog(mActivity);
             return;
         }
         setUpdateButtonClickable(false);
