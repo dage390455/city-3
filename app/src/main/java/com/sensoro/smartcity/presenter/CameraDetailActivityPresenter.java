@@ -114,6 +114,14 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                     break;
 
+                default:
+                    if (isAttachedView()) {
+
+
+                        getView().backFromWindowFull();
+                        getView().getPlayView().setCityPlayState(1);
+                    }
+                    break;
 
 
             }
