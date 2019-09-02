@@ -169,9 +169,10 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name="com.tencent.bugly.beta.ui.BetaActivity"
-            android:theme="@android:style/Theme.Translucent" />
+<!--        <activity-->
+<!--            android:name="com.tencent.bugly.beta.ui.BetaActivity"-->
+<!--            android:configChanges="keyboardHidden|orientation|screenSize|locale"-->
+<!--            android:theme="@android:style/Theme.Translucent" />-->
         <activity
             android:name="com.igexin.sdk.PushActivity"
             android:excludeFromRecents="true"
@@ -274,9 +275,9 @@
             android:label="PushService"
             android:process=":pushservice" />
 
-        <meta-data
-            android:name="InstallChannel"
-            android:value="${AVOS_CHANNEL_VALUE}" /> <!-- &lt;!&ndash; 您从百度网站获取的APP KEY &ndash;&gt; -->
+<!--        <meta-data-->
+<!--            android:name="InstallChannel"-->
+<!--            android:value="${AVOS_CHANNEL_VALUE}" /> &lt;!&ndash; &lt;!&ndash; 您从百度网站获取的APP KEY &ndash;&gt; &ndash;&gt;-->
         <!-- <meta-data -->
         <!-- android:name="BaiduMobAd_STAT_ID" -->
         <!-- android:value="bb510e227a" /> &lt;!&ndash; abcd1234 &ndash;&gt; -->
@@ -351,7 +352,7 @@
         <activity android:name=".activity.DeployMonitorConfigurationActivity" />
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />
-        <activity android:name=".activity.MonitorPointElectricDetailActivity" />
+        <activity android:name=".activity.MonitorPointDetailActivity" />
         <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
         <activity android:name=".activity.ContractEditorActivity" />
         <activity android:name=".activity.ContractCreationSuccessActivity" />

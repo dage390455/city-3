@@ -202,7 +202,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             endTime = String.valueOf(endDateTime);
         }
         //获取图片是根绝minID向后推limit个条目，服务器做的限定
-        RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, 20, minId, startTime, endTime)
+        RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, Constants.DEFAULT_PAGE_SIZE, minId, startTime, endTime)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraFacePic>>>(this) {
             @Override
             public void onCompleted(final ResponseResult<List<DeviceCameraFacePic>> deviceCameraFacePicListRsp) {

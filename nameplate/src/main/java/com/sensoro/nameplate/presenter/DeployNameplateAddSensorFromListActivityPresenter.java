@@ -96,7 +96,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
             page++;
         }
 
-        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, 20, mNameplateId, mSearchText)
+        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, Constants.DEFAULT_PAGE_SIZE, mNameplateId, mSearchText)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<NamePlateInfo>>>(this) {
             @Override
             public void onCompleted(ResponseResult<List<NamePlateInfo>> nameplateBindDeviceRsp) {

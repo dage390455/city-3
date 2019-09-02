@@ -94,7 +94,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         aMap.setMyLocationEnabled(false);
 //        aMap.getUiSettings().setCompassEnabled(true);
         aMap.setOnMapLoadedListener(this);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
@@ -197,7 +197,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                notDeployLayout.setVisibility(View.GONE);
                 //可视化区域，将指定位置指定到屏幕中心位置
                 final CameraUpdate mUpdata = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(destPosition, 15, 0, 0));
+                        .newCameraPosition(new CameraPosition(destPosition, 16, 0, 0));
                 aMap.moveCamera(mUpdata);
 
                 freshMarker();
@@ -356,7 +356,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
                 CameraUpdate update = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
+                        .newCameraPosition(new CameraPosition(latLng, 16, 0, 0));
                 aMap.moveCamera(update);
             } else {
                 getView().toastShort(mContext.getString(R.string.tips_data_error));

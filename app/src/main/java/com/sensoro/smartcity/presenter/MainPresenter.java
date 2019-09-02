@@ -854,18 +854,32 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             return;
         }
         String[] str = {"0"};
-
+        try {
+            LogUtils.loge("freshAlarmCount start");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         RetrofitServiceHelper.getInstance().getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
                 getView().setAlarmWarnCount(count);
                 needFreshAlarmCount = false;
+                try {
+                    LogUtils.loge("freshAlarmCount onCompleted count = " + count);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setAlarmWarnCount(0);
+                try {
+                    LogUtils.loge("freshAlarmCount onCompleted errorMsg = " + errorMsg);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }
