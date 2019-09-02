@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,11 +11,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.basestation.R;
+import com.sensoro.basestation.R2;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.BaseStationInfo;
-import com.sensoro.basestation.R;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.basestation.R2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,17 +70,70 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
 
         BaseStationInfo deviceCameraInfo = mData.get(position);
         if (deviceCameraInfo != null) {
+            String sn = deviceCameraInfo.getSn();
             //
             String name = deviceCameraInfo.getName();
             String type = deviceCameraInfo.getTypeName();
             if (TextUtils.isEmpty(name)) {
-                name = deviceCameraInfo.getSn();
+                name = sn;
             }
             if (!TextUtils.isEmpty(type)) {
                 holder.itemDeviceCameraTvDeviceName.setText(type + " ");
 
             }
             holder.itemDeviceCameraTvDeviceName.append(name);
+            if (!TextUtils.isEmpty(sn)) {
+                holder.itemDeviceCameraTvId.setText(sn);
+            } else {
+                holder.itemDeviceCameraTvId.setText("");
+
+            }
+
+
+            List<String> tags = deviceCameraInfo.getTags();
+            if (null != tags && tags.size() > 0) {
+                holder.itemDeviceCameraLlDetail.setVisibility(View.VISIBLE);
+                holder.itemDeviceCameraLlDetail.removeAllViews();
+                for (String tag : tags) {
+                    View view = LayoutInflater.from(mContext).inflate(R.layout.item_basestation_tag_item, null);
+                    TextView textView = view.findViewById(R.id.item_basestation_tag_tv);
+                    textView.setText(tag);
+                    holder.itemDeviceCameraLlDetail.addView(view);
+                }
+            } else {
+                holder.itemDeviceCameraLlDetail.setVisibility(View.GONE);
+            }
+
+            String status = deviceCameraInfo.getStatus();
+            if ("offline".equals(status)) {
+
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_basestation_offline);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.offline));
+                holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_5d5d5d));
+                holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+
+            } else if ("inactive".equals(status)) {
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+                holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.inactive));
+                holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+            } else if ("timeout".equals(status)) {
+                //TODO 颜色定义
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+                holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.time_out));
+                holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+            } else {
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+                holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.normal));
+                holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
+
+            }
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,71 +143,6 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
                 }
             }
         });
-
-
-//        if (null != types && types.size() > 0) {
-//            for (CameraFilterModel.ListBean type : types) {
-//                if (deviceCameraInfo.getType().equals(type.getCode())) {
-//
-//                    holder.item_basestation_tv_type.setVisibility(View.VISIBLE);
-//                    holder.item_basestation_tv_type.setText(type.getTitle());
-//                    break;
-//                } else {
-//                    holder.item_basestation_tv_type.setVisibility(View.GONE);
-//
-//                }
-//            }
-//        }
-
-
-        if (!TextUtils.isEmpty(deviceCameraInfo.getSn())) {
-            holder.itemDeviceCameraTvId.setText(deviceCameraInfo.getSn());
-        } else {
-            holder.itemDeviceCameraTvId.setText("");
-
-        }
-
-
-        if (null != deviceCameraInfo.getTags() && deviceCameraInfo.getTags().size() > 0) {
-
-            holder.itemDeviceCameraLlDetail.setVisibility(View.VISIBLE);
-            holder.itemDeviceCameraLlDetail.removeAllViews();
-            for (String tag : deviceCameraInfo.getTags()) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.item_basestation_tag_item, null);
-                TextView textView = view.findViewById(R.id.item_basestation_tag_tv);
-                textView.setText(tag);
-                holder.itemDeviceCameraLlDetail.addView(view);
-            }
-        } else {
-            holder.itemDeviceCameraLlDetail.setVisibility(View.GONE);
-        }
-
-
-        if ("offline".equals(deviceCameraInfo.getStatus())) {
-
-
-            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_basestation_offline);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-
-            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.offline));
-            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#5D5D5D"));
-            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-
-
-        } else if ("inactive".equals(deviceCameraInfo.getStatus())) {
-            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.inactive));
-            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#A6A6A6"));
-        } else {
-            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.normal));
-            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#1DBB99"));
-
-        }
 
     }
 

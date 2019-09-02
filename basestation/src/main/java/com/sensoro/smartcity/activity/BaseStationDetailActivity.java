@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -349,7 +350,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     /**
      * 手势处理，显示和隐藏高亮及topview
      */
-    OnChartGestureListener onChartGestureListener = new OnChartGestureListener() {
+    final OnChartGestureListener onChartGestureListener = new OnChartGestureListener() {
         @Override
         public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
 
@@ -395,7 +396,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     };
 
 
-    View.OnTouchListener touchListener = new View.OnTouchListener() {
+    final View.OnTouchListener touchListener = new View.OnTouchListener() {
         float ratio = 12f;
         float x0 = 0f;
         float y0 = 0f;
@@ -564,48 +565,65 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     @Override
     public void updateDetailData(BaseStationDetailModel model) {
-        if (!TextUtils.isEmpty(model.getName())) {
-            acBasestationTvName.setText(model.getName());
-
+        String name = model.getName();
+        String sn = model.getSn();
+        if (!TextUtils.isEmpty(name)) {
+            acBasestationTvName.setText(name);
         } else {
-            acBasestationTvName.setText(model.getSn());
-
+            acBasestationTvName.setText(sn);
         }
 
+        String typeName = model.getTypeName();
+        if (TextUtils.isEmpty(typeName)) {
+            typeName = mActivity.getString(R.string.unknown);
+        }
+        acBasestationTvTypetime.setText(typeName);
 
-        acBasestationTvTypetime.setText(model.getTypeName());
-
-        if (!TextUtils.isEmpty(model.getUpdatedTime())) {
-            acBasestationTvTypetime.append(" " + DateUtil.getHourFormatDate(Long.parseLong(model.getUpdatedTime())));
+        String updatedTime = model.getUpdatedTime();
+        if (!TextUtils.isEmpty(updatedTime)) {
+            acBasestationTvTypetime.append(" " + DateUtil.getHourFormatDate(Long.parseLong(updatedTime)));
         }
 
-        if (!TextUtils.isEmpty(model.getStatus())) {
+        String status = model.getStatus();
+        if (!TextUtils.isEmpty(status)) {
 
-            if ("offline".equals(model.getStatus())) {
-                acBasestationTvState.setText(mActivity.getResources().getString(R.string.offline));
-                acBasestationTvState.setTextColor(getResources().getColor(R.color.c_5d5d5d));
-            } else if ("inactive".equals(model.getStatus())) {
-                acBasestationTvState.setText(mActivity.getResources().getString(R.string.inactive));
-                acBasestationTvState.setTextColor(getResources().getColor(R.color.c_a6a6a6));
-            } else {
-                acBasestationTvState.setText(mActivity.getResources().getString(R.string.normal));
-                acBasestationTvState.setTextColor(getResources().getColor(R.color.c_1dbb99));
-
+            switch (status) {
+                case "offline":
+                    acBasestationTvState.setText(mActivity.getResources().getString(R.string.offline));
+                    acBasestationTvState.setTextColor(getResources().getColor(R.color.c_5d5d5d));
+                    break;
+                case "inactive":
+                    acBasestationTvState.setText(mActivity.getResources().getString(R.string.inactive));
+                    acBasestationTvState.setTextColor(getResources().getColor(R.color.c_a6a6a6));
+                    break;
+                case "timeout":
+                    acBasestationTvState.setText(mActivity.getResources().getString(R.string.time_out));
+                    acBasestationTvState.setTextColor(getResources().getColor(R.color.c_a6a6a6));
+                    break;
+                default:
+                    acBasestationTvState.setText(mActivity.getResources().getString(R.string.normal));
+                    acBasestationTvState.setTextColor(getResources().getColor(R.color.c_1dbb99));
+                    break;
             }
         }
 
 
-        if (model.getTags().size() > 0) {
+        List<String> tags = model.getTags();
+        if (tags != null && tags.size() > 0) {
             rcTag.setVisibility(View.GONE);
             rcTag.setVisibility(View.VISIBLE);
-            mTagAdapter.updateTags(model.getTags());
+            mTagAdapter.updateTags(tags);
         } else {
             rcTag.setVisibility(View.VISIBLE);
             rcTag.setVisibility(View.GONE);
         }
-        tvSn.setText(model.getSn());
+        tvSn.setText(sn);
 
-        tvDeviceVision.setText(model.getFirmwareVersion());
+        String firmwareVersion = model.getFirmwareVersion();
+        if (TextUtils.isEmpty(firmwareVersion)) {
+            firmwareVersion = mActivity.getString(R.string.unknown);
+        }
+        tvDeviceVision.setText(firmwareVersion);
 
 
     }
@@ -771,7 +789,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     }
 
 
-    private final Handler myHandler = new Handler() {
+    private final Handler myHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
 
