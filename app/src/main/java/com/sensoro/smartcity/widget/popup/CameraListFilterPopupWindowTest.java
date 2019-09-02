@@ -18,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.utils.ScreenUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraListPopAdapter;
 import com.sensoro.common.model.CameraFilterModel;
@@ -144,28 +145,58 @@ public class CameraListFilterPopupWindowTest {
     public void showAsDropDown(View view, List<CameraFilterModel> list) {
         updateSelectDeviceStatusList(list);
         cameraListPopAdapter.notifyDataSetChanged();
+//        if (Build.VERSION.SDK_INT < 24) {
+//            mPopupWindow.showAsDropDown(view);
+//        } else {  // 适配 android 7.0
+//            int[] location = new int[2];
+//            view.getLocationOnScreen(location);
+//            Point point = new Point();
+//            mActivity.getWindowManager().getDefaultDisplay().getSize(point);
+//            int tempHeight = mPopupWindow.getHeight();
+//            if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
+//                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+//            }
+//            mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
+//        }
+//        mPopupWindow.showAsDropDown(view);
+//        int i = cameraListPopAdapter.getItemCount() / 3;
+//        i *= 100;
+//        if (i < 300) {
+//            i = 300;
+//        }
+//        showTranslateAnimation.setDuration(i);
+//        dismissTranslateAnimation.setDuration(i);
+//        mFl.startAnimation(showTranslateAnimation);
+
+
         if (Build.VERSION.SDK_INT < 24) {
             mPopupWindow.showAsDropDown(view);
         } else {  // 适配 android 7.0
             int[] location = new int[2];
             view.getLocationOnScreen(location);
+
+
             Point point = new Point();
             mActivity.getWindowManager().getDefaultDisplay().getSize(point);
             int tempHeight = mPopupWindow.getHeight();
             if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
-                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+                mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ ScreenUtils.getBottomStatusHeight(mActivity));
+//                mPopupWindow.setHeight(mActivity.getResources().getDisplayMetrics().heightPixels - location[1] - view.getHeight());
+
             }
+
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
         }
-        mPopupWindow.showAsDropDown(view);
         int i = cameraListPopAdapter.getItemCount() / 3;
         i *= 100;
-        if (i < 300) {
+        if(i<300){
             i = 300;
         }
         showTranslateAnimation.setDuration(i);
         dismissTranslateAnimation.setDuration(i);
         mFl.startAnimation(showTranslateAnimation);
+
+
 
 
     }
