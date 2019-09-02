@@ -36,6 +36,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.smartcity.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
@@ -53,6 +54,7 @@ import java.util.List;
 
 import moe.codeest.enviews.CityENDownloadView;
 import moe.codeest.enviews.ENPlayView;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * 标准播放器，继承之后实现一些ui显示效果，如显示／隐藏ui，播放按键等
@@ -476,7 +478,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
     protected void init(Context context) {
         super.init(context);
         mCoverImage = (ImageView) findViewById(R.id.thumbImage);
-
+        VideoOptionModel videoOptionModel = new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+        List<VideoOptionModel> list = new ArrayList<>();
+        list.add(videoOptionModel);
+        GSYVideoManager.instance().setOptionModelList(list);
         Repause.registerListener(this);
         boolean needTimeOutOther = GSYVideoManager.instance().isNeedTimeOutOther();
         int timeOut = GSYVideoManager.instance().getTimeOut();
