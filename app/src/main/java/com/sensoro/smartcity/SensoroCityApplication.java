@@ -690,6 +690,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
         String message = error.getMessage();
         try {
             LogUtils.loge(this, message);
+            LogUtils.loge(this, "初始化QCR失败 ： " + message);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
