@@ -450,6 +450,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                 }
                                 try {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmLogInfo.class);
+                                    String deviceType = deviceAlarmLogInfo.getDeviceType();
+                                    if ("fire_host".equals(deviceType)) {
+                                        //屏蔽消防主机
+                                        return;
+                                    }
                                     String event = deviceAlarmLogInfo.getEvent();
                                     EventAlarmStatusModel eventAlarmStatusModel = new EventAlarmStatusModel();
                                     eventAlarmStatusModel.deviceAlarmLogInfo = deviceAlarmLogInfo;
