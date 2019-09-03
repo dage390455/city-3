@@ -52,20 +52,4 @@ public abstract class SlideVerifityStrategy {
         return getBlockPostionInfo(width,height,blockSize);
     }
 
-    /**
-     * 获得缺块阴影的Paint
-     */
-    public abstract Paint getBlockShadowPaint();
-
-    /**
-     * 获得滑块图片的Paint
-     */
-    public abstract Paint getBlockBitmapPaint();
-
-    /**
-     * 装饰滑块图片，在绘制图片后执行，即绘制滑块前景
-     */
-    public void decoreateSwipeBlockBitmap(Canvas canvas, Path shape, View view) {
-
-    }
 }

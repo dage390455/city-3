@@ -96,20 +96,20 @@ class PictureVertifyView extends AppCompatImageView {
     private void ininPaint(Context context){
         mPorterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         mStrategy = new DefaultSlideVerifityStrategy(context);
-        shadowPaint = mStrategy.getBlockShadowPaint();
-        bitmapPaint = mStrategy.getBlockBitmapPaint();
+
+        //绘制右侧滑块部分
+        shadowPaint = new Paint();
+        shadowPaint.setAlpha(180);
+        //绘制左侧滑块部分
+        bitmapPaint=  new Paint();
         setLayerType(View.LAYER_TYPE_SOFTWARE, bitmapPaint);
 
-        // 实例化阴影画笔
+        // 绘制左侧滑块阴影部分
         mMaskShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mMaskShadowPaint.setColor(Color.parseColor("#222222"));
-        mMaskShadowPaint.setStrokeWidth(50);
         mMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
 
+        // 绘制右侧滑块阴影部分
         mTargetMaskShadowPaint= new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mTargetMaskShadowPaint.setColor(Color.parseColor("#000000"));
-        mTargetMaskShadowPaint.setAlpha(200);
-
         mTargetMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
 
     }
@@ -144,13 +144,13 @@ class PictureVertifyView extends AppCompatImageView {
         if (mState != STATE_ACCESS) {
 //            canvas.drawPath(blockShape, shadowPaint);
 
-            canvas.drawBitmap(mTargetMaskShadowBitmap, shadowInfo.left, shadowInfo.top, mTargetMaskShadowPaint);
+            canvas.drawBitmap(mTargetMaskShadowBitmap, shadowInfo.left+2, shadowInfo.top, mTargetMaskShadowPaint);
             canvas.drawBitmap(targetBlock, shadowInfo.left, shadowInfo.top, shadowPaint);
         }
 
 
         if (mState == STATE_MOVE || mState == STATE_IDEL || mState == STATE_DOWN || mState == STATE_UNACCESS) {
-            canvas.drawBitmap(mMaskShadowBitmap, blockInfo.left, blockInfo.top, mMaskShadowPaint);
+            canvas.drawBitmap(mMaskShadowBitmap, blockInfo.left+2, blockInfo.top, mMaskShadowPaint);
             canvas.drawBitmap(verfityBlock, blockInfo.left, blockInfo.top, bitmapPaint);
         }
 
@@ -217,7 +217,7 @@ class PictureVertifyView extends AppCompatImageView {
     /**
      * 复位
      * */
-   public void reset() {
+    public void reset() {
         mState = STATE_IDEL;
         verfityBlock = null;
         shadowInfo = null;
