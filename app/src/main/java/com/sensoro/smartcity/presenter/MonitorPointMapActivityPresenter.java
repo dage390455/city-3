@@ -293,19 +293,19 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         }
         int status = mDeviceInfo.getStatus();
         List<String> tags = mDeviceInfo.getTags();
-        String tempTagStr = "";
+        StringBuilder tempTagStr = new StringBuilder();
         if (tags != null && tags.size() > 0) {
             for (String tag : tags) {
-                tempTagStr += tag + ",";
+                tempTagStr.append(tag).append(",");
             }
-            tempTagStr = tempTagStr.substring(0, tempTagStr.lastIndexOf(","));
+            tempTagStr = new StringBuilder(tempTagStr.substring(0, tempTagStr.lastIndexOf(",")));
         }
         long updatedTime = mDeviceInfo.getUpdatedTime();
         String tempAddress = mDeviceInfo.getAddress();
         if (TextUtils.isEmpty(tempAddress)) {
             tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/place?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
+        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
                 + "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
