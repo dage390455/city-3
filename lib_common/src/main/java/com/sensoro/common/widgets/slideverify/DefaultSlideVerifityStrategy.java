@@ -52,7 +52,7 @@ public class DefaultSlideVerifityStrategy extends SlideVerifityStrategy {
 
         int left = width/2+random.nextInt(width/2 - blockSize + 1);
         //Avoid robot frequently and quickly click the start point to access the captcha.
-        if (left < blockSize) {
+        if (left < blockSize-10) {
             left = blockSize-10;
         }
         int top = random.nextInt(height - blockSize -blockSize);
