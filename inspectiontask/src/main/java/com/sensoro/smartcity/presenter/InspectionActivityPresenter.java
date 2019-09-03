@@ -160,6 +160,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     @Override
     public void run() {
         String sn = mDeviceDetail.getSn();
+//        String sn="01A01117C62B0311";
         getView().setConfirmState(tempBleDevice.containsKey(sn));
         mHandler.postDelayed(this, 1 * 1000);
     }
