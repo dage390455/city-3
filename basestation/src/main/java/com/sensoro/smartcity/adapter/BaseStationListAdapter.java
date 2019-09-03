@@ -121,11 +121,11 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
                 holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
             } else if ("timeout".equals(status)) {
                 //TODO 颜色定义
-                Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
+                Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_small_oval_6d5eac);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
                 holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.time_out));
-                holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+                holder.itemDeviceCameraTvOnlinestate.setTextColor(mContext.getResources().getColor(R.color.c_6D5EAC));
             } else {
                 Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());

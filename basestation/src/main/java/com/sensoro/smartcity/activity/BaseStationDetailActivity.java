@@ -598,7 +598,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                     break;
                 case "timeout":
                     acBasestationTvState.setText(mActivity.getResources().getString(R.string.time_out));
-                    acBasestationTvState.setTextColor(getResources().getColor(R.color.c_a6a6a6));
+                    acBasestationTvState.setTextColor(getResources().getColor(R.color.c_6D5EAC));
                     break;
                 default:
                     acBasestationTvState.setText(mActivity.getResources().getString(R.string.normal));
