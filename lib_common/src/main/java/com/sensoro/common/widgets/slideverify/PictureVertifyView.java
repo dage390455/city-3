@@ -34,7 +34,7 @@ class PictureVertifyView extends AppCompatImageView {
     private static final int STATE_UNACCESS = 6;
 
 
-    private static final int TOLERANCE = 20;         //验证的最大容差
+    private static final int TOLERANCE = 30;         //验证的最大容差
 
 
     private int mState = STATE_IDEL;    //当前状态
@@ -183,8 +183,8 @@ class PictureVertifyView extends AppCompatImageView {
     void move(int progress) {
         mState = STATE_MOVE;
         blockInfo.left = (int) (progress / 100f * (getWidth() - blockSize))+blockMinLeft;
-        if(blockInfo.left>getWidth()-blockSize){
-            blockInfo.left=getWidth()-blockSize;
+        if(blockInfo.left>getWidth()-blockSize-blockMinLeft){
+            blockInfo.left=getWidth()-blockSize-blockMinLeft;
         }
         invalidate();
     }
