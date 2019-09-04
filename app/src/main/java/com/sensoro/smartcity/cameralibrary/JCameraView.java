@@ -32,12 +32,12 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.FileUtil;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.cameralibrary.listener.ErrorListener;
 import com.sensoro.smartcity.cameralibrary.listener.JCameraListener;
 import com.sensoro.smartcity.cameralibrary.state.CameraMachine;
-import com.sensoro.smartcity.cameralibrary.util.FileUtil;
 import com.sensoro.smartcity.cameralibrary.util.LogUtil;
 import com.sensoro.smartcity.cameralibrary.view.CameraView;
 import com.sensoro.smartcity.widget.RecordedButton;

@@ -23,12 +23,12 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.widget.ImageView;
 
+import com.sensoro.common.utils.FileUtil;
 import com.sensoro.smartcity.cameralibrary.listener.ErrorListener;
 import com.sensoro.smartcity.cameralibrary.util.AngleUtil;
 import com.sensoro.smartcity.cameralibrary.util.CameraParamUtil;
 import com.sensoro.smartcity.cameralibrary.util.CheckPermission;
 import com.sensoro.smartcity.cameralibrary.util.DeviceUtil;
-import com.sensoro.smartcity.cameralibrary.util.FileUtil;
 import com.sensoro.smartcity.cameralibrary.util.LogUtil;
 import com.sensoro.smartcity.cameralibrary.util.ScreenUtils;
 

@@ -22,14 +22,14 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.FileUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.contractmanager.R;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.model.BusinessLicenseData;
 import com.sensoro.smartcity.push.RecognizeService;
-import com.sensoro.smartcity.util.FileUtil;
-import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
