@@ -27,7 +27,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SettingNotificationActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.common.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.INearByDeviceActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.common.utils.WidgetUtil;

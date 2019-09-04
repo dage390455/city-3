@@ -22,7 +22,7 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.smartcity.util.ViewHelper;
+import com.sensoro.common.utils.ViewHelper;
 
 import java.util.List;
 

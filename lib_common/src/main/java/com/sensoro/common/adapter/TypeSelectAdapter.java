@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.common.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -23,13 +23,15 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.sensoro.common.R;
+import com.sensoro.common.R2;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.DeviceTypeModel;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.common.utils.WidgetUtil;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +209,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     @NonNull
     private void changeIconColor(TypeSelectHolder holder, boolean isWhite) {
-        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_corner_29c_shadow);
+        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_inspectiontask_corner_29c_shadow);
         holder.itemPopSelectTvTypeName.setTextColor(isWhite ? mContext.getResources().getColor(R.color.c_252525) : Color.WHITE);
         Drawable drawable = holder.itemPopSelectImvTypeIcon.getDrawable();
 //        Drawable.ConstantState statusTitle = drawable.getConstantState();
@@ -238,11 +240,11 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
 
     class TypeSelectHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_pop_select_imv_type_icon)
+        @BindView(R2.id.item_pop_select_imv_type_icon)
         ImageView itemPopSelectImvTypeIcon;
-        @BindView(R.id.item_pop_select_tv_type_name)
+        @BindView(R2.id.item_pop_select_tv_type_name)
         TextView itemPopSelectTvTypeName;
-        @BindView(R.id.item_pop_select_ll_root)
+        @BindView(R2.id.item_pop_select_ll_root)
         LinearLayout itemPopSelectLlRoot;
 
         TypeSelectHolder(View itemView) {

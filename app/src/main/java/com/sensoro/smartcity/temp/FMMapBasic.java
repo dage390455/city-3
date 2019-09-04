@@ -22,7 +22,7 @@ import com.fengmap.android.map.marker.FMLocationMarker;
 import com.fengmap.android.map.marker.FMNode;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.FileUtil;
-import com.sensoro.smartcity.util.ViewHelper;
+import com.sensoro.common.utils.ViewHelper;
 
 
 /**

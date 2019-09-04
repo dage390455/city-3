@@ -36,7 +36,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
-import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.common.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.SortConditionModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;

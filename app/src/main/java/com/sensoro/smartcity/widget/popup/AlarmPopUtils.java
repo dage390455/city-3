@@ -42,7 +42,7 @@ import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
-import com.sensoro.smartcity.adapter.ImagePickerAdapter;
+import com.sensoro.common.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.AlarmPopModel;

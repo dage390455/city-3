@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.common.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.sensoro.common.R;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.inspectiontask.R;
 
 import java.io.File;
 import java.util.ArrayList;

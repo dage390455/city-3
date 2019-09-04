@@ -15,7 +15,7 @@ import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.ImagePickerAdapter;
+import com.sensoro.common.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorSettingPhotoActivityPresenter;
 

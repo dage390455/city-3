@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.common.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.fengmap.android.map.geometry.FMMapCoord;
 import com.fengmap.android.map.marker.FMImageMarker;
 import com.fengmap.android.map.marker.FMTextMarker;
-import com.sensoro.inspectiontask.R;
+import com.sensoro.common.R;
 
 /**
  * 控件控制帮助类

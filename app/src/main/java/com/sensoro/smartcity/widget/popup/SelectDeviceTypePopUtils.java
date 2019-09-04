@@ -17,14 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.TypeSelectAdapter;
-import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.widget.MaxHeightGridLayoutManager;
+import com.sensoro.common.adapter.TypeSelectAdapter;
+import com.sensoro.common.model.DeviceTypeModel;
+import com.sensoro.common.widgets.MaxHeightGridLayoutManager;
 
 import java.util.List;
 

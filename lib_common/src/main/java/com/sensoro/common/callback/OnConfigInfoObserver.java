@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.callback;
+package com.sensoro.common.callback;
 
 public interface OnConfigInfoObserver<T> {
     void onStart(String msg);

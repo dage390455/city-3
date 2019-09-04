@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget;
+package com.sensoro.common.widgets;
 
 import android.content.Context;
 import android.graphics.Rect;
