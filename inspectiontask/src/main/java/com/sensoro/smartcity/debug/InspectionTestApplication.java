@@ -20,10 +20,10 @@ import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.entity.IBeacon;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
-import com.sensoro.common.callback.BleObserver;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
-import com.sensoro.smartcity.widget.popup.GlideImageLoader;
+import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.view.CropImageView;
+import com.sensoro.common.imagepicker.GlideImageLoader;
 import com.tencent.bugly.beta.Beta;
 
 import java.util.ArrayList;

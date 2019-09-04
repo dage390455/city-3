@@ -30,8 +30,8 @@ import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.MyVideoView;
-import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;
-import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
+import com.sensoro.common.imagepicker.util.NavigationBarChangeListener;
+import com.sensoro.common.imagepicker.view.SystemBarTintManager;
 
 import java.io.File;
 

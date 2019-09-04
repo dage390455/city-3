@@ -85,8 +85,8 @@ import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

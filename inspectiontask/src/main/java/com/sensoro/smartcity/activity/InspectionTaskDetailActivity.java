@@ -1,28 +1,30 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionTaskDetailActivityPresenter;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.common.utils.ViewHelper;
 
 import java.util.List;
 
@@ -164,7 +166,14 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
 
     @Override
     public void setTvState(int colorId, String text) {
-        ViewHelper.changeTvState(mActivity,acInspectionDetailTaskTvState,colorId, text);
+        Resources resources = getResources();
+        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
+        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        int color = resources.getColor(colorId);
+        gd.setColor(color);
+        acInspectionDetailTaskTvState.setCompoundDrawables(gd,null,null,null);
+        acInspectionDetailTaskTvState.setTextColor(color);
+        acInspectionDetailTaskTvState.setText(text);
     }
 
 

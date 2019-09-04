@@ -22,20 +22,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.common.widgets.slideverify.SlidePopUtils;
-import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.SecurityRisksActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
@@ -44,13 +46,10 @@ import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.common.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageGridActivity;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -66,7 +65,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+import static com.sensoro.common.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
 public class AlarmPopUtils implements Constants,
@@ -140,10 +139,10 @@ public class AlarmPopUtils implements Constants,
             mRealFireDialog = null;
         }
 
-        if(mSlidePopUtils!=null){
-            mSlidePopUtils.destroySlideVerifyDialog();
-            mSlidePopUtils=null;
-        }
+//        if (mSlidePopUtils != null) {
+//            mSlidePopUtils.destroySlideVerifyDialog();
+//            mSlidePopUtils = null;
+//        }
 
         if (bind != null) {
             bind.unbind();
@@ -344,7 +343,7 @@ public class AlarmPopUtils implements Constants,
         });
     }
 
-    SlidePopUtils mSlidePopUtils;
+//    private SlidePopUtils mSlidePopUtils;
 
     private void initRealFireDialog() {
         mRealFireDialog = new TipDialogUtils(mActivity);
@@ -366,30 +365,29 @@ public class AlarmPopUtils implements Constants,
         });
 
 
-        mSlidePopUtils = new SlidePopUtils();
-        mSlidePopUtils.setTitle(mActivity.getResources().getString(R.string.slide_dialog_title))
-                .setDesc(mActivity.getResources().getString(R.string.slide_dialog_desc))
-                .setListener(new SlidePopUtils.VerifityResultListener() {
-            @Override
-            public void onAccess(long time) {
-                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_success), Toast.LENGTH_SHORT).show();
-                mSlidePopUtils.dismissDialog();
-                doCommit();
-            }
-
-            @Override
-            public void onFailed(int failCount) {
-                mSlidePopUtils.dismissDialog();
-                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onMaxFailed() {
-                mSlidePopUtils.dismissDialog();
-                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+//        mSlidePopUtils = new SlidePopUtils();
+//        mSlidePopUtils.setTitle(mActivity.getResources().getString(R.string.slide_dialog_title))
+//                .setDesc(mActivity.getResources().getString(R.string.slide_dialog_desc))
+//                .setListener(new SlidePopUtils.VerifityResultListener() {
+//                    @Override
+//                    public void onAccess(long time) {
+//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_success), Toast.LENGTH_SHORT).show();
+//                        mSlidePopUtils.dismissDialog();
+//                        doCommit();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(int failCount) {
+//                        mSlidePopUtils.dismissDialog();
+//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onMaxFailed() {
+//                        mSlidePopUtils.dismissDialog();
+//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
 
     }

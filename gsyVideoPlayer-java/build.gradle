@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.support.app_compat
+//    implementation deps.support.app_compat
     api deps.ijkplayer_java
     api deps.ijkplayer_exo
     api deps.transitionseverywhere
@@ -41,10 +41,7 @@ dependencies {
     api project(':gsyVideoPlayer-base')
 //    api "com.shuyu:gsyVideoPlayer-base:$gsyVideoVersion"
 //    api "com.shuyu:gsyvideoplayer-androidvideocache:$gsyVideoVersion"
-    implementation(deps.immersionbar) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
-    api project(path: ':lib_common')
+    implementation project(path: ':lib_common')
 
 
 //    compile fileTree(dir: 'libs', include: ['*.jar'])
