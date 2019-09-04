@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -200,9 +201,9 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 if (isAttachedView()) {
                     getView().dismissProgressDialog();
                 }
-                String name = "";
-                String idNumber = "";
-                String address = "";
+                String name = "无";
+                String idNumber = "无";
+                String address = "无";
                 try {
                     if (result != null) {
                         try {
@@ -212,15 +213,25 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                         }
                         Word resultName = result.getName();
                         if (resultName != null) {
-                            name = resultName.getWords();
+                            String words = resultName.getWords();
+                            if (!TextUtils.isEmpty(words)) {
+                                name = words;
+                            }
                         }
                         Word resultIdNumber = result.getIdNumber();
                         if (resultIdNumber != null) {
-                            idNumber = resultIdNumber.getWords();
+                            String words = resultIdNumber.getWords();
+                            if (!TextUtils.isEmpty(words)) {
+                                idNumber = words;
+                            }
+
                         }
                         Word resultAddress = result.getAddress();
                         if (resultAddress != null) {
-                            address = resultAddress.getWords();
+                            String words = resultAddress.getWords();
+                            if (!TextUtils.isEmpty(words)) {
+                                address = words;
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -236,6 +247,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
             @Override
             public void onError(OCRError error) {
+
                 if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort(mActivity.getString(R.string.id_card_Identification_error) + error.getMessage());

@@ -179,13 +179,24 @@ public class BaseStationPopupWindow {
             Point point = new Point();
             mActivity.getWindowManager().getDefaultDisplay().getSize(point);
             int tempHeight = mPopupWindow.getHeight();
-            if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
-                mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ ScreenUtils.getBottomStatusHeight(mActivity));
-//                mPopupWindow.setHeight(mActivity.getResources().getDisplayMetrics().heightPixels - location[1] - view.getHeight());
 
-            }
-
+            mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ ScreenUtils.getBottomStatusHeight(mActivity));
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
+            ScreenUtils.isNavigationBarExist(mActivity, new ScreenUtils.OnNavigationStateListener() {
+                @Override
+                public void onNavigationState(boolean isShowing, int height) {
+                    view.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(isShowing){
+                                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+                            }else{
+                                mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ height);
+                            }
+                        }
+                    }, 500);
+                }
+            });
         }
         int i = cameraListPopAdapter.getItemCount() / 3;
         i *= 100;
