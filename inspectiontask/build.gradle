@@ -84,7 +84,6 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':lib_common')
-    implementation project(path: ':sensor-kit')
     implementation project(path: ':imagepicker')
 
     //组件调用需要集成登录测试module
@@ -92,7 +91,6 @@ dependencies {
         implementation project(path: ':logintest')
     }
     //
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor deps.arouter_compiler
     //
     annotationProcessor deps.butterknife_compiler

@@ -84,17 +84,13 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':lib_common')
-    implementation project(path: ':sensor-kit')
     implementation project(path: ':imagepicker')
 
     //组件调用需要集成登录测试module
     if(isModule.toBoolean()){
         implementation project(path: ':logintest')
     }
-
-
     //
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor deps.arouter_compiler
     //
     annotationProcessor deps.butterknife_compiler
@@ -104,11 +100,4 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
-
-    //播放器
-    implementation project(path: ':gsyVideoPlayer-base')
-    implementation project(path: ':gsyVideoPlayer-proxy_cache')
-    implementation project(path: ':gsyVideoPlayer-java')
-    implementation project(path: ':gsyVideoPlayer-armv7a')
 }
