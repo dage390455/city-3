@@ -45,7 +45,7 @@ import com.sensoro.smartcity.widget.CustomVRecyclerView;
 import com.sensoro.smartcity.widget.SensoroHomeAlarmView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerScaleHelper;
-import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+import com.sensoro.common.widgets.SelectDeviceTypePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectSortConditionPopUtils;
 
 import java.util.List;

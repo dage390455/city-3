@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.divider;
+package com.sensoro.common.widgets;
 
 import android.graphics.Rect;
 import android.view.View;

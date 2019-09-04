@@ -32,7 +32,7 @@ import com.sensoro.common.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.InspectionUploadExceptionTagAdapter;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresenter;
-import com.sensoro.smartcity.widget.ScrollFrameLayout;
+import com.sensoro.common.widgets.ScrollFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
