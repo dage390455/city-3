@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
 
+import com.fengmap.android.data.FMDataManager;
 
 import java.io.Closeable;
 import java.io.File;
@@ -232,7 +233,106 @@ public class FileUtil {
      */
     public static final String DEFAULT_THEME_ID = "3007";
 
+    /**
+     * 通过主题id获取主题路径
+     *
+     * @param themeId 主题id
+     * @return 主题文件绝对路径
+     */
+    public static String getThemePath(String themeId) {
+        String themePath = FMDataManager.getFMThemeResourceDirectory() + themeId + File.separator + themeId +
+                FILE_TYPE_THEME;
+        return themePath;
+    }
 
+    /**
+     * 通过地图id获取地图文件路径
+     *
+     * @param mapId 地图id
+     * @return 地图文件绝对路径
+     */
+    public static String getMapPath(String mapId) {
+        String mapPath = FMDataManager.getFMMapResourceDirectory() + mapId + File.separator + mapId + FILE_TYPE_MAP;
+        return mapPath;
+    }
+
+    /**
+     * 获取默认地图文件路径
+     *
+     * @param context 上下文
+     * @return 默认地图绝对路径
+     */
+    public static String getDefaultMapPath(Context context) {
+        String srcFile = DEFAULT_MAP_ID + FILE_TYPE_MAP;
+        String destFile = getMapPath(DEFAULT_MAP_ID);
+        try {
+            copyAssetsToSdcard(context, srcFile, destFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return destFile;
+    }
+
+    /**
+     * 获取默认地图主题路径
+     *
+     * @param context 上下文
+     * @return 默认主题绝对路径
+     */
+    public static String getDefaultThemePath(Context context) {
+        return getThemePath(context, DEFAULT_THEME_ID);
+    }
+
+    /**
+     * 获取本地主题路径
+     *
+     * @param context 上下文
+     * @param themeId 主题名称
+     * @return 本地主题绝对路径
+     */
+    public static String getThemePath(Context context, String themeId) {
+        String path = getThemePath(themeId);
+        File file = new File(path);
+        if (!file.exists()) {
+            copyAssetsThemeToSdcard(context);
+        }
+        return path;
+    }
+
+    /**
+     * 将assets目录下theme.zip主题复制、解压到sdcard中
+     *
+     * @param context 上下文
+     */
+    public static void copyAssetsThemeToSdcard(Context context) {
+        String srcFileName = "theme.zip";
+        String themeDir = FMDataManager.getFMThemeResourceDirectory();
+        String destFileName = themeDir + srcFileName;
+        try {
+            copyAssetsToSdcard(context, srcFileName, destFileName);
+            // 解压压缩包文件并删除主题压缩包文件
+            ZipUtils.unZipFolder(destFileName, themeDir);
+            deleteDirectory(destFileName);
+
+            // 遍历目录是否存在主题文件,不存在则解压
+            File themeFile = new File(themeDir);
+            File[] files = themeFile.listFiles();
+
+            String extension = ".zip";
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(extension)) {
+                    File f = new File(file.getName().replace(extension, ""));
+                    String fileDir = file.getAbsolutePath();
+                    if (!f.exists()) {
+                        ZipUtils.unZipFolder(fileDir, themeDir);
+                    }
+                    deleteDirectory(fileDir);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 删除文件
