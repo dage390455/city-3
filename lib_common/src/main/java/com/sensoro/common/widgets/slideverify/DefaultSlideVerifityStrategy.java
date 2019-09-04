@@ -62,16 +62,6 @@ public class DefaultSlideVerifityStrategy extends SlideVerifityStrategy {
         return new PositionInfo(left, top);
     }
 
-    @Override
-    public @NonNull
-    PositionInfo getPositionInfoForSwipeBlock(int width, int height, int blockSize) {
-        Random random = new Random();
-        int left = random.nextInt(width - blockSize + 1);
-        int top = random.nextInt(height - blockSize + 1);
-        if (top < 0) {
-            top = 0;
-        }
-        return new PositionInfo(left, top);
-    }
+  
 
 }

@@ -47,7 +47,7 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.basestation.R;
 import com.sensoro.basestation.R2;
-import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
+import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapterTest;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
 import com.sensoro.smartcity.widget.CityLineChartRenderer;
@@ -65,7 +65,7 @@ import static android.graphics.Typeface.DEFAULT_BOLD;
 /**
  * 基站详情
  */
-public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter> implements OnChartValueSelectedListener, IBaseStationDetailActivityView, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
+public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter> implements OnChartValueSelectedListener, IBaseStationDetailActivityView, MonitorDeployDetailPhotoAdapterTest.OnRecyclerViewItemClickListener {
 
     @BindView(R2.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -150,7 +150,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     private LineChart twentyhourChart;
     private LineChart sevendaysChart;
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
-    MonitorDeployDetailPhotoAdapter mAdapter;
+    MonitorDeployDetailPhotoAdapterTest mAdapter;
     private ProgressUtils mProgressUtils;
     private TagAdapter mTagAdapter;
     private int currentClick = 0;
@@ -169,7 +169,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         layoutManager.setReverseLayout(true);
         acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this, 8), false));
         acMonitorDeployPhoto.setLayoutManager(layoutManager);
-        mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
+        mAdapter = new MonitorDeployDetailPhotoAdapterTest(mActivity);
         acMonitorDeployPhoto.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
     }

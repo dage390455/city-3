@@ -39,8 +39,8 @@ import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.common.utils.CityAppUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
 import java.io.Serializable;

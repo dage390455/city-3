@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.sensoro.common.R;
+import com.sensoro.common.imagepicker.util.Utils;
 
 /**
  * Created by luozhanming on 2018/1/17.

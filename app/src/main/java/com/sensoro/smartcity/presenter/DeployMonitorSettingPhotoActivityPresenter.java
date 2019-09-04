@@ -12,10 +12,10 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ImagePicker;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.common.imagepicker.ui.ImageGridActivity;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.common.widgets.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+import static com.sensoro.common.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
 public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<IDeployMonitorSettingPhotoActivityView> implements SelectDialog.SelectDialogListener {

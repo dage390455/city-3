@@ -47,11 +47,11 @@ import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
 import com.sensoro.smartcity.adapter.InspectionTaskRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
-import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.common.model.DeviceTypeModel;
 import com.sensoro.common.model.StatusCountModel;
 import com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter;
 import com.sensoro.common.widgets.StatePopUtils;
-import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+import com.sensoro.common.widgets.SelectDeviceTypePopUtils;
 
 import java.util.List;
 

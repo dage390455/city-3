@@ -15,7 +15,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
-import com.sensoro.smartcity.widget.divider.TopSpaceItemDecoration;
+import com.sensoro.common.widgets.TopSpaceItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

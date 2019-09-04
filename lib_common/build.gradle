@@ -119,7 +119,7 @@ dependencies {
     }
 
     //
-    implementation project(':sensor-kit')
+    api project(':sensor-kit')
     //3D地图so及jar
     api deps.amap_3dmap
     //定位功能

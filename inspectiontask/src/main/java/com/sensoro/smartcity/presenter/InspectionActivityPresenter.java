@@ -22,7 +22,7 @@ import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
-import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.common.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 
 import org.greenrobot.eventbus.EventBus;

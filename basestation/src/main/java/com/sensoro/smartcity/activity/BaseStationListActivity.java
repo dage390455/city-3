@@ -48,7 +48,7 @@ import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.basestation.R;
 import com.sensoro.basestation.R2;
 import com.sensoro.smartcity.adapter.BaseStationListAdapter;
-import com.sensoro.smartcity.imainviews.ICameraListActivityView;
+import com.sensoro.smartcity.imainviews.ICameraListActivityViewTest;
 import com.sensoro.smartcity.presenter.BaseStationListActivityPresenter;
 import com.sensoro.smartcity.widget.popup.BaseStationPopupWindow;
 
@@ -58,8 +58,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @Route(path = ARouterConstants.ACTIVITY_BASESTATION_LIST)
-public class BaseStationListActivity extends BaseActivity<ICameraListActivityView, BaseStationListActivityPresenter>
-        implements ICameraListActivityView, BaseStationListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, BaseStationPopupWindow.OnCameraListFilterPopupWindowListener {
+public class BaseStationListActivity extends BaseActivity<ICameraListActivityViewTest, BaseStationListActivityPresenter>
+        implements ICameraListActivityViewTest, BaseStationListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, BaseStationPopupWindow.OnCameraListFilterPopupWindowListener {
 
     @BindView(R2.id.refreshLayout)
     SmartRefreshLayout refreshLayout;

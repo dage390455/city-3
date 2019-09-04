@@ -36,15 +36,14 @@ import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
-import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.common.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
-import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.common.model.DeviceTypeModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -469,21 +468,21 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         }
         mHandler.postDelayed(this, 3 * 1000);
 //
-        if (BLE_DEVICE_SET.containsKey("02C41117C72BC418")) {
-            BLEDevice bleDevice = BLE_DEVICE_SET.get("02C41117C72BC418");
-
-
-//            Intent intent = new Intent(mContext, TestUpdateActivity.class);
-//            intent.putExtra("sensoro_device", bleDevice);
-//            getView().startAC(intent);
-//            getView().finishAc();
-
-
-
-            Bundle bundle=new Bundle();
-            bundle.putSerializable("sensoro_device",(Serializable)bleDevice);;
-            startActivity(ARouterConstants.ACTIVITY_TEST_UPDATE,bundle,mContext);
-        }
+//        if (BLE_DEVICE_SET.containsKey("02C41117C72BC418")) {
+//            BLEDevice bleDevice = BLE_DEVICE_SET.get("02C41117C72BC418");
+//
+//
+////            Intent intent = new Intent(mContext, TestUpdateActivity.class);
+////            intent.putExtra("sensoro_device", bleDevice);
+////            getView().startAC(intent);
+////            getView().finishAc();
+//
+//
+//
+//            Bundle bundle=new Bundle();
+//            bundle.putSerializable("sensoro_device",(Serializable)bleDevice);;
+//            startActivity(ARouterConstants.ACTIVITY_TEST_UPDATE,bundle,mContext);
+//        }
     }
 
     public void doNavigation(int position) {

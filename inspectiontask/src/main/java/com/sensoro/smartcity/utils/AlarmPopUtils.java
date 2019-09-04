@@ -7,13 +7,13 @@ import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ImagePicker;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
-import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+import static com.sensoro.common.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
 public class AlarmPopUtils implements Constants{
