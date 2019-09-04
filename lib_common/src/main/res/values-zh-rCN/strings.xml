@@ -1203,4 +1203,16 @@
     <string name="result">结果</string>
     <string name="time_out">超时</string>
 
+
+    <!--    滑块验证国际化-->
+    <string name="slide_dialog_desc">在现场有明火或者浓烟，且有蔓延趋势的情况下确认真实火警；\n确认真实火警后，所有应急联系人及辖区领导都会接到电活通知赶往现场处置</string>
+    <string name="slide_dialog_title">确认真实火警</string>
+    <string name="slide_dialog_success">验证成功</string>
+    <string name="slide_dialog_failed">验证失败</string>
+    <string name="slide_dialog_failed_maxcount">验证超过最大次数</string>
+    <string name="slide_dialog_seek_title">请拖动上方滑块完成拼图</string>
+
+
+
+
 </resources>

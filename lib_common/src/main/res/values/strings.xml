@@ -1223,4 +1223,14 @@
     <string name="result">Result</string>
     <string name="time_out">timeOut</string>
 
+
+<!--    滑块验证国际化-->
+    <string name="slide_dialog_desc">Fire or smoke on site，and Confirm the true fire alarm in case of spreading trend；\nAfter confirming the true fire alarm
+，All emergency contacts and district leaders will be notified to rush to the scene for disposal.</string>
+    <string name="slide_dialog_title">Confirm the true fire alarm</string>
+    <string name="slide_dialog_success">Verification success</string>
+    <string name="slide_dialog_failed">Validation failure</string>
+    <string name="slide_dialog_failed_maxcount">Verification exceeded maximum number of times</string>
+    <string name="slide_dialog_seek_title">Please complete the puzzle</string>
+
 </resources>

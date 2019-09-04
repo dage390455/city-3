@@ -52,7 +52,7 @@ public class SlidePopUtils {
                         listener.onAccess(time);
                     }
 
-                    return "验证通过";
+                    return mActivity.getResources().getString(R.string.slide_dialog_success);
                 }
 
                 @Override
@@ -61,7 +61,7 @@ public class SlidePopUtils {
                         listener.onFailed(count);
                     }
 
-                    return "验证失败";
+                    return mActivity.getResources().getString(R.string.slide_dialog_failed);
                 }
 
                 @Override
@@ -69,7 +69,7 @@ public class SlidePopUtils {
                     if (listener != null) {
                         listener.onMaxFailed();
                     }
-                    return "可以走了";
+                    return mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount);
                 }
 
             });

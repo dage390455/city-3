@@ -16,8 +16,7 @@
             android:id="@+id/vertifyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:background="#333333"/>
+            android:scaleType="fitXY"/>
     </FrameLayout>
 
     <RelativeLayout
@@ -31,10 +30,10 @@
         android:layout_height="32dp"
         android:background="@drawable/pop_seekbar_text_bg"
         android:layout_centerVertical="true"
-        android:text="请拖动上方滑块完成拼图"
+        android:text="@string/slide_dialog_seek_title"
         android:gravity="center"
         android:textSize="12dp"
-        android:textColor="#333333"
+        android:textColor="@color/c_33ccff"
         />
 
         <com.sensoro.common.widgets.slideverify.TextSeekbar
