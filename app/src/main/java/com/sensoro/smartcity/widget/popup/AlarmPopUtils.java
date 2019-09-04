@@ -22,8 +22,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.sensoro.common.adapter.ImagePickerAdapter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageGridActivity;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.AlarmPopModel;
@@ -44,12 +48,8 @@ import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
-import com.sensoro.common.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.common.imagepicker.ImagePicker;
-import com.sensoro.common.imagepicker.ui.ImageGridActivity;
-import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,8 +64,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
-import static com.sensoro.common.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
 public class AlarmPopUtils implements Constants,
@@ -773,79 +771,6 @@ public class AlarmPopUtils implements Constants,
             }
             btAlarmPopupCommit.setEnabled(canClick);
             btAlarmPopupCommit.setClickable(canClick);
-        }
-    }
-
-    public static void handlePhotoIntent(int requestCode, int resultCode, Intent data) {
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            //添加图片返回
-            if (data != null && requestCode == REQUEST_CODE_SELECT) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                if (tempImages != null) {
-                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.fromTakePhoto = fromTakePhoto;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            }
-        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-            //预览图片返回
-            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-                if (tempImages != null) {
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            }
-        } else if (resultCode == RESULT_CODE_RECORD) {
-            //拍视频
-            if (data != null && requestCode == REQUEST_CODE_RECORD) {
-                ImageItem imageItem = (ImageItem) data.getSerializableExtra(Constants.EXTRA_PATH_RECORD);
-                if (imageItem != null) {
-                    try {
-                        LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    ArrayList<ImageItem> tempImages = new ArrayList<>();
-                    tempImages.add(imageItem);
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
-                EventData eventData = new EventData();
-                eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                AlarmPopModel alarmPopModel = new AlarmPopModel();
-                alarmPopModel.requestCode = requestCode;
-                alarmPopModel.resultCode = resultCode;
-                eventData.data = alarmPopModel;
-                EventBus.getDefault().post(eventData);
-            }
-
-        }
-        //
-        try {
-            LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
         }
     }
 }

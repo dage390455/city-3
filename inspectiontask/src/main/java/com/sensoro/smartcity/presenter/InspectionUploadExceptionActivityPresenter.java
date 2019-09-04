@@ -25,7 +25,7 @@ import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.smartcity.constant.InspectionConstant;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
-import com.sensoro.smartcity.utils.AlarmPopUtils;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
 import com.sensoro.common.imagepicker.ImagePicker;
 import com.sensoro.common.imagepicker.ui.ImageGridActivity;
 import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
@@ -213,7 +213,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
 
     }
 
