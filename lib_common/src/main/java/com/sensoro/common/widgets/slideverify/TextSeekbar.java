@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatSeekBar;
 
 import com.sensoro.common.R;
+import com.sensoro.common.imagepicker.util.Utils;
 
 /**
  * Created by luozhanming on 2018/1/17.
