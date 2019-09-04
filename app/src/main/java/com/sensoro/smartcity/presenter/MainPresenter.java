@@ -39,6 +39,7 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.smartcity.R;
@@ -48,7 +49,6 @@ import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -926,7 +926,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         // 对照片信息统一处理
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);
         }
