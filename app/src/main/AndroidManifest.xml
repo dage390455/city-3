@@ -55,9 +55,6 @@
         </activity> <!-- android:value="6e1be3076c19f3cf3d148223a2873733"/> -->
         <!-- feb394e9f7754ae572cc77a0bfc723e5 -->
         <!-- 如果您项目中的所有页面都只需要以高或宽中的一个作为基准进行适配的话, 那就只需要填写高或宽中的一个设计图尺寸即可 -->
-        <activity
-            android:name=".temp.FMMapBasic"
-            android:configChanges="orientation|keyboardHidden" />
 
         <activity android:name=".activity.ScanLoginResultActivity" />
 
@@ -239,9 +236,9 @@
         <meta-data
             android:name="PUSH_APPSECRET"
             android:value="${GETUI_APP_SECRET}" />
-        <meta-data
-            android:name="com.fengmap.mapapi.appkey"
-            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />
+<!--        <meta-data-->
+<!--            android:name="com.fengmap.mapapi.appkey"-->
+<!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
