@@ -281,6 +281,7 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(':city_camera')
     }
+
     if (!isModule.toBoolean()) {
         implementation project(path: ':inspectiontask')
     }
