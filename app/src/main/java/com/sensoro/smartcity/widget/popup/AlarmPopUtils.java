@@ -22,20 +22,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.common.widgets.slideverify.SlidePopUtils;
-import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.SecurityRisksActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
@@ -44,10 +46,7 @@ import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
@@ -140,10 +139,10 @@ public class AlarmPopUtils implements Constants,
             mRealFireDialog = null;
         }
 
-        if(mSlidePopUtils!=null){
-            mSlidePopUtils.destroySlideVerifyDialog();
-            mSlidePopUtils=null;
-        }
+//        if (mSlidePopUtils != null) {
+//            mSlidePopUtils.destroySlideVerifyDialog();
+//            mSlidePopUtils = null;
+//        }
 
         if (bind != null) {
             bind.unbind();
@@ -344,7 +343,7 @@ public class AlarmPopUtils implements Constants,
         });
     }
 
-    SlidePopUtils mSlidePopUtils;
+//    private SlidePopUtils mSlidePopUtils;
 
     private void initRealFireDialog() {
         mRealFireDialog = new TipDialogUtils(mActivity);
@@ -366,31 +365,30 @@ public class AlarmPopUtils implements Constants,
         });
 
 
-        mSlidePopUtils = new SlidePopUtils();
-        mSlidePopUtils.setTitle("确认真实火警")
-                .setDesc("在现场有明火或者浓烟，且有蔓延趋势的情况下确认真实火警；\n" +
-                        "确认真实火警后，所有应急联系人及辖区领导都会接到电活通知赶往现场处置")
-                .setListener(new SlidePopUtils.VerifityResultListener() {
-            @Override
-            public void onAccess(long time) {
-                Toast.makeText(mActivity, "验证成功", Toast.LENGTH_SHORT).show();
-                mSlidePopUtils.dismissDialog();
-                doCommit();
-            }
-
-            @Override
-            public void onFailed(int failCount) {
-                mSlidePopUtils.dismissDialog();
-                Toast.makeText(mActivity, "验证失败", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onMaxFailed() {
-                mSlidePopUtils.dismissDialog();
-                Toast.makeText(mActivity, "验证超过最大次数", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+//        mSlidePopUtils = new SlidePopUtils();
+//        mSlidePopUtils.setTitle("确认真实火警")
+//                .setDesc("在现场有明火或者浓烟，且有蔓延趋势的情况下确认真实火警；\n" +
+//                        "确认真实火警后，所有应急联系人及辖区领导都会接到电活通知赶往现场处置")
+//                .setListener(new SlidePopUtils.VerifityResultListener() {
+//                    @Override
+//                    public void onAccess(long time) {
+//                        Toast.makeText(mActivity, "验证成功", Toast.LENGTH_SHORT).show();
+//                        mSlidePopUtils.dismissDialog();
+//                        doCommit();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(int failCount) {
+//                        mSlidePopUtils.dismissDialog();
+//                        Toast.makeText(mActivity, "验证失败", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onMaxFailed() {
+//                        mSlidePopUtils.dismissDialog();
+//                        Toast.makeText(mActivity, "验证超过最大次数", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
 
     }
