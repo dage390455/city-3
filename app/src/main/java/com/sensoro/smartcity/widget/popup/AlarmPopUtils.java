@@ -476,8 +476,8 @@ public class AlarmPopUtils implements Constants,
             return;
         }
         if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
-//            mRealFireDialog.show();
-            mSlidePopUtils.showDialog(mActivity);
+            mRealFireDialog.show();
+//            mSlidePopUtils.showDialog(mActivity);
             return;
         }
         setUpdateButtonClickable(false);
