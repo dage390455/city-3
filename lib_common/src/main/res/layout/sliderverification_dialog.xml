@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#F34A4A"
+            android:textColor="@color/c_f34a4a"
             android:textSize="20dp"
             />
 
@@ -28,7 +28,7 @@
             android:layout_marginTop="16dp"
             android:lineSpacingExtra="4dp"
             android:text=""
-            android:textColor="#252525"
+            android:textColor="@color/c_252525"
             android:textSize="14dp"
             />
 
@@ -54,8 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:textSize="16dp"
-        android:textColor="#252525"
-        android:text="取消"
+        android:textColor="@color/c_252525"
+        android:text="@string/cancel"
         android:background="@null"
         />
 </LinearLayout>

@@ -367,13 +367,12 @@ public class AlarmPopUtils implements Constants,
 
 
         mSlidePopUtils = new SlidePopUtils();
-        mSlidePopUtils.setTitle("确认真实火警")
-                .setDesc("在现场有明火或者浓烟，且有蔓延趋势的情况下确认真实火警；\n" +
-                        "确认真实火警后，所有应急联系人及辖区领导都会接到电活通知赶往现场处置")
+        mSlidePopUtils.setTitle(mActivity.getResources().getString(R.string.slide_dialog_title))
+                .setDesc(mActivity.getResources().getString(R.string.slide_dialog_desc))
                 .setListener(new SlidePopUtils.VerifityResultListener() {
             @Override
             public void onAccess(long time) {
-                Toast.makeText(mActivity, "验证成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_success), Toast.LENGTH_SHORT).show();
                 mSlidePopUtils.dismissDialog();
                 doCommit();
             }
@@ -381,13 +380,13 @@ public class AlarmPopUtils implements Constants,
             @Override
             public void onFailed(int failCount) {
                 mSlidePopUtils.dismissDialog();
-                Toast.makeText(mActivity, "验证失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onMaxFailed() {
                 mSlidePopUtils.dismissDialog();
-                Toast.makeText(mActivity, "验证超过最大次数", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -477,8 +476,8 @@ public class AlarmPopUtils implements Constants,
             return;
         }
         if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
-            mRealFireDialog.show();
-//            mSlidePopUtils.showDialog(mActivity);
+//            mRealFireDialog.show();
+            mSlidePopUtils.showDialog(mActivity);
             return;
         }
         setUpdateButtonClickable(false);
