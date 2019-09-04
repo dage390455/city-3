@@ -89,26 +89,26 @@
         <activity android:name=".activity.DeployRecordActivity" />
         <activity android:name=".activity.DeployRecordDetailActivity" />
         <activity android:name=".activity.SignalCheckActivity" />
-        <activity android:name=".widget.imagepicker.ui.ImageBaseActivity" />
+        <activity android:name="com.sensoro.common.imagepicker.ui.ImageBaseActivity" />
         <activity
-            android:name=".widget.imagepicker.ui.ImageGridActivity"
+            android:name="com.sensoro.common.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerThemeFullScreen" />
         <activity
-            android:name=".widget.imagepicker.ui.ImageCropActivity"
+            android:name="com.sensoro.common.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="false"
             android:theme="@style/ImagePickerTheme" />
         <activity
-            android:name=".widget.imagepicker.ui.ImagePreviewActivity"
+            android:name="com.sensoro.common.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerThemeFullScreen" />
         <activity
-            android:name=".widget.imagepicker.ui.ImagePreviewDelActivity"
+            android:name="com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerThemeFullScreen" />
         <activity
-            android:name=".widget.imagepicker.ui.ImageAlarmPhotoDetailActivity"
+            android:name="com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerThemeFullScreen" />
         <activity android:name=".activity.MalfunctionDetailActivity" />
@@ -241,7 +241,7 @@
 <!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
 
         <provider
-            android:name=".widget.imagepicker.ImagePickerProvider"
+            android:name="com.sensoro.common.imagepicker.ImagePickerProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">

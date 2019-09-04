@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.PermissionDialogUtils;
-import com.sensoro.imagepicker.R;
+import com.sensoro.common.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.yanzhenjie.permission.Action;

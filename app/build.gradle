@@ -273,7 +273,7 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
 
-    implementation project(':imagepicker')
+//    implementation project(':imagepicker')
     //
     if (!isModule.toBoolean()) {
         implementation project(':nameplate')

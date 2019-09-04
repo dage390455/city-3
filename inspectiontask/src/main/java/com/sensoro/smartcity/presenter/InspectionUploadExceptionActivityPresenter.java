@@ -26,9 +26,9 @@ import com.sensoro.inspectiontask.R;
 import com.sensoro.smartcity.constant.InspectionConstant;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.smartcity.utils.AlarmPopUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageGridActivity;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

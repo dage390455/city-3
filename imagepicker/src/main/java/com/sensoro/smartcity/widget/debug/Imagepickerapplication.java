@@ -3,7 +3,7 @@ package com.sensoro.smartcity.widget.debug;
 import com.sensoro.common.base.BaseApplication;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
-import com.sensoro.smartcity.widget.popup.GlideImageLoader;
+import com.sensoro.smartcity.widget.imagepicker.GlideImageLoader;
 
 public  class Imagepickerapplication extends BaseApplication{
 

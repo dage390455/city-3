@@ -72,7 +72,7 @@ public class ContractTestActivity extends Activity {
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        permissionDialogUtils.setTipMessageText(getString(com.sensoro.imagepicker.R.string.permission_descript)).setTipConfirmText(getString(com.sensoro.imagepicker.R.string.reauthorization),getResources().getColor(com.sensoro.imagepicker.R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                        permissionDialogUtils.setTipMessageText(getString(R.string.permission_descript)).setTipConfirmText(getString(R.string.reauthorization),getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
                             @Override
                             public void onCancelClick() {
                                 executor.cancel();
@@ -102,7 +102,7 @@ public class ContractTestActivity extends Activity {
                         if (AndPermission.hasAlwaysDeniedPermission(ContractTestActivity.this, permissions)) {
                             // 如果用户勾选了禁止重复提醒，需要提示用户去到APP权限设置页面开启权限
                             String permissionTips = MyPermissionManager.getPermissionTips(data);
-                            permissionDialogUtils.setTipConfirmText(ContractTestActivity.this.getString(com.sensoro.imagepicker.R.string.go_setting), ContractTestActivity.this.getResources().getColor(com.sensoro.imagepicker.R.color.c_f34a4a)).setTipMessageText(permissionTips + ContractTestActivity.this.getString(com.sensoro.imagepicker.R.string.permission_check)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                            permissionDialogUtils.setTipConfirmText(ContractTestActivity.this.getString(R.string.go_setting), ContractTestActivity.this.getResources().getColor(R.color.c_f34a4a)).setTipMessageText(permissionTips + ContractTestActivity.this.getString(R.string.permission_check)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
                                 @Override
                                 public void onCancelClick() {
                                     permissionDialogUtils.dismiss();

@@ -84,7 +84,7 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':lib_common')
-    implementation project(path: ':imagepicker')
+//    implementation project(path: ':imagepicker')
 
     //组件调用需要集成登录测试module
     if(isModule.toBoolean()){

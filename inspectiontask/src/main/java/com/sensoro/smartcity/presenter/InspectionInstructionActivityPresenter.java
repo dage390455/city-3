@@ -13,8 +13,8 @@ import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;

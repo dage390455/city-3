@@ -38,8 +38,8 @@ import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.common.utils.CityAppUtils;
 import com.sensoro.common.utils.WidgetUtil;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
