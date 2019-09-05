@@ -9,8 +9,6 @@ import androidx.multidex.MultiDexApplication;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.amap.api.location.AMapLocationClient;
-import com.baidu.ocr.sdk.exception.OCRError;
-import com.baidu.ocr.sdk.model.AccessToken;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
@@ -104,7 +102,7 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
                 layout.setPrimaryColorsId(android.R.color.white);
 
                 String format = BaseApplication.this.getResources().getString(R.string.update_from) + " %s";
-                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat(format));
+                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat(format)).setAccentColor(getInstance().getResources().getColor(R.color.c_6a6a6a));
             }
         });
         //设置全局的Footer构建器
@@ -112,7 +110,7 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
             @Override
             public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
                 //指定为经典Footer，默认是 BallPulseFooter
-                return new ClassicsFooter(context).setDrawableSize(20);
+                return new ClassicsFooter(context).setDrawableSize(20).setAccentColor(getInstance().getResources().getColor(R.color.c_6a6a6a));
             }
         });
     }
