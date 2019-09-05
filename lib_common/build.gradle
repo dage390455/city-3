@@ -47,6 +47,7 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     //
+    api project(':lib_res')
     api deps.support.app_compat
     api deps.support.multidex
     api deps.support.recyclerview
