@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:theme">
+        tools:replace="android:theme,android:label">
         <!-- 适配华为（huawei）刘海屏 -->
         <activity android:name=".activity.UUIDAddMySettingActivity" />
 
@@ -236,9 +236,9 @@
         <meta-data
             android:name="PUSH_APPSECRET"
             android:value="${GETUI_APP_SECRET}" />
-<!--        <meta-data-->
-<!--            android:name="com.fengmap.mapapi.appkey"-->
-<!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
+        <!--        <meta-data-->
+        <!--            android:name="com.fengmap.mapapi.appkey"-->
+        <!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
 
         <provider
             android:name="com.sensoro.common.imagepicker.ImagePickerProvider"
