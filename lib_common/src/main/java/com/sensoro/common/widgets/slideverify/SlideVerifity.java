@@ -149,7 +149,7 @@ public class SlideVerifity extends LinearLayout {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (isDown) {  //手指按下
                     isDown = false;
-                    if (progress > 10) { //按下位置不正确
+                    if (progress > 30) { //按下位置不正确
                         isResponse = false;
                     } else {
                         isResponse = true;

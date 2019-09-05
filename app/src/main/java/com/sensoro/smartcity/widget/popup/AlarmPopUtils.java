@@ -41,6 +41,7 @@ import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
+import com.sensoro.common.widgets.slideverify.SlidePopUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.SecurityRisksActivity;
