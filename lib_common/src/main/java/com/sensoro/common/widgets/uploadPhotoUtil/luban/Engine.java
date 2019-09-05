@@ -6,7 +6,9 @@ import android.graphics.Matrix;
 
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.imagepicker.util.BitmapUtil;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.ImageUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -84,10 +86,20 @@ class Engine {
         final int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
         final int textPaddingRight = (int) (25 * srcWidth / 375f + 0.5f);
         Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
+
+        int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
+        try {
+            float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
+            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
+            tagFontSize= (int) (srcWidth/5.0f/5.0f);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
 
         tagBitmap = ImageUtil.drawTextToRightBottom(ContextUtils.getContext(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
-                21, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
+                tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         if (Checker.SINGLE.isJPG(srcImg.open())) {
