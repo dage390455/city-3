@@ -153,7 +153,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
         DeviceTypeModel deviceTypeModel = new DeviceTypeModel();
         if (position == 0) {
             deviceTypeModel.name = mContext.getString(R.string.all_types);
-            deviceTypeModel.iconRes = R.mipmap.type_all;
+            deviceTypeModel.iconRes = R.mipmap.type_all_test;
         } else {
             final int index = position - 1;
             switch (typeStyle) {
