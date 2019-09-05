@@ -1212,6 +1212,12 @@
     <string name="slide_dialog_failed_maxcount">验证超过最大次数</string>
     <string name="slide_dialog_seek_title">请拖动上方滑块完成拼图</string>
 
+    <string name="device_imei">IMEI</string>
+    <string name="device_imsi">IMSI</string>
+    <string name="device_iccid">卡号（ICCID）</string>
+
+
+
 
 
 

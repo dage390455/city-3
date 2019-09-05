@@ -48,6 +48,7 @@ import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.MonitorOptionsBean;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.common.server.bean.OtherBean;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
@@ -323,6 +324,18 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         Integer interval = mDeviceInfo.getInterval();
         if (interval != null) {
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+        }
+        //TODO 特殊配置
+        if ("fh388n_smoke_nb".equals(deviceType)) {
+            //带有2g的 配置参数
+            getView().set2GDeviceConfigVisible(true);
+            OtherBean other = mDeviceInfo.getOther();
+            if (other != null) {
+                String imei = other.getImei();
+                String imsi = other.getImsi();
+                String iccid = other.getIccid();
+                getView().set2GDeviceConfigInfo(imei, imsi, iccid);
+            }
         }
     }
 
