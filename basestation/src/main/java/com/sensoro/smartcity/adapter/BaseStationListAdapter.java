@@ -106,7 +106,6 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
 
             String status = deviceCameraInfo.getStatus();
             if ("offline".equals(status)) {
-
                 Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_basestation_offline);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.offline));

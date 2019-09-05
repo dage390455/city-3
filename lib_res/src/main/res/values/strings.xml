@@ -1,5 +1,73 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    //
+
+    <!--camera-->
+    <string name="capture_time">Capture time</string>
+    <string name="process_status">Processing status</string>
+    <string name="customize_time">Custom time</string>
+    <string name="seven_days">7days</string>
+    <string name="three_days">3das</string>
+    <string name="twentyfour_hours">24 h</string>
+    <string name="Unlimited">Unlimited</string>
+    <string name="capture_photo">Capture pic</string>
+    <string name="control_photo">Cloth control picture</string>
+    <string name="word_valid">Effective</string>
+    <string name="word_unvalid">Invalid</string>
+    <string name="warn_confirm">Confirm</string>
+    <string name="external_type">Foreign</string>
+    <string name="focus_type">Focus</string>
+    <string name="invade_type">Intrusion</string>
+    <string name="security_warn_result_type_title">Alert result type (required)</string>
+    <string name="security_warn_des_title">Instruction manual</string>
+    <string name="security_warn_des_hint">Please describe the actual situation of the warning event, input up to 100 characters.</string>
+    <string name="security_warn_invalid">Invalid warning</string>
+    <string name="security_warn_valid">Effective warning</string>
+    <string name="security_warn_confirm_dialog_exit_button">Confirm exit</string>
+    <string name="security_warn_confirm_dialog_exit_title">Whether to withdraw the warning confirmation</string>
+    <string name="security_warn_confirm_dialog_upload_button">Confirmation report</string>
+    <string name="security_warn_confirm_dialog_upload_title">Whether to report the %1$s warning</string>
+    <string name="security_warn_detail_activity_title">Alert log</string>
+    <string name="security_warn_video_title">Warning video</string>
+    <string name="security_warn_deploy_title">Control information</string>
+    <string name="toast_image_download_success">Saved to local</string>
+    <string name="toast_image_download_failed">Save failed</string>
+    <string name="word_base_info">Basic Information</string>
+    <string name="word_device_sn">SN</string>
+    <string name="title_camera_brand">Camera brand</string>
+    <string name="title_label">Label</string>
+    <string name="title_camera_version">Camera version</string>
+    <string name="title_warn_contact">Alert contact</string>
+    <string name="title_navi">Navigation</string>
+    <string name="word_name">Name</string>
+    <string name="word_nation">Nationality</string>
+    <string name="word_phone">Phone</string>
+    <string name="word_idcard">ID Card</string>
+    <string name="word_describe">description</string>
+    <string name="word_all">All</string>
+    <string name="invalid_warn">Invalid warning</string>
+    <string name="effective_warn">Effective warning</string>
+    <string name="unprocessed">Unprocessed</string>
+    <string name="download_security_warn_record_success">Download completed</string>
+    <string name="download_security_warn_record_fail">download failed</string>
+    <string name="capture_security_warn_record_success">Saved to local</string>
+    <string name="capture_security_warn_record_fail">Save failed</string>
+    <string name="online">Online</string>
+    <string name="contact_count_tip">%dpeople total</string>
+    <string name="security_warn_timeline_remark">Remarks: %1$s</string>
+    <string name="security_warn_timeline_title">Contact [%1$s] confirms this alert with %2$s</string>
+    <string name="security_warn_timeline_call_success">The call was successfully dialed</string>
+    <string name="security_warn_timeline_call_failure">Phone call failed</string>
+    <string name="security_warn_timeline_call_process">Telephone call</string>
+    <string name="security_warn_timeline_sms_success">SMS sent successfully</string>
+    <string name="security_warn_timeline_sms_failure">message failed to send</string>
+    <string name="security_warn_timeline_sms_process">Sending a text message;</string>
+    <string name="security_search_tip">Device Name/Task Name/Person Name</string>
+    <string name="security_camera_info_error">Information acquisition failed, please try again</string>
+    <string name="camera_contact_no_exist">Camera contact does not exist</string>
+    <string name="owner_contact_no_exist">Owner contact does not exist</string>
+    <string name="security_warn_video_title_transcoding">Early warning video (acquiring...)</string>
+    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
+
+    //<!--city-->
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
     //

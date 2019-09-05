@@ -3,6 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#1DBB99</color>
+    //
+    <color name="transBlock">#80000000</color>
+    <color name="c_B2000000">#B2000000</color>
+    //
     <color name="white">#FFFFFF</color>
     <color name="mocha_color">#6D5ACE</color>
     <color name="slide_menu_item_bg">#2e3344</color>

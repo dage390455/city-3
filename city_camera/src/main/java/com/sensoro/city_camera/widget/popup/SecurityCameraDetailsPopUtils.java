@@ -146,7 +146,7 @@ public class SecurityCameraDetailsPopUtils {
 
         mCameraNameTv.setText(mSecurityCameraInfo.getName());
         mCameraTypeTv.setText(mSecurityCameraInfo.getType());
-        mCameraStatusTv.setText(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
+        mCameraStatusTv.setText(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.online : R.string.offline);
         mCameraStatusTv.setTextColor(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? mActivity.getResources().getColor(R.color.c_1dbb99)
                 : mActivity.getResources().getColor(R.color.c_a6a6a6));
         mCameraSNTv.setText(mSecurityCameraInfo.getSn());
