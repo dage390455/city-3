@@ -78,6 +78,7 @@ import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.common.callback.BleObserver;
 import com.sensoro.common.callback.OnConfigInfoObserver;
 import com.sensoro.common.constant.MonitorPointOperationCode;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
@@ -326,7 +327,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
         }
         //TODO 特殊配置
-        if ("fh388n_smoke_nb".equals(deviceType)) {
+        if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(deviceType)) {
             //带有2g的 配置参数
             getView().set2GDeviceConfigVisible(true);
             OtherBean other = mDeviceInfo.getOther();

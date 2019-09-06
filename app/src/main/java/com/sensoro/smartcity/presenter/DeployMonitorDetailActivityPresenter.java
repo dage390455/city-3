@@ -41,9 +41,11 @@ import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
+import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.RegexUtils;
@@ -146,6 +148,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private final HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
     private String tempForceReason;
     private Integer tempStatus;
+    private String mScheduleNo;
 
     @Override
     public void initData(Context context) {
@@ -408,14 +411,103 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
                 //TODO 加入白名单处理
-                if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
-                    doUploadImages(lon, lan);
+                if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
+                    //2g电气火灾的配置
+                    handle2GDeviceConfig();
                 } else {
-                    handleDeviceSignalStatusAndBleSetting();
+                    if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
+                        doUploadImages(lon, lan);
+                    } else {
+                        handleDeviceSignalStatusAndBleSetting();
+                    }
                 }
+
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 单独处理2g的电气火灾类配置
+     */
+    private void handle2GDeviceConfig() {
+        ArrayList<String> sns = new ArrayList<>();
+        sns.add(deployAnalyzerModel.sn);
+        getView().showBleConfigDialog();
+        mScheduleNo = null;
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", deployAnalyzerModel.settingData)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
+            @Override
+            public void onCompleted(MonitorPointOperationRequestRsp response) {
+                String scheduleNo = response.getScheduleNo();
+                if (TextUtils.isEmpty(scheduleNo)) {
+                    getView().dismissBleConfigDialog();
+                    getView().toastShort(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+                } else {
+                    String[] split = scheduleNo.split(",");
+                    if (split.length > 0) {
+                        mScheduleNo = split[0];
+                        mHandler.removeCallbacks(DeviceTaskOvertime);
+                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                    } else {
+                        getView().dismissBleConfigDialog();
+                        getView().toastShort(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissBleConfigDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+    }
+
+    private final Runnable DeviceTaskOvertime = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(DeviceTaskOvertime);
+            mScheduleNo = null;
+            getView().dismissBleConfigDialog();
+            getView().toastShort(mContext.getString(R.string.operation_request_time_out));
+
+        }
+    };
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        try {
+            LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
+        if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
+            String[] split = scheduleNo.split(",");
+            if (split.length > 0) {
+                final String temp = split[0];
+                if (!TextUtils.isEmpty(temp)) {
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                if (isAttachedView()) {
+                                    //TODO 成功后执行上传
+                                    final double lon = deployAnalyzerModel.latLng.get(0);
+                                    final double lan = deployAnalyzerModel.latLng.get(1);
+                                    getView().dismissBleConfigDialog();
+                                    doUploadImages(lon, lan);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
         }
     }
 
