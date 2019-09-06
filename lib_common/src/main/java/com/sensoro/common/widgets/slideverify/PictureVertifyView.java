@@ -18,6 +18,8 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.sensoro.common.utils.DpUtils;
+
 
 /**
  * 拼图区域控件
@@ -46,9 +48,7 @@ class PictureVertifyView extends AppCompatImageView {
     private Bitmap mMaskShadowBitmap;//拼图缺块阴影
 
 
-    private Bitmap targetBlock;        //拼图目标位置Bitmap
     private Paint  mTargetMaskShadowPaint;
-    private Bitmap mTargetMaskShadowBitmap;//拼图缺块阴影
 
 
 
@@ -91,9 +91,12 @@ class PictureVertifyView extends AppCompatImageView {
         super(context, attrs, defStyleAttr);
 
         ininPaint(context);
+
     }
 
     private void ininPaint(Context context){
+        blockSize= DpUtils.dp2px(context,blockSize);
+        blockMinLeft= DpUtils.dp2px(context,blockMinLeft);
         mPorterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         mStrategy = new DefaultSlideVerifityStrategy(context);
 
@@ -104,16 +107,16 @@ class PictureVertifyView extends AppCompatImageView {
         bitmapPaint=  new Paint();
         setLayerType(View.LAYER_TYPE_SOFTWARE, bitmapPaint);
 
+
         // 绘制左侧滑块阴影部分
         mMaskShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
+        mMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.OUTER));
 
         // 绘制右侧滑块阴影部分
         mTargetMaskShadowPaint= new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mTargetMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
 
     }
-
 
     private void initDrawElements(){
         if (shadowInfo == null) {
@@ -127,12 +130,8 @@ class PictureVertifyView extends AppCompatImageView {
         if (verfityBlock == null) {
             verfityBlock = createBlockBitmap();
             mMaskShadowBitmap=verfityBlock.extractAlpha();
-
-            targetBlock=createTargetBlockBitmap();
-            mTargetMaskShadowBitmap=targetBlock.extractAlpha();
-
-
         }
+
     }
 
 
@@ -144,14 +143,15 @@ class PictureVertifyView extends AppCompatImageView {
         if (mState != STATE_ACCESS) {
 //            canvas.drawPath(blockShape, shadowPaint);
 
-            canvas.drawBitmap(mTargetMaskShadowBitmap, shadowInfo.left+2, shadowInfo.top, mTargetMaskShadowPaint);
-            canvas.drawBitmap(targetBlock, shadowInfo.left, shadowInfo.top, shadowPaint);
+            canvas.drawBitmap(mMaskShadowBitmap, shadowInfo.left, shadowInfo.top, mTargetMaskShadowPaint);
+            canvas.drawBitmap(verfityBlock, shadowInfo.left, shadowInfo.top, shadowPaint);
         }
 
-
         if (mState == STATE_MOVE || mState == STATE_IDEL || mState == STATE_DOWN || mState == STATE_UNACCESS) {
-            canvas.drawBitmap(mMaskShadowBitmap, blockInfo.left+2, blockInfo.top, mMaskShadowPaint);
+            canvas.drawBitmap(mMaskShadowBitmap, blockInfo.left, blockInfo.top, mMaskShadowPaint);
             canvas.drawBitmap(verfityBlock, blockInfo.left, blockInfo.top, bitmapPaint);
+
+
         }
 
     }
@@ -222,6 +222,10 @@ class PictureVertifyView extends AppCompatImageView {
         verfityBlock = null;
         shadowInfo = null;
         blockShape = null;
+        if(mMaskShadowBitmap!=null){
+            mMaskShadowBitmap.recycle();
+            mMaskShadowBitmap=null;
+        }
         invalidate();
     }
 
@@ -268,6 +272,7 @@ class PictureVertifyView extends AppCompatImageView {
         this.blockInfo = null;
         this.shadowInfo = null;
         this.verfityBlock = null;
+
         invalidate();
     }
 
@@ -277,60 +282,44 @@ class PictureVertifyView extends AppCompatImageView {
     }
     private PorterDuffXfermode mPorterDuffXfermode;
 
-    /**
-     * 生成目标拼图缺块的Bitmap
-     * */
-    private Bitmap createTargetBlockBitmap() {
-        Paint  mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        //以控件宽高 create一块bitmap
-        Bitmap tempBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-
-        //把创建的bitmap作为画板
-        Canvas mCanvas = new Canvas(tempBitmap);
-        //有锯齿 且无法解决,所以换成XFermode的方法做
-        //mCanvas.clipPath(mask);
-        // 抗锯齿
-        mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-        //绘制用于遮罩的圆形
-        mCanvas.drawPath(blockShape, mMaskPaint);
-        //设置遮罩模式(图像混合模式)
-        mMaskPaint.setXfermode(mPorterDuffXfermode);
-        //★考虑到scaleType等因素，要用Matrix对Bitmap进行缩放
-        mCanvas.drawBitmap(((BitmapDrawable) getDrawable()).getBitmap(), getImageMatrix(), mMaskPaint);
-        mMaskPaint.setXfermode(null);
-
-        return cropBitmap(tempBitmap);
-    }
 
     /**
      * 生成拼图缺块的Bitmap
      * */
     private Bitmap createBlockBitmap() {
-//        Bitmap tempBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-//        Canvas canvas = new Canvas(tempBitmap);
-//        getDrawable().setBounds(0, 0, getWidth(), getHeight());
-//        canvas.clipPath(blockShape);
-//        getDrawable().draw(canvas);
+        Bitmap tempBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(tempBitmap);
+        getDrawable().setBounds(0, 0, getWidth(), getHeight());
+        canvas.clipPath(blockShape);
+        getDrawable().draw(canvas);
 //        mStrategy.decoreateSwipeBlockBitmap(canvas, blockShape,this);
 
-
-        Paint  mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        //以控件宽高 create一块bitmap
-        Bitmap tempBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-
-        //把创建的bitmap作为画板
-        Canvas mCanvas = new Canvas(tempBitmap);
-        //有锯齿 且无法解决,所以换成XFermode的方法做
-        //mCanvas.clipPath(mask);
-        // 抗锯齿
-        mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-        //绘制用于遮罩的圆形
-        mCanvas.drawPath(blockShape, mMaskPaint);
-        //设置遮罩模式(图像混合模式)
-        mMaskPaint.setXfermode(mPorterDuffXfermode);
-        //★考虑到scaleType等因素，要用Matrix对Bitmap进行缩放
-        mCanvas.drawBitmap(((BitmapDrawable) getDrawable()).getBitmap(), getImageMatrix(), mMaskPaint);
-        mMaskPaint.setXfermode(null);
+        
+//       Bitmap  tempBitmap1= cropBitmap(tempBitmap);
+//
+//
+//
+//        Paint  mMaskPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+//        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        //以控件宽高 create一块bitmap
+//         tempBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+//
+//        //把创建的bitmap作为画板
+//        Canvas mCanvas = new Canvas(tempBitmap);
+//        //有锯齿 且无法解决,所以换成XFermode的方法做
+////        mCanvas.clipPath(blockShape);
+////        mCanvas.drawBitmap(((BitmapDrawable) getDrawable()).getBitmap(), getImageMatrix(), mMaskPaint);
+//
+//        // 抗锯齿
+//        mCanvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+//        //绘制用于遮罩的圆形
+////        mCanvas.drawPath(blockShape, mMaskPaint);
+//        mCanvas.drawBitmap(tempBitmap1,shadowInfo.left,shadowInfo.top,mMaskPaint);
+//        //设置遮罩模式(图像混合模式)
+//        mMaskPaint.setXfermode(mPorterDuffXfermode);
+//        //★考虑到scaleType等因素，要用Matrix对Bitmap进行缩放
+//        mCanvas.drawBitmap(((BitmapDrawable) getDrawable()).getBitmap(), getImageMatrix(), mMaskPaint);
+//        mMaskPaint.setXfermode(null);
 
 
 

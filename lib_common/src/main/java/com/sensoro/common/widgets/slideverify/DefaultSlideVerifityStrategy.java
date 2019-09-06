@@ -10,6 +10,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.sensoro.common.utils.DpUtils;
+
 import java.util.Random;
 
 /**
@@ -52,8 +54,8 @@ public class DefaultSlideVerifityStrategy extends SlideVerifityStrategy {
 
         int left = width/2+random.nextInt(width/2 - blockSize + 1);
         //Avoid robot frequently and quickly click the start point to access the captcha.
-        if (left < blockSize-10) {
-            left = blockSize-10;
+        if (left < blockSize) {
+            left = blockSize- DpUtils.dp2px(mContext,10);
         }
         int top = random.nextInt(height - blockSize -blockSize);
         if (top < 0) {

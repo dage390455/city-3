@@ -1,4 +1,73 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!--camera-->
+    <string name="capture_time">抓拍时间</string>
+    <string name="process_status">处理状态</string>
+    <string name="customize_time">自定义时间</string>
+    <string name="seven_days">7天</string>
+    <string name="three_days">3天</string>
+    <string name="twentyfour_hours">24小时</string>
+    <string name="Unlimited">不限</string>
+    <string name="capture_photo">抓拍图片</string>
+    <string name="control_photo">布控图片</string>
+    <string name="word_valid">有效</string>
+    <string name="word_unvalid">无效</string>
+    <string name="warn_confirm">预警确认</string>
+    <string name="external_type">外来</string>
+    <string name="focus_type">重点</string>
+    <string name="invade_type">入侵</string>
+    <string name="security_warn_result_type_title">预警结果类型（必填）</string>
+    <string name="security_warn_des_title">备注说明</string>
+    <string name="security_warn_des_hint">请对预警事件的实际情况进行描述，最多输入100个字符</string>
+    <string name="security_warn_invalid">无效预警</string>
+    <string name="security_warn_valid">有效预警</string>
+    <string name="security_warn_confirm_dialog_exit_button">确认退出</string>
+    <string name="security_warn_confirm_dialog_exit_title">是否退出预警确认</string>
+    <string name="security_warn_confirm_dialog_upload_button">确认上报</string>
+    <string name="security_warn_confirm_dialog_upload_title">是否上报%1$s预警</string>
+    <string name="security_warn_detail_activity_title">预警日志</string>
+    <string name="security_warn_video_title">预警录像</string>
+    <string name="security_warn_deploy_title">布控信息</string>
+    <string name="toast_image_download_success">已保存至本地</string>
+    <string name="toast_image_download_failed">保存失败</string>
+    <string name="word_base_info">基本信息</string>
+    <string name="word_device_sn">设备号</string>
+    <string name="title_camera_brand">摄像机品牌</string>
+    <string name="title_label">标签</string>
+    <string name="title_camera_version">摄像机版本</string>
+    <string name="title_warn_contact">预警联系人</string>
+    <string name="title_navi">位置导航</string>
+    <string name="word_name">姓名</string>
+    <string name="word_nation">民族</string>
+    <string name="word_phone">手机号</string>
+    <string name="word_idcard">身份证</string>
+    <string name="word_describe">描述</string>
+    <string name="word_all">全部</string>
+    <string name="invalid_warn">无效预警</string>
+    <string name="effective_warn">有效预警</string>
+    <string name="unprocessed">未处理</string>
+    <string name="download_security_warn_record_success">下载完成</string>
+    <string name="download_security_warn_record_fail">下载失败</string>
+    <string name="capture_security_warn_record_success">已保存至本地</string>
+    <string name="capture_security_warn_record_fail">保存失败</string>
+    <string name="online">在线</string>
+    <string name="contact_count_tip">共%d人</string>
+    <string name="security_warn_timeline_remark">备注：%1$s</string>
+    <string name="security_warn_timeline_title">联系人[%1$s]通过%2$s确认本次预警</string>
+    <string name="security_warn_timeline_call_success"> 电话拨打成功</string>
+    <string name="security_warn_timeline_call_failure"> 电话拨打失败</string>
+    <string name="security_warn_timeline_call_process"> 电话拨打中</string>
+    <string name="security_warn_timeline_sms_success"> 短信发送成功</string>
+    <string name="security_warn_timeline_sms_failure"> 短信发送失败</string>
+    <string name="security_warn_timeline_sms_process"> 短信发送中</string>
+    <string name="security_search_tip">设备名称/任务名称/人员姓名</string>
+    <string name="security_camera_info_error">信息获取失败，请重试</string>
+    <string name="camera_contact_no_exist">相机联系人不存在</string>
+    <string name="owner_contact_no_exist">业主联系人不存在</string>
+    <string name="security_warn_video_title_transcoding">预警录像（获取中…)</string>
+    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
+
+
+    <!--city-->
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
     //
