@@ -19,6 +19,7 @@ import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.CameraListActivity;
+import com.sensoro.smartcity.activity.ListMultiVideoActivity;
 import com.sensoro.smartcity.activity.NearByDeviceActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
@@ -259,7 +260,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mPresenter.doAboutUs();
                 break;
             case R.id.fg_main_manage_ll_version_info:
-                mPresenter.doVersionInfo();
+//                mPresenter.doVersionInfo();
+                startAC(new Intent(mRootFragment.getActivity(), ListMultiVideoActivity.class));
+
                 break;
             case R.id.fg_main_manage_ll_exit:
                 mExitDialog.show();

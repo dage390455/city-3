@@ -209,6 +209,12 @@
         <activity android:name=".activity.DeployRecordConfigThreePhaseElectActivity" />
         <activity android:name=".activity.DeployRecordConfigCommonElectActivity" />
 
+        <activity
+            android:name=".activity.ListMultiVideoActivity"
+
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+
         <meta-data
             android:name="android.notch_support"
             android:value="true" />

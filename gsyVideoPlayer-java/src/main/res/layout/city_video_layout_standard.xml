@@ -252,7 +252,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/city_seek_dialog_tv"
