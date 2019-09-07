@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +8,9 @@ import android.widget.BaseAdapter;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.temp.entity.VideoModel;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.sensoro.smartcity.widget.MultiSampleVideo;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
-import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoView;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +27,8 @@ public class ListMultiNormalAdapter extends BaseAdapter {
     private List<VideoModel> list = new ArrayList<>();
     private LayoutInflater inflater = null;
     private Context context;
-    private OrientationUtils orientationUtils;
 
+    private String fullKey = "null";
 
     public ListMultiNormalAdapter(Context context) {
         super();
@@ -65,7 +60,7 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.list_video_item_mutli, null);
-            holder.gsyVideoPlayer = (CityStandardGSYVideoPlayer) convertView.findViewById(R.id.video_item_player);
+            holder.gsyVideoPlayer = (MultiSampleVideo) convertView.findViewById(R.id.video_item_player);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -76,6 +71,14 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         holder.gsyVideoPlayer.setPlayTag(TAG);
         holder.gsyVideoPlayer.setPlayPosition(position);
 
+        boolean isPlaying = holder.gsyVideoPlayer.getCurrentPlayer().isInPlayingState();
+
+
+        holder.gsyVideoPlayer.setIsLive(View.VISIBLE);
+        if (!isPlaying) {
+            holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
+            holder.gsyVideoPlayer.startPlayLogic();
+        }
 
         //增加title
         holder.gsyVideoPlayer.getTitleTextView().setVisibility(View.GONE);
@@ -84,128 +87,65 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         holder.gsyVideoPlayer.getBackButton().setVisibility(View.GONE);
 
         //设置全屏按键功能
-//        holder.gsyVideoPlayer.setRotateViewAuto(true);
-//        holder.gsyVideoPlayer.setLockLand(true);
+        holder.gsyVideoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resolveFullBtn(holder.gsyVideoPlayer);
+            }
+        });
+        holder.gsyVideoPlayer.setRotateViewAuto(false);
+        holder.gsyVideoPlayer.setLockLand(true);
         holder.gsyVideoPlayer.setReleaseWhenLossAudio(false);
-//        holder.gsyVideoPlayer.setShowFullAnimation(true);
+        holder.gsyVideoPlayer.setShowFullAnimation(false);
         holder.gsyVideoPlayer.setIsTouchWiget(false);
 
         holder.gsyVideoPlayer.setNeedLockFull(true);
 
+//        if (position % 2 == 0) {
+//            holder.gsyVideoPlayer.loadCoverImage(list.get(position).url, R.drawable.camera_detail_mask);
+//        } else {
+//            holder.gsyVideoPlayer.loadCoverImage(list.get(position).url, R.drawable.camera_detail_mask);
+//        }
 
-        orientationUtils = new OrientationUtils((Activity) context, holder.gsyVideoPlayer);
-        //初始化不打开外部的旋转
-        orientationUtils.setEnable(false);
+        holder.gsyVideoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
 
 
-        GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
-
-        gsyVideoOption
-                .setIsTouchWiget(true)
-                .setRotateViewAuto(false)
-                .setLockLand(false)
-                .setAutoFullWithSize(false)
-                .setShowFullAnimation(false)
-                .setNeedLockFull(true)
-//                .setUrl(url)
-                .setCacheWithPlay(false)
-//                .setVideoTitle(cameraName)
-                .setVideoAllCallBack(new GSYSampleCallBack() {
-                    @Override
-                    public void onPlayError(final String url, Object... objects) {
-                        holder.gsyVideoPlayer.setCityPlayState(3);
-                        backFromWindowFull();
-                        holder.gsyVideoPlayer.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                gsyVideoOption.setUrl(url).build(holder.gsyVideoPlayer);
-                                holder.gsyVideoPlayer.startPlayLogic();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onAutoComplete(final String url, Object... objects) {
-
-                        backFromWindowFull();
-//
-                    }
-
-                    @Override
-                    public void onPrepared(String url, Object... objects) {
-                        super.onPrepared(url, objects);
-                    }
-
-                    @Override
-                    public void onQuitFullscreen(String url, Object... objects) {
-                        super.onQuitFullscreen(url, objects);
-
-                        if ((holder.gsyVideoPlayer.getCurrentState() != GSYVideoView.CURRENT_STATE_PLAYING)
-                                && (holder.gsyVideoPlayer.getCurrentState() != GSYVideoView.CURRENT_STATE_PAUSE)) {
-                            orientationUtils.setEnable(false);
-                        }
-                        if (orientationUtils != null) {
-                            orientationUtils.backToProtVideo();
-                        }
-                    }
-                }).setLockClickListener(new LockClickListener() {
             @Override
-            public void onClick(View view, boolean lock) {
-                if (orientationUtils != null) {
-                    //配合下方的onConfigurationChanged
-                    orientationUtils.setEnable(!lock);
-                }
+            public void onQuitFullscreen(String url, Object... objects) {
+                super.onQuitFullscreen(url, objects);
+                fullKey = "null";
             }
-        }).build(holder.gsyVideoPlayer);
 
-
-        holder.gsyVideoPlayer.getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                backFromWindowFull();
+            public void onEnterFullscreen(String url, Object... objects) {
+                super.onEnterFullscreen(url, objects);
+                holder.gsyVideoPlayer.getCurrentPlayer().getTitleTextView().setText((String) objects[0]);
+                fullKey = holder.gsyVideoPlayer.getKey();
             }
-        });
-        VideoModel videoModel = list.get(position);
 
-        boolean isPlaying = holder.gsyVideoPlayer.getCurrentPlayer().isInPlayingState();
-
-        if (!isPlaying) {
-            holder.gsyVideoPlayer.setUpLazy(videoModel.url, false, null, null, "这是title");
-            holder.gsyVideoPlayer.startPlayLogic();
-//            holder.gsyVideoPlayer.setIsLive(View.INVISIBLE);
-
-            holder.gsyVideoPlayer.startPlayLogic();
-        }
-        holder.gsyVideoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //直接横屏
-                orientationUtils.resolveByClick();
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                holder.gsyVideoPlayer.startWindowFullscreen(context, true, true);
+            public void onAutoComplete(String url, Object... objects) {
+                super.onAutoComplete(url, objects);
             }
         });
 
         return convertView;
     }
 
-    public void backFromWindowFull() {
-        if (orientationUtils != null) {
-            orientationUtils.backToProtVideo();
-        }
-        if (GSYVideoManager.backFromWindowFull(context)) {
-            return;
-        }
+    /**
+     * 全屏幕按键处理
+     */
+    private void resolveFullBtn(final StandardGSYVideoPlayer standardGSYVideoPlayer) {
+        standardGSYVideoPlayer.startWindowFullscreen(context, false, true);
     }
-
 
     class ViewHolder {
-        CityStandardGSYVideoPlayer gsyVideoPlayer;
+        MultiSampleVideo gsyVideoPlayer;
     }
 
 
-//    public String getFullKey() {
-//        return fullKey;
-//    }
+    public String getFullKey() {
+        return fullKey;
+    }
 
 }

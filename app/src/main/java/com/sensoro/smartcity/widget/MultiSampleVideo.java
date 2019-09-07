@@ -100,6 +100,11 @@ public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
     }
 
 
+//    @Override
+//    public int getLayoutId() {
+//        return R.layout.video_layout_cover;
+//    }
+
     public void loadCoverImage(String url, int res) {
         mCoverOriginUrl = url;
         mDefaultRes = res;
@@ -130,13 +135,6 @@ public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
         multiSampleVideo.mStartButton.setVisibility(GONE);
         multiSampleVideo.mStartButton = null;
         return multiSampleVideo;
-    }
-
-
-    @Override
-    protected void changeUiToNormal() {
-        super.changeUiToNormal();
-
     }
 
     public String getKey() {

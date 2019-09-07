@@ -433,6 +433,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer implement
 
     @Override
     public void onApplicationResumed() {
+        GSYVideoManager.onResume(false);
 
     }
 

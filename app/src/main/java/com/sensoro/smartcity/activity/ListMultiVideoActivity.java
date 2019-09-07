@@ -13,7 +13,6 @@ import com.sensoro.smartcity.adapter.ListMultiNormalAdapter;
 import com.sensoro.smartcity.imainviews.IMutilCameraView;
 import com.sensoro.smartcity.presenter.MutilCamerPresenter;
 import com.sensoro.smartcity.util.CustomManager;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +29,7 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
     ListMultiNormalAdapter listMultiNormalAdapter;
 
     private boolean isPause;
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
 
@@ -88,16 +88,6 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
 
 
     @Override
-    public void onBackPressed() {
-        //为了支持重力旋转
-
-        if (GSYVideoManager.backFromWindowFull(this)) {
-            return;
-        }
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar.statusBarDarkFont(true).statusBarColor(R.color.white).init();
@@ -117,6 +107,14 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
 ////        listMultiNormalAdapter.backFromWindowFull();
 //
 //    }
+
+    @Override
+    public void onBackPressed() {
+        if (CustomManager.backFromWindowFull(this, listMultiNormalAdapter.getFullKey())) {
+            return;
+        }
+        super.onBackPressed();
+    }
 
     @Override
     protected void onPause() {
@@ -142,5 +140,6 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
         super.onDestroy();
         CustomManager.clearAllVideo();
     }
+
 
 }
