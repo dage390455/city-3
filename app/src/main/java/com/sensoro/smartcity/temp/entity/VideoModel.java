@@ -9,4 +9,13 @@ import com.sensoro.common.server.bean.DeviceCameraInfo;
 
 public class VideoModel {
     public DeviceCameraInfo deviceCameraInfo;
+
+    public VideoModel(String url) {
+        this.url = url;
+    }
+
+    public String url;
+
+    public VideoModel() {
+    }
 }

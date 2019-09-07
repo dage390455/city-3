@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -12,6 +13,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
 
 
@@ -87,15 +89,15 @@ public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
     }
 
 
-//    @Override
-//    protected int getFullId() {
-//        return CustomManager.FULLSCREEN_ID;
-//    }
-//
-//    @Override
-//    protected int getSmallId() {
-//        return CustomManager.SMALL_ID;
-//    }
+    @Override
+    protected int getFullId() {
+        return CustomManager.FULLSCREEN_ID;
+    }
+
+    @Override
+    protected int getSmallId() {
+        return CustomManager.SMALL_ID;
+    }
 
 
     public void loadCoverImage(String url, int res) {
@@ -112,23 +114,23 @@ public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
                 .into(mCoverImage);
     }
 
-//    @Override
-//    public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
-//        GSYBaseVideoPlayer gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
-//        MultiSampleVideo multiSampleVideo = (MultiSampleVideo) gsyBaseVideoPlayer;
-//        multiSampleVideo.loadCoverImage(mCoverOriginUrl, mDefaultRes);
-//        return multiSampleVideo;
-//    }
-//
-//
-//    @Override
-//    public GSYBaseVideoPlayer showSmallVideo(Point size, boolean actionBar, boolean statusBar) {
-//        //下面这里替换成你自己的强制转化
-//        MultiSampleVideo multiSampleVideo = (MultiSampleVideo) super.showSmallVideo(size, actionBar, statusBar);
-//        multiSampleVideo.mStartButton.setVisibility(GONE);
-//        multiSampleVideo.mStartButton = null;
-//        return multiSampleVideo;
-//    }
+    @Override
+    public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar, boolean statusBar) {
+        GSYBaseVideoPlayer gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
+        MultiSampleVideo multiSampleVideo = (MultiSampleVideo) gsyBaseVideoPlayer;
+        multiSampleVideo.loadCoverImage(mCoverOriginUrl, mDefaultRes);
+        return multiSampleVideo;
+    }
+
+
+    @Override
+    public GSYBaseVideoPlayer showSmallVideo(Point size, boolean actionBar, boolean statusBar) {
+        //下面这里替换成你自己的强制转化
+        MultiSampleVideo multiSampleVideo = (MultiSampleVideo) super.showSmallVideo(size, actionBar, statusBar);
+        multiSampleVideo.mStartButton.setVisibility(GONE);
+        multiSampleVideo.mStartButton = null;
+        return multiSampleVideo;
+    }
 
 
     @Override
