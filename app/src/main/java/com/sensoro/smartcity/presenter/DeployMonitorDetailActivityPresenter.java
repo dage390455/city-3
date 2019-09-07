@@ -496,11 +496,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
                                 mHandler.removeCallbacks(DeviceTaskOvertime);
                                 if (isAttachedView()) {
-                                    //TODO 成功后执行上传
-                                    final double lon = deployAnalyzerModel.latLng.get(0);
-                                    final double lan = deployAnalyzerModel.latLng.get(1);
-                                    getView().dismissBleConfigDialog();
-                                    doUploadImages(lon, lan);
+                                    //TODO 下行命令成功后开始安装检测
+                                    CheckDeviceSignalStatus();
+//                                    final double lon = deployAnalyzerModel.latLng.get(0);
+//                                    final double lan = deployAnalyzerModel.latLng.get(1);
+//                                    getView().dismissBleConfigDialog();
+//                                    doUploadImages(lon, lan);
                                 }
                             }
                         }
