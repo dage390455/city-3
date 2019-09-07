@@ -410,17 +410,18 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
-                //TODO 加入白名单处理
-                if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
-                    //2g电气火灾的配置
-                    handle2GDeviceConfig();
-                } else {
+                //TODO 暂时注释掉2g电气火灾的部署
+//                if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
+//                    //2g电气火灾的配置
+//                    handle2GDeviceConfig();
+//                } else {
                     if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
+                        // 白名单设备
                         doUploadImages(lon, lan);
                     } else {
                         handleDeviceSignalStatusAndBleSetting();
                     }
-                }
+//                }
 
                 break;
             default:
