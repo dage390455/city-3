@@ -143,25 +143,35 @@ public class SelectDeviceTypePopUtils {
         } else {  // 适配 android 7.0
             int[] location = new int[2];
             view.getLocationOnScreen(location);
-            Point point = new Point();
-            mActivity.getWindowManager().getDefaultDisplay().getSize(point);
-            mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ ScreenUtils.getBottomStatusHeight(mActivity));
+            ScreenUtils.heightNavBarExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight()-ScreenUtils.getNavigationBarHeight(mActivity);
+            ScreenUtils.heightNavBarNotExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1]- view.getHeight() ;
+            if(ScreenUtils.isNavigationBarExist(mActivity)){
+                mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
+            }else{
+                mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
+            }
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
-            ScreenUtils.isNavigationBarExist(mActivity, new ScreenUtils.OnNavigationStateListener() {
+            view.postDelayed(new Runnable() {
                 @Override
-                public void onNavigationState(boolean isShowing, int height) {
-                    view.postDelayed(new Runnable() {
+                public void run() {
+                    ScreenUtils.isNavigationBarExist(mActivity, new ScreenUtils.OnNavigationStateListener() {
                         @Override
-                        public void run() {
-                            if(isShowing){
-                                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
-                            }else{
-                                mPopupWindow.setHeight(point.y - location[1] - view.getHeight()+ height);
+                        public void onNavigationState(boolean isShowing,  int height) {
+                            try {
+                                if(isShowing){
+                                    mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarExisted);
+                                }else{
+                                    mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarNotExisted);
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
                         }
-                    }, 500);
+                    });
                 }
-            });
+            },500);
         }
 
         showAnimation();

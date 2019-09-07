@@ -2,13 +2,19 @@ package com.sensoro.common.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -19,29 +25,22 @@ import java.lang.reflect.Method;
 import static android.view.View.NO_ID;
 
 public class ScreenUtils {
-
+    public static  int  heightNavBarNotExisted;
+    public  static int  heightNavBarExisted;
     //    以下代码为判断底部导航的高度问题
 //获取底部导航的高度
     public static int getBottomStatusHeight(Context context) {
 
-        int totalHeight = getDpi(context);
+        int totalHeight = getRealScreenHeight(context);
         int contentHeight = getScreenHeight(context);
-
-        if(context instanceof Activity){
-            if(isNavigationBarExist((Activity) context)){
-                return 0;
-            }else{
-                return totalHeight - contentHeight;
-            }
-        }
         return totalHeight - contentHeight;
     }
 
 
 
     //获取屏幕原始尺寸高度，包括虚拟功能键高度
-    public static int getDpi(Context context) {
-        int dpi = 0;
+    public static int getRealScreenHeight(Context context) {
+        int realHeight = 0;
         WindowManager windowManager = (WindowManager)
                 context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
@@ -53,11 +52,13 @@ public class ScreenUtils {
             @SuppressWarnings("unchecked")
             Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
             method.invoke(display, displayMetrics);
-            dpi = displayMetrics.heightPixels;
+            realHeight = displayMetrics.heightPixels;
         } catch (Exception e) {
             e.printStackTrace();
+
         }
-        return dpi;
+
+        return realHeight>0?realHeight: getScreenHeight(context);
     }
     //获取屏幕高度 不包含虚拟按键=
     public static int getScreenHeight(Context context) {
@@ -66,41 +67,8 @@ public class ScreenUtils {
     }
 
 
-    /**
-     * 判断虚拟导航栏是否显示
-     *
-     * @param context 上下文对象
-     * @return true(显示虚拟导航栏)，false(不显示或不支持虚拟导航栏)
-     */
-    public static boolean checkNavigationBarShow(@NonNull Context context) {
-        boolean hasNavigationBar = false;
-        Resources rs = context.getResources();
-        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
-        if (id > 0) {
-            hasNavigationBar = rs.getBoolean(id);
-        }
-        try {
-            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-            Method m = systemPropertiesClass.getMethod("get", String.class);
-            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
-            //判断是否隐藏了底部虚拟导航
-            int navigationBarIsMin = 0;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                navigationBarIsMin = Settings.System.getInt(context.getContentResolver(),
-                        "navigationbar_is_min", 0);
-            } else {
-                navigationBarIsMin = Settings.Global.getInt(context.getContentResolver(),
-                        "navigationbar_is_min", 0);
-            }
-            if ("1".equals(navBarOverride) || 1 == navigationBarIsMin) {
-                hasNavigationBar = false;
-            } else if ("0".equals(navBarOverride)) {
-                hasNavigationBar = true;
-            }
-        } catch (Exception e) {
-        }
-        return hasNavigationBar;
-    }
+
+
 
 
 
@@ -131,42 +99,66 @@ public class ScreenUtils {
         if (activity == null) {
             return;
         }
-        final int height = getNavigationHeight(activity);
+        View rootView= activity.getWindow().getDecorView();
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (onNavigationStateListener != null) {
+                  boolean  isShown=  checkNavigationBarShow(activity,activity.getWindow());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-            activity.getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsets onApplyWindowInsets(View v, WindowInsets windowInsets) {
-                    boolean isShowing = false;
-                    int b = 0;
-                    if (windowInsets != null) {
-                        b = windowInsets.getSystemWindowInsetBottom();
-                        isShowing = (b == height);
-                    }
-                    if (onNavigationStateListener != null && b <= height) {
-                        onNavigationStateListener.onNavigationState(isShowing, b);
-                    }
-                    return windowInsets;
+                    onNavigationStateListener.onNavigationState(isShown,0);
                 }
-            });
-        }
+            }
+        });
+
     }
 
 
-    public static int getNavigationHeight(Context activity) {
-        if (activity == null) {
-            return 0;
+    public static boolean checkNavigationBarShow(@NonNull Context context, @NonNull Window window) {
+        boolean show;
+        Display display = window.getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getRealSize(point);
+
+        View decorView = window.getDecorView();
+        Configuration conf = context.getResources().getConfiguration();
+        if (Configuration.ORIENTATION_LANDSCAPE == conf.orientation) {
+            View contentView = decorView.findViewById(android.R.id.content);
+            show = (point.x != contentView.getWidth());
+        } else {
+            Rect rect = new Rect();
+            decorView.getWindowVisibleDisplayFrame(rect);
+            show = (rect.bottom != point.y);
         }
-        Resources resources = activity.getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height",
-                "dimen", "android");
-        int height = 0;
-        if (resourceId > 0) {
-            //获取NavigationBar的高度
-            height = resources.getDimensionPixelSize(resourceId);
-        }
+        return show;
+    }
+
+
+    public static int getNavigationBarHeight(Activity mActivity) {
+
+        Resources resources = mActivity.getResources();
+
+        int resourceId=resources.getIdentifier("navigation_bar_height","dimen","android");
+
+        int height = resources.getDimensionPixelSize(resourceId);
+
+
+        return  height;
+
+    }
+
+
+    public int getStatusBarHeight(Activity mActivity) {
+
+        Resources resources = mActivity.getResources();
+
+        int resourceId = resources.getIdentifier("status_bar_height","dimen","android");
+
+        int height = resources.getDimensionPixelSize(resourceId);
+
+
         return height;
-    }
 
+    }
 
 }
