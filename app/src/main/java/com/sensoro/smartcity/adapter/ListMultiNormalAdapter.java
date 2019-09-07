@@ -10,10 +10,13 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.temp.entity.VideoModel;
 import com.sensoro.smartcity.widget.MultiSampleVideo;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 /**
  * 多个播放的listview adapter
@@ -29,6 +32,14 @@ public class ListMultiNormalAdapter extends BaseAdapter {
     private Context context;
 
     private String fullKey = "null";
+
+    private int state = -10;
+
+    public void setState(int state) {
+        this.state = state;
+        notifyDataSetChanged();
+
+    }
 
     public ListMultiNormalAdapter(Context context) {
         super();
@@ -93,6 +104,9 @@ public class ListMultiNormalAdapter extends BaseAdapter {
                 resolveFullBtn(holder.gsyVideoPlayer);
             }
         });
+        String gsyVideoPlayerKey = holder.gsyVideoPlayer.getKey();
+
+
         holder.gsyVideoPlayer.setRotateViewAuto(false);
         holder.gsyVideoPlayer.setLockLand(true);
         holder.gsyVideoPlayer.setReleaseWhenLossAudio(false);
@@ -107,6 +121,42 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 //            holder.gsyVideoPlayer.loadCoverImage(list.get(position).url, R.drawable.camera_detail_mask);
 //        }
 
+
+        if (state == -1) {
+
+            holder.gsyVideoPlayer.setCityPlayState(-1);
+
+            holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
+            holder.gsyVideoPlayer.startPlayLogic();
+        } else if (state == 2) {
+            holder.gsyVideoPlayer.setCityPlayState(2);
+            holder.gsyVideoPlayer.setIsShowMaskTopBack(false);
+
+            CustomManager.backFromWindowFull(context, gsyVideoPlayerKey);
+
+            holder.gsyVideoPlayer.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    holder.gsyVideoPlayer.setCityPlayState(-1);
+                    if (holder.gsyVideoPlayer.getCurrentState() == CURRENT_STATE_PAUSE) {
+                        holder.gsyVideoPlayer.clickCityStartIcon();
+
+                    }
+
+                    CustomManager.onResume(gsyVideoPlayerKey);
+
+
+                }
+            });
+
+        } else if (state == 1) {
+            holder.gsyVideoPlayer.setCityPlayState(1);
+            holder.gsyVideoPlayer.setIsShowMaskTopBack(false);
+
+            CustomManager.backFromWindowFull(context, gsyVideoPlayerKey);
+
+        }
         holder.gsyVideoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
 
 

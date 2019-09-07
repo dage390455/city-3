@@ -8,6 +8,8 @@ import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.widgets.CalendarPopUtils;
 import com.sensoro.smartcity.imainviews.IMutilCameraView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 public class MutilCamerPresenter extends BasePresenter<IMutilCameraView> {
@@ -34,94 +36,95 @@ public class MutilCamerPresenter extends BasePresenter<IMutilCameraView> {
 
     @Override
     public void initData(Context context) {
+        EventBus.getDefault().register(this);
 
     }
 
     @Override
     public void onDestroy() {
 
+        EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * 网络改变状态
-     *
-     * @param eventData
-     */
+
+//    /**
+//     * 网络改变状态
+//     *
+//     * @param eventData
+//     */
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onMessageEvent(EventData eventData) {
 //        int code = eventData.code;
 //        if (code == Constants.NetworkInfo) {
 //            int data = (int) eventData.data;
-//
 //            switch (data) {
-//
 //                case ConnectivityManager.TYPE_WIFI:
-//                    getView().getPlayView().setCityPlayState(-1);
-//                    if (null == itemUrl) {
-//                        doLive();
-//                        getView().setVerOrientationUtilEnable(true);
+//                    setCityPlayState(-1);
+//                    if (getCurrentState() == CURRENT_STATE_PAUSE) {
+//                        clickCityStartIcon();
+//                        CustomManager.onResumeAll();
 //
 //                    } else {
-//                        getView().getPlayView().clickCityStartIcon();
-//                        GSYVideoManager.onResume(true);
+//                        if (!TextUtils.isEmpty(mUrl)) {
+//                            setUp(mUrl, false, TextUtils.isEmpty(mTitle) ? "" : mTitle);
+//                            startPlayLogic();
+//                        }
 //                    }
 //                    break;
-//
 //                case ConnectivityManager.TYPE_MOBILE:
+//                    setCityPlayState(2);
+//                    getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            setCityPlayState(-1);
+//                            if (getCurrentState() == CURRENT_STATE_PAUSE) {
+//                                clickCityStartIcon();
 //
-//                    if (isAttachedView()) {
-//                        getView().getPlayView().setCityPlayState(2);
-//                        getView().setVerOrientationUtilEnable(false);
-//                        getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                getView().getPlayView().setCityPlayState(-1);
-//                                getView().setVerOrientationUtilEnable(true);
-//                                if (null == itemUrl) {
-//                                    doLive();
-//                                } else {
-//                                    if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-//                                        getView().getPlayView().clickCityStartIcon();
-//
-//                                    }
-//                                }
-//                                GSYVideoManager.onResume(true);
 //                            }
-//                        });
 //
 //
-//                        getView().backFromWindowFull();
-//                    }
+//                        }
+//                    });
+//
 //
 //                    break;
 //
 //                default:
-//                    if (isAttachedView()) {
+//                    CustomManager.onPauseAll();
 //
 //
-//                        getView().backFromWindowFull();
-//                        getView().getPlayView().setCityPlayState(1);
+//                    setCityPlayState(1);
+//                    if (mOrientationUtils != null) {
+//                        mOrientationUtils.backToProtVideo();
+//                        mOrientationUtils.setEnable(false);
+//                    }
+//                    if (GSYVideoManager.backFromWindowFull(mContext)) {
+//                        return;
 //                    }
 //                    break;
 //
 //
 //            }
 //        } else if (code == Constants.VIDEO_START) {
-//
-//            if (null == itemUrl) {
-//                doLive();
-//                getView().setVerOrientationUtilEnable(true);
-//
-//            } else {
-//                getView().getPlayView().clickCityStartIcon();
+//            if (getCurrentState() == CURRENT_STATE_PAUSE) {
+//                clickCityStartIcon();
 //                GSYVideoManager.onResume(true);
+//            } else {
+//                if (!TextUtils.isEmpty(mUrl)) {
+//                    setUp(mUrl, false, TextUtils.isEmpty(mTitle) ? "" : mTitle);
+//                    startPlayLogic();
+//                }
 //            }
 //        } else if (code == Constants.VIDEO_STOP) {
-//            getView().setVerOrientationUtilEnable(false);
 //            GSYVideoManager.onPause();
 //
-//            getView().backFromWindowFull();
-//
+//            if (mOrientationUtils != null) {
+//                mOrientationUtils.backToProtVideo();
+//                mOrientationUtils.setEnable(false);
+//            }
+//            if (GSYVideoManager.backFromWindowFull(mContext)) {
+//                return;
+//            }
 //
 //        }
 //    }

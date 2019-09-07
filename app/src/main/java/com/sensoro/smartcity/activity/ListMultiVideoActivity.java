@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,17 @@ import android.widget.ListView;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ListMultiNormalAdapter;
 import com.sensoro.smartcity.imainviews.IMutilCameraView;
 import com.sensoro.smartcity.presenter.MutilCamerPresenter;
-import com.sensoro.smartcity.util.CustomManager;
+import com.shuyu.gsyvideoplayer.utils.CustomManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,12 +37,49 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
 
     private boolean isPause;
 
+    /**
+     * 网络改变状态
+     *
+     * @param eventData
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == Constants.NetworkInfo) {
+            int data = (int) eventData.data;
+
+            switch (data) {
+
+                case ConnectivityManager.TYPE_WIFI:
+
+                    listMultiNormalAdapter.setState(-1);
+
+                    break;
+
+                case ConnectivityManager.TYPE_MOBILE:
+                    listMultiNormalAdapter.setState(2);
+                    CustomManager.onPauseAll();
+
+                    break;
+
+                default:
+
+                    listMultiNormalAdapter.setState(1);
+                    CustomManager.onPauseAll();
+                    break;
+
+
+            }
+        }
+    }
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
 
         setContentView(R.layout.activity_list_video);
         ButterKnife.bind(this);
         initViewHeight();
+        EventBus.getDefault().register(this);
 
         listMultiNormalAdapter = new ListMultiNormalAdapter(this);
         videoList.setAdapter(listMultiNormalAdapter);
@@ -138,6 +182,8 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
+
         CustomManager.clearAllVideo();
     }
 

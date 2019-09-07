@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.CustomManager;
+import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -45,9 +45,11 @@ public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
         super(context, attrs);
     }
 
+
     @Override
     protected void init(Context context) {
         super.init(context);
+
         mCoverImage = (ImageView) findViewById(R.id.thumbImage);
         if (mThumbImageViewLayout != null &&
                 (mCurrentState == -1 || mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR)) {
@@ -146,4 +148,12 @@ public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
         }
         return TAG + mPlayPosition + mPlayTag;
     }
+
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util;
+package com.shuyu.gsyvideoplayer.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.GSYVideoBaseManager;
+import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager;
-import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.util.HashMap;
@@ -87,7 +86,7 @@ public class CustomManager extends GSYVideoBaseManager {
     /**
      * 恢复播放
      */
-    public void onResume(String key) {
+    public static void onResume(String key) {
         if (getCustomManager(key).listener() != null) {
             getCustomManager(key).listener().onVideoResume();
         }
