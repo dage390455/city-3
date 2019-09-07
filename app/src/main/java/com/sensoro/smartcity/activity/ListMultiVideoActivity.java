@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +90,6 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
     @Override
     public void onBackPressed() {
         //为了支持重力旋转
-        onBackPressAdapter();
 
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
@@ -99,21 +97,6 @@ public class ListMultiVideoActivity extends BaseActivity<IMutilCameraView, Mutil
         super.onBackPressed();
     }
 
-    /********************************为了支持重力旋转********************************/
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (listMultiNormalAdapter != null && listMultiNormalAdapter.getListNeedAutoLand() && !isPause) {
-            listMultiNormalAdapter.onConfigurationChanged(this, newConfig);
-        }
-    }
-
-    private void onBackPressAdapter() {
-        //为了支持重力旋转
-        if (listMultiNormalAdapter != null && listMultiNormalAdapter.getListNeedAutoLand()) {
-            listMultiNormalAdapter.onBackPressed();
-        }
-    }
     @Override
     public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
