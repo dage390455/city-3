@@ -1,5 +1,13 @@
 package com.sensoro.smartcity.activity;
 
+
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionInstructionActivity
+ * 简  述: <巡检内容页,要点：设备名称，巡检图片列表>
+ */
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;

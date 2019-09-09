@@ -7,17 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.inspectiontask.R;
 import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
-import com.sensoro.smartcity.constant.InspectionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +47,8 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         holder.itemInspectionAdapterTvTitle.setText(tasksBean.getName());
         holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormatPoint(tasksBean.getBeginTime())+" - "+DateUtil.getDateByOtherFormatPoint(tasksBean.getEndTime()));
 
-        //防止status 后台瞎给 造成崩溃，如status 给个6，索引越界
-        try {
-            setTvState(holder, InspectionConstant.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],mContext.getString(InspectionConstant.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setTvState(holder, tasksBean.getStatus());
+
         holder.itemInspectionAdapterClRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,12 +64,32 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         this.listener = listener;
     }
 
-    private void setTvState(InspectionTaskHolder holder, @ColorRes int color, String text) {
-//        GradientDrawable compoundDrawables = (GradientDrawable) holder.itemInspectionAdapterImvState.getBackground();
-//        compoundDrawables.setColor(mContext.getResources().getColor(color));
-//
-//        holder.itemInspectionAdapterTvState.setText(text);
-//        holder.itemInspectionAdapterTvState.setTextColor(mContext.getResources().getColor(color));
+    private void setTvState(InspectionTaskHolder holder, int status) {
+        int color=R.color.c_8058a5;
+        String text=mContext.getString(R.string.inspection_status_text_pending_execution);
+        switch (status) {
+            case 0:
+                color=R.color.c_8058a5;
+                text=mContext.getString(R.string.inspection_status_text_pending_execution);
+                break;
+            case 1:
+                color=R.color.c_3aa7f0;
+                text=mContext.getString(R.string.inspection_status_text_executing);
+                break;
+            case 2:
+                color=R.color.c_ff8d34;
+                text=mContext.getString(R.string.inspection_status_text_timeout_not_completed);
+                break;
+            case 3:
+                color=R.color.c_1dbb99;
+                text=mContext.getString(R.string.inspection_status_text_completed);
+                break;
+            case 4:
+                color=R.color.c_a6a6a6;
+                text=mContext.getString(R.string.inspection_status_text_timeout_completed);
+                break;
+        }
+
         WidgetUtil.changeTvState(mContext,holder.itemInspectionAdapterTvState,color,text);
 
     }

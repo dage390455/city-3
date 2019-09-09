@@ -543,6 +543,8 @@
     <string name="inspection_task_search_hint">设备名称/设备编号</string>
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">开始巡检</string>
+    <string name="inspection_task_detail_go_on_inspection">继续巡检</string>
+    <string name="inspection_task_detail_title">详情</string>
     <string name="inspection_task_detail_task_number">任务编号</string>
     <string name="inspection_task_detail_inspection_established">既定巡检时间</string>
     <string name="inspection_task_detail_device_counts">设备数量</string>
@@ -1286,8 +1288,7 @@
     <string name="device_iccid">卡号（ICCID）</string>
 
 
-
-
+    <string name="server_error_alert">服务器数据返回错误 设备类型</string>
 
 
 </resources>

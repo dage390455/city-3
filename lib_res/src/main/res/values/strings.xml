@@ -524,6 +524,8 @@
     <string name="inspection_task_search_hint">Name/SN</string>
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">Start inspection</string>
+    <string name="inspection_task_detail_go_on_inspection">Go on inspection</string>
+    <string name="inspection_task_detail_title">Detail</string>
     <string name="inspection_task_detail_task_number">Task ID</string>
     <string name="inspection_task_detail_inspection_established">inspection scheduled time</string>
     <string name="inspection_task_detail_device_counts">Number of devices</string>
@@ -1303,5 +1305,9 @@
     <string name="device_imei">IMEI</string>
     <string name="device_imsi">IMSI</string>
     <string name="device_iccid">Card（ICCID）</string>
+
+
+    <string name="server_error_alert">server data error deviceTypes</string>
+
 
 </resources>

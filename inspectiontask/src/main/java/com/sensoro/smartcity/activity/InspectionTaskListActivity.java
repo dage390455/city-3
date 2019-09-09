@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionTaskListActivity
+ * 简  述: <巡检任务首页,未完成，已完成列表，上拉刷新，下拉加载更多，日历筛选>
+ */
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,8 +86,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     View icNoContent;
     private InspectionTaskAdapter mTaskAdapter;
     private CalendarPopUtils mCalendarPopUtils;
-    private long startTime = -1;
-    private long endTime = -1;
+
     private ProgressUtils mProgressUtils;
     private boolean isShowProgressDialog = true;
 
@@ -129,34 +134,6 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
             }
         });
 
-        acInspectionTaskListRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
-//                        toolbarDirection == DIRECTION_DOWN) {
-////                    mListRecyclerView.setre
-//                }
-                if (manager.findFirstVisibleItemPosition() > 4) {
-                    if (newState == 0) {
-//                        mReturnTopImageView.setVisibility(VISIBLE);
-//                        if (returnTopAnimation.hasEnded()) {
-//                            mReturnTopImageView.startAnimation(returnTopAnimation);
-//                        }
-                    } else {
-//                        mReturnTopImageView.setVisibility(View.GONE);
-                    }
-                } else {
-//                    mReturnTopImageView.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-            }
-        });
 
         refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -277,8 +254,8 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         long temp_startTime = -1;
         long temp_endTime = -1;
         if (getRlDateEditIsVisible()) {
-            temp_startTime = startTime;
-            temp_endTime = endTime;
+            temp_startTime = mPresenter.getStartTime();
+            temp_endTime = mPresenter.getEndTime();
         }
 
         mCalendarPopUtils.show(includeTextTitleClRoot, temp_startTime, temp_endTime);
@@ -287,13 +264,12 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         setRlDateEditVisible(true);
-        startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
-        endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
-                .getCalendarYearMothDayFormatDate(endTime));
-        endTime += 1000 * 60 * 60 * 24;
-        mPresenter.requestDataByDate(startTime, endTime);
-
+        mPresenter.setStartTime(DateUtil.strToDate(calendarDateModel.startDate).getTime());
+        mPresenter.setEndTime(DateUtil.strToDate(calendarDateModel.endDate).getTime());
+        setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(mPresenter.getStartTime()) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(mPresenter.getEndTime()));
+        mPresenter.updateEndTime();
+        mPresenter.requestDataByDate(mPresenter.getStartTime(), mPresenter.getEndTime());
     }
 
 

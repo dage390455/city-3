@@ -269,7 +269,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     }
                 } else {
                     if (needPop) {
-                        getView().toastShort("服务器数据返回错误 deviceTypes");
+                        getView().toastShort(mContext.getString(R.string.server_error_alert));
                     }
 
                 }
@@ -369,16 +369,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (direction == Constants.DIRECTION_DOWN) {
             mDevices.clear();
         }
-//        handleDeviceAlarmLogs(deviceAlarmLogRsp);
         List<InspectionTaskDeviceDetail> devices = inspectionTaskDeviceDetailRsp.getData().getDevices();
         if (devices != null) {
             mDevices.addAll(devices);
-//            if (!TextUtils.isEmpty(tempSearch)) {
-////            getView().setSelectedDateSearchText(searchText);
-//                getView().setSearchButtonTextVisible(true);
-//            } else {
-//                getView().setSearchButtonTextVisible(false);
-//            }
             handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
@@ -467,22 +460,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             throwable.printStackTrace();
         }
         mHandler.postDelayed(this, 3 * 1000);
-//
-//        if (BLE_DEVICE_SET.containsKey("02C41117C72BC418")) {
-//            BLEDevice bleDevice = BLE_DEVICE_SET.get("02C41117C72BC418");
-//
-//
-////            Intent intent = new Intent(mContext, TestUpdateActivity.class);
-////            intent.putExtra("sensoro_device", bleDevice);
-////            getView().startAC(intent);
-////            getView().finishAc();
-//
-//
-//
-//            Bundle bundle=new Bundle();
-//            bundle.putSerializable("sensoro_device",(Serializable)bleDevice);;
-//            startActivity(ARouterConstants.ACTIVITY_TEST_UPDATE,bundle,mContext);
-//        }
     }
 
     public void doNavigation(int position) {
@@ -508,11 +485,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionScan() {
-//        Intent intent = new Intent(mContext, ScanActivity.class);
-//        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
-//        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-//        getView().startAC(intent);
-
         Bundle bundle=new Bundle();
         bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
         bundle.putSerializable(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
@@ -550,9 +522,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (TextUtils.isEmpty(text)) {
             return;
         }
-//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
-//        mSearchHistoryList.remove(text);
-//        mSearchHistoryList.add(0, text);
         List<String> inspectionList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(inspectionList);
