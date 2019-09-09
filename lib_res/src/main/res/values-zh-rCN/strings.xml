@@ -98,7 +98,7 @@
     <string name="female">女</string>
     <string name="signal_excellent">信号 优</string>
     <string name="signal_good">信号 良</string>
-    <string name="signal_weak">信号 差</string>
+    <string name="signal_weak">信号 一般</string>
     <string name="no_signal">信号 无</string>
     <string name="alert_contact">预警联系人</string>
     <string name="get_the_middle_profile">获取配置文件中</string>
@@ -519,7 +519,7 @@
     <string name="deploy_result_recent_upload_time">最近上传时间</string>
     <string name="deploy_result_is_upload">是否上传完成部署？</string>
     <string name="no_signal_can_not_uploaded">无信号不能上传</string>
-    <string name="deploy_result_upload_tip">当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署</string>
+    <string name="deploy_result_upload_tip">当前设备无信号或信号一般，请按设备自检按钮刷新信号再完成上传部署</string>
     <string name="deploy_result_force_upload">强制上传</string>
     <string name="deploy_result_ok">好的</string>
 
@@ -944,7 +944,7 @@
     <string name="firmware_update_in_preparation">固件更新，准备中</string>
     <string name="s_good">优</string>
     <string name="s_normal">良</string>
-    <string name="s_bad">差</string>
+    <string name="s_bad">一般</string>
     <string name="s_none">无</string>
     <string name="air_rated_current">空开额定电流：</string>
     <string name="monitor_material">线材</string>
@@ -987,7 +987,7 @@
     <string name="signal_strength">信号强度</string>
     <string name="device_status">设备状态</string>
     <string name="retest">重新测试</string>
-    <string name="deploy_check_signal_bad">信号差</string>
+    <string name="deploy_check_signal_bad">信号一般</string>
     <string name="deploy_check_signal_none">无信号</string>
     <string name="deploy_check_suggest_config_instruction">&#160;&#160;配置说明</string>
     <string name="deploy_check_suggest_particular_instruction">&#160;&#160;详细说明</string>
@@ -996,10 +996,10 @@
     <string name="deploy_check_button_tip_is_powered_on">请确保设备通电，在开始安装测试</string>
     <string name="deploy_check_button_tip_press_the_sensor">请按下传感器自检按钮，并开始安装测试</string>
     <string name="deploy_check_dialog_no_signal">无信号</string>
-    <string name="deploy_check_dialog_bad_signal">信号差</string>
+    <string name="deploy_check_dialog_bad_signal">信号一般</string>
     <string name="installation_test_not_nearby">请确保已激活设备蓝牙，且在设备附近</string>
     <string name="installation_config_failed">初始配置失败，原因：</string>
-    <string name="deploy_check_dialog_quality_bad_signal">信号质量差</string>
+    <string name="deploy_check_dialog_quality_bad_signal">信号质量一般</string>
     <string name="device_is_malfunction">设备故障中，</string>
     <string name="device_is_alarm">设备预警中，</string>
     <string name="deploy_check_suggest_repair_instruction">修复说明</string>
