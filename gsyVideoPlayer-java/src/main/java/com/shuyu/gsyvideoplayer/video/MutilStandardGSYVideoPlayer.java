@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.sensoro.common.base.ContextUtils;
@@ -57,8 +58,7 @@ import moe.codeest.enviews.ENPlayView;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
- * 标准播放器，继承之后实现一些ui显示效果，如显示／隐藏ui，播放按键等
- * Created by shuyu on 2016/11/11.
+ * 多任务播放
  */
 
 public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implements Repause.Listener {
@@ -70,9 +70,19 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
     public ImageView backMaskTv;
     public TextView swVideoFormatTv;
+
+    public RelativeLayout getMaskLayoutTop() {
+        return maskLayoutTop;
+    }
+
     private RelativeLayout maskLayoutTop;
 
     public TextView maskTitleTv;
+
+    public RelativeLayout getrMobileData() {
+        return rMobileData;
+    }
+
     private RelativeLayout rMobileData;
 
 
@@ -86,7 +96,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     /**
      * 1没网,2移动数据 3加载失败重试 4 播放完成重播 5 离线 6直播 7 录像
      */
-    private static int cityPlayState;
+    private int cityPlayState;
     /**
      * 切换视频流
      */
@@ -101,7 +111,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
      * 切换视频格式，不提示移动数据
      */
     private static boolean isChangeVideoFormat = false;
-    private static boolean isAudioChecked;
+    private boolean isAudioChecked;
 
     private Button playAndRetryBtn;
     private LinearLayout layoutBottomControlLl;
@@ -284,18 +294,18 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 //                maskTitleTv.setText(mTitle);
                 tiptv.setText(getResources().getString(R.string.mobile_network));
                 maskLayoutTop.setVisibility(VISIBLE);
-                playAndRetryBtn.setOnClickListener(v -> {
-                    maskLayoutTop.setVisibility(GONE);
-                    rMobileData.setVisibility(GONE);
-                    cityPlayState = -1;
-                    if (mVideoAllCallBack != null) {
-                        Debuger.printfLog("onClickStartThumb");
-                        mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, MutilStandardGSYVideoPlayer.this);
-                    }
-                    prepareVideo();
-                    startDismissControlViewTimer();
-
-                });
+//                playAndRetryBtn.setOnClickListener(v -> {
+//                    maskLayoutTop.setVisibility(GONE);
+//                    rMobileData.setVisibility(GONE);
+//                    cityPlayState = -1;
+//                    if (mVideoAllCallBack != null) {
+//                        Debuger.printfLog("onClickStartThumb");
+//                        mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, MutilStandardGSYVideoPlayer.this);
+//                    }
+//                    prepareVideo();
+//                    startDismissControlViewTimer();
+//
+//                });
 
                 break;
             case 3:
@@ -385,9 +395,8 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     public void setIsLive(int isLive) {
         if (isLive == View.INVISIBLE) {
             cityChangePosition = false;
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-            audioIv.setChecked(true);
-            isAudioChecked = true;
+            //todo 声音按钮
+
             mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
@@ -597,20 +606,22 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
         }
         maskLayoutTop.setVisibility(GONE);
         rMobileData.setVisibility(GONE);
+
         maskFaceIv.setVisibility(GONE);
 
-
-        if ((!NetworkUtils.isAvailable(getContext()) || !NetworkUtils.isWifiConnected(getContext()))) {
-            if (!NetworkUtils.isAvailable(getContext())) {
-                setCityPlayState(1);
-                return;
-            }
-            /**
-             * 切换视频格式，不显示移动数据
-             */
-            if (!NetworkUtils.isWifiConnected(getContext()) && !isChangeVideoFormat) {
-                setCityPlayState(2);
-                return;
+        if (cityPlayState != 1 && cityPlayState != 2) {
+            if ((!NetworkUtils.isAvailable(getContext()) || !NetworkUtils.isWifiConnected(getContext()))) {
+                if (!NetworkUtils.isAvailable(getContext())) {
+                    setCityPlayState(1);
+                    return;
+                }
+                /**
+                 * 切换视频格式，不显示移动数据
+                 */
+                if (!NetworkUtils.isWifiConnected(getContext()) && !isChangeVideoFormat) {
+                    setCityPlayState(2);
+                    return;
+                }
             }
         }
         if (mVideoAllCallBack != null) {
@@ -836,7 +847,8 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
         if (st.mThumbImageViewLayout != null && sf.mThumbImageViewLayout != null) {
             st.mThumbImageViewLayout = sf.mThumbImageViewLayout;
         }
-//        st.mOrientationUtils = sf.mOrientationUtils;
+        st.cityPlayState = sf.cityPlayState;
+        st.isAudioChecked = sf.isAudioChecked;
     }
 
     /**
@@ -860,6 +872,11 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             backMaskTv.setVisibility(VISIBLE);
             gsyBaseVideoPlayer.currentVideoFormat = currentVideoFormat;
             gsyBaseVideoPlayer.mThumbImageViewLayout = mThumbImageViewLayout;
+            gsyBaseVideoPlayer.cityPlayState = cityPlayState;
+            gsyBaseVideoPlayer.isAudioChecked = isAudioChecked;
+            setCityPlayState(cityPlayState);
+            audioIv.setChecked(isAudioChecked);
+
         }
         return gsyBaseVideoPlayer;
     }
@@ -875,6 +892,9 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             MutilStandardGSYVideoPlayer sampleVideo = (MutilStandardGSYVideoPlayer) gsyVideoPlayer;
             currentVideoFormat = sampleVideo.currentVideoFormat;
             mThumbImageViewLayout = sampleVideo.mThumbImageViewLayout;
+            setCityPlayState(cityPlayState);
+            audioIv.setChecked(isAudioChecked);
+
 
         }
 
@@ -1464,6 +1484,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
 
         setCityPlayState(cityPlayState);
+        Toast.makeText(mContext, isAudioChecked + "", Toast.LENGTH_SHORT).show();
 
 
         //横竖屏切换，icon大小和间距动态调整

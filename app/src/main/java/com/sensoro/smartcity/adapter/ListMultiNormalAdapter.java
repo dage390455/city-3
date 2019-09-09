@@ -160,8 +160,9 @@ public class ListMultiNormalAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     videoModel.state = -1;
-                    holder.gsyVideoPlayer.setCityPlayState(-1);
-                    holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
+                    holder.gsyVideoPlayer.getMaskLayoutTop().setVisibility(View.GONE);
+                    holder.gsyVideoPlayer.getrMobileData().setVisibility(View.GONE);
+                    holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
                     holder.gsyVideoPlayer.startPlayLogic();
                     videoModel.state = -10;
 
@@ -178,6 +179,21 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
         holder.gsyVideoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
 
+            @Override
+            public void onPlayError(final String url, Object... objects) {
+
+                holder.gsyVideoPlayer.setCityPlayState(3);
+                CustomManager.backFromWindowFull(context, gsyVideoPlayerKey);
+                holder.gsyVideoPlayer.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        holder.gsyVideoPlayer.setCityPlayState(-1);
+                        holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
+                        holder.gsyVideoPlayer.startPlayLogic();
+                        videoModel.state = -10;
+                    }
+                });
+            }
 
             @Override
             public void onQuitFullscreen(String url, Object... objects) {
@@ -195,6 +211,8 @@ public class ListMultiNormalAdapter extends BaseAdapter {
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
+                CustomManager.backFromWindowFull(context, gsyVideoPlayerKey);
+
             }
         });
 
