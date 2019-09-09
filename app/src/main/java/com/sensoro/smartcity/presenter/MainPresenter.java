@@ -904,18 +904,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getView().isHomeFragmentChecked()) {
-                if (homeFragment.onBackPressed()) {
-                    return true;
+            if (isAttachedView()) {
+                if (getView().isHomeFragmentChecked()) {
+                    if (homeFragment != null && homeFragment.onBackPressed()) {
+                        return true;
+                    }
                 }
+                exit();
+                return true;
             }
-            exit();
-            return true;
+
         }
         return false;
     }
 
-    public void exit() {
+    private void exit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             getView().toastShort(mContext.getResources().getString(R.string.exit_main));
             exitTime = System.currentTimeMillis();
