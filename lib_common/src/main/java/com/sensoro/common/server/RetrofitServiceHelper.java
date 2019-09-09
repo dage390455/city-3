@@ -57,6 +57,7 @@ import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SecurityAlarmTimelineData;
+import com.sensoro.common.server.bean.SensoroBugData;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
@@ -102,6 +103,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 
 import static com.sensoro.common.server.security.constants.SecurityConstants.SECURITY_ALARMLIST_PAGE_COUNT;
 
@@ -2594,5 +2596,15 @@ public class RetrofitServiceHelper {
 
     public Observable<ResponseResult<UserInfo>> getPermissionChangeInfo() {
         return retrofitService.getPermissionChangeInfo();
+    }
+
+    /**
+     * 提交打点数据
+     *
+     * @param data
+     * @return
+     */
+    public Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data) {
+        return retrofitService.updateSensoroData(data);
     }
 }

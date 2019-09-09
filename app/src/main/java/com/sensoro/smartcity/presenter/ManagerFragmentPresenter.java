@@ -218,6 +218,27 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         } else {
             AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
         }
+//        SensoroBugData data = new SensoroBugData();
+//        SensoroBugData.DataBean dataBean = new SensoroBugData.DataBean();
+//        dataBean.setAccountName("setAccountName");
+//        dataBean.setMsg("setMsg");
+//        String[] strings = {"1", "2"};
+//        dataBean.setTags(Arrays.asList(strings));
+//        dataBean.setTimeStamp(System.currentTimeMillis());
+//        data.setData(dataBean);
+//        RetrofitServiceHelper.getInstance().updateSensoroData(data).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(this) {
+//            @Override
+//            public void onCompleted(ResponseResult<Object> objectResponseResult) {
+//                int code = objectResponseResult.getCode();
+//                String message = objectResponseResult.getMessage();
+//                getView().toastShort("updateSensoroData code = " + code + ",message = " + message);
+//            }
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+//                getView().toastShort("updateSensoroData " + errorMsg);
+//            }
+//        });
     }
 
     public void doVersionInfo() {
