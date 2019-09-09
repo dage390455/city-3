@@ -9,6 +9,7 @@ import com.sensoro.common.server.bean.DeviceCameraInfo;
 
 public class VideoModel {
     public DeviceCameraInfo deviceCameraInfo;
+    public int state = -10;
 
     public VideoModel(String url) {
         this.url = url;

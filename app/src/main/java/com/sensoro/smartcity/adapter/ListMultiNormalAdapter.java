@@ -11,12 +11,11 @@ import com.sensoro.smartcity.temp.entity.VideoModel;
 import com.sensoro.smartcity.widget.MultiSampleVideo;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 /**
  * 多个播放的listview adapter
@@ -33,10 +32,14 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
     private String fullKey = "null";
 
-    private int state = -10;
+
+    private final boolean available;
+    private final boolean wifiConnected;
 
     public void setState(int state) {
-        this.state = state;
+        for (VideoModel videoModel : list) {
+            videoModel.state = state;
+        }
         notifyDataSetChanged();
 
     }
@@ -44,10 +47,28 @@ public class ListMultiNormalAdapter extends BaseAdapter {
     public ListMultiNormalAdapter(Context context) {
         super();
         this.context = context;
-        inflater = LayoutInflater.from(context);
-        list.add(new VideoModel("http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4"));
-        list.add(new VideoModel("https://scpub-oss1.antelopecloud.cn/records/m3u8_info2/1567763820_1567763851.m3u8?access_token=540409951_3356491776_1598775818_24520bdc9e5d45495b8213de4faf5bea&head=1"));
 
+        available = NetworkUtils.isAvailable(context);
+        wifiConnected = NetworkUtils.isWifiConnected(context);
+
+
+        inflater = LayoutInflater.from(context);
+
+        VideoModel model = new VideoModel("https://scpub-api.antelopecloud.cn/cloud/v2/live/540410181.m3u8?client_token=540410181_3356491776_1598926009_dba5190f984714bf4a38504f392e9edb");
+
+        VideoModel videoModel = new VideoModel("https://scpub-oss1.antelopecloud.cn/records/m3u8_info2/1567763820_1567763851.m3u8?access_token=540409951_3356491776_1598775818_24520bdc9e5d45495b8213de4faf5bea&head=1");
+
+        if (!available) {
+            model.state = 1;
+            videoModel.state = 1;
+        }
+        if (!wifiConnected) {
+            model.state = 2;
+            videoModel.state = 2;
+        }
+
+        list.add(model);
+        list.add(videoModel);
     }
 
     @Override
@@ -85,9 +106,10 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         boolean isPlaying = holder.gsyVideoPlayer.getCurrentPlayer().isInPlayingState();
 
 
-        holder.gsyVideoPlayer.setIsLive(View.VISIBLE);
+        holder.gsyVideoPlayer.setIsLive(View.INVISIBLE);
+        VideoModel videoModel = list.get(position);
         if (!isPlaying) {
-            holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
+            holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
             holder.gsyVideoPlayer.startPlayLogic();
         }
 
@@ -122,41 +144,38 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 //        }
 
 
-        if (state == -1) {
+        holder.gsyVideoPlayer.setIsShowMaskTopBack(false);
+        holder.gsyVideoPlayer.setCityPlayState(-1);
 
+
+        if (videoModel.state == -1) {
             holder.gsyVideoPlayer.setCityPlayState(-1);
-
             holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
             holder.gsyVideoPlayer.startPlayLogic();
-        } else if (state == 2) {
+            videoModel.state = -10;
+        } else if (videoModel.state == 2) {
             holder.gsyVideoPlayer.setCityPlayState(2);
-            holder.gsyVideoPlayer.setIsShowMaskTopBack(false);
-
             CustomManager.backFromWindowFull(context, gsyVideoPlayerKey);
-
             holder.gsyVideoPlayer.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    videoModel.state = -1;
                     holder.gsyVideoPlayer.setCityPlayState(-1);
-                    if (holder.gsyVideoPlayer.getCurrentState() == CURRENT_STATE_PAUSE) {
-                        holder.gsyVideoPlayer.clickCityStartIcon();
-
-                    }
-
-                    CustomManager.onResume(gsyVideoPlayerKey);
+                    holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
+                    holder.gsyVideoPlayer.startPlayLogic();
+                    videoModel.state = -10;
 
 
                 }
             });
 
-        } else if (state == 1) {
+        } else if (videoModel.state == 1) {
             holder.gsyVideoPlayer.setCityPlayState(1);
-            holder.gsyVideoPlayer.setIsShowMaskTopBack(false);
-
             CustomManager.backFromWindowFull(context, gsyVideoPlayerKey);
 
+
         }
+
         holder.gsyVideoPlayer.setVideoAllCallBack(new GSYSampleCallBack() {
 
 

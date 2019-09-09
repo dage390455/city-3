@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.smartcity.R;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.MutilStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
 
@@ -22,7 +22,7 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
  * Created by guoshuyu on 2018/1/31.
  */
 
-public class MultiSampleVideo extends CityStandardGSYVideoPlayer {
+public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
 
     private final static String TAG = "MultiSampleVideo";
 
