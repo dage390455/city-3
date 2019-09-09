@@ -136,5 +136,10 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setDeviceCamerasText(String text);
 
-    void setDeviceDetailConfigInfo(String actual,String trans);
+    void setDeviceDetailConfigInfo(String actual, String trans);
+
+    void set2GDeviceConfigVisible(boolean visible);
+
+    void set2GDeviceConfigInfo(String imei, String imsi, String iccid);
+
 }

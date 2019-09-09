@@ -48,6 +48,7 @@ import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.MonitorOptionsBean;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.common.server.bean.OtherBean;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
@@ -77,6 +78,7 @@ import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.common.callback.BleObserver;
 import com.sensoro.common.callback.OnConfigInfoObserver;
 import com.sensoro.common.constant.MonitorPointOperationCode;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
@@ -323,6 +325,18 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         Integer interval = mDeviceInfo.getInterval();
         if (interval != null) {
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+        }
+        //TODO 特殊配置
+        if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(deviceType)) {
+            //带有2g的 配置参数
+            getView().set2GDeviceConfigVisible(true);
+            OtherBean other = mDeviceInfo.getOther();
+            if (other != null) {
+                String imei = other.getImei();
+                String imsi = other.getImsi();
+                String iccid = other.getIccid();
+                getView().set2GDeviceConfigInfo(imei, imsi, iccid);
+            }
         }
     }
 

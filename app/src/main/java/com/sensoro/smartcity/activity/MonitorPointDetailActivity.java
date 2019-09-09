@@ -21,7 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.Elect3DetailModel;
+import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -30,15 +33,13 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcMalfunctionContentAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
-import com.sensoro.common.constant.MonitorPointOperationCode;
-import com.sensoro.common.model.Elect3DetailModel;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
@@ -47,7 +48,6 @@ import com.sensoro.smartcity.widget.dialog.MonitorPointDemoDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
-import com.sensoro.common.widgets.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,6 +200,14 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     LinearLayout monitorDetailLlDeviceConfig;
     @BindView(R.id.rl_monitor_device_config)
     RelativeLayout rlMonitorDeviceConfig;
+    @BindView(R.id.tv_monitor_detail_imei)
+    TextView tvMonitorDetailImei;
+    @BindView(R.id.tv_monitor_detail_imsi)
+    TextView tvMonitorDetailImsi;
+    @BindView(R.id.tv_monitor_detail_iccid)
+    TextView tvMonitorDetailIccid;
+    @BindView(R.id.ll_2g_device_config)
+    LinearLayout ll2gDeviceConfig;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -720,6 +728,24 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
+    public void set2GDeviceConfigVisible(boolean visible) {
+        ll2gDeviceConfig.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void set2GDeviceConfigInfo(String imei, String imsi, String iccid) {
+        if (!TextUtils.isEmpty(imei)) {
+            tvMonitorDetailImei.setText(imei);
+        }
+        if (!TextUtils.isEmpty(imsi)) {
+            tvMonitorDetailImsi.setText(imsi);
+        }
+        if (!TextUtils.isEmpty(iccid)) {
+            tvMonitorDetailIccid.setText(iccid);
+        }
+    }
+
+    @Override
     public void dismissTipDialog() {
         if (mTipUtils != null) {
             mTipUtils.dismiss();
@@ -1104,7 +1130,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
         }
     }
-
 
 }
 

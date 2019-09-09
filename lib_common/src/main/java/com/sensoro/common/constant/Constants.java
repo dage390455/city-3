@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface Constants {
-     String ROUTEPATH = "routerpath";
+    String ROUTEPATH = "routerpath";
     //
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
@@ -359,6 +359,8 @@ public interface Constants {
         {
             add("acrel_fires");
             add("acrel_alpha");
+            //2g版三相电
+            add("acrel300T_fires_2G");
         }
     };
     ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
@@ -432,7 +434,6 @@ public interface Constants {
 
     String EXTRA_PATH_RECORD = "path_record";
     String EXTRA_VIDEO_DEL = "video_del";
-
 
 
     //
@@ -654,7 +655,6 @@ public interface Constants {
 //            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
 //            "magnetic", "tracker", "distance", "light"
 //    };
-
 
 
 }

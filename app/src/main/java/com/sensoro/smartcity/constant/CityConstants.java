@@ -3,6 +3,7 @@ package com.sensoro.smartcity.constant;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.MaterialValueModel;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**
@@ -50,6 +51,14 @@ public interface CityConstants {
             put("150", new MaterialValueModel(371, 281));
             put("185", new MaterialValueModel(423, 328));
 
+        }
+    };
+
+    ArrayList<String> DEVICE_2G_CONFIG_DEVICE_TYPES = new ArrayList<String>(6) {
+        {
+            add("fh388n_smoke_nb");
+            add("acrel300T_fires_2G");
+            add("acrel300D_fires_2G");
         }
     };
 }
