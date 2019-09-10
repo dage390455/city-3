@@ -50,6 +50,16 @@ public class CustomCornerDialog extends Dialog {
 
     }
 
+    /**
+     * 不会设置dilog的总体宽度
+     */
+    public CustomCornerDialog(@NonNull Context context, View view, int theme) {
+        super(context, theme);
+        setContentView(view);
+
+    }
+
+
     public CustomCornerDialog(Activity activity, int customCornerDialogStyle, View view, boolean dismissKeyboard) {
         this(activity, customCornerDialogStyle, view);
         mDismissKeyboard = dismissKeyboard;

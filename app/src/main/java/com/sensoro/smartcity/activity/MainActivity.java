@@ -243,7 +243,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .transparentStatusBar()
@@ -275,4 +275,5 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         }
         super.onDestroy();
     }
+
 }

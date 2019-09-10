@@ -24,13 +24,13 @@ import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SettingNotificationActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.common.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.INearByDeviceActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -285,7 +285,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
     public void itemClickStartActivity(int position) {
 
         Intent intent = new Intent();
-        intent.setClass(mActivity, MonitorPointElectricDetailActivity.class);
+        intent.setClass(mActivity, MonitorPointDetailActivity.class);
         intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfos.get(position));
         getView().startAC(intent);
 

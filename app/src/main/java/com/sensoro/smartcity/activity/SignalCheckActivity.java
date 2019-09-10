@@ -19,7 +19,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
 import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.presenter.SignalCheckActivityPresenter;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;

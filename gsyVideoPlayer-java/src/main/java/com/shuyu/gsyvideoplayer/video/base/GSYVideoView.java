@@ -20,6 +20,7 @@ import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.sensoro.common.utils.LogUtils;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
 import com.shuyu.gsyvideoplayer.listener.VideoAllCallBack;
@@ -648,7 +649,11 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
 
     @Override
     public void onError(int what, int extra) {
-
+        try {
+            LogUtils.loge("GSYVideoManager onError what = " + what + ",extra = " + extra);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (mNetChanged) {
             mNetChanged = false;
             netWorkErrorLogic();

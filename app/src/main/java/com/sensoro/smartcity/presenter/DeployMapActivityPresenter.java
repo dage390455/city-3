@@ -41,7 +41,7 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -459,7 +459,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 //可视化区域，将指定位置指定到屏幕中心位置
             LatLng latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
             CameraUpdate update = CameraUpdateFactory
-                    .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
+                    .newCameraPosition(new CameraPosition(latLng, 16, 0, 0));
             aMap.moveCamera(update);
             deviceMarker.setPosition(latLng);
             LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
@@ -556,7 +556,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     if (deployAnalyzerModel.latLng.size() == 2) {
                         latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
                         update = CameraUpdateFactory
-                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
+                                .newCameraPosition(new CameraPosition(latLng, 16, 0, 0));
                         aMap.moveCamera(update);
                         deviceMarker.setPosition(latLng);
                     }
@@ -571,7 +571,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         latLng = new LatLng(lat, lon);
                         //可视化区域，将指定位置指定到屏幕中心位置
                         update = CameraUpdateFactory
-                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
+                                .newCameraPosition(new CameraPosition(latLng, 16, 0, 0));
                         aMap.moveCamera(update);
                         if (locationMarker != null) {
                             locationMarker.setPosition(latLng);

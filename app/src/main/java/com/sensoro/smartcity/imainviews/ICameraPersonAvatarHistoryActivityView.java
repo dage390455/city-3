@@ -10,8 +10,6 @@ import java.util.List;
 public interface ICameraPersonAvatarHistoryActivityView extends IActivityIntent, IProgressDialog, IToast {
     void onPullRefreshComplete();
 
-    void onPullRefreshCompleteNoMoreData();
-
     void updateData(List<DeviceCameraPersonFaceBean> data);
 
     List<DeviceCameraPersonFaceBean> getAdapterData();

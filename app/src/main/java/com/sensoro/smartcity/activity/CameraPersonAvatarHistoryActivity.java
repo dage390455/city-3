@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -34,7 +35,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonAvatarHistoryAdapter;
 import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonAvatarHistoryActivityPresenter;
-import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.List;
 
@@ -233,11 +233,6 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void updateData(List<DeviceCameraPersonFaceBean> data) {
         if (data != null) {
             rvContentAdapter.updateData(data);
@@ -247,7 +242,11 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
 
     @SuppressLint("RestrictedApi")
     public void setNoContentVisible(boolean isVisible) {
-        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+        }
 
         if (isVisible) {
             refreshLayout.setRefreshContent(icNoContent);
@@ -268,10 +267,14 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
             faceUrl = Constants.CAMERA_BASE_URL + faceUrl;
         }
         Glide.with(mActivity).load(faceUrl)
-                .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity))
+                .apply(new RequestOptions()
+//                        .transform(new GlideCircleTransform(mActivity))
+                        .circleCrop()
                         .placeholder(R.drawable.person_locus_placeholder)
                         .error(R.drawable.person_locus_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
+                .skipMemoryCache(false)
+                .dontAnimate()
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }
 }

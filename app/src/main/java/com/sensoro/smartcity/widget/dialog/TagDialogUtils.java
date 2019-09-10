@@ -2,7 +2,10 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,13 +39,41 @@ public class TagDialogUtils implements View.OnClickListener {
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
         mDialogImvClear.setOnClickListener(this);
-        mDialogEtInput.setOnClickListener(this);
+        mDialogEtInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDialogEtInput.requestFocus();
+                mDialogEtInput.setCursorVisible(true);
+                return false;
+            }
+        });
         mDialogEtInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
+        mDialogEtInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() == 0) {
+                    mDialogImvClear.setVisibility(View.GONE);
+                } else {
+                    mDialogImvClear.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         mAddTagDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
@@ -100,10 +131,6 @@ public class TagDialogUtils implements View.OnClickListener {
                         onTagDialogListener.onConfirm(mType, tag, currentPosition);
                     }
                 }
-                break;
-            case R.id.dialog_add_tag_et_input:
-                mDialogEtInput.requestFocus();
-                mDialogEtInput.setCursorVisible(true);
                 break;
             case R.id.dialog_add_tag_imv_clear:
                 if (mDialogEtInput != null) {

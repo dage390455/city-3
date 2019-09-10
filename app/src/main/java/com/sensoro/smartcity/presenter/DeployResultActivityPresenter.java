@@ -13,6 +13,7 @@ import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
@@ -34,6 +35,11 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         mContext = (Activity) context;
         deployResultModel = (DeployResultModel) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL);
         //
+        try {
+            LogUtils.loge("deployResultModel signal : " + deployResultModel.signal);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         switch (deployResultModel.resultCode) {
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
                 getView().setDeployResultRightButtonText(mContext.getString(R.string.modify_deploy_info));

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
@@ -190,7 +191,12 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
 
     @SuppressLint("RestrictedApi")
     public void setNoContentVisible(boolean isVisible) {
-        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+
+
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+        }
         if (isVisible) {
             refreshLayout.setRefreshContent(icNoContent);
         } else {

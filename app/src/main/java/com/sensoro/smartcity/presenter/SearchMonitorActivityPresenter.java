@@ -17,11 +17,11 @@ import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import java.util.ArrayList;
@@ -51,15 +51,14 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         mPref = mContext.getSharedPreferences(Constants.PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         String history = mPref.getString(Constants.PREFERENCE_KEY_DEVICE, null);
+        mHistoryKeywords.clear();
         if (!TextUtils.isEmpty(history)) {
-            mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
+        //默认显示最近搜索
+        getView().setSearchHistoryLayoutVisible(true);
         if (mHistoryKeywords.size() > 0) {
-            getView().setSearchHistoryLayoutVisible(true);
             getView().updateSearchHistoryData(mHistoryKeywords);
-        } else {
-            getView().setSearchHistoryLayoutVisible(false);
         }
 
     }
@@ -261,7 +260,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (position >= 0) {
             DeviceInfo deviceInfo = mDataList.get(position);
             Intent intent = new Intent();
-            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
+            intent.setClass(mContext, MonitorPointDetailActivity.class);
             intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(Constants.EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(Constants.EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());

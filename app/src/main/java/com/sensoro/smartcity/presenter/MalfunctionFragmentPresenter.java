@@ -20,8 +20,8 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
-import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.model.CalendarDateModel;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,12 +116,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                         List<MalfunctionListInfo> data = malfunctionListRsp.getData();
                         if (data == null || data.size() == 0) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
                             refreshUI(direction, malfunctionListRsp);
-                            getView().onPullRefreshComplete();
                         }
+                        getView().onPullRefreshComplete();
 
                     }
                 });
@@ -175,7 +174,8 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(1, null, null, tempSearch, startTime, endTime
+        cur_page = 1;
+        RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, startTime, endTime
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<MalfunctionListInfo>>>(this) {
 
 

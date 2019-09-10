@@ -477,8 +477,8 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         boolean isVertical = false;
         int videoHeight = getCurrentVideoHeight();
         int videoWidth = getCurrentVideoWidth();
-        Debuger.printfLog("GSYVideoBase isVerticalVideo  videoHeight " + videoHeight + " videoWidth " + videoWidth);
-        Debuger.printfLog("GSYVideoBase isVerticalVideo  mRotate " + mRotate);
+//        Debuger.printfLog("GSYVideoBase isVerticalVideo  videoHeight " + videoHeight + " videoWidth " + videoWidth);
+//        Debuger.printfLog("GSYVideoBase isVerticalVideo  mRotate " + mRotate);
         if (videoHeight > 0 && videoWidth > 0) {
             if (mRotate == 90 || mRotate == 270) {
                 isVertical = videoWidth > videoHeight;
@@ -553,7 +553,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     public void onConfigurationChanged(Activity activity, Configuration newConfig, OrientationUtils orientationUtils, boolean hideActionBar, boolean hideStatusBar) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_USER) {
+        if (/*newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||*/newConfig.orientation == ActivityInfo.SCREEN_ORIENTATION_USER) {
             if (!isIfCurrentIsFullscreen()) {
                 startWindowFullscreen(activity, hideActionBar, hideStatusBar);
             }
@@ -636,6 +636,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             gsyVideoPlayer.setId(getFullId());
             gsyVideoPlayer.setIfCurrentIsFullscreen(true);
             gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
+//            gsyVideoPlayer.setThumbImageView(this.mThumbImageView);
 
             cloneParams(this, gsyVideoPlayer);
 

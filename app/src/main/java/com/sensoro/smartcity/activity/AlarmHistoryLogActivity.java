@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,21 +18,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
+import com.sensoro.common.widgets.CalendarPopUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmHistoryLogRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IAlarmHistoryLogActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.AlarmHistoryLogActivityPresenter;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     private void initView() {
@@ -244,7 +244,10 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+        }
         if (isVisible) {
             refreshLayout.setRefreshContent(icNoContent);
         } else {
@@ -252,11 +255,6 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
         }
 
 
-    }
-
-    @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
     @Override

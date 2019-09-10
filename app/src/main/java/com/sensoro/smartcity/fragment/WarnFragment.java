@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -46,7 +48,7 @@ import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
@@ -159,6 +161,15 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             @Override
             public void afterTextChanged(Editable s) {
                 setSearchClearImvVisible(s.length() > 0);
+            }
+        });
+        fgMainWarnEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                fgMainWarnEtSearch.requestFocus();
+                fgMainWarnEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                return false;
             }
         });
 
@@ -439,17 +450,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         super.onDestroyView();
     }
 
-    @OnClick({R.id.fg_main_top_search_frame_search, R.id.fg_main_top_search_et_search, R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
+    @OnClick({R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
             R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top, R.id.fg_main_top_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.fg_main_top_search_frame_search:
-            case R.id.fg_main_top_search_et_search:
-                fgMainWarnEtSearch.requestFocus();
-                fgMainWarnEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-//                forceOpenSoftKeyboard();
-                break;
+
             case R.id.fg_main_top_search_imv_clear:
                 fgMainWarnEtSearch.getText().clear();
                 fgMainWarnEtSearch.requestFocus();
@@ -527,11 +532,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void setUpdateButtonClickable(boolean canClick) {
         mAlarmPopUtils.setUpdateButtonClickable(canClick);
     }
@@ -573,11 +573,19 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
+
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            if (isVisible) {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            } else {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+            }
+        }
+
         if (isVisible) {
-            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
             refreshLayout.setRefreshContent(icNoContent);
         } else {
-            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
             refreshLayout.setRefreshContent(fgMainWarnRcContent);
         }
     }

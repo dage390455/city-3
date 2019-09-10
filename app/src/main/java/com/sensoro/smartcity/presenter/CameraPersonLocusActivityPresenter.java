@@ -184,6 +184,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
     private void initMarkerImageView() {
         imageView = new ImageView(mActivity);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.width = AppUtils.dp2px(mActivity, 64);
         layoutParams.height = AppUtils.dp2px(mActivity, 80);
@@ -197,7 +198,8 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     private void requestData(String faceId) {
-
+        if (!isAttachedView())
+            return;
         getView().setSelectDayBg(day);
         Long endTime = System.currentTimeMillis();
         Long startTime = endTime - 24 * 60 * 60 * 1000L * day;
@@ -343,9 +345,13 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .asBitmap()
                 .load(url)
                 .thumbnail(0.1f)
-                .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity, dp24)).error(R.drawable.deploy_pic_placeholder)           //设置错误图片
+                .apply(new RequestOptions()
+                        .transform(new GlideCircleTransform(mActivity, dp24))
+                        .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                         .placeholder(R.drawable.ic_default_cround_image)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .dontAnimate()
+                        .skipMemoryCache(false))
 //                .override(size,size)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
@@ -642,8 +648,12 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     public void doMonitorMapLocation() {
-        CameraPosition cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(), preBean.getLongitude()), mMapZoom, 0, 30);
-        getView().setMapCenter(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        if (preBean != null) {
+            CameraPosition cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(), preBean.getLongitude()), mMapZoom, 0, 30);
+            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+//        CameraPosition cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(), preBean.getLongitude()), mMapZoom, 0, 30);
+//        getView().setMapCenter(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
     }
 }

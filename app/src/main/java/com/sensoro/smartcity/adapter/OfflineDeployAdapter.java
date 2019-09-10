@@ -14,8 +14,8 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;

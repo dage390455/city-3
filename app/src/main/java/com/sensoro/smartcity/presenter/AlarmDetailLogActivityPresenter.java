@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BasePresenter;
@@ -24,6 +25,7 @@ import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
@@ -34,11 +36,12 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.sensoro.common.utils.CityAppUtils;
+import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -288,8 +291,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mContext, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 if (isAttachedView()) {
                     getView().startAC(intent);
                 }
@@ -320,8 +323,14 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         if (deviceNotifications.isEmpty()) {
             getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-            dialogUtil.show(deviceNotifications);
+            if (deviceNotifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(deviceNotifications);
+            } else {
+                DeviceNotificationBean deviceNotificationBean = deviceNotifications.get(0);
+                String content = deviceNotificationBean.getContent();
+                AppUtils.diallPhone(content, mContext);
+            }
         }
     }
 
@@ -451,12 +460,22 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
 
     public void doCameraVideo() {
+        if ((!NetworkUtils.isAvailable(mContext))) {
+            SensoroToast.getInstance().makeText(mContext.getResources().getString(R.string.disconnected_from_network), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
         intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
         getView().startAC(intent);
     }
 
     public void doCameraLive() {
+        if ((!NetworkUtils.isAvailable(mContext))) {
+            SensoroToast.getInstance().makeText(mContext.getResources().getString(R.string.disconnected_from_network), Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
         ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface Constants {
+    String ROUTEPATH = "routerpath";
     //
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
@@ -80,9 +81,18 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
     String EXTRA_GRANTS_HAS_CONTROLLER_AID = "extra_grants_has_controller_aid";
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
+    //控制设备
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT = "extra_grants_has_device_mute_short";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME = "extra_grants_has_device_mute_time";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_RESET = "extra_grants_has_device_control_reset";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_PASSWORD = "extra_grants_has_device_control_password";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_VIEW = "extra_grants_has_device_control_view";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_CHECK = "extra_grants_has_device_control_check";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_CONFIG = "extra_grants_has_device_control_config";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_OPEN = "extra_grants_has_device_control_open";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_CLOSE = "extra_grants_has_device_control_close";
+    //
     String EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE = "extra_grants_has_device_firmware_update";
     String EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE = "extra_grants_has_device_demo_mode";
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST = "extra_grants_has_device_camera_list";
@@ -328,6 +338,7 @@ public interface Constants {
     int EVENT_DATA_SEARCH_NAMEPLATE = 0x64;
     int EVENT_DATA_PERMISSIONCHANGE = 0x65;
 
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
@@ -348,6 +359,8 @@ public interface Constants {
         {
             add("acrel_fires");
             add("acrel_alpha");
+            //2g版三相电
+            add("acrel300T_fires_2G");
         }
     };
     ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
@@ -390,6 +403,10 @@ public interface Constants {
     String OFFLINE_DEPLOYANALYZERMODEL_SP = "offline_DeployAnalyzerModel_sp";
     String OFFLINE_DEPLOYANALYZERMODEL_KEY = "offline_DeployAnalyzerModel_key";
     //
+
+    String PREFERENCE_VIDEO_FORMAT_SETTING_SP = "preference_video_format_setting_sp";
+    String PREFERENCE_VIDEO_FORMAT_SETTING_KEY = "preference_video_format_setting_key";
+
     String EXTRA_SECURITY_RISK = "extra_security_risk";
 
     String PREFERENCE_LOCAL_DEVICES_MERGE_TYPES = "preference_local_devices_mergetypes";
@@ -413,6 +430,14 @@ public interface Constants {
     int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
     int TYPE_SCAN_DEPLOY_CAMERA = 0x65;
     int EVENT_DATA_ADD_NEW_UUID_CONTENT = 0x66;
+
+    /**
+     * 默认接口加载页数
+     */
+    int DEFAULT_PAGE_SIZE = 20;
+
+    String EXTRA_PATH_RECORD = "path_record";
+    String EXTRA_VIDEO_DEL = "video_del";
 
 
     //
@@ -634,5 +659,7 @@ public interface Constants {
 //            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
 //            "magnetic", "tracker", "distance", "light"
 //    };
+
+
 }
 

@@ -47,7 +47,7 @@ import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
 import com.sensoro.smartcity.model.DeployCameraConfigModel;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

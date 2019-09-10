@@ -10,8 +10,6 @@ import java.util.List;
 public interface IMalfunctionHistoryActivityView extends IToast,IProgressDialog,IActivityIntent {
     void onPullRefreshComplete();
 
-    void onPullRefreshCompleteNoMoreData();
-
     void updateMalfunctionListAdapter(List<MalfunctionListInfo> mMalfunctionInfoList);
 
     void setNoContentVisible(boolean isVisible);

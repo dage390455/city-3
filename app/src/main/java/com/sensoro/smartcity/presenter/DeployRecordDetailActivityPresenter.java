@@ -21,10 +21,10 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployRecordContactDialogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,8 +18,6 @@ public interface IMalfunctionFragmentView extends IToast,IProgressDialog,IActivi
 
     void onPullRefreshComplete();
 
-    void onPullRefreshCompleteNoMoreData();
-
     void setSearchButtonTextVisible(boolean b);
 
     void updateAlarmListAdapter(List<MalfunctionListInfo> mMalfunctionInfoList);

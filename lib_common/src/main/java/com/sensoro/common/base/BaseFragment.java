@@ -46,6 +46,11 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         }
         if (mRootView == null) {
             mRootView = inflater.inflate(initRootViewId(), container, false);
+        } else {
+            ViewGroup viewGroup = (ViewGroup) mRootView.getParent();
+            if (viewGroup != null) {
+                viewGroup.removeView(mRootView);
+            }
         }
         unbinder = ButterKnife.bind(mPresenter.getView(), mRootView);
 
@@ -164,10 +169,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         if (mRootFragment != null) {
             mRootFragment = null;
         }
-
-//        if(immersionBar != null){
-//            immersionBar.destroy();
-//        }
         SensoroToast.getInstance().cancelToast();
         super.onDestroyView();
     }

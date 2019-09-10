@@ -34,8 +34,8 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.CityAppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
@@ -94,7 +94,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         aMap.setMyLocationEnabled(false);
 //        aMap.getUiSettings().setCompassEnabled(true);
         aMap.setOnMapLoadedListener(this);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
@@ -197,7 +197,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                notDeployLayout.setVisibility(View.GONE);
                 //可视化区域，将指定位置指定到屏幕中心位置
                 final CameraUpdate mUpdata = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(destPosition, 15, 0, 0));
+                        .newCameraPosition(new CameraPosition(destPosition, 16, 0, 0));
                 aMap.moveCamera(mUpdata);
 
                 freshMarker();
@@ -293,19 +293,19 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         }
         int status = mDeviceInfo.getStatus();
         List<String> tags = mDeviceInfo.getTags();
-        String tempTagStr = "";
+        StringBuilder tempTagStr = new StringBuilder();
         if (tags != null && tags.size() > 0) {
             for (String tag : tags) {
-                tempTagStr += tag + ",";
+                tempTagStr.append(tag).append(",");
             }
-            tempTagStr = tempTagStr.substring(0, tempTagStr.lastIndexOf(","));
+            tempTagStr = new StringBuilder(tempTagStr.substring(0, tempTagStr.lastIndexOf(",")));
         }
         long updatedTime = mDeviceInfo.getUpdatedTime();
         String tempAddress = mDeviceInfo.getAddress();
         if (TextUtils.isEmpty(tempAddress)) {
             tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/place?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
+        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
                 + "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
@@ -356,7 +356,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
                 CameraUpdate update = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
+                        .newCameraPosition(new CameraPosition(latLng, 16, 0, 0));
                 aMap.moveCamera(update);
             } else {
                 getView().toastShort(mContext.getString(R.string.tips_data_error));

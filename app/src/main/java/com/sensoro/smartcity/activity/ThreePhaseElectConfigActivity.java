@@ -37,7 +37,7 @@ import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
+import com.sensoro.common.widgets.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.monitor_point_detail_air_switch_config));
         includeImvTitleTvTitle.getPaint().setFakeBoldText(true);
         includeTextTitleTvSubtitle.setText(R.string.save);
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1dbb99));
         mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity, false);
         mTipUtils = new TipOperationDialogUtils(mActivity, false);
         initRcInline();

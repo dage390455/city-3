@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/pop_slideverify_bg">
+
+    <LinearLayout
+        android:layout_width="306dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/c_f34a4a"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="4dp"
+            android:text=""
+            android:textColor="@color/c_252525"
+            android:textSize="14dp" />
+
+        <com.sensoro.common.widgets.slideverify.SlideVerifity
+            android:id="@+id/svf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:mode="mode_bar"
+            app:src="@mipmap/bg_slide_verfication"
+            app:blockSize="50dp"
+            app:max_fail_count="10000" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dedede" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:textSize="16dp"
+        android:textColor="@color/c_252525"
+        android:text="@string/cancel"
+        android:background="@null" />
+</LinearLayout>

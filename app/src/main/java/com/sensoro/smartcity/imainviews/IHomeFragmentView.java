@@ -1,9 +1,13 @@
 package com.sensoro.smartcity.imainviews;
 
+import android.view.View;
+
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
+import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.smartcity.model.HomeTopModel;
+import com.sensoro.smartcity.model.SortConditionModel;
 
 import java.util.List;
 
@@ -14,11 +18,11 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void setImvSearchVisible(boolean isVisible);
 
-    void refreshHeaderData(boolean isFirstInit, List<HomeTopModel> data);
+    void refreshHeaderData(boolean isResetHeaderPosition, boolean isFirstInit, List<HomeTopModel> data);
 
     void returnTop();
 
-    void refreshContentData(boolean isFirstInit, List<HomeTopModel> dataList);
+    void refreshContentData(boolean isFirstInit, boolean isPageChanged, List<DeviceInfo> deviceInfoList);
 
 //    void recycleViewRefreshComplete();
 
@@ -48,4 +52,21 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     void dismissAlarmInfoView();
 
     int getFirstVisibleItemPosition();
+
+
+    /**
+     * 状态变化数据更新过度动画设置
+     */
+    void startAnimation(View view, int animResID);
+
+    /**
+     * 过滤条件查看窗口
+     */
+    void updateSelectFilterConditionPopAndShow(List mSortConditionList, SortConditionModel selectedCondition);
+
+    void updateSelectFilterCondition(List mSortConditionList, SortConditionModel selectedCondition);
+
+    void resetTypeAndSortCondition();
+
+
 }

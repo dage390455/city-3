@@ -72,7 +72,7 @@ public interface RetrofitService {
     //demo环境
     String SCOPE_DEMO = "https://city-demo-api.sensoro.com/";
     //测试环境
-    String SCOPE_TEST = "https://city-test-api.sensoro.com/";
+    String SCOPE_TEST = "https://city-test1-api.sensoro.com/";
     //预发布环境
     String SCOPE_PRE = "https://city-pre-api.sensoro.com/";
     //    String SCOPE_PRE = "http://xiaolai.ngrok.gkzyk.com/";
@@ -145,7 +145,7 @@ public interface RetrofitService {
                                                                          @Query("all") int all);
 
     @GET(DEVICE_BRIEF_LIST)
-    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("sns") List<String> sns, @Query("page") int page, @Query("count")
+    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("order") String order, @Query("sort") String sort, @Query("sns") List<String> sns, @Query("page") int page, @Query("count")
             int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
                                                                         @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 
@@ -401,7 +401,7 @@ public interface RetrofitService {
     @GET("query-dict")
     Observable<ResponseResult<List<CameraFilterModel>>> getCameraFilter();
 
-    @GET("group/stations/fields")
+    @GET("prov2/group/stations/fields")
     Observable<ResponseResult<List<CameraFilterModel>>> getStationFilter();
 
     @GET("cameras")

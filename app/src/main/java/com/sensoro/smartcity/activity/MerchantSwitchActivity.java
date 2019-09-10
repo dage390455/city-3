@@ -2,43 +2,45 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MerchantAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
-import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MerchantAdapter;
+import com.sensoro.smartcity.adapter.MerchantSubAdapter;
+import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
+import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 
 import java.util.List;
 
@@ -50,13 +52,15 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
-        , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        , View.OnClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, MerchantSubAdapter.OnMerchantClickListener {
+    @BindView(R.id.rl_merchant_root)
+    RelativeLayout rlMerchantRoot;
     @BindView(R.id.ll_main_merchant)
     LinearLayout llMainMerchant;
     @BindView(R.id.tv_back_to_main_merchant)
     TextView tvBackToMainMerchant;
     @BindView(R.id.fragment_merchant_list)
-    ListView mPullListView;
+    RecyclerView mPullListView;
     @BindView(R.id.merchant_iv_menu_list)
     ImageView mMenuListImageView;
     @BindView(R.id.merchant_list_bottom_sep)
@@ -92,7 +96,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     LinearLayout merchantLlListRoot;
     @BindView(R.id.merchant_tv_cancel)
     TextView merchantTvCancel;
-
+    private Animation returnTopAnimation;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private SearchHistoryAdapter mSearchHistoryAdapter;
@@ -118,6 +122,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+        }
 
         if (historyClearDialog != null) {
             historyClearDialog.destroy();
@@ -127,6 +134,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     private void initView() {
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        mReturnTopImageView.setAnimation(returnTopAnimation);
+        mReturnTopImageView.setVisibility(View.GONE);
         mReturnTopImageView.setOnClickListener(this);
         mMenuListImageView.setOnClickListener(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
@@ -164,10 +174,45 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 //            }
 //        });
 //        mPullListView.setMode(PullToRefreshBase.Mode.BOTH);
-        mPullListView.setOnScrollListener(this);
+
         mMerchantAdapter = new MerchantAdapter(mActivity);
+        mMerchantAdapter.setOnMerchantClickListener(this);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        mPullListView.setLayoutManager(layoutManager);
+        mPullListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
+                if (layoutManager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        mReturnTopImageView.setVisibility(View.GONE);
+                    }
+                } else {
+                    mReturnTopImageView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
+//        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
+//        defaultItemAnimator.setAddDuration(500);
+//        defaultItemAnimator.setRemoveDuration(500);
+//        mPullListView.setItemAnimator(defaultItemAnimator);
         mPullListView.setAdapter(mMerchantAdapter);
-        mPullListView.setOnItemClickListener(this);
+//        mPullListView.setOnItemClickListener(this);
 
         initRcHistorySearch();
 
@@ -209,17 +254,44 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 setSearchClearImvVisible(s.length() > 0);
             }
         });
+        AppUtils.getInputSoftStatus(rlMerchantRoot, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                mMerchantEtSearch.setCursorVisible(false);
+            }
 
+            @Override
+            public void onKeyBoardOpen() {
+                mMerchantEtSearch.setCursorVisible(true);
+            }
+        });
+        mMerchantEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mMerchantEtSearch.requestFocus();
+                mMerchantEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                setLlMainAccountVisible(false);
+                setTvCancelVisible(true);
+                return false;
+            }
+        });
         initClearHistoryDialog();
 
+    }
+
+    @Override
+    protected void onPause() {
+        AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
+        super.onPause();
     }
 
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -277,23 +349,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        UserInfo userInfo = mMerchantAdapter.getData().get(position);
-        mPresenter.clickItem(userInfo);
-    }
-
-    @OnClick({R.id.merchant_frame_search, R.id.merchant_et_search, R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel, R.id.tv_back_to_main_merchant})
+    @OnClick({R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel, R.id.tv_back_to_main_merchant})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.merchant_frame_search:
-            case R.id.merchant_et_search:
-                mMerchantEtSearch.requestFocus();
-                mMerchantEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-                setLlMainAccountVisible(false);
-                setTvCancelVisible(true);
-                break;
             case R.id.btn_search_clear:
                 showHistoryClearDialog();
                 break;
@@ -393,12 +451,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     @Override
-    public void updateAdapterUserInfo(List<UserInfo> data) {
+    public void updateAdapterUserInfo(List<UserInfo> data, boolean isSearCh) {
         if (data != null && data.size() > 0) {
             icNoContent.setVisibility(View.GONE);
             merchantLlListRoot.setVisibility(View.VISIBLE);
-            mMerchantAdapter.setDataList(data);
-            mMerchantAdapter.notifyDataSetChanged();
+            mMerchantAdapter.updateDataList(data, isSearCh);
         } else {
             if (isRlTitleAccountVisible()) {
                 icNoContent.setVisibility(View.GONE);
@@ -421,12 +478,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     private boolean isRlTitleAccountVisible() {
         return llMainMerchant.getVisibility() == View.VISIBLE;
-    }
-
-    @Override
-    protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity,mMerchantEtSearch);
-        super.onPause();
     }
 
     @Override
@@ -456,23 +507,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                         int totalItemCount) {
-//        int tempPos = mPullListView.getRefreshableView().getFirstVisiblePosition();
-        int tempPos = mPullListView.getFirstVisiblePosition();
-        if (tempPos > 0) {
-            mReturnTopImageView.setVisibility(View.VISIBLE);
-        } else {
-            mReturnTopImageView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
     public void onCancelClick() {
         if (historyClearDialog != null) {
             historyClearDialog.dismiss();
@@ -487,5 +521,10 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             historyClearDialog.dismiss();
         }
 
+    }
+
+    @Override
+    public void onClickMerchant(UserInfo userInfo) {
+        mPresenter.clickItem(userInfo);
     }
 }

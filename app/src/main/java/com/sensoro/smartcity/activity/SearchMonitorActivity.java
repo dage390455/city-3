@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -38,6 +39,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
@@ -47,9 +49,7 @@ import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -84,6 +84,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     SmartRefreshLayout acSearchDeviceRefreshLayout;
     @BindView(R.id.ac_search_device_rc_content)
     RecyclerView acSearchDeviceRcContent;
+    @BindView(R.id.index_layout_list)
+    RelativeLayout indexLayoutList;
     View icNoContent;
     @BindView(R.id.search_device_ll_root)
     RelativeLayout searchDeviceLlRoot;
@@ -116,7 +118,14 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         mKeywordEt.addTextChangedListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
-        mKeywordEt.setOnClickListener(this);
+        mKeywordEt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                setSearchHistoryLayoutVisible(true);
+                setIndexListLayoutVisible(false);
+                return false;
+            }
+        });
         AppUtils.getInputSoftStatus(searchDeviceLlRoot, new AppUtils.InputSoftStatusListener() {
             @Override
             public void onKeyBoardClose() {
@@ -228,7 +237,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList != null) {
-            Collections.sort(dataList);
             mSearchRcContentAdapter.updateData(dataList);
         }
         setIndexListLayoutVisible(true);
@@ -248,11 +256,17 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 //        indexLayoutList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
 
+        RefreshHeader refreshHeader = acSearchDeviceRefreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            if (isVisible) {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            } else {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+            }
+        }
         if (isVisible) {
-            acSearchDeviceRefreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
             acSearchDeviceRefreshLayout.setRefreshContent(icNoContent);
         } else {
-            acSearchDeviceRefreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
             acSearchDeviceRefreshLayout.setRefreshContent(acSearchDeviceRcContent);
         }
 
@@ -297,7 +311,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void setTypeView(String typesText) {
 
     }
-
 
 
     private void initSearchHistory() {
@@ -356,7 +369,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setSearchHistoryLayoutVisible(boolean isVisible) {
         mSearchHistoryLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
-        mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
     @Override
@@ -367,7 +379,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void setIndexListLayoutVisible(boolean isVisible) {
-//        indexLayoutList.setVisibility(isVisible ? VISIBLE : View.GONE);
+        indexLayoutList.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
 
@@ -417,15 +429,11 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
                 mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
                 mPresenter.updateSearchHistoryData();
+                setSearchHistoryLayoutVisible(true);
                 break;
             case R.id.index_return_top:
                 returnTop();
                 break;
-            case R.id.search_device_et:
-                setSearchHistoryLayoutVisible(true);
-                setIndexListLayoutVisible(false);
-                break;
-
             default:
                 break;
         }
@@ -551,7 +559,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Override

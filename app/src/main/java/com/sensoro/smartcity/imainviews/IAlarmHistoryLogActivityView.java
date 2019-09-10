@@ -12,8 +12,6 @@ public interface IAlarmHistoryLogActivityView extends IToast, IProgressDialog, I
 
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> data);
 
-    void onPullRefreshCompleteNoMoreData();
-
     void onPullRefreshComplete();
 
     void setDateSelectVisible(boolean isVisible);

@@ -17,12 +17,12 @@ import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ImagePicker;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.common.imagepicker.ui.ImageGridActivity;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.common.widgets.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,14 +44,17 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         mActivity = (Activity) context;
         Bundle bundle = getBundle(mActivity);
         String deviceType = null;
-        List<DeployPicInfo> deployPicInfos = new ArrayList<>();
+        final List<DeployPicInfo> deployPicInfos = new ArrayList<>();
         if (bundle != null) {
             deviceType = bundle.getString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
             mergeType = WidgetUtil.handleMergeType(deviceType);
             getView().setDeployPicTvInstallationSiteTipVisible(Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
             Serializable serializable = bundle.getSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO);
             if (serializable instanceof ArrayList) {
-                deployPicInfos = (ArrayList<DeployPicInfo>) serializable;
+                ArrayList<DeployPicInfo> picInfos = (ArrayList<DeployPicInfo>) serializable;
+                if (picInfos.size() > 0) {
+                    deployPicInfos.addAll(picInfos);
+                }
             }
         } else {
             getView().setDeployPicTvInstallationSiteTipVisible(false);
@@ -66,9 +69,14 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         if (deployPicInfos.isEmpty()) {
             List<DeployPicInfo> configDeviceDeployPic = PreferencesHelper.getInstance().getConfigDeviceDeployPic(deviceType);
             if (configDeviceDeployPic != null && configDeviceDeployPic.size() > 0) {
-                deployPicInfos = configDeviceDeployPic;
+                //当存在旧数据时清除
+                for (DeployPicInfo deployPicInfo : configDeviceDeployPic) {
+                    deployPicInfo.photoItem = null;
+                }
+                deployPicInfos.addAll(configDeviceDeployPic);
             } else {
                 //这里自定义了一个类型认为是部署摄像机
+
                 if ("deploy_camera".equals(deviceType)) {
                     DeployPicInfo deployPicInfo1 = new DeployPicInfo();
                     deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);

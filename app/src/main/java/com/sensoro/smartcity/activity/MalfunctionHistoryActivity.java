@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -28,9 +29,9 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MalfunctionHistoryRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.MalfunctionHistoryActivityPresenter;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import java.util.List;
 
@@ -225,18 +226,15 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
     @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-
-        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+        }
         if (isVisible) {
             refreshLayout.setRefreshContent(icNoContent);
         } else {
             refreshLayout.setRefreshContent(acHistoryLogRcContent);
         }
-    }
-
-    @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
     @Override

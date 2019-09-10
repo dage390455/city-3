@@ -8,7 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.maps.TextureMapView;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
@@ -19,6 +21,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
+@Route(path = ARouterConstants.ACTIVITY_MonitorPointMap_Activity)
 public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivityView, MonitorPointMapActivityPresenter> implements IMonitorPointMapActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;

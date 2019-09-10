@@ -22,34 +22,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.sensoro.common.adapter.ImagePickerAdapter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageGridActivity;
+import com.sensoro.common.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.AlarmPopModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
+import com.sensoro.common.widgets.slideverify.SlidePopUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.SecurityRisksActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
-import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,7 +66,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class AlarmPopUtils implements Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
@@ -137,6 +137,12 @@ public class AlarmPopUtils implements Constants,
             mRealFireDialog.destory();
             mRealFireDialog = null;
         }
+
+//        if (mSlidePopUtils != null) {
+//            mSlidePopUtils.destroySlideVerifyDialog();
+//            mSlidePopUtils = null;
+//        }
+
         if (bind != null) {
             bind.unbind();
             bind = null;
@@ -336,6 +342,8 @@ public class AlarmPopUtils implements Constants,
         });
     }
 
+//    private SlidePopUtils mSlidePopUtils;
+
     private void initRealFireDialog() {
         mRealFireDialog = new TipDialogUtils(mActivity);
         mRealFireDialog.setTipMessageText(mActivity.getString(R.string.confirm_upload_real_fire));
@@ -354,6 +362,33 @@ public class AlarmPopUtils implements Constants,
                 doCommit();
             }
         });
+
+
+//        mSlidePopUtils = new SlidePopUtils();
+//        mSlidePopUtils.setTitle(mActivity.getResources().getString(R.string.slide_dialog_title))
+//                .setDesc(mActivity.getResources().getString(R.string.slide_dialog_desc))
+//                .setListener(new SlidePopUtils.VerifityResultListener() {
+//                    @Override
+//                    public void onAccess(long time) {
+//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_success), Toast.LENGTH_SHORT).show();
+//                        mSlidePopUtils.dismissDialog();
+//                        doCommit();
+//                    }
+//
+//                    @Override
+//                    public void onFailed(int failCount) {
+//                        mSlidePopUtils.dismissDialog();
+//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onMaxFailed() {
+//                        mSlidePopUtils.dismissDialog();
+//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+
+
     }
 
     public void show(final AlarmPopupModel alarmPopupModel) {
@@ -439,6 +474,7 @@ public class AlarmPopUtils implements Constants,
         }
         if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
             mRealFireDialog.show();
+//            mSlidePopUtils.showDialog(mActivity);
             return;
         }
         setUpdateButtonClickable(false);
@@ -499,8 +535,8 @@ public class AlarmPopUtils implements Constants,
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 mActivity.startActivityForResult(intent, REQUEST_CODE_PLAY_RECORD);
             } else {
                 Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
@@ -736,79 +772,6 @@ public class AlarmPopUtils implements Constants,
             }
             btAlarmPopupCommit.setEnabled(canClick);
             btAlarmPopupCommit.setClickable(canClick);
-        }
-    }
-
-    public static void handlePhotoIntent(int requestCode, int resultCode, Intent data) {
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            //添加图片返回
-            if (data != null && requestCode == REQUEST_CODE_SELECT) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                if (tempImages != null) {
-                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.fromTakePhoto = fromTakePhoto;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            }
-        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-            //预览图片返回
-            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-                if (tempImages != null) {
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            }
-        } else if (resultCode == RESULT_CODE_RECORD) {
-            //拍视频
-            if (data != null && requestCode == REQUEST_CODE_RECORD) {
-                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
-                if (imageItem != null) {
-                    try {
-                        LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    ArrayList<ImageItem> tempImages = new ArrayList<>();
-                    tempImages.add(imageItem);
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
-                EventData eventData = new EventData();
-                eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                AlarmPopModel alarmPopModel = new AlarmPopModel();
-                alarmPopModel.requestCode = requestCode;
-                alarmPopModel.resultCode = resultCode;
-                eventData.data = alarmPopModel;
-                EventBus.getDefault().post(eventData);
-            }
-
-        }
-        //
-        try {
-            LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
         }
     }
 }

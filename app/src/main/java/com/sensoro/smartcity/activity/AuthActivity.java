@@ -12,7 +12,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
 import com.sensoro.smartcity.presenter.AuthActivityPresenter;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.NumKeyboard;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;

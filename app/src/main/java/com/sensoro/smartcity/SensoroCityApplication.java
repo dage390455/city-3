@@ -1,11 +1,14 @@
 package com.sensoro.smartcity;
 
+import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -20,29 +23,32 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.sensoro.common.base.BaseApplication;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.entity.IBeacon;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
-import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.smartcity.activity.SplashActivity;
+import com.sensoro.common.callback.BleObserver;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
-import com.sensoro.smartcity.widget.popup.GlideImageLoader;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.view.CropImageView;
+import com.sensoro.common.imagepicker.GlideImageLoader;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
+import com.tencent.bugly.beta.ui.UILifecycleListener;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,15 +61,15 @@ import java.util.LinkedHashMap;
  */
 
 public class SensoroCityApplication extends BaseApplication implements SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
-    public IWXAPI api;
+
     private static volatile SensoroCityApplication instance;
     public static NotificationUtils mNotificationUtils;
     private static PushHandler pushHandler;
     private final Handler taskHandler = new Handler(Looper.getMainLooper());
-    public volatile boolean hasGotToken = false;
+
     public static String VIDEO_PATH;
-    public AMapLocationClient mLocationClient;
-    public BLEDeviceManager bleDeviceManager;
+
+    //    public BLEDeviceManager bleDeviceManager;
     private final Runnable iBeaconTask = new Runnable() {
         private boolean noStateOut = true;
         private boolean noStateIn = true;
@@ -349,6 +355,10 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 @Override
                 public void run() {
                     Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
+                    //只收集release版本的日志信息，升级也只针对release版本
+                    if (!BuildConfig.DEBUG) {
+                        initBugLy();
+                    }
                 }
             }, 1000);
             initSensoroSDK();
@@ -358,87 +368,235 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
     }
 
     private void initBugLy() {
-        try {
+        synchronized (SensoroCityApplication.class) {
+            try {
 //  在这里设置strategy的属性，在bugly初始化时传入
-            final CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
-            strategy.setAppChannel("master");  //设置渠道
-            strategy.setAppVersion(BuildConfig.VERSION_NAME);      //App的版本
-            strategy.setAppPackageName("com.sensoro.smartcity");  //App的包名
-            //
-            /**
-             * true表示app启动自动初始化升级模块;
-             * false不会自动初始化;
-             * 开发者如果担心sdk初始化影响app启动速度，可以设置为false，
-             * 在后面某个时刻手动调用Beta.init(getApplicationContext(),false);
-             */
-            Beta.autoInit = true;
+                final CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+                strategy.setAppChannel("master");  //设置渠道
+                strategy.setAppVersion(BuildConfig.VERSION_NAME);      //App的版本
+                strategy.setAppPackageName("com.sensoro.smartcity");  //App的包名
+                //
+                /**
+                 * true表示app启动自动初始化升级模块;
+                 * false不会自动初始化;
+                 * 开发者如果担心sdk初始化影响app启动速度，可以设置为false，
+                 * 在后面某个时刻手动调用Beta.init(getApplicationContext(),false);
+                 */
+                Beta.autoInit = false;
 
-            /**
-             * true表示初始化时自动检查升级;
-             * false表示不会自动检查升级,需要手动调用Beta.checkUpgrade()方法;
-             */
-            Beta.autoCheckUpgrade = true;
+                /**
+                 * true表示初始化时自动检查升级;
+                 * false表示不会自动检查升级,需要手动调用Beta.checkUpgrade()方法;
+                 */
+                Beta.autoCheckUpgrade = true;
 
-            /**
-             * 设置升级检查周期为60s(默认检查周期为0s)，60s内SDK不重复向后台请求策略);
-             */
-            Beta.upgradeCheckPeriod = 60 * 1000;
+                /**
+                 * 设置升级检查周期为60s(默认检查周期为0s)，60s内SDK不重复向后台请求策略);
+                 */
+                Beta.upgradeCheckPeriod = 60 * 20 * 1000;
 
-            /**
-             * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
-             */
-            Beta.initDelay = 2 * 1000;
+                /**
+                 * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
+                 */
+                Beta.initDelay = 6 * 1000;
 
-            /**
-             * 设置通知栏大图标，largeIconId为项目中的图片资源;
-             */
+                /**
+                 * 设置通知栏大图标，largeIconId为项目中的图片资源;
+                 */
 //        Beta.largeIconId = R.drawable.ic_launcher;
 
-            /**
-             * 设置状态栏小图标，smallIconId为项目中的图片资源Id;
-             */
+                /**
+                 * 设置状态栏小图标，smallIconId为项目中的图片资源Id;
+                 */
 //        Beta.smallIconId = R.drawable.ic_launcher;
 
-            /**
-             * 设置更新弹窗默认展示的banner，defaultBannerId为项目中的图片资源Id;
-             * 当后台配置的banner拉取失败时显示此banner，默认不设置则展示“loading“;
-             */
+                /**
+                 * 设置更新弹窗默认展示的banner，defaultBannerId为项目中的图片资源Id;
+                 * 当后台配置的banner拉取失败时显示此banner，默认不设置则展示“loading“;
+                 */
 //        Beta.defaultBannerId = R.drawable.ic_launcher;
 
-            /**
-             * 设置sd卡的Download为更新资源保存目录;
-             * 后续更新资源会保存在此目录，需要在manifest中添加WRITE_EXTERNAL_STORAGE权限;
-             */
-            Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                /**
+                 * 设置sd卡的Download为更新资源保存目录;
+                 * 后续更新资源会保存在此目录，需要在manifest中添加WRITE_EXTERNAL_STORAGE权限;
+                 */
+                Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-            /**
-             * 点击过确认的弹窗在APP下次启动自动检查更新时会再次显示;
-             */
-            Beta.showInterruptedStrategy = true;
-            //
-            Beta.upgradeDialogLayoutId = R.layout.layout_upgrade_dialog;
-            /**
-             * 只允许在MainActivity上显示更新弹窗，其他activity上不显示弹窗;
-             * 不设置会默认所有activity都可以显示弹窗;
-             */
-//            Beta.canShowUpgradeActs.add(MainActivity.class);
-//            Beta.canShowUpgradeActs.add(LoginActivity.class);
-            //设置是否显示消息通知
-            Beta.enableNotification = true;
-            //设置Wifi下自动下载
-            Beta.autoDownloadOnWifi = false;
-            //设置是否显示弹窗中的apk信息
-            Beta.canShowApkInfo = true;
-            //关闭热更新
-            Beta.enableHotfix = false;
-            strategy.setCrashHandleCallback(new CrashHandler());
-            // 统一初始化Bugly产品，包含Beta
-            Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
-            Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
-            Beta.init(this.getApplicationContext(), BuildConfig.DEBUG);
-        } catch (Exception e) {
-            e.printStackTrace();
+                /**
+                 * 点击过确认的弹窗在APP下次启动自动检查更新时会再次显示;
+                 */
+                Beta.showInterruptedStrategy = true;
+                //
+                Beta.upgradeDialogLayoutId = R.layout.layout_upgrade_dialog;
+                /**
+                 * 只允许在MainActivity上显示更新弹窗，其他activity上不显示弹窗;
+                 * 不设置会默认所有activity都可以显示弹窗;
+                 */
+                Beta.canNotShowUpgradeActs.add(SplashActivity.class);
+                //设置是否显示消息通知
+                Beta.enableNotification = true;
+                //设置Wifi下自动下载
+                Beta.autoDownloadOnWifi = false;
+                //设置是否显示弹窗中的apk信息
+                Beta.canShowApkInfo = true;
+                //关闭热更新
+                Beta.enableHotfix = false;
+
+                //
+//                Beta.upgradeListener = new UpgradeListener() {
+//                    @Override
+//                    public void onUpgrade(int i, UpgradeInfo upgradeInfo, boolean isManual, boolean isSilence) {
+//                        try {
+//                            LogUtils.loge("Beta.upgrade onUpgrade i = " + i + ",upgradeInfo = " + upgradeInfo + ", isManual = " + isManual + ",isSilence = " + isSilence);
+//                        } catch (Throwable throwable) {
+//                            throwable.printStackTrace();
+//                        }
+//                    }
+//                };
+                //
+//                Beta.upgradeStateListener = new UpgradeStateListener() {
+//                    @Override
+//                    public void onUpgradeFailed(boolean isManual) {
+//                        try {
+//                            LogUtils.loge("Beta.upgrade onUpgradeFailed isManual = " + isManual);
+//                        } catch (Throwable throwable) {
+//                            throwable.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onUpgradeSuccess(boolean isManual) {
+//                        try {
+//                            LogUtils.loge("Beta.upgrade onUpgradeSuccess isManual = " + isManual);
+//                        } catch (Throwable throwable) {
+//                            throwable.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onUpgradeNoVersion(boolean isManual) {
+//                        try {
+//                            LogUtils.loge("Beta.upgrade onUpgradeNoVersion isManual = " + isManual);
+//                        } catch (Throwable throwable) {
+//                            throwable.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onUpgrading(boolean isManual) {
+//                        try {
+//                            LogUtils.loge("Beta.upgrade onUpgrading isManual = " + isManual);
+//                        } catch (Throwable throwable) {
+//                            throwable.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onDownloadCompleted(boolean isManual) {
+//                        try {
+//                            LogUtils.loge("Beta.upgrade onDownloadCompleted isManual = " + isManual);
+//                        } catch (Throwable throwable) {
+//                            throwable.printStackTrace();
+//                        }
+//                    }
+//                };
+                //
+                Beta.upgradeDialogLifecycleListener = new UILifecycleListener<UpgradeInfo>() {
+                    @Override
+                    public void onCreate(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onCreate");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        // 注：可通过这个回调方式获取布局的控件，如果设置了id，可通过findViewById方式获取，如果设置了tag，可以通过findViewWithTag，具体参考下面例子:
+
+                        // 通过id方式获取控件，并更改imageview图片
+                        TextView textView = (TextView) view.findViewById(R.id.tv_upgrade_info_url);
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    AppUtils.openNetPage(ActivityTaskManager.getInstance().getTopActivity(), "https://fir.im/g7jk");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+//                        imageView.setImageResource(R.mipmap.ic_launcher);
+//
+//                        // 通过tag方式获取控件，并更改布局内容
+//                        TextView textView = (TextView) view.findViewWithTag("textview");
+//                        textView.setText("my custom text");
+//
+//                        // 更多的操作：比如设置控件的点击事件
+//                        imageView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                Intent intent = new Intent(getApplicationContext(), OtherActivity.class);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                startActivity(intent);
+//                            }
+//                        });
+                    }
+
+                    @Override
+                    public void onStart(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onStart");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onResume(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onResume");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onPause(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onPause");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onStop(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onStop");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onDestroy(Context context, View view, UpgradeInfo upgradeInfo) {
+                        try {
+                            LogUtils.loge("Beta.upgrade onDestory");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+                };
+                strategy.setCrashHandleCallback(new CrashHandler());
+                // 统一初始化Bugly产品，包含Beta
+                Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
+                Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
+                Beta.init(getApplicationContext(), BuildConfig.DEBUG);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     private final class CrashHandler extends CrashReport.CrashHandleCallback {
@@ -531,6 +689,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
         String message = error.getMessage();
         try {
             LogUtils.loge(this, message);
+            LogUtils.loge(this, "初始化QCR失败 ： " + message);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -567,7 +726,6 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
 //        FMMapSDK.init(this);
         initImagePicker();
         locate();
-        initBugLy();
         //IBeacon相关
         SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
         IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();

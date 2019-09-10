@@ -29,7 +29,7 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.presenter.LoginPresenter;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.widget.dialog.LoginUrlDialogUtils;
 
 import java.util.Locale;
@@ -96,7 +96,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private void initView() {
         loginUrlDialogUtils = new LoginUrlDialogUtils(mActivity);
         loginUrlDialogUtils.registerListener(this);
-        loginUrlDialogUtils.setTitle("自定义例如：\ncity-dev-api.sensoro.com");
+        loginUrlDialogUtils.setTitle("例：city-dev");
         acLoginTvLogoBottom.setText(String.format(Locale.ROOT, "Copyright \u00a9 %s SENSORO", DateUtil.getStrTime_yy(System.currentTimeMillis())));
         if (acLoginEtAccount.getText().length() > 0 || acLoginEtPsd.getText().length() > 0) {
             updateLogoDescriptionState(false);

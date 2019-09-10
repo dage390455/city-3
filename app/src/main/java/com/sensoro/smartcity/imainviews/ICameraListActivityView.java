@@ -16,8 +16,6 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
 
     void setBaseStationType(List<CameraFilterModel.ListBean> data);
 
-    void onPullRefreshCompleteNoMoreData();
-
     void onPullRefreshComplete();
 
     void setDateSelectVisible(boolean isVisible);

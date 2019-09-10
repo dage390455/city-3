@@ -5,12 +5,12 @@ import android.text.TextUtils;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.bean.GrantsInfo;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import java.util.List;
 
 public class UserPermissionFactory {
-    public static EventLoginData createLoginData(UserInfo userInfo, String phoneId) {
+    public static EventLoginData /**/createLoginData(UserInfo userInfo, String phoneId) {
         final EventLoginData eventLoginData = new EventLoginData();
         GrantsInfo grants = userInfo.getGrants();
         //
@@ -49,9 +49,18 @@ public class UserPermissionFactory {
         eventLoginData.hasSignalConfig = false;
         eventLoginData.hasForceUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
+        //设备控制
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
         eventLoginData.hasDeviceMuteTime = getHasMuteTime(grants);
+        eventLoginData.hasDeviceControlCheck = getHasControlCheck(grants);
+        eventLoginData.hasDeviceControlReset = getHasControlReset(grants);
+        eventLoginData.hasDeviceControlPassword = getHasControlPassword(grants);
+        eventLoginData.hasDeviceControlView = getHasControlView(grants);
+        eventLoginData.hasDeviceControlConfig = getHasControlConfig(grants);
+        eventLoginData.hasDeviceControlOpen = getHasControlOpen(grants);
+        eventLoginData.hasDeviceControlClose = getHasControlClose(grants);
+        //
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
@@ -63,6 +72,11 @@ public class UserPermissionFactory {
         eventLoginData.hasMonitorTaskConfirm = getHasMonitorTaskConfirm(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
+//        if("admin".equalsIgnoreCase(eventLoginData.roles)){
+//            eventLoginData.hasControllerAid = false;
+//        }else{
+//            eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
+//        }
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
         try {
             LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
@@ -313,6 +327,7 @@ public class UserPermissionFactory {
 
     /**
      * 权限 briefList statusStatistics list 权限
+     *
      * @param grants
      * @return
      */
@@ -449,6 +464,118 @@ public class UserPermissionFactory {
             List<String> grantsControl = grants.getControl();
             if (grantsControl != null) {
                 return grantsControl.contains("mute_time");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有重置权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlReset(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("reset");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 控制密码修改
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlPassword(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("password");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 查询
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlView(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("view");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 自检
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlCheck(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("check");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 断电
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlOpen(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("open");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 上电
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlClose(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("close");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 配置
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlConfig(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("config");
             }
         }
         return false;

@@ -16,8 +16,11 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.SensoroToast;
@@ -26,13 +29,14 @@ import com.sensoro.smartcity.cameralibrary.JCameraView;
 import com.sensoro.smartcity.cameralibrary.listener.JCameraListener;
 import com.sensoro.smartcity.imainviews.ITakeRecordActivityView;
 import com.sensoro.smartcity.presenter.TakeRecordActivityPresenter;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import java.io.File;
 import java.io.Serializable;
 
 import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 
+@Route(path = ARouterConstants.ACTIVITY_TAKE_RECORD)
 public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, TakeRecordActivityPresenter> implements ITakeRecordActivityView, View.OnClickListener {
 
     private ImageView imv_back;
@@ -84,7 +88,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
                 imageItem.path = videoPath;
                 imageItem.thumbPath = videoThumbPath;
                 imageItem.name = videoPath.substring(videoPath.lastIndexOf("/") + 1);
-                intent.putExtra("path_record", (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
                 setFinishResult(RESULT_CODE_RECORD, intent);
                 finishAc();
 
@@ -101,7 +105,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
 
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar.transparentStatusBar().init();
         return true;

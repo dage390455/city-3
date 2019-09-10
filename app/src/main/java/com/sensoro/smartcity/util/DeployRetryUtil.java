@@ -15,6 +15,7 @@ import com.sensoro.common.server.bean.DeployStationInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import java.util.ArrayList;

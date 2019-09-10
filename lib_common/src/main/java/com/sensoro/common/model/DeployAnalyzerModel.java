@@ -25,6 +25,7 @@ public class DeployAnalyzerModel implements Serializable {
     public String deviceType;
     public int mapSourceType = 1;
     public String hls;
+    public String flv;
     public String installationMode;
     public String orientation;
     public DeployControlSettingData settingData;

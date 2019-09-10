@@ -22,8 +22,8 @@ import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
 
 import org.greenrobot.eventbus.EventBus;

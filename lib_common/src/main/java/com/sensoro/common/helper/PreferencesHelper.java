@@ -107,9 +107,18 @@ public final class PreferencesHelper implements Constants {
 //        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasForceUpload);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
+        //
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, eventLoginData.hasDeviceMuteLong);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME, eventLoginData.hasDeviceMuteTime);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_RESET, eventLoginData.hasDeviceControlReset);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_PASSWORD, eventLoginData.hasDeviceControlPassword);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_VIEW, eventLoginData.hasDeviceControlView);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_CHECK, eventLoginData.hasDeviceControlCheck);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_CONFIG, eventLoginData.hasDeviceControlConfig);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_OPEN, eventLoginData.hasDeviceControlOpen);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_CLOSE, eventLoginData.hasDeviceControlClose);
+        //
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, eventLoginData.hasDeviceFirmwareUpdate);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, eventLoginData.hasDeviceDemoMode);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
@@ -128,92 +137,65 @@ public final class PreferencesHelper implements Constants {
         if (mEventLoginData == null) {
             SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                     .MODE_PRIVATE);
-            String phoneId = sp.getString(EXTRA_PHONE_ID, null);
-            String userId = sp.getString(EXTRA_USER_ID, null);
+            final EventLoginData eventLoginData = new EventLoginData();
+            eventLoginData.phoneId = sp.getString(EXTRA_PHONE_ID, null);
+            eventLoginData.userId = sp.getString(EXTRA_USER_ID, null);
+            eventLoginData.userName = sp.getString(EXTRA_USER_NAME, null);
+            eventLoginData.phone = sp.getString(EXTRA_PHONE, null);
+            eventLoginData.roles = sp.getString(EXTRA_USER_ROLES, null);
+            eventLoginData.accountId = sp.getString(EXTRA_USER_ACCOUNT_ID, null);
             try {
-                LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
+                LogUtils.loge(this, "phoneId = " + eventLoginData.phoneId + ",userId = " + eventLoginData.userId);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
-            String userName = sp.getString(EXTRA_USER_NAME, null);
-            String phone = sp.getString(EXTRA_PHONE, null);
-            String roles = sp.getString(EXTRA_USER_ROLES, null);
-            String accountId = sp.getString(EXTRA_USER_ACCOUNT_ID, null);
-            boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
-            boolean hasStationDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, false);
-            boolean hasStationList = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_LIST, false);
-            boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
-            boolean hasContractCreate = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_CREATE, false);
-            boolean hasContractModify = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_MODIFY, false);
-            boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, false);
-            boolean hasMerchantChange = sp.getBoolean(EXTRA_GRANTS_HAS_MERCHANT_CHANGE, false);
-            boolean hasInspectionTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, false);
-            boolean hasInspectionTaskModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, false);
-            boolean hasInspectionDeviceList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, false);
-            boolean hasInspectionDeviceModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, false);
-            boolean hasAlarmInfo = sp.getBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, false);
-            boolean hasMalfunction = sp.getBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, false);
-            boolean hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
-            boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
+            //
+            eventLoginData.isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
+            eventLoginData.hasStationDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, false);
+            eventLoginData.hasStationList = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_LIST, false);
+            eventLoginData.hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
+            eventLoginData.hasContractCreate = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_CREATE, false);
+            eventLoginData.hasContractModify = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_MODIFY, false);
+            eventLoginData.hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
+            eventLoginData.hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, false);
+            eventLoginData.hasMerchantChange = sp.getBoolean(EXTRA_GRANTS_HAS_MERCHANT_CHANGE, false);
+            eventLoginData.hasInspectionTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, false);
+            eventLoginData.hasInspectionTaskModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, false);
+            eventLoginData.hasInspectionDeviceList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, false);
+            eventLoginData.hasInspectionDeviceModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, false);
+            eventLoginData.hasAlarmInfo = sp.getBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, false);
+            eventLoginData.hasMalfunction = sp.getBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, false);
+            eventLoginData.hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
+            eventLoginData.hasSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
 //            boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
-            boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
-            boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
-            boolean hasDeviceMuteShort = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, false);
-            boolean hasDeviceMuteLong = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, false);
-            boolean hasDeviceMuteTime = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME, false);
-            boolean hasDeviceFirmUpdate = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, false);
-            boolean hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
-            boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
-            boolean hasDeviceCameraList = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, false);
-            boolean hasDeviceCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, false);
-            boolean hasNameplateList = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, false);
-            boolean hasNameplateDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, false);
-            boolean hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
-            boolean hasMonitorTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, false);
-            boolean hasMonitorTaskConfirm = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, false);
-            final EventLoginData eventLoginData = new EventLoginData();
-            eventLoginData.phoneId = phoneId;
-            eventLoginData.userId = userId;
-            eventLoginData.userName = userName;
-            eventLoginData.phone = phone;
-            eventLoginData.roles = roles;
-            eventLoginData.accountId = accountId;
-            eventLoginData.hasSubMerchant = hasSubMerchant;
-            eventLoginData.hasMerchantChange = hasMerchantChange;
-            eventLoginData.isSupperAccount = isSupperAccount;
-            eventLoginData.hasStationDeploy = hasStationDeploy;
-            eventLoginData.hasStationList = hasStationList;
-            eventLoginData.hasContract = hasContract;
-            eventLoginData.hasContractCreate = hasContractCreate;
-            eventLoginData.hasContractModify = hasContractModify;
-            eventLoginData.hasScanLogin = hasScanLogin;
-            eventLoginData.hasInspectionTaskList = hasInspectionTaskList;
-            eventLoginData.hasInspectionTaskModify = hasInspectionTaskModify;
-            eventLoginData.hasInspectionDeviceList = hasInspectionDeviceList;
-            eventLoginData.hasInspectionDeviceModify = hasInspectionDeviceModify;
-            eventLoginData.hasAlarmInfo = hasAlarmInfo;
-            eventLoginData.hasMalfunction = hasMalfunction;
-            eventLoginData.hasDeviceBrief = hasDeviceBrief;
-            eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
-            //TODO 统一去掉信号配置
-//            eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
+            //这里去掉具有信号配置权限
             eventLoginData.hasSignalConfig = false;
-            eventLoginData.hasForceUpload = hasBadSignalUpload;
-            eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
-            eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
-            eventLoginData.hasDeviceMuteLong = hasDeviceMuteLong;
-            eventLoginData.hasDeviceMuteTime = hasDeviceMuteTime;
-            eventLoginData.hasDeviceFirmwareUpdate = hasDeviceFirmUpdate;
-            eventLoginData.hasDeviceDemoMode = hasDeviceDemoMode;
-            eventLoginData.hasControllerAid = hasControllerAid;
-            eventLoginData.hasDeviceCameraList = hasDeviceCameraList;
-            eventLoginData.hasDeviceCameraDeploy = hasDeviceCameraDeploy;
-            eventLoginData.hasNameplateList = hasNameplateList;
-            eventLoginData.hasNameplateDeploy = hasNameplateDeploy;
-            eventLoginData.hasIBeaconSearchDemo = hasIBeaconSearchDemo;
-            eventLoginData.hasMonitorTaskList = hasMonitorTaskList;
-            eventLoginData.hasMonitorTaskConfirm = hasMonitorTaskConfirm;
+            eventLoginData.hasForceUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
+
+            eventLoginData.hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
+            //设备控制权限
+            eventLoginData.hasDeviceMuteShort = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, false);
+            eventLoginData.hasDeviceMuteLong = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, false);
+            eventLoginData.hasDeviceMuteTime = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME, false);
+            eventLoginData.hasDeviceControlReset = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_RESET, false);
+            eventLoginData.hasDeviceControlPassword = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_PASSWORD, false);
+            eventLoginData.hasDeviceControlView = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_VIEW, false);
+            eventLoginData.hasDeviceControlCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_CHECK, false);
+            eventLoginData.hasDeviceControlConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_CONFIG, false);
+            eventLoginData.hasDeviceControlOpen = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_OPEN, false);
+            eventLoginData.hasDeviceControlClose = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CONTROL_CLOSE, false);
+            //
+            eventLoginData.hasDeviceFirmwareUpdate = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, false);
+            eventLoginData.hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
+            eventLoginData.hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
+            eventLoginData.hasDeviceCameraList = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, false);
+            eventLoginData.hasDeviceCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, false);
+            eventLoginData.hasNameplateList = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, false);
+            eventLoginData.hasNameplateDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, false);
+            eventLoginData.hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
+            eventLoginData.hasMonitorTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, false);
+            eventLoginData.hasMonitorTaskConfirm = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, false);
+
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;

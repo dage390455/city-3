@@ -18,7 +18,6 @@ import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.NearByDeviceActivity;
 import com.sensoro.smartcity.activity.OfflineDeployActivity;
@@ -289,7 +288,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 //                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:
-                startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
+
+//                startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
+                mPresenter.doBaseStationList();
                 break;
             case R.id.fg_main_manage_ll_nearby:
                 startAC(new Intent(mRootFragment.getActivity(), NearByDeviceActivity.class));

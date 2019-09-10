@@ -21,12 +21,12 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.cameralibrary.util.LogUtil;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import static com.sensoro.smartcity.temp.RecyclerItemViewHolder.TAG;
 

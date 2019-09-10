@@ -77,7 +77,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':lib_common')
     //
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor deps.arouter_compiler
     annotationProcessor deps.butterknife_compiler
     //
@@ -88,12 +87,6 @@ dependencies {
     //Calendar view
     //implementation project(':calendarview')
     //
-    //3D地图so及jar
-    implementation deps.amap_3dmap
-    //定位功能
-    implementation deps.amap_location
-    //搜索功能
-    implementation deps.amap_search
     //图片预览
     implementation 'com.github.MikeOrtiz:TouchImageView:2.2.0'
     //播放器
@@ -102,4 +95,10 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
     implementation project(path: ':bottomnavigation')
+
+    //组件调用需要集成登录测试module
+    if(isModule.toBoolean()){
+        implementation project(path: ':logintest')
+    }
+
 }

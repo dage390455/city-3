@@ -698,9 +698,6 @@ public class DeviceInfo implements Serializable, Comparable {
 //        this.deviceGroup = deviceGroup;
 //    }
 
-    public static class OtherBean implements Serializable {
-    }
-
     public static class DeviceGroup implements Serializable {
         private String _id;
         private String id;

@@ -39,6 +39,8 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -47,8 +49,6 @@ import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -310,6 +310,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     throwable.printStackTrace();
                                 }
 
+
+                                try {
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceInfoListener:" + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.getInstance().getGson().fromJson(json,
                                             DeviceInfo.class);
@@ -395,6 +401,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     throwable.printStackTrace();
                                 }
                                 try {
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmCountListener:" + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                try {
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmCount.class);
                                     List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
                                     DeviceAlarmCount.AllBean allBean = all.get(0);
@@ -431,8 +442,19 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
+
+                                try {
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmDisplayStatusListener:" + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 try {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmLogInfo.class);
+                                    String deviceType = deviceAlarmLogInfo.getDeviceType();
+                                    if ("fire_host".equals(deviceType)) {
+                                        //屏蔽消防主机
+                                        return;
+                                    }
                                     String event = deviceAlarmLogInfo.getEvent();
                                     EventAlarmStatusModel eventAlarmStatusModel = new EventAlarmStatusModel();
                                     eventAlarmStatusModel.deviceAlarmLogInfo = deviceAlarmLogInfo;
@@ -479,8 +501,27 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         public void call(Object... args) {
             try {
                 synchronized (MainPresenter.DeviceFlushListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            try {
+                                LogUtils.loge(this, "socket-->>> DeviceFlushListener json = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+
+                            try {
+                                LogUtils.loge("AlarmDeviceCountsBean", "DeviceFlushListener:" + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        }
+                    }
                     //TODO 设备删除做的操作
                     EventBus.getDefault().post(Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH);
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -551,7 +592,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                         netWorkStateModel.ping = pingNetCanUse;
                         EventBus.getDefault().post(netWorkStateModel);
                         //TODO 暂时去掉频繁后台请求
-//                            Beta.checkUpgrade(false, false);
+//                        Beta.checkUpgrade(false, false);
 
                         LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                     } catch (Throwable throwable) {
@@ -818,18 +859,32 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             return;
         }
         String[] str = {"0"};
-
+        try {
+            LogUtils.loge("freshAlarmCount start");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         RetrofitServiceHelper.getInstance().getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
                 getView().setAlarmWarnCount(count);
                 needFreshAlarmCount = false;
+                try {
+                    LogUtils.loge("freshAlarmCount onCompleted count = " + count);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setAlarmWarnCount(0);
+                try {
+                    LogUtils.loge("freshAlarmCount onCompleted errorMsg = " + errorMsg);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }
@@ -849,18 +904,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getView().isHomeFragmentChecked()) {
-                if (homeFragment.onBackPressed()) {
-                    return true;
+            if (isAttachedView()) {
+                if (getView().isHomeFragmentChecked()) {
+                    if (homeFragment != null && homeFragment.onBackPressed()) {
+                        return true;
+                    }
                 }
+                exit();
+                return true;
             }
-            exit();
-            return true;
+
         }
         return false;
     }
 
-    public void exit() {
+    private void exit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             getView().toastShort(mContext.getResources().getString(R.string.exit_main));
             exitTime = System.currentTimeMillis();
@@ -871,7 +929,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         // 对照片信息统一处理
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);
         }

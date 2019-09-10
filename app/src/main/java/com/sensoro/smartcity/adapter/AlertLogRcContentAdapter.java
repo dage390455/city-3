@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -28,7 +29,7 @@ import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.HtmlImageSpan;
 import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 
@@ -440,6 +441,77 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             SpannableString spannableString = new SpannableString(alarmDetailInfo);
             holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
+        } else if ("operation".equals(recordInfo.getType())) {
+            //TODO
+            holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(mContext.getString(R.string.operator));
+            String name = recordInfo.getName();
+            String category = recordInfo.getCategory();
+            String source = recordInfo.getSource();
+            stringBuilder.append("【").append(name).append("】").append(" ").append(mContext.getString(R.string.by)).append(" ");
+            if ("app".equals(source)) {
+                stringBuilder.append("APP");
+            } else if ("platform".equals(source)) {
+                stringBuilder.append("Web");
+            }
+            stringBuilder.append(" ");
+            if (!TextUtils.isEmpty(category)) {
+                switch (category) {
+                    case MonitorPointOperationCode.ERASURE_STR:
+                        stringBuilder.append(mContext.getString(R.string.monitor_point_detail_erasure));
+                        //短消音
+                        break;
+                    case MonitorPointOperationCode.ERASURE_LONG_STR:
+                        stringBuilder.append(mContext.getString(R.string.monitor_point_detail_erasure_long));
+                        //长消音
+                        break;
+                    case MonitorPointOperationCode.ERASURE_TIME_STR:
+                        stringBuilder.append(mContext.getString(R.string.monitor_point_detail_erasure_time));
+                        AlarmInfo.RecordInfo.ValueInfo value = recordInfo.getValue();
+                        if (value != null) {
+                            int beepMuteTime = value.getBeepMuteTime();
+                            stringBuilder.append(" ").append(beepMuteTime).append(mContext.getString(R.string.minute));
+                        }
+                        //定时消音
+                        break;
+                }
+            }
+            stringBuilder.append(" ").append(mContext.getString(R.string.result)).append(":").append(" ");
+            Integer taskStatus = recordInfo.getTaskStatus();
+            if (taskStatus == null) {
+                stringBuilder.append(mContext.getString(R.string.unknown));
+            } else {
+                // 消音任务状态 0-成功，1-失败，2-未知
+                switch (taskStatus) {
+                    case 0:
+                        stringBuilder.append(mContext.getString(R.string.success));
+                        break;
+                    case 1:
+                        String result = mContext.getString(R.string.failed);
+                        stringBuilder.append(result);
+                        try {
+                            //防止字段截取出错
+                            String allMsg = stringBuilder.toString();
+                            SpannableString spannableString = new SpannableString(allMsg);
+                            spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_f34a4a)), allMsg.length() - result.length(), allMsg.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            holder.itemAlertContentTvContent.setText(spannableString);
+                            holder.llConfirm.setVisibility(View.GONE);
+                            return;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    case 2:
+                        stringBuilder.append(mContext.getString(R.string.unknown));
+                        break;
+                    default:
+                        stringBuilder.append(mContext.getString(R.string.unknown));
+                        break;
+                }
+            }
+            holder.itemAlertContentTvContent.setText(stringBuilder.toString());
+            holder.llConfirm.setVisibility(View.GONE);
+
         }
 
     }

@@ -8,7 +8,7 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
-    def verName = "3.3.7"
+    def verName = "3.4.0"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -148,12 +148,12 @@ APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
     }
 
     // 多渠道打包
-    productFlavors {
-        SensoroCity {}
-        productFlavors.all { flavor ->
-            flavor.manifestPlaceholders = [AVOS_CHANNEL_VALUE: name]
-        }
-    }
+//    productFlavors {
+//        SensoroCity {}
+//        productFlavors.all { flavor ->
+//            flavor.manifestPlaceholders = [AVOS_CHANNEL_VALUE: name]
+//        }
+//    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -215,7 +215,7 @@ APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    api fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     androidTestImplementation(deps.support.test_espresso, {
@@ -235,8 +235,7 @@ dependencies {
     }
     debugImplementation deps.leakcanary_debug
     releaseImplementation deps.leakcanary_release
-    //  更改扫描二维码为maven库
-    implementation deps.bga_qrcode_zxing
+
     //
     //protobuf
     implementation deps.protobuf
@@ -247,16 +246,15 @@ dependencies {
     debugImplementation deps.blockcanary_debug
     releaseImplementation deps.blockcanary_release
     //
-    implementation files('libs/ocr-sdk.jar')
+//    implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
-    //
-    implementation project(':sensor-kit')
     //
     implementation project(':bottomnavigation')
     //Calendar view
     implementation project(':calendarview')
     //
     implementation project(path: ':pickerview')
+
     //
     implementation(deps.mapbox) {
         transitive = true
@@ -267,17 +265,15 @@ dependencies {
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }
-    //mp表格组件
-    implementation deps.MPAndroidChart
-    //二维码扫描
-    api(project(':simplescanner')) {
-        exclude group: "com.amap.api"
-    }
+
+
     //播放器
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
+
+//    implementation project(':imagepicker')
     //
     if (!isModule.toBoolean()) {
         implementation project(':nameplate')
@@ -285,14 +281,29 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(':city_camera')
     }
+
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':inspectiontask')
+    }
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':contractmanager')
+    }
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':basestation')
+    }
+
+
+
+
+
     //个推
     implementation deps.getui
-    //3D地图so及jar
-    implementation deps.amap_3dmap
-    //定位功能
-    implementation deps.amap_location
-    //搜索功能
-    implementation deps.amap_search
+//    //3D地图so及jar
+//    implementation deps.amap_3dmap
+//    //定位功能
+//    implementation deps.amap_location
+//    //搜索功能
+//    implementation deps.amap_search
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 

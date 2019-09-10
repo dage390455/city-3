@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/layout_bg"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/prompt"
+        android:textSize="18dp" />
+
+    <EditText
+        android:id="@+id/dialog_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/dialog_input_tip_detail"
+        android:background="@null"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@drawable/my_cursor"
+        android:gravity="center"
+        android:minLines="2" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/item_sensor_line"
+            android:text="@string/cancel" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="#D1D1D1"></View>
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/item_sensor_line"
+            android:text="@string/dialog_input_confirm" />
+    </LinearLayout>
+</LinearLayout>

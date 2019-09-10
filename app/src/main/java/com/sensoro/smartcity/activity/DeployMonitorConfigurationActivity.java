@@ -29,7 +29,7 @@ import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
+import com.sensoro.common.widgets.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +101,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     private void initView() {
         includeTextTitleImvArrowsLeft.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1dbb99));
         initTipDialog();
         initOperatingDialog();
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.initial_configuration));

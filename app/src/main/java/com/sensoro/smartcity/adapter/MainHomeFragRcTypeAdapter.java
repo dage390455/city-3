@@ -17,7 +17,7 @@ import com.sensoro.common.iwidget.IOnDestroy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.common.utils.AppUtils;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.common.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -146,7 +146,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         HomeTopModel homeTopModel = mData.get(position);
-        int type = homeTopModel.type;
+        int type = homeTopModel.status;
         freshType(holder, type, position);
         int value = homeTopModel.value;
         freshValue(holder, value);
@@ -199,14 +199,18 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
             int pxL = AppUtils.dp2px(mContext, 14);
             lp.setMargins(pxL, 0, 0, 0);
             holder.homeStatusRoot.setLayoutParams(lp);
+        } else if (position == mData.size() - 1) {
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
+            int pxR = AppUtils.dp2px(mContext, 14);
+            lp.setMargins(0, 0, pxR, 0);
+            holder.homeStatusRoot.setLayoutParams(lp);
         } else {
-            if (position == mData.size() - 1) {
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
-                int pxR = AppUtils.dp2px(mContext, 14);
-                lp.setMargins(0, 0, pxR, 0);
-                holder.homeStatusRoot.setLayoutParams(lp);
-            }
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
+            int pxR = AppUtils.dp2px(mContext, 14);
+            lp.setMargins(0, 0, 0, 0);
+            holder.homeStatusRoot.setLayoutParams(lp);
         }
+
     }
 
     @Override

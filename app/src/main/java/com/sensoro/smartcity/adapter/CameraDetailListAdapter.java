@@ -1,8 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,23 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +32,11 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
     private final Context mContext;
     private final List<DeviceCameraFacePic> mList = new ArrayList<>();
     private CameraDetailListClickListener mListener;
+
+    public int getmClickPosition() {
+        return mClickPosition;
+    }
+
     private int mClickPosition = -1;
 
     public CameraDetailListAdapter(Context context) {
@@ -96,26 +92,17 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
             }
             url = url.trim();
         }
-        Uri parse = Uri.parse(url);
         Glide.with(mContext)                             //配置上下文
-                .load(parse)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        try {
-                            LogUtils.loge("onLoadFailed");
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .apply(new RequestOptions().transform(new GlideCircleTransform(mContext)).error(R.drawable.person_locus_placeholder).placeholder(R.drawable.person_locus_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
+                .load(url)
+                .apply(new RequestOptions()
+//                        .transform(new GlideCircleTransform(mContext))
+//                        .transform(new CircleCrop())
+                        .circleCrop()
+                        .error(R.drawable.person_locus_placeholder)
+                        .placeholder(R.drawable.person_locus_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(false)
+                        .dontAnimate())
 
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                 //设置错误图片

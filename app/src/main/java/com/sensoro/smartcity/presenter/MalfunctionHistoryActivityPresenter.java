@@ -12,7 +12,7 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.CalendarDateModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,11 +97,10 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                         if (data == null || data.size() == 0) {
                             cur_page--;
                             getView().toastShort(mActivity.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, malfunctionListRsp);
-                            getView().onPullRefreshComplete();
                         }
+                        getView().onPullRefreshComplete();
                     }
                 });
                 break;

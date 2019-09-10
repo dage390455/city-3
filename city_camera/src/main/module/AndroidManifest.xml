@@ -10,15 +10,18 @@
         android:theme="@style/MyTheme"
         tools:replace="android:theme">
 
+
         <activity
-            android:name="com.sensoro.city_camera.activity.LauncherActivity"
+            android:name="com.sensoro.city_camera.debug.CityCameraTestActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.sensoro.city_camera.activity.LauncherActivity" />
         <activity
             android:name="com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
@@ -29,9 +32,9 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="feb394e9f7754ae572cc77a0bfc723e5" />
-        <meta-data
-            android:name="com.fengmap.mapapi.appkey"
-            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />
+        <!--        <meta-data-->
+        <!--            android:name="com.fengmap.mapapi.appkey"-->
+        <!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
         <service android:name="com.amap.api.location.APSService" />
     </application>
 

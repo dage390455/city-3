@@ -28,7 +28,7 @@ public class BleConfigurationDialogUtils {
         mTv.setText(message);
         Window window = mDialog.getWindow();
         if (window != null) {
-            window.setDimAmount(0f);
+//            window.setDimAmount(0f);
         }
         rotateAnimation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(1000);
