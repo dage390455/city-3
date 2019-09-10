@@ -159,7 +159,6 @@ public class ListMultiNormalAdapter extends BaseAdapter {
             holder.gsyVideoPlayer.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    videoModel.state = -1;
                     holder.gsyVideoPlayer.getMaskLayoutTop().setVisibility(View.GONE);
                     holder.gsyVideoPlayer.getrMobileData().setVisibility(View.GONE);
                     holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
