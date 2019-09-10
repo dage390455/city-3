@@ -370,7 +370,6 @@ public class AlarmPopUtils implements Constants,
                 .setListener(new SlidePopUtils.VerifityResultListener() {
                     @Override
                     public void onAccess(long time) {
-                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_success), Toast.LENGTH_SHORT).show();
                         mSlidePopUtils.dismissDialog();
                         doCommit();
                     }
@@ -378,13 +377,13 @@ public class AlarmPopUtils implements Constants,
                     @Override
                     public void onFailed(int failCount) {
                         mSlidePopUtils.dismissDialog();
-                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
+                        SensoroToast.getInstance().makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onMaxFailed() {
                         mSlidePopUtils.dismissDialog();
-                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
+                        SensoroToast.getInstance().makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
                     }
                 });
 
