@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ac_login_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/login_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="58dp"
+            android:contentDescription="@null"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_login_logo" />
+
+        <TextView
+            android:id="@+id/ac_login_tv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="36dp"
+            android:text="@string/sensoro_city"
+            android:textColor="@color/c_252525"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/ac_login_tv_logo_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:text="@string/login_tip"
+            android:textColor="@color/c_252525"
+            android:textSize="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ac_login_imv_account_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="14dp"
+                android:contentDescription="@null" />
+
+            <EditText
+                android:id="@+id/ac_login_et_account"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/login_input_account_tip"
+                android:singleLine="true"
+                android:textColor="@color/c_252525"
+                android:textColorHint="@color/c_a6a6a6"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
+            <ImageView
+                android:id="@+id/ac_login_imv_account_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ac_login_imv_psd_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="14dp"
+                android:contentDescription="@null" />
+
+            <EditText
+                android:id="@+id/ac_login_et_psd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/login_input_password_tip"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="@color/c_252525"
+                android:textColorHint="@color/c_a6a6a6"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
+            <ImageView
+                android:id="@+id/ac_login_imv_psd_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/login_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:background="@drawable/shape_button"
+                android:gravity="center"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="@dimen/city_btn_text_size" />
+
+            <TextView
+                android:id="@+id/tv_url_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="10dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/ac_login_tv_logo_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y50"
+            android:text="Copyright © 2018 SENSORO" />
+    </LinearLayout>
+</FrameLayout>

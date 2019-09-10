@@ -15,7 +15,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;

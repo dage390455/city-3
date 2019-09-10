@@ -36,7 +36,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
-import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.common.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.SortConditionModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
@@ -45,7 +45,7 @@ import com.sensoro.smartcity.widget.CustomVRecyclerView;
 import com.sensoro.smartcity.widget.SensoroHomeAlarmView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerScaleHelper;
-import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+import com.sensoro.common.widgets.SelectDeviceTypePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectSortConditionPopUtils;
 
 import java.util.List;
@@ -239,6 +239,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 } catch (Exception e) {
                     e.printStackTrace();
                     //TODO 可以考虑异常刷新所有 并重置
+                    mPresenter.requestInitData(true,true);
                 }
 
             }

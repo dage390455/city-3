@@ -3,10 +3,12 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.DeviceNotificationBean;
@@ -18,15 +20,15 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
-import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
-import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
-import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.CityAppUtils;
+import com.sensoro.common.utils.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -159,8 +161,14 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         if (deviceNotifications.isEmpty()) {
             getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
         } else {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
-            dialogUtil.show(deviceNotifications);
+            if (deviceNotifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
+                dialogUtil.show(deviceNotifications);
+            } else {
+                DeviceNotificationBean deviceNotificationBean = deviceNotifications.get(0);
+                String content = deviceNotificationBean.getContent();
+                AppUtils.diallPhone(content, mActivity);
+            }
         }
 
 //        String tempNumber = mMalfunctionInfo.getDeviceNotification().getContent();
@@ -193,11 +201,10 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         InspectionTaskDeviceDetail inspectionTaskDeviceDetail = new InspectionTaskDeviceDetail();
         inspectionTaskDeviceDetail.setSn(deviceSN);
         //
-        Intent intent = new Intent(mActivity, ScanActivity.class);
-        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE);
-        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, inspectionTaskDeviceDetail);
-        getView().startAC(intent);
-
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE);
+        bundle.putSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, inspectionTaskDeviceDetail);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mActivity);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -35,12 +35,19 @@ android {
         }
 
     }
+        sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+
+    }
 
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     //
+    api project(':lib_res')
     api deps.support.app_compat
     api deps.support.multidex
     api deps.support.recyclerview
@@ -98,4 +105,26 @@ dependencies {
     annotationProcessor deps.arouter_compiler
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     api project(path: ':calendarview')
+
+    api files('libs/ocr-sdk.jar')
+
+    //mp表格组件
+    api deps.MPAndroidChart
+
+
+    //  更改扫描二维码为maven库
+    api deps.bga_qrcode_zxing
+    //二维码扫描
+    api(project(':simplescanner')) {
+        exclude group: "com.amap.api"
+    }
+
+    //
+    api project(':sensor-kit')
+    //3D地图so及jar
+    api deps.amap_3dmap
+    //定位功能
+    api deps.amap_location
+    //搜索功能
+    api deps.amap_search
 }

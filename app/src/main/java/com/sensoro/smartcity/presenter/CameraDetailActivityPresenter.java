@@ -21,8 +21,8 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.model.CalendarDateModel;
+import com.sensoro.common.widgets.CalendarPopUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -202,7 +202,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             endTime = String.valueOf(endDateTime);
         }
         //获取图片是根绝minID向后推limit个条目，服务器做的限定
-        RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, 20, minId, startTime, endTime)
+        RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, Constants.DEFAULT_PAGE_SIZE, minId, startTime, endTime)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraFacePic>>>(this) {
             @Override
             public void onCompleted(final ResponseResult<List<DeviceCameraFacePic>> deviceCameraFacePicListRsp) {
@@ -266,25 +266,14 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         EventBus.getDefault().unregister(this);
     }
 
-//    private void setLastCover(DeviceCameraFacePic model) {
-//        Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
-//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-//                //缓存全尺寸
-//                .into(getView().getImageView());
-//
-//    }
 
     public void onCameraItemClick(final int index) {
-//        GSYVideoManager.instance().setTimeOut(1, true);
         if (isAttachedView()) {
             List<DeviceCameraFacePic> rvListData = getView().getRvListData();
             if (rvListData != null) {
 
                 DeviceCameraFacePic model = rvListData.get(index);
                 String captureTime1 = model.getCaptureTime();
-
-
-//            setLastCover(model);
 
                 getView().loadCoverImage(model.getSceneUrl());
                 long time;
@@ -385,7 +374,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                 getView().loadCoverImage(lastCover);
 
-//            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
                 itemUrl = null;
                 itemTitle = null;
             }
@@ -438,7 +426,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                 getView().startPlayLogic(itemUrl, itemTitle);
 
-//                getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
             }
         }
     }
@@ -459,7 +446,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     url = hls;
 
                     getView().loadCoverImage(lastCover);
-//                    getLastCoverImage(lastCover);
                     deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
                         if (!TextUtils.isEmpty(itemTitle)) {

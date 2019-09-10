@@ -35,21 +35,20 @@ import com.sensoro.libbleserver.ble.entity.IBeacon;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.activity.SplashActivity;
-import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.common.callback.BleObserver;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.util.NotificationUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
-import com.sensoro.smartcity.widget.popup.GlideImageLoader;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.view.CropImageView;
+import com.sensoro.common.imagepicker.GlideImageLoader;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.ui.UILifecycleListener;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,15 +61,15 @@ import java.util.LinkedHashMap;
  */
 
 public class SensoroCityApplication extends BaseApplication implements SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
-    public IWXAPI api;
+
     private static volatile SensoroCityApplication instance;
     public static NotificationUtils mNotificationUtils;
     private static PushHandler pushHandler;
     private final Handler taskHandler = new Handler(Looper.getMainLooper());
-    public volatile boolean hasGotToken = false;
+
     public static String VIDEO_PATH;
-    public AMapLocationClient mLocationClient;
-    public BLEDeviceManager bleDeviceManager;
+
+//    public BLEDeviceManager bleDeviceManager;
     private final Runnable iBeaconTask = new Runnable() {
         private boolean noStateOut = true;
         private boolean noStateIn = true;
@@ -356,7 +355,10 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
                 @Override
                 public void run() {
                     Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
-                    initBugLy();
+                    //只收集release版本的日志信息，升级也只针对release版本
+                    if (!BuildConfig.DEBUG) {
+                        initBugLy();
+                    }
                 }
             }, 1000);
             initSensoroSDK();
@@ -687,6 +689,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
         String message = error.getMessage();
         try {
             LogUtils.loge(this, message);
+            LogUtils.loge(this, "初始化QCR失败 ： " + message);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

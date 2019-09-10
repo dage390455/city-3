@@ -37,7 +37,7 @@ import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
+import com.sensoro.common.widgets.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;

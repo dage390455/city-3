@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     android:orientation="vertical">
 
     <com.sensoro.common.widgets.HomeViewPager
@@ -12,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="20dp"
         android:background="#1000" />
 
     <View

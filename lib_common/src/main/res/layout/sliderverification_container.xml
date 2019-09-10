@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    >
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="154dp"
+       >
+
+        <com.sensoro.common.widgets.slideverify.PictureVertifyView
+            android:id="@+id/vertifyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+
+        >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@drawable/pop_seekbar_text_bg"
+        android:layout_centerVertical="true"
+        android:text="@string/slide_dialog_seek_title"
+        android:gravity="center"
+        android:textSize="12dp"
+        android:textColor="@color/c_33ccff"
+        />
+
+        <com.sensoro.common.widgets.slideverify.TextSeekbar
+            android:id="@+id/seekbar"
+            style="@style/SlideSeekbarSytle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:splitTrack="false"
+            android:thumbOffset="0dp"
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -3,10 +3,13 @@ package com.sensoro.common.widgets.uploadPhotoUtil.luban;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
 
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.imagepicker.util.BitmapUtil;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.ImageUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -76,18 +79,43 @@ class Engine {
         options.inSampleSize = computeSize();
 
         Bitmap tagBitmap = BitmapFactory.decodeStream(srcImg.open(), null, options);
+        int mBitmapDegree=BitmapUtil.getBitmapDegree(srcImg.getPath());
+        if(mBitmapDegree>0){
+            Log.d("mBitmapDegree",mBitmapDegree+"");
+            Log.d("mBitmapDegree","tagBitmap.width="+tagBitmap.getWidth());
+            tagBitmap=BitmapUtil.rotateBitmapByDegree(tagBitmap,mBitmapDegree);
+            Log.d("mBitmapDegree","tagBitmap.width="+tagBitmap.getWidth());
+        }
+
         //TODO 按像素比例绘制
         int srcWidth = tagBitmap.getWidth();
         int srcHeight = tagBitmap.getHeight();
-        final int picPaddingBottom = (int) (50 * srcHeight / 667f + 0.5f);
-        final int textPaddingBottom = (int) (30 * srcHeight / 667f + 0.5f);
-        final int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
-        final int textPaddingRight = (int) (25 * srcWidth / 375f + 0.5f);
+         int picPaddingBottom = (int) (50 * srcHeight / 667f + 0.5f);
+         int textPaddingBottom = (int) (25 * srcHeight / 667f + 0.5f);
+         int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
+         int textPaddingRight = (int) (25 * srcWidth / 375f + 0.5f);
         Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
+
+        int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
+        try {
+            float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
+            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
+            tagFontSize= (int) (srcWidth/25.0f);
+
+            picPaddingBottom= textPaddingBottom+tagFontSize+markBitmap.getHeight()/5;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
 
         tagBitmap = ImageUtil.drawTextToRightBottom(ContextUtils.getContext(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
-                21, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
+                tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
+
+        if(mBitmapDegree>0) {
+            tagBitmap = BitmapUtil.rotateBitmapByDegree(tagBitmap, -mBitmapDegree);
+        }
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         if (Checker.SINGLE.isJPG(srcImg.open())) {

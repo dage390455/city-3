@@ -2,24 +2,26 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
-import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.AlarmDetailLogActivityPresenter;
-import com.sensoro.common.server.bean.AlarmInfo;
-import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
@@ -109,7 +111,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtils.handlePhotoIntent(requestCode,resultCode,data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode,resultCode,data);
     }
 
     @Override

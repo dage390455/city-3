@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface Constants {
+     String ROUTEPATH = "routerpath";
     //
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
@@ -425,9 +426,15 @@ public interface Constants {
     int EVENT_DATA_ADD_NEW_UUID_CONTENT = 0x66;
 
     /**
-     * 接口加载页数
+     * 默认接口加载页数
      */
-    int pageSize = 20;
+    int DEFAULT_PAGE_SIZE = 20;
+
+    String EXTRA_PATH_RECORD = "path_record";
+    String EXTRA_VIDEO_DEL = "video_del";
+
+
+
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -647,5 +654,8 @@ public interface Constants {
 //            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
 //            "magnetic", "tracker", "distance", "light"
 //    };
+
+
+
 }
 

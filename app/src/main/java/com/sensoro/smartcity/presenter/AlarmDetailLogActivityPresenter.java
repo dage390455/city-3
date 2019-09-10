@@ -23,6 +23,7 @@ import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
@@ -35,10 +36,10 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.sensoro.common.utils.CityAppUtils;
+import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
@@ -290,8 +291,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mContext, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 if (isAttachedView()) {
                     getView().startAC(intent);
                 }
@@ -322,8 +323,14 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         if (deviceNotifications.isEmpty()) {
             getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-            dialogUtil.show(deviceNotifications);
+            if (deviceNotifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(deviceNotifications);
+            } else {
+                DeviceNotificationBean deviceNotificationBean = deviceNotifications.get(0);
+                String content = deviceNotificationBean.getContent();
+                AppUtils.diallPhone(content, mContext);
+            }
         }
     }
 

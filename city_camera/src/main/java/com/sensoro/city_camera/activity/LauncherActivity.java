@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
@@ -17,6 +18,7 @@ import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.presenter.LauncherActivityPresenter;
 import com.sensoro.common.adapter.MainFragmentPageAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.widgets.HomeViewPager;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -27,6 +29,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+@Route(path = ARouterConstants.ACTIVITY_CITY_CAMERA_LAUNCHER)
 public class LauncherActivity extends BaseActivity<ILauncherActivityView, LauncherActivityPresenter> implements ILauncherActivityView
         , BottomNavigationBar.OnTabSelectedListener {
 
@@ -72,11 +76,9 @@ public class LauncherActivity extends BaseActivity<ILauncherActivityView, Launch
     private void initBottomBar() {
         warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, mActivity.getString(R.string.main_page_warn));
         warnItem.setBadgeItem(new TextBadgeItem());
-        BottomNavigationItem cameraItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, getString(R.string.main_page_camera));
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
                 .addItem(warnItem)
-                .addItem(cameraItem)
                 .setFirstSelectedPosition(0)
                 .initialise();
         warnItem.getBadgeItem().hide(false);
@@ -214,7 +216,7 @@ public class LauncherActivity extends BaseActivity<ILauncherActivityView, Launch
     }
 
     @Override
-    public boolean isActivityOverrideStatusBar() {
+    public boolean setMyCurrentStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
         immersionBar
                 .transparentStatusBar()

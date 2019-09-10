@@ -23,7 +23,7 @@ public class WaterImageTools {
         final Bitmap comBit = Bitmap.createScaledBitmap(bitmap, compressW, compressH, true);
 
         //将水印压缩成和上传图片一样大小
-        Bitmap watermark = BitmapFactory.decodeResource(context.getResources(), R.mipmap.arrows_left);
+        Bitmap watermark = BitmapFactory.decodeResource(context.getResources(), R.drawable.arrows_left);
         final Bitmap comWatermark = Bitmap.createScaledBitmap(watermark, compressW, compressH, true);
 
         if (comBit == null) {

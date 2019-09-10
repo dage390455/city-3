@@ -5,13 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -29,18 +32,16 @@ import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.DeviceTypeCount;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
-import com.sensoro.smartcity.activity.ScanActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.SortConditionModel;
-import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils.DialogDisplayStatusListener;
 
@@ -479,7 +480,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         try {
             DeviceInfo deviceInfo = mDeviceInfoList.get(position);
             Intent intent = new Intent();
-            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
+            intent.setClass(mContext, MonitorPointDetailActivity.class);
             intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(Constants.EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(Constants.EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -750,7 +751,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
                         //此处容错，如果当前的model为空或者model中的设备数量小于等于一页的数量同时返回的列表数量与当前modeltop的设备数量不等，整体刷新
-                        if(mCurrentHomeTopModel==null||(mCurrentHomeTopModel.value<=Constants.pageSize&&mDeviceInfoList.size()!=mCurrentHomeTopModel.value)){
+                        if(mCurrentHomeTopModel==null||(mCurrentHomeTopModel.value<=Constants.DEFAULT_PAGE_SIZE &&mDeviceInfoList.size()!=mCurrentHomeTopModel.value)){
                             needResetHeaderPosition=true;
                             needFreshAll=true;
                             requestInitData(true,true);
@@ -915,9 +916,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doScanLogin() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
-                Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
-                getView().startAC(intent);
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
+                startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mContext);
                 return;
             }
         }
@@ -1013,9 +1014,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void doScanDeploy() {
-        Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
-        getView().startAC(intent);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mContext);
     }
 
     public void doSearch() {
@@ -1026,9 +1027,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContractCreate) {
-                Intent intent = new Intent(mContext, ContractEditorActivity.class);
-                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
-                getView().startAC(intent);
+//                Intent intent = new Intent(mContext, ContractEditorActivity.class);
+//                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
+//                getView().startAC(intent);
+
+                Bundle bundle=new Bundle();
+                bundle.putInt(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
+                startActivity(ARouterConstants.ACTIVITY_CONTRACT_EDITOR,bundle,mContext);
                 return;
             }
         }

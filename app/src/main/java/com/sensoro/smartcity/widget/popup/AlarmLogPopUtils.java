@@ -38,9 +38,9 @@ import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
+import com.sensoro.common.utils.CityAppUtils;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
 import java.io.Serializable;
@@ -428,8 +428,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             if (imageItem.isRecord) {
                 Intent intent = new Intent();
                 intent.setClass(mActivity, VideoPlayActivity.class);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del", true);
+                intent.putExtra(Constants.EXTRA_PATH_RECORD, (Serializable) imageItem);
+                intent.putExtra(Constants.EXTRA_VIDEO_DEL, true);
                 mActivity.startActivity(intent);
             } else {
                 //

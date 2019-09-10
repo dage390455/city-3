@@ -37,7 +37,7 @@ import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapENActivityView;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

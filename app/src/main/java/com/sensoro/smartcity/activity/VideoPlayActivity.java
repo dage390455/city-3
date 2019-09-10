@@ -21,14 +21,17 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.MyVideoView;
-import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;
-import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
+import com.sensoro.common.imagepicker.util.NavigationBarChangeListener;
+import com.sensoro.common.imagepicker.view.SystemBarTintManager;
 
 import java.io.File;
 
@@ -37,7 +40,7 @@ import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 /**
  * Created by zhaoshuang on 17/2/24.
  */
-
+@Route(path = ARouterConstants.ACTIVITY_VIDEP_PLAY)
 public class VideoPlayActivity extends AppCompatActivity implements View.OnClickListener, NavigationBarChangeListener.OnSoftInputStateChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
 
     private MyVideoView vv_play;
@@ -91,7 +94,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         boolean videoDel = intent.getBooleanExtra("video_del", false);
         mBtnDel.setVisibility(videoDel ? View.GONE : View.VISIBLE);
         //
-        mImageItem = (ImageItem) intent.getSerializableExtra("path_record");
+        mImageItem = (ImageItem) intent.getSerializableExtra(Constants.EXTRA_PATH_RECORD);
         if (mImageItem != null) {
             mProgressUtils.showProgress();
             Log.e("VideoPlayActivity", "path = " + mImageItem.path);

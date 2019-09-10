@@ -17,11 +17,11 @@ import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import java.util.ArrayList;
@@ -260,7 +260,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (position >= 0) {
             DeviceInfo deviceInfo = mDataList.get(position);
             Intent intent = new Intent();
-            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
+            intent.setClass(mContext, MonitorPointDetailActivity.class);
             intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(Constants.EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(Constants.EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());

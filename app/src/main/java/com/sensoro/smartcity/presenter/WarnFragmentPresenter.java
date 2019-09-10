@@ -23,6 +23,7 @@ import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
@@ -30,11 +31,11 @@ import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -60,20 +61,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     private String tempSearch;
     private volatile boolean needFresh = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-//    private final Comparator<DeviceAlarmLogInfo> deviceAlarmLogInfoComparator = new Comparator<DeviceAlarmLogInfo>() {
-//        @Override
-//        public int compare(DeviceAlarmLogInfo o1, DeviceAlarmLogInfo o2) {
-//            long l = o2.getCreatedTime() - o1.getCreatedTime();
-//            if (l > 0) {
-//                return 1;
-//            } else if (l < 0) {
-//                return -1;
-//            } else {
-//                return 0;
-//            }
-//
-//        }
-//    };
 
     @Override
     public void initData(Context context) {
@@ -100,65 +87,38 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         if (deviceNotifications.isEmpty()) {
             getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-            dialogUtil.show(deviceNotifications);
+            if (deviceNotifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(deviceNotifications);
+            } else {
+                DeviceNotificationBean deviceNotificationBean = deviceNotifications.get(0);
+                String content = deviceNotificationBean.getContent();
+                AppUtils.diallPhone(content, mContext);
+            }
         }
 
     }
 
     private void freshEmptyData() {
         if (isAttachedView()) {
-            mDeviceAlarmLogInfoList.clear();
-            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+            synchronized (mDeviceAlarmLogInfoList) {
+                mDeviceAlarmLogInfoList.clear();
+                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+            }
+
         }
     }
 
     private void freshUI(final int direction, ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
-//        if (!TextUtils.isEmpty(tempSearch)) {
-//            getView().setSearchButtonTextVisible(true);
-//        } else {
-//            getView().setSearchButtonTextVisible(false);
-//        }
         final List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                if (direction == Constants.DIRECTION_DOWN) {
-                    mDeviceAlarmLogInfoList.clear();
-                }
                 synchronized (mDeviceAlarmLogInfoList) {
-//                    if (mDeviceAlarmLogInfoList.size() > 0) {
-//                        HashMap<String, DeviceAlarmLogInfo> stringDeviceAlarmLogInfoHashMap = new HashMap<>();
-//                        for (DeviceAlarmLogInfo deviceAlarmLogInfo : deviceAlarmLogInfoList) {
-//                            stringDeviceAlarmLogInfoHashMap.put(deviceAlarmLogInfo.get_id(), deviceAlarmLogInfo);
-//                        }
-//                        ArrayList<DeviceAlarmLogInfo> tempList = new ArrayList<>();
-//                        for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
-//                            DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(i);
-//                            DeviceAlarmLogInfo deviceAlarmLogInfo1 = stringDeviceAlarmLogInfoHashMap.get(deviceAlarmLogInfo.get_id());
-//                            if (deviceAlarmLogInfo1 == null) {
-//                                tempList.add(deviceAlarmLogInfo);
-//                            } else {
-//                                mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo1);
-//                            }
-//                        }
-//                        mDeviceAlarmLogInfoList.addAll(tempList);
-//                    } else {
+                    if (direction == Constants.DIRECTION_DOWN) {
+                        mDeviceAlarmLogInfoList.clear();
+                    }
                     mDeviceAlarmLogInfoList.addAll(deviceAlarmLogInfoList);
-//                    }
-
-//                    out:
-//                    for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
-//                        DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
-//                        for (int j = 0; j < mDeviceAlarmLogInfoList.size(); j++) {
-//                            if (mDeviceAlarmLogInfoList.get(j).get_id().equals(deviceAlarmLogInfo.get_id())) {
-//                                mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
-//                                break out;
-//                            }
-//                        }
-//                        mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
-//                    }
-//                    Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -369,26 +329,19 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
                 DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
                 if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
-//                    AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-//                    deviceAlarmLogInfo.setSort(1);
-//                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-//                        if (recordInfo.getType().equals("recovery")) {
-//                            deviceAlarmLogInfo.setSort(4);
-//                            break;
-//                        }
-//                    }
                     mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
                     canRefresh = true;
                     break;
                 }
             }
             if (canRefresh) {
-//                Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (isAttachedView()) {
-                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            synchronized (mDeviceAlarmLogInfoList) {
+                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            }
                         }
 
                     }
@@ -508,7 +461,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 @Override
                 public void run() {
                     if (isAttachedView()) {
-                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        synchronized (mDeviceAlarmLogInfoList) {
+                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        }
                     }
                     needFresh = false;
                 }
@@ -523,14 +478,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
                 DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
                 if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
-//                    AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-//                    deviceAlarmLogInfo.setSort(1);
-//                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-//                        if (recordInfo.getType().equals("recovery")) {
-//                            deviceAlarmLogInfo.setSort(4);
-//                            break;
-//                        }
-//                    }
                     mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
                     needAdd = false;
                     needFresh = true;
@@ -538,10 +485,20 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
             }
             if (needAdd && isNewInfo) {
-                mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
-                needFresh = true;
+                if (mDeviceAlarmLogInfoList.size() > 0) {
+                    DeviceAlarmLogInfo current = mDeviceAlarmLogInfoList.get(0);
+                    long newCreatedTime = deviceAlarmLogInfo.getCreatedTime();
+                    long createdTime = current.getCreatedTime();
+                    if (newCreatedTime > createdTime) {
+                        mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+                        needFresh = true;
+                    }
+                } else {
+                    mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
+                    needFresh = true;
+                }
+
             }
-//            Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
 
         }
     }
@@ -598,53 +555,4 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     }
                 });
     }
-    //-------------------------------------------------------------------------------------------
-    //去掉按照确认类型排序排序
-//        for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
-//            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
-//            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-//            boolean isHaveRecovery = false;
-//            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-//                if (recordInfo.getType().equals("recovery")) {
-//                    deviceAlarmLogInfo.setSort(4);
-//                    isHaveRecovery = true;
-//                    break;
-//                } else {
-//                    deviceAlarmLogInfo.setSort(1);
-//                }
-//            }
-//            switch (deviceAlarmLogInfo.getDisplayStatus()) {
-//                case DISPLAY_STATUS_CONFIRM:
-//                    if (isHaveRecovery) {
-//                        deviceAlarmLogInfo.setSort(2);
-//                    } else {
-//                        deviceAlarmLogInfo.setSort(1);
-//                    }
-//                    break;
-//                case DISPLAY_STATUS_ALARM:
-//                    if (isHaveRecovery) {
-//                        deviceAlarmLogInfo.setSort(2);
-//                    } else {
-//                        deviceAlarmLogInfo.setSort(1);
-//                    }
-//                    break;
-//                case DISPLAY_STATUS_MIS_DESCRIPTION:
-//                    if (isHaveRecovery) {
-//                        deviceAlarmLogInfo.setSort(3);
-//                    } else {
-//                        deviceAlarmLogInfo.setSort(1);
-//                    }
-//                    break;
-//                case DISPLAY_STATUS_TEST:
-//                    if (isHaveRecovery) {
-//                        deviceAlarmLogInfo.setSort(4);
-//                    } else {
-//                        deviceAlarmLogInfo.setSort(1);
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//            mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
-//        }
 }

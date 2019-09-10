@@ -29,7 +29,7 @@ import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
+import com.sensoro.common.widgets.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;

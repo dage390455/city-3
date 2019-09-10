@@ -13,7 +13,7 @@ import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;

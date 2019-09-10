@@ -39,6 +39,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.HandlePhotoIntentUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
@@ -48,9 +49,7 @@ import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -560,7 +559,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Override
