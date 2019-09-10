@@ -111,7 +111,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        HandlePhotoIntentUtils.handlePhotoIntent(requestCode,resultCode,data);
+        HandlePhotoIntentUtils.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation,
-            R.id.ac_alert_tv_alert_confirm, R.id.include_text_title_imv_arrows_left,R.id.ll_camera_live_ac_alert,
+            R.id.ac_alert_tv_alert_confirm, R.id.include_text_title_imv_arrows_left, R.id.ll_camera_live_ac_alert,
             R.id.ll_camera_video_ac_alert})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -271,9 +271,9 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
         if (liveCount != null && liveCount.size() > 0) {
             llCameraLiveAcAlert.setVisibility(View.VISIBLE);
             tvLiveCameraCountAcAlert.setText(
-                    String.format(Locale.ROOT,"%s%d%s",mActivity.getString(R.string.relation_camera)
-                            ,liveCount.size(),mActivity.getString(R.string.upload_photo_dialog_append_title3)));
-        }else{
+                    String.format(Locale.ROOT, "%s%d%s", mActivity.getString(R.string.relation_camera)
+                            , liveCount.size(), mActivity.getString(R.string.upload_photo_dialog_append_title3)));
+        } else {
             llCameraLiveAcAlert.setVisibility(View.GONE);
         }
 
@@ -284,13 +284,18 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
         if (size > 0) {
             llCameraVideoAcAlert.setVisibility(View.VISIBLE);
 
-            tvVideoCameraCountAcAlert.setText(String.format(Locale.ROOT,"%s%d%s",mActivity.getString(R.string.alarm_camera_video)
-                    ,size,mActivity.getString(R.string.video_unit_duan)));
-        }else{
+            tvVideoCameraCountAcAlert.setText(String.format(Locale.ROOT, "%s%d%s", mActivity.getString(R.string.alarm_camera_video)
+                    , size, mActivity.getString(R.string.video_unit_duan)));
+        } else {
             llCameraVideoAcAlert.setVisibility(View.GONE);
 
         }
 
+    }
+
+    @Override
+    public void setHistoryLogVisible(boolean visible) {
+        includeTextTitleTvSubtitle.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

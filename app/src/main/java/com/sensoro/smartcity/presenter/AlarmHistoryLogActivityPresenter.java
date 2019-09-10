@@ -2,6 +2,7 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -20,6 +21,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmHistoryLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
@@ -418,4 +420,10 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         mHandler.postDelayed(this, 3000);
     }
 
+    public void onClickHistoryItem(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
+        intent.putExtra(Constants.EXTRA_ALARM_INFO, deviceAlarmLogInfo);
+        intent.putExtra(Constants.EXTRA_ALARM_HISTORY_VISIBLE, true);
+        getView().startAC(intent);
+    }
 }

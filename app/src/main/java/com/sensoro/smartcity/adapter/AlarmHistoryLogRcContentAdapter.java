@@ -1,16 +1,17 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ public class AlarmHistoryLogRcContentAdapter extends RecyclerView.Adapter<AlarmH
 
     public interface OnAlarmHistoryLogConfirmListener {
         void onHistoryConfirm(View v, int position);
+
+        void onItemClick(View v, int position);
     }
 
     @Override
@@ -77,6 +80,14 @@ public class AlarmHistoryLogRcContentAdapter extends RecyclerView.Adapter<AlarmH
                     break;
             }
             holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getCreatedTime(), 0) + mContext.getString(R.string.occur_alarmed));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, holder.getAdapterPosition());
+                    }
+                }
+            });
         }
 //        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
 //        boolean isAlarm = false;
