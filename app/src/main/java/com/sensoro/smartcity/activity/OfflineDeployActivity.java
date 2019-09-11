@@ -106,6 +106,12 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
                 adapter.notifyDataSetChanged();
                 mPresenter.removeTask(deployAnalyzerModel);
             }
+
+            @Override
+            public void onItemClick(View v, int position) {
+                DeployAnalyzerModel deployAnalyzerModel = adapter.getData().get(position);
+                mPresenter.doOfflineTaskDetail(deployAnalyzerModel);
+            }
         });
         mPresenter.initData(this);
 

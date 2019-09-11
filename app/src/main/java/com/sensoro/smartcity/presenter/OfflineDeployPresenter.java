@@ -271,4 +271,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         deviceInfos.clear();
 
     }
+
+    public void doOfflineTaskDetail(DeployAnalyzerModel deployAnalyzerModel) {
+        //TODO 跳转到离线上传详情界面
+        getView().toastShort("离线上传详情");
+
+    }
 }

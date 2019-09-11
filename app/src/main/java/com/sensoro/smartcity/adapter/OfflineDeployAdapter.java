@@ -38,6 +38,8 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         void onForceUploadClick(View view, int position);
 
         void onClearClick(View view, int position);
+
+        void onItemClick(View v, int position);
     }
 
     public void setOnContentClickListener(OnContentItemClickListener onContentItemClickListener) {
@@ -109,7 +111,14 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
                 }
             }
         });
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onContentItemClickListener != null) {
+                    onContentItemClickListener.onItemClick(v, position);
+                }
+            }
+        });
         holder.tvUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +140,6 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         } else {
             holder.progressBar.setVisibility(View.INVISIBLE);
         }
-
 
         if (deviceInfo.isShowForce && PreferencesHelper.getInstance().getUserData().hasForceUpload) {
             holder.tvForceLoad.setVisibility(View.VISIBLE);
