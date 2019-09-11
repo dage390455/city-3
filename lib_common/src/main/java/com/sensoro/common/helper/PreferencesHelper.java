@@ -128,6 +128,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, eventLoginData.hasIBeaconSearchDemo);
         editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, eventLoginData.hasMonitorTaskList);
         editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, eventLoginData.hasMonitorTaskConfirm);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEPLOY_OFFLINE_TASK, eventLoginData.hasDeployOfflineTask);
         //
         editor.apply();
     }
@@ -194,6 +195,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
             eventLoginData.hasMonitorTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, false);
             eventLoginData.hasMonitorTaskConfirm = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, false);
+            eventLoginData.hasDeployOfflineTask = sp.getBoolean(EXTRA_GRANTS_HAS_DEPLOY_OFFLINE_TASK, false);
 
             mEventLoginData = eventLoginData;
         }

@@ -102,6 +102,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO = "extra_grants_has_ibeacon_search_demo";
     String EXTRA_GRANTS_HAS_MONITOR_TASK_LIST = "extra_grants_has_monitor_task_list";
     String EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM = "extra_grants_has_monitor_task_confirm";
+    String EXTRA_GRANTS_HAS_DEPLOY_OFFLINE_TASK = "extra_grants_has_deploy_offline_task";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
