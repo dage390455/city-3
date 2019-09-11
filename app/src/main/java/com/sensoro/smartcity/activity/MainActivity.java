@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
@@ -16,6 +17,8 @@ import com.sensoro.bottomnavigation.TextBadgeItem;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -23,6 +26,7 @@ import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.HomeViewPager;
+import com.sensoro.smartcity.widget.dialog.OfflineDialogUtils;
 import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 
 import java.util.List;
@@ -31,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
-        , BottomNavigationBar.OnTabSelectedListener {
+        , BottomNavigationBar.OnTabSelectedListener, Repause.Listener {
 
     @BindView(R.id.ac_main_hvp_content)
     HomeViewPager acMainHvpContent;
@@ -43,12 +47,18 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private PermissionChangeDialogUtils permissionChangeDialogUtils;
 
+    private long lastOpenTime;
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+        lastOpenTime = System.currentTimeMillis();
+
+        Repause.registerListener(this);
+        onApplicationResumed();
 
     }
 
@@ -90,6 +100,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     protected MainPresenter createPresenter() {
+
         return new MainPresenter();
     }
 
@@ -234,6 +245,15 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     }
 
+    @Override
+    public void showOffLineDialog() {
+
+
+        Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+        OfflineDialogUtils offlineDialogUtils = new OfflineDialogUtils(topActivity);
+        offlineDialogUtils.show();
+
+    }
 
     private void initViewPager() {
         mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
@@ -267,13 +287,31 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         //
     }
 
+
     @Override
     protected void onDestroy() {
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        Repause.unregisterListener(this);
         super.onDestroy();
     }
 
+    @Override
+    public void onApplicationResumed() {
+        Long s = (System.currentTimeMillis() - lastOpenTime) / (1000 * 60);
+//        if (s > 60) {
+        LinkedTreeMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getofflineDeployData();
+        if (null != allTask && allTask.size() > 0) {
+            showOffLineDialog();
+        }
+//        }
+    }
+
+
+    @Override
+    public void onApplicationPaused() {
+
+    }
 }
