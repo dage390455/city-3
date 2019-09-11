@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
@@ -933,7 +932,7 @@ public final class PreferencesHelper implements Constants {
         return null;
     }
 
-    public boolean setofflineDeployData(LinkedTreeMap<String, DeployAnalyzerModel> linkedHashMap) {
+    public boolean setOfflineDeployData(LinkedHashMap<String, DeployAnalyzerModel> linkedHashMap) {
         if (linkedHashMap != null) {
             String json = RetrofitServiceHelper.getInstance().getGson().toJson(linkedHashMap);
             ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)
@@ -943,11 +942,11 @@ public final class PreferencesHelper implements Constants {
         return false;
     }
 
-    public LinkedTreeMap<String, DeployAnalyzerModel> getofflineDeployData() {
+    public LinkedHashMap<String, DeployAnalyzerModel> getOfflineDeployData() {
         String data = ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)
                 .getString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, null);
         if (!TextUtils.isEmpty(data)) {
-            return RetrofitServiceHelper.getInstance().getGson().fromJson(data, new TypeToken<Map<String, DeployAnalyzerModel>>() {
+            return RetrofitServiceHelper.getInstance().getGson().fromJson(data, new TypeToken<LinkedHashMap<String, DeployAnalyzerModel>>() {
             }.getType());
         }
         return null;

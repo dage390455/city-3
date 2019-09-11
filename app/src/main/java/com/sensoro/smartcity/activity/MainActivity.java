@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.internal.LinkedTreeMap;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
@@ -29,6 +28,7 @@ import com.sensoro.smartcity.widget.HomeViewPager;
 import com.sensoro.smartcity.widget.dialog.OfflineDialogUtils;
 import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         initView();
         mPresenter.initData(mActivity);
         lastOpenTime = System.currentTimeMillis();
-
+        //TODO 这里应该是在application中 注册过 目前不需要多处注册 只需要在初始化检查一次就可以了
         Repause.registerListener(this);
         onApplicationResumed();
 
@@ -247,8 +247,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void showOffLineDialog() {
-
-
         Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
         OfflineDialogUtils offlineDialogUtils = new OfflineDialogUtils(topActivity);
         offlineDialogUtils.show();
@@ -302,7 +300,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     public void onApplicationResumed() {
         Long s = (System.currentTimeMillis() - lastOpenTime) / (1000 * 60);
 //        if (s > 60) {
-        LinkedTreeMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getofflineDeployData();
+        LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
         if (null != allTask && allTask.size() > 0) {
             showOffLineDialog();
         }

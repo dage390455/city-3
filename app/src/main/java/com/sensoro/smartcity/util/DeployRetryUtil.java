@@ -2,7 +2,6 @@ package com.sensoro.smartcity.util;
 
 import android.content.Context;
 
-import com.google.gson.internal.LinkedTreeMap;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
@@ -19,18 +18,19 @@ import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class DeployRetryUtil {
-
-    private static volatile LinkedTreeMap<String, DeployAnalyzerModel> deployTasks = new LinkedTreeMap<>();
+    //TODO treemap默认会按照key做自然排序 顺序会不一致 最好用linkhashmap
+    private static volatile LinkedHashMap<String, DeployAnalyzerModel> deployTasks = new LinkedHashMap<>();
 
     private DeployRetryUtil() {
 
-        LinkedTreeMap<String, DeployAnalyzerModel> alltask = PreferencesHelper.getInstance().getofflineDeployData();
+        LinkedHashMap<String, DeployAnalyzerModel> alltask = PreferencesHelper.getInstance().getOfflineDeployData();
         if (null != alltask) {
             deployTasks = alltask;
         }
@@ -52,15 +52,15 @@ public class DeployRetryUtil {
 
         task.lastOperateTime = System.currentTimeMillis();
         deployTasks.put(task.sn, task);
-        PreferencesHelper.getInstance().setofflineDeployData(deployTasks);
+        PreferencesHelper.getInstance().setOfflineDeployData(deployTasks);
 
 
     }
 
     public void removeTask(DeployAnalyzerModel task) {
-
-        deployTasks.remove(task);
-        PreferencesHelper.getInstance().setofflineDeployData(deployTasks);
+        //TODO 这个应该是移除sn吧
+        deployTasks.remove(task.sn);
+        PreferencesHelper.getInstance().setOfflineDeployData(deployTasks);
 
     }
 

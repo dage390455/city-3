@@ -127,7 +127,7 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
 
             case R.id.offline_deploy_batch_tv:
 
-                mPresenter.dobatch();
+                mPresenter.doBatch();
                 break;
 
             default:
