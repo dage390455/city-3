@@ -10,7 +10,6 @@ public class MonitorPointOperationTaskResultInfo {
     private String type;
     private String appId;
     private String operator;
-    private String owners;
     private ContentBean content;
     private int total;
     private int complete;
@@ -70,14 +69,6 @@ public class MonitorPointOperationTaskResultInfo {
 
     public void setOperator(String operator) {
         this.operator = operator;
-    }
-
-    public String getOwners() {
-        return owners;
-    }
-
-    public void setOwners(String owners) {
-        this.owners = owners;
     }
 
     public ContentBean getContent() {
