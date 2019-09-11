@@ -32,7 +32,6 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     private DeviceNotificationBean deviceNotification;
     private List<DeviceNotificationBean> deviceNotifications;
-    private AlarmInfo.OwnerInfo owners;
     private boolean isDeleted;
     private int displayStatus;
     private int sort;
@@ -143,14 +142,6 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     public void setRecords(AlarmInfo.RecordInfo[] records) {
         this.records = records;
-    }
-
-    public AlarmInfo.OwnerInfo getOwners() {
-        return owners;
-    }
-
-    public void setOwners(AlarmInfo.OwnerInfo owners) {
-        this.owners = owners;
     }
 
     public boolean isDeleted() {

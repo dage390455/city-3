@@ -524,16 +524,6 @@ public class DeviceInfo implements Serializable, Comparable {
         this.demoMode = demoMode;
     }
 
-    public String getOwners() {
-        return owners;
-    }
-
-    public void setOwners(String owners) {
-        this.owners = owners;
-    }
-
-    private String owners;
-
     public void setInterval(Integer interval) {
         this.interval = interval;
     }

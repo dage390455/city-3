@@ -479,7 +479,7 @@ public class DateUtil {
         //
         if (h >= 24) {
             int day = h / 24;
-            h = day % 24;
+            h = h % 24;
             return day + context.getString(R.string.day) + getStrTime(context, h, d, s);
         } else {
             return getStrTime(context, h, d, s);
