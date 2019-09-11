@@ -150,6 +150,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private String mOperationType;
     private volatile int deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
     private ArrayList<DeviceCameraInfo> deviceCameras;
+    private int DEVICE_CMD_OVER_TIME = 15 * 1000;
 
     @Override
     public void initData(Context context) {
@@ -328,6 +329,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         }
         //TODO 特殊配置
         if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(deviceType)) {
+            //针对特殊设备需要下行30s
+            DEVICE_CMD_OVER_TIME = 30 * 1000;
             //带有2g的 配置参数
             getView().set2GDeviceConfigVisible(true);
             OtherBean other = mDeviceInfo.getOther();
@@ -337,6 +340,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 String iccid = other.getIccid();
                 getView().set2GDeviceConfigInfo(imei, imsi, iccid);
             }
+        } else {
+            DEVICE_CMD_OVER_TIME = 15 * 1000;
         }
     }
 
@@ -1708,7 +1713,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     String[] split = scheduleNo.split(",");
                     if (split.length > 0) {
                         mScheduleNo = split[0];
-                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, DEVICE_CMD_OVER_TIME);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
