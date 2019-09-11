@@ -99,12 +99,13 @@ public class OfflineDeployTaskDetailActivityPresenter extends BasePresenter<IOff
 //            if (!TextUtils.isEmpty(deployStaff)) {
 //                getView().setDeployRecordDetailDeployStaff(deployStaff);
 //            }
-            List<String> deployPics = deployAnalyzerModel.imgUrls;
-            if (deployPics != null && deployPics.size() > 0) {
+            List<ImageItem> imageItems = deployAnalyzerModel.imageItems;
+            if (imageItems!=null&&imageItems.size()>0){
+
                 ArrayList<ScenesData> list = new ArrayList<>();
-                for (String url : deployPics) {
+            for (ImageItem imageItem : imageItems) {
                     ScenesData scenesData = new ScenesData();
-                    scenesData.url = url;
+                    scenesData.url = imageItem.path;
                     list.add(scenesData);
                 }
                 getView().updateDeployPic(list);
