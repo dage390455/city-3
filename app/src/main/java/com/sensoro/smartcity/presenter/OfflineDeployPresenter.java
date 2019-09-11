@@ -150,14 +150,16 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                     long updatedTime = data.getData().getUpdatedTime();
                     //最后更新时间是否在此操作之前
                     if (tempDeployAnalyzerModel.lastOperateTime > updatedTime) {
-                        //获取最新信号失败
                         showState();
                     } else {
-                        if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
+                        if (tempDeployAnalyzerModel.signal.equals("normal") || tempDeployAnalyzerModel.signal.equals("good")) {
+//                            if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
                             deployRetryUtil.doUploadImages(mContext, tempDeployAnalyzerModel, retryListener);
+//                            }
                         } else {
                             showState();
                         }
+
                     }
                     getView().notifyDataSetChanged();
 

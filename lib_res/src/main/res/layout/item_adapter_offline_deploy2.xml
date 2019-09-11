@@ -27,6 +27,18 @@
         android:textColor="@color/c_a6a6a6"
         android:textSize="14dp" />
 
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_hasdeployed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@+id/item_offline_deploy_adapter_tv_errormsg"
+        android:textColor="@color/c_a6a6a6"
+        android:layout_marginRight="5dp"
+        android:textSize="14dp" />
+
     <TextView
         android:id="@+id/item_offline_deploy_adapter_tv_errormsg"
         android:layout_width="wrap_content"

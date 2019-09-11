@@ -147,6 +147,15 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             holder.tvForceLoad.setVisibility(View.GONE);
 
         }
+
+
+        if (deviceInfo.hasDeployed) {
+
+            holder.tvHasdeployed.setText("已部署");
+        } else {
+            holder.tvHasdeployed.setText("");
+
+        }
         if (!TextUtils.isEmpty(deviceInfo.getStateErrorMsg)) {
             holder.itemOfflineDeployAdapterErrorMsgTv.setText(deviceInfo.getStateErrorMsg);
 
@@ -181,6 +190,8 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         TextView tvForceLoad;
         @BindView(R.id.item_offline_deploy_tv_upload)
         TextView tvUpload;
+        @BindView(R.id.item_offline_deploy_adapter_tv_hasdeployed)
+        TextView tvHasdeployed;
         @BindView(R.id.oading_prgbar)
         ProgressBar progressBar;
         @BindView(R.id.item_offline_deploy_root)

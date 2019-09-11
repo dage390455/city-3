@@ -64,6 +64,10 @@ public class DeployAnalyzerModel implements Serializable {
      */
     public int realStatus = -1;
     public boolean isShowForce = false;
+    /**
+     * 是否已部署
+     */
+    public boolean hasDeployed = false;
 
     @Override
     public boolean equals(Object o) {
