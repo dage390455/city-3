@@ -1291,4 +1291,8 @@
     <string name="device_imsi">IMSI</string>
     <string name="device_iccid">卡号（ICCID）</string>
 
+
+    <!--离线详情-->
+    <string name="offline_deploy_task_detail_title">离线详情</string>
+
 </resources>

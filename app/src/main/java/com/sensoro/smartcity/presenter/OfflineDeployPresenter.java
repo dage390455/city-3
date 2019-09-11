@@ -2,6 +2,7 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
@@ -11,6 +12,7 @@ import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.smartcity.activity.OfflineDeployTaskDetailActivity;
 import com.sensoro.smartcity.imainviews.IOfflineDeployActivityView;
 import com.sensoro.smartcity.util.DeployRetryUtil;
 
@@ -274,7 +276,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
     public void doOfflineTaskDetail(DeployAnalyzerModel deployAnalyzerModel) {
         //TODO 跳转到离线上传详情界面
-        getView().toastShort("离线上传详情");
-
+//        getView().toastShort("离线上传详情");
+        Intent intent = new Intent();
+        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        intent.setClass(mContext, OfflineDeployTaskDetailActivity.class);
+        getView().startAC(intent);
     }
 }
