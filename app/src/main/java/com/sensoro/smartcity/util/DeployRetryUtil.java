@@ -47,6 +47,15 @@ public class DeployRetryUtil {
 
     }
 
+    public void updateTask(DeployAnalyzerModel task) {
+        if (null != deployTasks.get(task.sn)) {
+            task.hasDeployed = true;
+            deployTasks.put(task.sn, task);
+        }
+        PreferencesHelper.getInstance().setOfflineDeployData(deployTasks);
+
+
+    }
 
     public void addTask(DeployAnalyzerModel task) {
 

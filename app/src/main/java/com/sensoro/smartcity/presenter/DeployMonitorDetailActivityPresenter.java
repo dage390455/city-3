@@ -977,6 +977,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void freshPoint(ResponseResult<DeviceInfo> deviceDeployRsp) {
+
         DeployResultModel deployResultModel = new DeployResultModel();
         DeviceInfo deviceInfo = deviceDeployRsp.getData();
         deployResultModel.deviceInfo = deviceInfo;
@@ -1004,9 +1005,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
+
+        deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+        deployRetryUtil.updateTask(deployAnalyzerModel);
     }
 
     private void freshStation(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
+
         DeployResultModel deployResultModel = new DeployResultModel();
         //
         Intent intent = new Intent(mContext, DeployResultActivity.class);
@@ -1025,6 +1030,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.signal = String.copyValueOf(deployAnalyzerModel.signal.toCharArray());
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
+        deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
+        deployRetryUtil.updateTask(deployAnalyzerModel);
     }
 
     @Override
