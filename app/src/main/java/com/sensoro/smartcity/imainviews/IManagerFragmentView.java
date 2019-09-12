@@ -31,6 +31,8 @@ public interface IManagerFragmentView extends IToast, IActivityIntent, IProgress
 
     void setIBeaconVisible(boolean hasIBeacon);
 
+    void setDeployOfflineTaskVisible(boolean hasDeployOfflineTask);
+
     void showBleTips();
 
     void hideBleTips();

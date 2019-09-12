@@ -17,6 +17,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -306,26 +307,38 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         }
     }
 
+    /**
+     * 提示离线上传
+     */
     public void showOffLineDialog() {
-        Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
-        DefaultTipDialogUtils offlineDialogUtils = new DefaultTipDialogUtils(topActivity);
 
-        offlineDialogUtils.setTipMessageText(getResources().getString(R.string.offline_dialog_content));
-        offlineDialogUtils.setTipConfirmText(getResources().getString(R.string.determine), getResources().getColor(R.color.c_1dbb99));
-        offlineDialogUtils.setTipCacnleText(getResources().getString(R.string.cancel), getResources().getColor(R.color.c_a6a6a6));
-        offlineDialogUtils.setUtilsClickListener(new DefaultTipDialogUtils.DialogUtilsClickListener() {
-            @Override
-            public void onCancelClick() {
-                offlineDialogUtils.dismiss();
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            if (userData.hasDeployOfflineTask) {
+
+                Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+                DefaultTipDialogUtils offlineDialogUtils = new DefaultTipDialogUtils(topActivity);
+
+                offlineDialogUtils.setTipMessageText(getResources().getString(R.string.offline_dialog_content));
+                offlineDialogUtils.setTipConfirmText(getResources().getString(R.string.determine), getResources().getColor(R.color.c_1dbb99));
+                offlineDialogUtils.setTipCacnleText(getResources().getString(R.string.cancel), getResources().getColor(R.color.c_a6a6a6));
+                offlineDialogUtils.setUtilsClickListener(new DefaultTipDialogUtils.DialogUtilsClickListener() {
+                    @Override
+                    public void onCancelClick() {
+                        offlineDialogUtils.dismiss();
+                    }
+
+                    @Override
+                    public void onConfirmClick() {
+                        offlineDialogUtils.dismiss();
+                        mActivity.startActivity(new Intent(mActivity, OfflineDeployActivity.class));
+                    }
+                });
+                offlineDialogUtils.show();
             }
 
-            @Override
-            public void onConfirmClick() {
-                offlineDialogUtils.dismiss();
-                mActivity.startActivity(new Intent(mActivity, OfflineDeployActivity.class));
-            }
-        });
-        offlineDialogUtils.show();
+        }
+
 
     }
 

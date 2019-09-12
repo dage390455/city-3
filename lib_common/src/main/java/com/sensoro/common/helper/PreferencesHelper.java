@@ -935,9 +935,10 @@ public final class PreferencesHelper implements Constants {
     }
 
     public boolean setOfflineDeployData(LinkedHashMap<String, DeployAnalyzerModel> linkedHashMap) {
-        if (linkedHashMap != null) {
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null && linkedHashMap != null) {
             String json = RetrofitServiceHelper.getInstance().getGson().toJson(linkedHashMap);
-            ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)
+            ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP + userData.accountId, Context.MODE_PRIVATE)
                     .edit().putString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, json).apply();
             return true;
         }
@@ -945,11 +946,14 @@ public final class PreferencesHelper implements Constants {
     }
 
     public LinkedHashMap<String, DeployAnalyzerModel> getOfflineDeployData() {
-        String data = ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)
-                .getString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, null);
-        if (!TextUtils.isEmpty(data)) {
-            return RetrofitServiceHelper.getInstance().getGson().fromJson(data, new TypeToken<LinkedHashMap<String, DeployAnalyzerModel>>() {
-            }.getType());
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            String data = ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP + userData.accountId, Context.MODE_PRIVATE)
+                    .getString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, null);
+            if (!TextUtils.isEmpty(data)) {
+                return RetrofitServiceHelper.getInstance().getGson().fromJson(data, new TypeToken<LinkedHashMap<String, DeployAnalyzerModel>>() {
+                }.getType());
+            }
         }
         return null;
     }

@@ -68,6 +68,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setNameplateVisible(userData.hasNameplateList);
             //TODO 设置是否有IBeacon功能
             getView().setIBeaconVisible(userData.hasIBeaconSearchDemo);
+            getView().setDeployOfflineTaskVisible(userData.hasDeployOfflineTask);
         }
     }
 
