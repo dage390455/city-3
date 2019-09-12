@@ -2,18 +2,18 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.ColorInt;
 
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.OfflineDeployActivity;
 
-public class OfflineDialogUtils {
+public class DefaultTipDialogUtils {
 
     //    private AlertDialog mDialog;
     private final TextView dialogTipTvCancel;
@@ -29,8 +29,9 @@ public class OfflineDialogUtils {
     //    private final TextView mTvConfirm;
     private CustomCornerDialog mDialog;
     private ProgressUtils mProgressUtils;
+    private DialogUtilsClickListener listener;
 
-    public OfflineDialogUtils(Activity activity) {
+    public DefaultTipDialogUtils(Activity activity) {
         mActivity = activity;
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         View view = View.inflate(activity, R.layout.item_dialog_permission_change, null);
@@ -46,9 +47,6 @@ public class OfflineDialogUtils {
 //        if (window != null) {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
-        dialogTipTvContent.setText("您有未提交的离线部署记录，点击前往提交");
-        dialogTipTvConfirm.setText("确定");
-        dialogTipTvCancel.setText("取消");
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
         mDialog.setCancelable(false);
@@ -56,15 +54,19 @@ public class OfflineDialogUtils {
         dialogTipTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //稍后登录
                 dismiss();
+                if (null != listener) {
+                    listener.onCancelClick();
+
+                }
             }
         });
         dialogTipTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                mActivity.startActivity(new Intent(mActivity, OfflineDeployActivity.class));
+                if (null != listener) {
+                    listener.onConfirmClick();
+                }
 
             }
         });
@@ -111,6 +113,19 @@ public class OfflineDialogUtils {
         }
     }
 
+    public void setTipMessageText(String text) {
+        dialogTipTvContent.setText(text);
+    }
+
+    public void setTipCacnleText(String text, @ColorInt int color) {
+        dialogTipTvCancel.setText(text);
+//        mTvConfirm.setTextColor(color);
+    }
+
+    public void setTipConfirmText(String text, @ColorInt int color) {
+        dialogTipTvConfirm.setText(text);
+        dialogTipTvConfirm.setTextColor(color);
+    }
 
     public void setDismissListener(OnPopupDismissListener listener) {
 
@@ -128,4 +143,13 @@ public class OfflineDialogUtils {
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void setUtilsClickListener(DialogUtilsClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface DialogUtilsClickListener {
+        void onCancelClick();
+
+        void onConfirmClick();
+    }
 }

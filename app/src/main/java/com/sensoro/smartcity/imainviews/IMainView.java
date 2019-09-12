@@ -27,5 +27,4 @@ public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
 
     void showPermissionChangeDialog();
 
-    void showOffLineDialog();
 }

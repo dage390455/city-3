@@ -1294,5 +1294,16 @@
 
     <!--离线详情-->
     <string name="offline_deploy_task_detail_title">离线详情</string>
+    <string name="offline_dialog_content">您有未提交的离线部署记录，点击前往提交</string>
+    <string name="delete_task">确认删除此缓存</string>
+    <string name="upload_offline">离线上传</string>
+    <string name="upload_all">全部上传</string>
+    <string name="deployed">已部署</string>
+    <string name="base_station_deployment">基站部署</string>
+    <string name="deployment_device">设备部署</string>
+    <string name="deployment_replacement">设备更换</string>
+    <string name="successful_deployment">部署成功</string>
+    <string name="nosignal">无信号</string>
+
 
 </resources>

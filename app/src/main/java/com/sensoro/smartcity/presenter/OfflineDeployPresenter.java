@@ -12,6 +12,7 @@ import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.OfflineDeployTaskDetailActivity;
 import com.sensoro.smartcity.imainviews.IOfflineDeployActivityView;
 import com.sensoro.smartcity.util.DeployRetryUtil;
@@ -116,7 +117,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                     getView().updateAdapter(deviceInfos);
                     getView().dismissProgressDialog();
                     getView().setCurrentTaskIndex(-1);
-                    getView().toastLong("部署成功");
+                    getView().toastLong(mContext.getResources().getString(R.string.successful_deployment));
 
 
                 }
@@ -153,9 +154,9 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                         showState();
                     } else {
                         if (tempDeployAnalyzerModel.signal.equals("normal") || tempDeployAnalyzerModel.signal.equals("good")) {
-//                            if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
-                            deployRetryUtil.doUploadImages(mContext, tempDeployAnalyzerModel, retryListener);
-//                            }
+                            if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
+                                deployRetryUtil.doUploadImages(mContext, tempDeployAnalyzerModel, retryListener);
+                            }
                         } else {
                             showState();
                         }
@@ -177,7 +178,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 tempDeployAnalyzerModel.isShowForce = true;
 
             }
-            onGetDeviceRealStatusErrorMsg(-1, "无信号");
+            onGetDeviceRealStatusErrorMsg(-1, mContext.getResources().getString(R.string.nosignal));
             getView().setCurrentTaskIndex(-1);
             getView().setUploadClickable(true);
 

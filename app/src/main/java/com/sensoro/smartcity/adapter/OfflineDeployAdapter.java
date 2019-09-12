@@ -87,13 +87,13 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         String type = "";
         switch (deviceInfo.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_STATION:
-                type = "基站部署";
+                type = mContext.getResources().getString(R.string.base_station_deployment);
                 break;
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
-                type = "设备部署";
+                type = mContext.getResources().getString(R.string.deployment_device);
                 break;
             default:
-                type = "设备更换";
+                type = mContext.getResources().getString(R.string.deployment_replacement);
                 break;
         }
 
@@ -151,7 +151,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
 
         if (deviceInfo.hasDeployed) {
 
-            holder.tvHasdeployed.setText("已部署");
+            holder.tvHasdeployed.setText(mContext.getResources().getString(R.string.deployed));
         } else {
             holder.tvHasdeployed.setText("");
 

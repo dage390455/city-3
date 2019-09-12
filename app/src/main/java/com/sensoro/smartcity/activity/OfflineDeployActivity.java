@@ -26,6 +26,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.OfflineDeployAdapter;
 import com.sensoro.smartcity.imainviews.IOfflineDeployActivityView;
 import com.sensoro.smartcity.presenter.OfflineDeployPresenter;
+import com.sensoro.smartcity.widget.dialog.DefaultTipDialogUtils;
 
 import java.util.ArrayList;
 
@@ -54,15 +55,17 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
 
     OfflineDeployAdapter adapter;
     private ProgressUtils mProgressUtils;
+    private DefaultTipDialogUtils tipDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_offline_deploy_list);
 
         ButterKnife.bind(this);
+        initTipDialog();
         icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
 
-        includeTextTitleTvTitle.setText("离线上传");
+        includeTextTitleTvTitle.setText(getResources().getString(R.string.upload_offline));
         includeTextTitleTvSubtitle.setText("");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
@@ -101,10 +104,25 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
 
             @Override
             public void onClearClick(View view, int position) {
-                DeployAnalyzerModel deployAnalyzerModel = adapter.getData().get(position);
-                adapter.getData().remove(position);
-                adapter.notifyDataSetChanged();
-                mPresenter.removeTask(deployAnalyzerModel);
+                tipDialogUtils.setUtilsClickListener(new DefaultTipDialogUtils.DialogUtilsClickListener() {
+                    @Override
+                    public void onCancelClick() {
+                        tipDialogUtils.dismiss();
+                    }
+
+                    @Override
+                    public void onConfirmClick() {
+                        tipDialogUtils.dismiss();
+                        DeployAnalyzerModel deployAnalyzerModel = adapter.getData().get(position);
+                        adapter.getData().remove(position);
+                        adapter.notifyDataSetChanged();
+                        mPresenter.removeTask(deployAnalyzerModel);
+
+                    }
+                });
+                tipDialogUtils.show();
+
+
             }
 
             @Override
@@ -115,6 +133,15 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
         });
         mPresenter.initData(this);
 
+
+    }
+
+    private void initTipDialog() {
+        tipDialogUtils = new DefaultTipDialogUtils(mActivity);
+
+        tipDialogUtils.setTipMessageText(getResources().getString(R.string.delete_task));
+        tipDialogUtils.setTipConfirmText(getResources().getString(R.string.determine), getResources().getColor(R.color.c_1dbb99));
+        tipDialogUtils.setTipCacnleText(getResources().getString(R.string.cancel), getResources().getColor(R.color.c_a6a6a6));
 
     }
 

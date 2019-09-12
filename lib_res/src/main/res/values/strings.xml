@@ -1306,4 +1306,17 @@
 
     <!--离线上传-->
     <string name="offline_deploy_task_detail_title">离线详情</string>
+    <string name="offline_dialog_content">You have an unsubmitted offline deployment record, click to submit</string>
+
+    <string name="delete_task">Verify that this cache is deleted</string>
+    <string name="upload_offline">Upload offline</string>
+    <string name="upload_all">upload all</string>
+    <string name="deployed">Deployed</string>
+    <string name="base_station_deployment">Base station deployment</string>
+    <string name="deployment_device">Device deployment</string>
+    <string name="deployment_replacement">Device replacement</string>
+    <string name="successful_deployment">Successful deployment</string>
+    <string name="nosignal">no_signal</string>
+
+
 </resources>

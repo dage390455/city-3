@@ -47,7 +47,7 @@
         android:background="@color/c_1dbb99"
         android:gravity="center"
 
-        android:text="批量上传"
+        android:text="@string/upload_all"
         android:textColor="@color/white" />
 
 </RelativeLayout>

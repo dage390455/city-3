@@ -25,7 +25,7 @@ import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.HomeViewPager;
-import com.sensoro.smartcity.widget.dialog.OfflineDialogUtils;
+import com.sensoro.smartcity.widget.dialog.DefaultTipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 
 import java.util.LinkedHashMap;
@@ -58,7 +58,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         lastOpenTime = System.currentTimeMillis();
         //TODO 这里应该是在application中 注册过 目前不需要多处注册 只需要在初始化检查一次就可以了
         Repause.registerListener(this);
-        onApplicationResumed();
+
+        //冷启动显示
+        LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
+        if (null != allTask && allTask.size() > 0) {
+            showOffLineDialog();
+        }
 
     }
 
@@ -245,13 +250,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     }
 
-    @Override
-    public void showOffLineDialog() {
-        Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
-        OfflineDialogUtils offlineDialogUtils = new OfflineDialogUtils(topActivity);
-        offlineDialogUtils.show();
-
-    }
 
     private void initViewPager() {
         mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
@@ -299,12 +297,36 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public void onApplicationResumed() {
         Long s = (System.currentTimeMillis() - lastOpenTime) / (1000 * 60);
-//        if (s > 60) {
-        LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
-        if (null != allTask && allTask.size() > 0) {
-            showOffLineDialog();
+        if (s > 60) {
+            LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
+            if (null != allTask && allTask.size() > 0) {
+                showOffLineDialog();
+                lastOpenTime = System.currentTimeMillis();
+            }
         }
-//        }
+    }
+
+    public void showOffLineDialog() {
+        Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+        DefaultTipDialogUtils offlineDialogUtils = new DefaultTipDialogUtils(topActivity);
+
+        offlineDialogUtils.setTipMessageText(getResources().getString(R.string.offline_dialog_content));
+        offlineDialogUtils.setTipConfirmText(getResources().getString(R.string.determine), getResources().getColor(R.color.c_1dbb99));
+        offlineDialogUtils.setTipCacnleText(getResources().getString(R.string.cancel), getResources().getColor(R.color.c_a6a6a6));
+        offlineDialogUtils.setUtilsClickListener(new DefaultTipDialogUtils.DialogUtilsClickListener() {
+            @Override
+            public void onCancelClick() {
+                offlineDialogUtils.dismiss();
+            }
+
+            @Override
+            public void onConfirmClick() {
+                offlineDialogUtils.dismiss();
+                mActivity.startActivity(new Intent(mActivity, OfflineDeployActivity.class));
+            }
+        });
+        offlineDialogUtils.show();
+
     }
 
 
