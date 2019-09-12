@@ -12,7 +12,6 @@ public class MalfunctionListInfo implements Serializable {
     private String malfunctionType;
     private Map<String, MalfunctionDataBean> malfunctionData;
     private String appId;
-    private OwnersBean owners;
     private String deviceSN;
     private String deviceName;
     private String deviceType;
@@ -58,14 +57,6 @@ public class MalfunctionListInfo implements Serializable {
 
     public void setAppId(String appId) {
         this.appId = appId;
-    }
-
-    public OwnersBean getOwners() {
-        return owners;
-    }
-
-    public void setOwners(OwnersBean owners) {
-        this.owners = owners;
     }
 
     public String getDeviceSN() {
@@ -207,77 +198,6 @@ public class MalfunctionListInfo implements Serializable {
     public void setDeviceNotifications(List<DeviceNotificationBean> deviceNotifications) {
         this.deviceNotifications = deviceNotifications;
     }
-
-    public static class OwnersBean implements Serializable {
-
-        /**
-         * _id : 507f1f77bcf86cd799100001
-         * nickname : dealers1
-         * appId : appId123890
-         * roles : dealers
-         * grants : {}
-         * id : 507f1f77bcf86cd799100001
-         */
-
-        private String _id;
-        private String nickname;
-        private String appId;
-        private String roles;
-        private GrantsBean grants;
-        private String id;
-
-        public String get_id() {
-            return _id;
-        }
-
-        public void set_id(String _id) {
-            this._id = _id;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
-        }
-
-        public String getAppId() {
-            return appId;
-        }
-
-        public void setAppId(String appId) {
-            this.appId = appId;
-        }
-
-        public String getRoles() {
-            return roles;
-        }
-
-        public void setRoles(String roles) {
-            this.roles = roles;
-        }
-
-        public GrantsBean getGrants() {
-            return grants;
-        }
-
-        public void setGrants(GrantsBean grants) {
-            this.grants = grants;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public static class GrantsBean implements Serializable {
-        }
-    }
-
 
     public static class RecordsBean implements Serializable {
 

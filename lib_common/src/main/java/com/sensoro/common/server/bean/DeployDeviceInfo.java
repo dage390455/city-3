@@ -7,7 +7,6 @@ public class DeployDeviceInfo implements Serializable {
 
 
     private String sn;
-    private String owners;
     private String appId;
     private String deviceType;
     private String unionType;
@@ -69,14 +68,6 @@ public class DeployDeviceInfo implements Serializable {
 
     public void setSn(String sn) {
         this.sn = sn;
-    }
-
-    public String getOwners() {
-        return owners;
-    }
-
-    public void setOwners(String owners) {
-        this.owners = owners;
     }
 
     public String getAppId() {

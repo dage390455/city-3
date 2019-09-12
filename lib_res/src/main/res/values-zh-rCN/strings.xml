@@ -1,5 +1,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!--camera-->
+    <array name="sortcondition">
+        <item>默认排序</item>
+        <item>名称顺序</item>
+        <item>名称倒序</item>
+    </array>
     <string name="capture_time">抓拍时间</string>
     <string name="process_status">处理状态</string>
     <string name="customize_time">自定义时间</string>
@@ -64,13 +69,13 @@
     <string name="camera_contact_no_exist">相机联系人不存在</string>
     <string name="owner_contact_no_exist">业主联系人不存在</string>
     <string name="security_warn_video_title_transcoding">预警录像（获取中…)</string>
-    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
 
 
     <!--city-->
+    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
     <string name="app_name">SensoroCity</string>
-    <string name="city_name">SENSORO CITY</string>
     //
+    <string name="city_name">SENSORO CITY</string>
     <string name="historical_log">历史日志</string>
     <string name="year">年</string>
     <string name="name">姓名</string>
@@ -143,22 +148,22 @@
     <string name="confirm_that_the_alert_type_app_is">通过 App 确认本次预警类型为</string>
     <string name="confirm_that_the_alert_type_web_is">通过 Web 确认本次预警类型为</string>
     <string name="below_the_warning_value">低于预警值</string>
+
+
     <string name="achieve_warning_value">达到预警值</string>
-
-
     <string name="the_system_sends_msg_to">系统发送短信至</string>
     <string name="alarm_sms_sent_tip_new">系统发送预警短信至：</string>
     <string name="alarm_sms_reciver_sent_tip_new">系统发送恢复短信至：</string>
     <string name="alarm_sms_timeout_sent_tip_new">系统发送超时短信至：</string>
-    <string name="alarm_sms_real_sent_tip_new">系统发送真实火警短信至：</string>
 
+    <string name="alarm_sms_real_sent_tip_new">系统发送真实火警短信至：</string>
     <string name="the_system_calls_to">系统拨打电话至</string>
     <string name="alarm_phone_sent_tip_new">系统拨打预警电话至：</string>
     <string name="alarm_phone_reciver_sent_tip_new">系统拨打恢复电话至：</string>
     <string name="alarm_phone_timeout_sent_tip_new">系统拨打超时电话至：</string>
+
+
     <string name="alarm_phone_real_sent_tip_new">系统拨打真实火警电话至：</string>
-
-
     <string name="equipment_warning">设备预警</string>
     <string name="value_is">值为</string>
     <string name="telephone_call">拨打中</string>
@@ -178,23 +183,18 @@
     <string name="not_inspected">未巡检</string>
     <string name="has_inspected">已巡检</string>
     <string name="i_have_inspected">我已巡检</string>
-    <string name="unknown">未知</string>
     //
+    <string name="unknown">未知</string>
     <string name="detection_points">监测点数</string>
     <string name="warning_monitoring_point">预警监测点</string>
     <string name="normal_monitoring_point">正常监测点</string>
     <string name="lost_monitoring_point">失联监测点</string>
     <string name="inactive_monitoring_point">未激活监测点</string>
     <string name="malfunction_monitoring_point">故障监测点</string>
-    <string name="all_types">全部类型</string>
 
+    <string name="all_types">全部类型</string>
     <string name="sortcondition">排序方式</string>
     <string name="sortcondition_def">默认排序</string>
-    <array name="sortcondition">
-        <item>默认排序</item>
-        <item>名称顺序</item>
-        <item>名称倒序</item>
-    </array>
 
 
     <string name="main_page_home">首页</string>
@@ -543,8 +543,6 @@
     <string name="inspection_task_search_hint">设备名称/设备编号</string>
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">开始巡检</string>
-    <string name="inspection_task_detail_go_on_inspection">继续巡检</string>
-    <string name="inspection_task_detail_title">详情</string>
     <string name="inspection_task_detail_task_number">任务编号</string>
     <string name="inspection_task_detail_inspection_established">既定巡检时间</string>
     <string name="inspection_task_detail_device_counts">设备数量</string>
@@ -1262,6 +1260,12 @@
     <string name="monitor_point_detail_operat">操作中</string>
     <string name="duration">时长</string>
     <string name="no_permission">无此权限，请联系管理员并重新登录</string>
+    <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">请勿输入英文，数字等非法字符</string>
+    <string name="please_go_to_setting">请到设置-权限管理中开启</string>
+
+    <string name="permission_change_desc">权限已被修改，为确保功能完善请重新登录账号</string>
+    <string name="login_later">稍后登录</string>
+    <string name="re_login">重新登录</string>
 
     <string name="missing_required_photo">缺少必选照片</string>
 
@@ -1289,6 +1293,5 @@
 
 
     <string name="server_error_alert">服务器数据返回错误 设备类型</string>
-
 
 </resources>
