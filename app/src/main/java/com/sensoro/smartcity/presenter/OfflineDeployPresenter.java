@@ -9,6 +9,8 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployResultModel;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
@@ -22,9 +24,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivityView> {
     private Activity mContext;
-    private DeployRetryUtil deployRetryUtil;
     private ArrayList<DeployAnalyzerModel> deviceInfos = new ArrayList<>();
     private DeployAnalyzerModel tempDeployAnalyzerModel;
     private boolean isBatch = false;
@@ -34,25 +38,45 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         //TODO 大小写 问题 发黄不看着别扭吗 老铁
         //TODO 国际化
         mContext = (Activity) context;
-        deployRetryUtil = DeployRetryUtil.getInstance();
+        List<String> deviceSN = new ArrayList<>();
+        List<String> cameraSN = new ArrayList<>();
+        List<String> stationSN = new ArrayList<>();
         LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
         if (null != allTask && allTask.size() > 0) {
             Iterator iter = allTask.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 DeployAnalyzerModel val = (DeployAnalyzerModel) entry.getValue();
+                if (Constants.TYPE_SCAN_DEPLOY_CAMERA == val.deployType) {
+                    cameraSN.add(val.sn);
+                } else if (Constants.TYPE_SCAN_DEPLOY_STATION == val.deployType) {
+                    stationSN.add(val.sn);
+                } else {
+                    deviceSN.add(val.sn);
+                }
                 deviceInfos.add(val);
-
             }
 //            Collections.reverse(deviceInfos);
             getView().updateAdapter(deviceInfos);
 
         }
+        //TODO 查找设备的部署状态 走三个接口 设备 camera station
+        RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(deviceSN, 1, 10000, null, null, null, null).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+            @Override
+            public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+
+            }
+        });
 
     }
 
     public void removeTask(DeployAnalyzerModel model) {
-        deployRetryUtil.removeTask(model);
+        DeployRetryUtil.getInstance().removeTask(model);
     }
 
     /**
@@ -76,7 +100,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         if (null != deployAnalyzerModel) {
             tempDeployAnalyzerModel = deployAnalyzerModel;
             getView().setCurrentTaskIndex(deviceInfos.indexOf(deployAnalyzerModel));
-            deployRetryUtil.doUploadImages(mContext, deployAnalyzerModel, retryListener);
+            DeployRetryUtil.getInstance().doUploadImages(mContext, deployAnalyzerModel, retryListener);
         }
     }
 
@@ -96,7 +120,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             getView().setUploadClickable(false);
         }
         getView().setCurrentTaskIndex(deviceInfos.indexOf(model));
-        deployRetryUtil.retryTry(mContext, model, retryListener);
+        DeployRetryUtil.getInstance().retryTry(mContext, model, retryListener);
     }
 
 
@@ -154,7 +178,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                         showState();
                     } else {
                         if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
-                            deployRetryUtil.doUploadImages(mContext, tempDeployAnalyzerModel, retryListener);
+                            DeployRetryUtil.getInstance().doUploadImages(mContext, tempDeployAnalyzerModel, retryListener);
                         } else {
                             showState();
                         }

@@ -525,6 +525,13 @@ public class RetrofitServiceHelper {
                 sensorTypes, mergeTypes, status, search);
     }
 
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page,int count, String sensorTypes, String mergeTypes, Integer status, String
+            search) {
+        return retrofitService.getDeviceBriefInfoList(null, null, sns, page, count, 1, 1,
+                sensorTypes, mergeTypes, status, search);
+    }
+
+
     /**
      * 主页top信息
      *
