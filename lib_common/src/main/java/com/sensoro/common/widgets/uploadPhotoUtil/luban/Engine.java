@@ -81,10 +81,7 @@ class Engine {
         Bitmap tagBitmap = BitmapFactory.decodeStream(srcImg.open(), null, options);
         int mBitmapDegree=BitmapUtil.getBitmapDegree(srcImg.getPath());
         if(mBitmapDegree>0){
-            Log.d("mBitmapDegree",mBitmapDegree+"");
-            Log.d("mBitmapDegree","tagBitmap.width="+tagBitmap.getWidth());
             tagBitmap=BitmapUtil.rotateBitmapByDegree(tagBitmap,mBitmapDegree);
-            Log.d("mBitmapDegree","tagBitmap.width="+tagBitmap.getWidth());
         }
 
         //TODO 按像素比例绘制
@@ -94,20 +91,22 @@ class Engine {
          int textPaddingBottom = (int) (25 * srcHeight / 667f + 0.5f);
          int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
          int textPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
-        Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
+//        Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
 
         int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
         try {
-            float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
-            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
+//            float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
+//            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
             tagFontSize= (int) (srcWidth/40.0f);
-
-            picPaddingBottom= textPaddingBottom+tagFontSize+markBitmap.getHeight()/5;
+            picPaddingBottom= textPaddingBottom+tagFontSize+tagFontSize*2/3;
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
+//        tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
+
+        tagBitmap = ImageUtil.drawTagToRightBottom(ContextUtils.getContext(), tagBitmap, "SENSORO",
+                tagFontSize*2, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), picPaddingRight, picPaddingBottom);
 
         tagBitmap = ImageUtil.drawTextToRightBottom(ContextUtils.getContext(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
                 tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
@@ -123,7 +122,7 @@ class Engine {
         }
         tagBitmap.compress(focusAlpha ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 60, stream);
         tagBitmap.recycle();
-        markBitmap.recycle();
+//        markBitmap.recycle();
         FileOutputStream fos = new FileOutputStream(tagImg);
         fos.write(stream.toByteArray());
         fos.flush();
