@@ -17,19 +17,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import me.jessyan.autosize.utils.ScreenUtils;
-
 /**
  * Responsible for starting compress and managing active and cached resources.
  */
-class Engine {
+class Enginebackup {
     private InputStreamProvider srcImg;
     private File tagImg;
     private int srcWidth;
     private int srcHeight;
     private boolean focusAlpha;
 
-    Engine(InputStreamProvider srcImg, File tagImg, boolean focusAlpha) throws IOException {
+        Enginebackup(InputStreamProvider srcImg, File tagImg, boolean focusAlpha) throws IOException {
         this.tagImg = tagImg;
         this.srcImg = srcImg;
         this.focusAlpha = focusAlpha;
@@ -90,27 +88,26 @@ class Engine {
         int srcWidth = tagBitmap.getWidth();
         int srcHeight = tagBitmap.getHeight();
         int picPaddingBottom = (int) (50 * srcHeight / 667f + 0.5f);
-        int textPaddingBottom = (int) (16 * srcHeight / 667f + 0.5f);
+        int textPaddingBottom = (int) (25 * srcHeight / 667f + 0.5f);
         int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
         int textPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
-        Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
+//        Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
 
         int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
         try {
-            float  rate=(srcWidth/2-picPaddingRight)*1.0f/markBitmap.getWidth();
-            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
-            tagFontSize= (int) (srcWidth/25.0f);
-            picPaddingBottom= textPaddingBottom+tagFontSize+markBitmap.getHeight()/5;
-
-
-
+//            float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
+//            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
+            tagFontSize= (int) (srcWidth/40.0f);
+            picPaddingBottom= textPaddingBottom+tagFontSize+tagFontSize*2/3;
         }catch (Exception e){
             e.printStackTrace();
         }
 
+//        tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
 
+        tagBitmap = ImageUtil.drawTagToRightBottom(ContextUtils.getContext(), tagBitmap, "SENSORO",
+                tagFontSize*2, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), picPaddingRight, picPaddingBottom);
 
-        tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
         tagBitmap = ImageUtil.drawTextToRightBottom(ContextUtils.getContext(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
                 tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
 
@@ -125,7 +122,7 @@ class Engine {
         }
         tagBitmap.compress(focusAlpha ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 60, stream);
         tagBitmap.recycle();
-        markBitmap.recycle();
+//        markBitmap.recycle();
         FileOutputStream fos = new FileOutputStream(tagImg);
         fos.write(stream.toByteArray());
         fos.flush();
