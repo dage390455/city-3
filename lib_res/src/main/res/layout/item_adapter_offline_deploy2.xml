@@ -7,84 +7,6 @@
     android:layout_marginTop="12dp"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/item_offline_deploy_adapter_tv_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/colorAccent"
-        android:textSize="16dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/item_offline_deploy_adapter_tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/item_offline_deploy_adapter_tv_type"
-        android:textColor="@color/c_a6a6a6"
-        android:textSize="14dp" />
-
-
-    <TextView
-        android:id="@+id/item_offline_deploy_adapter_tv_hasdeployed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_toLeftOf="@+id/item_offline_deploy_adapter_tv_errormsg"
-        android:textColor="@color/c_a6a6a6"
-        android:layout_marginRight="5dp"
-        android:textSize="14dp" />
-
-    <TextView
-        android:id="@+id/item_offline_deploy_adapter_tv_errormsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:paddingRight="20dp"
-        android:textColor="@color/c_f34a4a"
-        android:textSize="14dp" />
-
-    <ProgressBar
-        android:id="@+id/oading_prgbar"
-        style="@style/CustomProgressBar_Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/item_offline_deploy_adapter_content_tv"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="8dp"
-        android:visibility="invisible" />
-
-
-    <TextView
-        android:id="@+id/item_offline_deploy_adapter_content_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/item_offline_deploy_adapter_tv_type"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-
-        android:layout_marginEnd="20dp"
-        android:gravity="start"
-        android:textColor="@color/c_252525"
-        android:textSize="14dp" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_divider_height"
-        android:layout_below="@+id/item_offline_deploy_adapter_content_tv"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp"
-        android:background="@color/c_dfdfdf" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,31 +28,13 @@
             android:paddingTop="6dp"
             android:paddingEnd="8dp"
             android:paddingBottom="6dp"
-            android:text="清除"
+            android:text="@string/clear"
             android:textColor="@color/c_252525"
             android:textSize="12dp"
 
 
             />
 
-        <TextView
-            android:id="@+id/item_offline_deploy_tv_upload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/item_offline_deploy_adapter_clear_tv"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="20dp"
-
-            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_2dp"
-            android:paddingStart="8dp"
-
-            android:paddingTop="6dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="6dp"
-
-            android:text="上传"
-            android:textColor="@color/c_252525"
-            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/item_offline_deploy_adapter_tv_force_upload"
@@ -144,11 +48,100 @@
             android:paddingEnd="8dp"
 
             android:paddingBottom="6dp"
-            android:text="强制上传"
+            android:text="@string/forceload"
             android:textColor="@color/c_252525"
             android:textSize="12dp"
             android:visibility="gone" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/oading_prgbar"
+        style="@style/CustomProgressBar_Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_offline_deploy_adapter_tv_deployedtime"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible" />
+
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_hasdeployed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/item_offline_deploy_adapter_tv_errormsg"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_errormsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/c_f34a4a"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tiem_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_offline_deploy_adapter_tv_type"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+
+        android:layout_marginEnd="20dp"
+        android:gravity="start"
+        android:textColor="@color/c_252525"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_sn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/item_offline_deploy_adapter_tv_type"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_deployedtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_below="@+id/item_offline_deploy_adapter_tv_sn"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/item_offline_deploy_adapter_tv_type"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14dp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_divider_height"
+        android:layout_below="@+id/item_offline_deploy_adapter_tiem_tv"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/c_dfdfdf" />
 
 
 </RelativeLayout>

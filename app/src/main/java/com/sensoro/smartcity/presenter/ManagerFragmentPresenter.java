@@ -68,6 +68,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setNameplateVisible(userData.hasNameplateList);
             //TODO 设置是否有IBeacon功能
             getView().setIBeaconVisible(userData.hasIBeaconSearchDemo);
+            getView().setDeployOfflineTaskVisible(userData.hasDeployOfflineTask);
         }
     }
 
@@ -228,14 +229,14 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 //        data.setData(dataBean);
 //        RetrofitServiceHelper.getInstance().updateSensoroData(data).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(this) {
 //            @Override
-//            public void onCompleted(ResponseResult<Object> objectResponseResult) {
+//            public void onDeployCompleted(ResponseResult<Object> objectResponseResult) {
 //                int code = objectResponseResult.getCode();
 //                String message = objectResponseResult.getMessage();
 //                getView().toastShort("updateSensoroData code = " + code + ",message = " + message);
 //            }
 //
 //            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
+//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
 //                getView().toastShort("updateSensoroData " + errorMsg);
 //            }
 //        });

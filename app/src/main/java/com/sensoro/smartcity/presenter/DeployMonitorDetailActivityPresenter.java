@@ -94,9 +94,6 @@ import java.util.Set;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.common.server.CityObserver.ERR_CODE_NET_CONNECT_EX;
-import static com.sensoro.common.server.CityObserver.ERR_CODE_UNKNOWN_EX;
-
 public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart
         , BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
@@ -858,92 +855,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
 
-    /**
-     * 重试
-     */
-    public void doRetry() {
-        getView().showProgressDialog();
-        deployRetryUtil.retryTry(mContext, deployAnalyzerModel, new DeployRetryUtil.OnRetryListener() {
-            @Override
-            public void onStart() {
-                if (isAttachedView()) {
-                    getView().showStartUploadProgressDialog();
-                }
-            }
-
-            @Override
-            public void onComplete(List<ScenesData> scenesDataList) {
-
-            }
-
-            @Override
-            public void onError(String errMsg) {
-                if (isAttachedView()) {
-                    getView().setUploadBtnStatus(true);
-                    getView().dismissUploadProgressDialog();
-                    getView().toastShort(errMsg);
-                    //失败，本地照片存储,重试
-                    getView().showRetryDialog();
-                    getView().dismissProgressDialog();
-
-
-                }
-            }
-
-            @Override
-            public void onProgress(String content, double percent) {
-                if (isAttachedView()) {
-                    getView().showUploadProgressDialog(content, percent);
-                }
-            }
-
-
-            @Override
-            public void onCompleted(DeployResultModel deployResultModel) {
-                getView().dismissProgressDialog();
-                Intent intent = new Intent();
-                intent.setClass(mContext, DeployResultActivity.class);
-                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                getView().startAC(intent);
-                getView().finishAc();
-
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().setUploadBtnStatus(true);
-                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                    getView().toastShort(errorMsg);
-                    deployRetryUtil.addTask(deployAnalyzerModel);
-                    getView().showRetryDialog();
-
-                } else if (errorCode == 4013101 || errorCode == 4000013) {
-                    freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
-                } else {
-                    freshError(deployAnalyzerModel.sn, errorMsg, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
-                }
-
-
-            }
-
-            @Override
-            public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
-                updateDeviceStatusDialog(data);
-            }
-
-            @Override
-            public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
-                tempForceReason = null;
-                getView().toastShort(errorMsg);
-                getView().dismissBleConfigDialog();
-                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                    deployRetryUtil.addTask(deployAnalyzerModel);
-                    getView().showRetryDialog();
-                }
-            }
-        });
-    }
 
     private void freshError(String scanSN, String errorInfo, int resultCode) {
         //
@@ -1006,8 +917,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
 
-        deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-        deployRetryUtil.updateTask(deployAnalyzerModel);
     }
 
     private void freshStation(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
@@ -1030,8 +939,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.signal = String.copyValueOf(deployAnalyzerModel.signal.toCharArray());
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
-        deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
-        deployRetryUtil.updateTask(deployAnalyzerModel);
     }
 
     @Override

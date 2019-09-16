@@ -2614,4 +2614,13 @@ public class RetrofitServiceHelper {
     public Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data) {
         return retrofitService.updateSensoroData(data);
     }
+
+    /**
+     * 获取摄像头 数组sn
+     * @param sn
+     * @return
+     */
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(@Body List<String> sn) {
+        return retrofitService.getCameraList(sn);
+    }
 }

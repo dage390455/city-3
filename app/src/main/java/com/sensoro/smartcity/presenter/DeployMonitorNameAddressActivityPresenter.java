@@ -157,7 +157,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
 //        getView().showProgressDialog();
 //        RetrofitServiceHelper.INSTANCE.getDeviceNameValid(text).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
 //            @Override
-//            public void onCompleted(ResponseBase responseBase) {
+//            public void onDeployCompleted(ResponseBase responseBase) {
 //                if (isAttachedView()) {
 //                    getView().dismissProgressDialog();
 //                    doResult(text);
@@ -165,7 +165,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
 //            }
 //
 //            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
+//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
 ////                if (errorCode==4007108){
 //////此code为重名
 //////                }

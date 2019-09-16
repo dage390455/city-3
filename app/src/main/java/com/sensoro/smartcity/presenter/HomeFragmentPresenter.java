@@ -763,7 +763,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             mDeviceInfoList.clear();
                         }
                         try {
-                            LogUtils.loge("onErrorMsg", "mDeviceInfoList.size=" + mDeviceInfoList.size());
+                            LogUtils.loge("onDeployErrorMsg", "mDeviceInfoList.size=" + mDeviceInfoList.size());
 
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();

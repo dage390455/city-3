@@ -296,6 +296,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 startAC(new Intent(mRootFragment.getActivity(), NearByDeviceActivity.class));
                 break;
             case R.id.fg_main_manage_ll_deploy_retry:
+
+
                 startAC(new Intent(mRootFragment.getActivity(), OfflineDeployActivity.class));
                 break;
         }
@@ -320,6 +322,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setContractVisible(boolean isVisible) {
         fgMainManageLlContractManagement.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         line2.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployOfflineTaskVisible(boolean hasDeployOfflineTask) {
+        fgMainManageLlDeployRetry.setVisibility(hasDeployOfflineTask ? View.VISIBLE : View.GONE);
+        line12.setVisibility(hasDeployOfflineTask ? View.VISIBLE : View.GONE);
     }
 
     @Override

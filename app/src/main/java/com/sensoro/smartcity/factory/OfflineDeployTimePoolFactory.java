@@ -2,20 +2,12 @@ package com.sensoro.smartcity.factory;
 
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.server.CityObserver;
-import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceInfo;
-import com.sensoro.common.server.response.ResponseResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class OfflineDeployTimePoolFactory {
     public static ArrayList<DeployAnalyzerModel> createDeployMaps(LinkedHashMap<String, DeployAnalyzerModel> allTask, OnOfflineDeployTimePoolFactoryListener listener) {
@@ -41,20 +33,21 @@ public class OfflineDeployTimePoolFactory {
                 }
                 deviceInfos.add(val);
             }
-            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(deviceSN, 1, 10000, null, null, null, null).subscribeOn
-                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
-                @Override
-                public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
-                    deviceInfoListRsp
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-
-                }
-            });
+//            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(deviceSN, 1, 10000, null, null, null, null).subscribeOn
+//                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+//                @Override
+//                public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
+//                    deviceInfoListRsp
+//                }
+//
+//                @Override
+//                public void onErrorMsg(int errorCode, String errorMsg) {
+//
+//                }
+//            });
 
         }
+        return deviceInfos;
     }
 
     public interface OnOfflineDeployTimePoolFactoryListener {

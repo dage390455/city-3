@@ -25,8 +25,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.CustomCornerDialog;
@@ -323,7 +325,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
             @Override
             public void onConfirmClick() {
-                mPresenter.doRetry();
+                mPresenter.doConfirm();
                 retryDialog.dismiss();
 
             }
@@ -558,8 +560,14 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void showRetryDialog() {
-        if (null != retryDialog) {
-            retryDialog.show("网络异常是否重试", "离线上传", "立即重试");
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            if (userData.hasDeployOfflineTask) {
+                if (null != retryDialog) {
+                    retryDialog.show("网络异常是否重试", "离线上传", "立即重试");
+                }
+            }
+
         }
 
     }

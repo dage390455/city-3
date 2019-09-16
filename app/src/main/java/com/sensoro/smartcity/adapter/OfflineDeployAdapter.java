@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.WidgetUtil;
@@ -33,7 +32,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
 
     public interface OnContentItemClickListener {
 
-        void onUploadClick(View view, int position);
+//        void onUploadClick(View view, int position);
 
         void onForceUploadClick(View view, int position);
 
@@ -87,22 +86,25 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         String type = "";
         switch (deviceInfo.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_STATION:
-                type = "基站部署";
+                type = mContext.getResources().getString(R.string.base_station_deployment);
                 break;
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
-                type = "设备部署";
+                type = mContext.getResources().getString(R.string.deployment_device);
+                break;
+            case Constants.TYPE_SCAN_DEPLOY_CAMERA:
+                type = mContext.getResources().getString(R.string.deployment_device);
                 break;
             default:
-                type = "设备更换";
+                type = mContext.getResources().getString(R.string.deployment_replacement);
                 break;
         }
 
         holder.typeTv.setText(type);
         String deviceType = deviceInfo.deviceType;
-        String deviceTypeStr = WidgetUtil.getDeviceMainTypeName(deviceType);
         StringBuilder stringBuilder = new StringBuilder();
-        holder.itemOfflineDeployAdapterSnTv.setText(stringBuilder.append(deviceTypeStr).append(" ").append(deviceInfo.sn).toString());
-        holder.timeTv.setText(DateUtil.getStrTimeToday(mContext, deviceInfo.updatedTime, 0));
+        holder.itemOfflineDeployAdapterSnTv.setText(stringBuilder.append(" SN:").append(deviceInfo.sn).toString());
+
+
         holder.itemOfflineDeployAdapterClearTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,20 +121,17 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
                 }
             }
         });
-        holder.tvUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onContentItemClickListener != null && canClick) {
-                    onContentItemClickListener.onUploadClick(v, position);
-                }
-            }
-        });
-        holder.tvForceLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onContentItemClickListener != null && canClick) {
-                    onContentItemClickListener.onForceUploadClick(v, position);
-                }
+//        holder.tvUpload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (onContentItemClickListener != null && canClick) {
+//                    onContentItemClickListener.onUploadClick(v, position);
+//                }
+//            }
+//        });
+        holder.tvForceLoad.setOnClickListener(v -> {
+            if (onContentItemClickListener != null && canClick) {
+                onContentItemClickListener.onForceUploadClick(v, position);
             }
         });
         if (position == currentTaskIndex) {
@@ -141,7 +140,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             holder.progressBar.setVisibility(View.INVISIBLE);
         }
 
-        if (deviceInfo.isShowForce && PreferencesHelper.getInstance().getUserData().hasForceUpload) {
+        if (deviceInfo.isShowForce) {
             holder.tvForceLoad.setVisibility(View.VISIBLE);
         } else {
             holder.tvForceLoad.setVisibility(View.GONE);
@@ -149,13 +148,33 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         }
 
 
+        // TODO: 2019-09-16 是否已部署显示 
         if (deviceInfo.hasDeployed) {
 
-            holder.tvHasdeployed.setText("已部署");
+            holder.tvHasdeployed.setText(mContext.getResources().getString(R.string.deployed));
+            holder.tvdeployedtime.setText(mContext.getResources().getString(R.string.deployed));
         } else {
             holder.tvHasdeployed.setText("");
+            holder.tvdeployedtime.setText("");
 
         }
+
+        String deviceTypeStr = WidgetUtil.getDeviceMainTypeName(deviceType);
+        StringBuilder sb = new StringBuilder();
+        sb.append(deviceTypeStr);
+        if (deviceInfo.updatedTime == 0) {
+            deviceInfo.updatedTime = deviceInfo.lastOperateTime;
+            sb.append(DateUtil.getStrTimeToday(mContext, deviceInfo.lastOperateTime, 0));
+
+        } else {
+            sb.append(DateUtil.getStrTimeToday(mContext, deviceInfo.updatedTime, 0));
+
+
+        }
+        // TODO: 2019-09-16 追加已部署时间
+        sb.append("部署时间：" + DateUtil.getDate(deviceInfo.lastOperateTime));
+        holder.timeTv.setText(sb.toString());
+
         if (!TextUtils.isEmpty(deviceInfo.getStateErrorMsg)) {
             holder.itemOfflineDeployAdapterErrorMsgTv.setText(deviceInfo.getStateErrorMsg);
 
@@ -178,20 +197,22 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
     class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_offline_deploy_adapter_tv_errormsg)
         TextView itemOfflineDeployAdapterErrorMsgTv;
-        @BindView(R.id.item_offline_deploy_adapter_content_tv)
+        @BindView(R.id.item_offline_deploy_adapter_tv_sn)
         TextView itemOfflineDeployAdapterSnTv;
         @BindView(R.id.item_offline_deploy_adapter_clear_tv)
         TextView itemOfflineDeployAdapterClearTv;
-        @BindView(R.id.item_offline_deploy_adapter_tv_time)
+        @BindView(R.id.item_offline_deploy_adapter_tiem_tv)
         TextView timeTv;
         @BindView(R.id.item_offline_deploy_adapter_tv_type)
         TextView typeTv;
         @BindView(R.id.item_offline_deploy_adapter_tv_force_upload)
         TextView tvForceLoad;
-        @BindView(R.id.item_offline_deploy_tv_upload)
-        TextView tvUpload;
+        //        @BindView(R.id.item_offline_deploy_tv_upload)
+//        TextView tvUpload;
         @BindView(R.id.item_offline_deploy_adapter_tv_hasdeployed)
         TextView tvHasdeployed;
+        @BindView(R.id.item_offline_deploy_adapter_tv_deployedtime)
+        TextView tvdeployedtime;
         @BindView(R.id.oading_prgbar)
         ProgressBar progressBar;
         @BindView(R.id.item_offline_deploy_root)
