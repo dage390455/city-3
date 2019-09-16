@@ -3,9 +3,6 @@ package com.sensoro.common.widgets.uploadPhotoUtil.luban;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.common.R;
@@ -23,14 +20,14 @@ import java.io.IOException;
 /**
  * Responsible for starting compress and managing active and cached resources.
  */
-class Engine {
+class Enginebackup {
     private InputStreamProvider srcImg;
     private File tagImg;
     private int srcWidth;
     private int srcHeight;
     private boolean focusAlpha;
 
-    Engine(InputStreamProvider srcImg, File tagImg, boolean focusAlpha) throws IOException {
+        Enginebackup(InputStreamProvider srcImg, File tagImg, boolean focusAlpha) throws IOException {
         this.tagImg = tagImg;
         this.srcImg = srcImg;
         this.focusAlpha = focusAlpha;
@@ -77,27 +74,6 @@ class Engine {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    /**
-     * 根据指定的文字占用宽度，计算出最大的字体大小，使用了递归，要注意！！！！！！！！！！！！！
-     * @param tagTextTargetWidth
-     * @param tagText
-     * @param initSize
-     * @return
-     */
-    private int getTagTextSize(int  tagTextTargetWidth,String tagText,int initSize){
-        if(TextUtils.isEmpty(tagText))
-            return initSize;
-        Paint paint=new Paint();
-        Rect rect =new Rect();
-        paint.setTextSize(initSize);
-        paint.getTextBounds(tagText,0,tagText.length(),rect);
-
-        if(rect.width()<=tagTextTargetWidth){
-            return initSize;
-        }else{
-            return getTagTextSize(tagTextTargetWidth,tagText,initSize-2);
-        }
-    }
     File compress() throws Exception {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = computeSize();
@@ -117,35 +93,23 @@ class Engine {
         int textPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
 //        Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
 
-        int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),42);
-        int tagDateFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
-        Log.d("tagFontSize","tagFontSize=="+tagFontSize);
-        Log.d("tagFontSize","tagDateFontSize=="+tagDateFontSize);
-        String tag="SENSORO";
+        int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
         try {
 //            float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
 //            markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
-//            tagFontSize= (int) (srcWidth/40.0f);
-
-//            tag字体大小
-            int  targetWidth= (int) (srcWidth-srcWidth*0.55-20 * srcWidth / 375f);
-            tagFontSize=  getTagTextSize(targetWidth,tag,srcWidth/10);
-            tagDateFontSize=tagFontSize/3;
-            Log.d("tagFontSize","tagFontSize=="+tagFontSize);
-            Log.d("tagFontSize","tagDateFontSize=="+tagDateFontSize);
-            picPaddingBottom= textPaddingBottom+tagDateFontSize+tagDateFontSize*2/3;
-
+            tagFontSize= (int) (srcWidth/40.0f);
+            picPaddingBottom= textPaddingBottom+tagFontSize+tagFontSize*2/3;
         }catch (Exception e){
             e.printStackTrace();
         }
 
 //        tagBitmap = ImageUtil.createWaterMaskRightBottom(ContextUtils.getContext(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
 
-        tagBitmap = ImageUtil.drawTagToRightBottom(ContextUtils.getContext(), tagBitmap, tag,
-                tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), picPaddingRight, picPaddingBottom);
+        tagBitmap = ImageUtil.drawTagToRightBottom(ContextUtils.getContext(), tagBitmap, "SENSORO",
+                tagFontSize*2, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), picPaddingRight, picPaddingBottom);
 
         tagBitmap = ImageUtil.drawTextToRightBottom(ContextUtils.getContext(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
-                tagDateFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
+                tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
 
         if(mBitmapDegree>0) {
             tagBitmap = BitmapUtil.rotateBitmapByDegree(tagBitmap, -mBitmapDegree);
