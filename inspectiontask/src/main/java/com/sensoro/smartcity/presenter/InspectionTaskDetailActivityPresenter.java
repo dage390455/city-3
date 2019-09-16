@@ -71,20 +71,21 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
 
     private void freshTvState(int status) {
         switch (status) {
-            case 0:
+            case InspectionConstant.TASK_STATUS_PEDNING_EXC:
                 getView().setTvbtnStartState(R.drawable.shape_bg_inspectiontask_corner_29c_shadow, R.color.white, mContext.getString(R.string.inspection_task_detail_start_inspection));
                 break;
-            case 1:
-            case 2:
+            case InspectionConstant.TASK_STATUS_EXCING:
+            case InspectionConstant.TASK_STATUS_TIMEOUE_UNDONE:
                 getView().setTvbtnStartState(R.drawable.shape_bg_inspectiontask_corner_29c_shadow, R.color.white,  mContext.getString(R.string.inspection_task_detail_go_on_inspection));
                 break;
-            case 3:
-            case 4:
+            case InspectionConstant.TASK_STATUS_DONE:
+            case InspectionConstant.TASK_STATUS_TIMEOUE_DONE:
                 getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525,  mContext.getString(R.string.inspection_task_detail_title));
                 break;
         }
 
         setTvState(status);
+
     }
     private void setTvState(int status){
         int color=R.color.c_8058a5;

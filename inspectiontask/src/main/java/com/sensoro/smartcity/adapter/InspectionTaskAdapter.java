@@ -16,6 +16,7 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
+import com.sensoro.smartcity.constant.InspectionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.sensoro.smartcity.constant.InspectionConstant.TASK_STATUS_EXCING;
+import static com.sensoro.smartcity.constant.InspectionConstant.TASK_STATUS_PEDNING_EXC;
 
 
 public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAdapter.InspectionTaskHolder> {
@@ -68,23 +71,23 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         int color=R.color.c_8058a5;
         String text=mContext.getString(R.string.inspection_status_text_pending_execution);
         switch (status) {
-            case 0:
+            case InspectionConstant.TASK_STATUS_PEDNING_EXC:
                 color=R.color.c_8058a5;
                 text=mContext.getString(R.string.inspection_status_text_pending_execution);
                 break;
-            case 1:
+            case InspectionConstant.TASK_STATUS_EXCING:
                 color=R.color.c_3aa7f0;
                 text=mContext.getString(R.string.inspection_status_text_executing);
                 break;
-            case 2:
+            case InspectionConstant.TASK_STATUS_TIMEOUE_UNDONE:
                 color=R.color.c_ff8d34;
                 text=mContext.getString(R.string.inspection_status_text_timeout_not_completed);
                 break;
-            case 3:
+            case InspectionConstant.TASK_STATUS_DONE:
                 color=R.color.c_1dbb99;
                 text=mContext.getString(R.string.inspection_status_text_completed);
                 break;
-            case 4:
+            case InspectionConstant.TASK_STATUS_TIMEOUE_DONE:
                 color=R.color.c_a6a6a6;
                 text=mContext.getString(R.string.inspection_status_text_timeout_completed);
                 break;
