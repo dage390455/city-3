@@ -40,7 +40,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
-
+/**
+ * 单相电和旧版本设备的下行
+ */
 public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMonitorConfigurationView, DeployMonitorConfigurationPresenter>
         implements IDeployMonitorConfigurationView {
     @BindView(R.id.include_text_title_tv_cancel)

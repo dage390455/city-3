@@ -62,8 +62,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             mHandler.removeCallbacks(DeviceTaskOvertime);
             mScheduleNo = null;
             getView().dismissOperatingLoadingDialog();
-            getView().showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
-
+            //若超时 去除显示超时对话框逻辑
+//            getView().showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
+            if (isAttachedView()) {
+                getView().finishAc();
+            }
         }
     };
 

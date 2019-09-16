@@ -105,6 +105,28 @@ public class ImageUtil {
                 AppUtils.dp2px(context, paddingLeft),
                 AppUtils.dp2px(context, paddingTop) + bounds.height());
     }
+    /**
+     * 绘制tag
+     *
+     * @return
+     */
+    public static Bitmap drawTagToRightBottom(Context context, Bitmap bitmap, String text,
+                                               int size, int color, int paddingRight, int paddingBottom) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(color);
+        //设置加粗
+        paint.setTypeface(Typeface.DEFAULT);
+        paint.setTextSize(size);
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+//        return drawTextToBitmap(context, bitmap, text, paint, bounds,
+//                bitmap.getWidth() - bounds.width() - AppUtils.dp2px(context, paddingRight),
+//                bitmap.getHeight() - AppUtils.dp2px(context, paddingBottom));
+        //更改为pix
+        return drawTextToBitmap(context, bitmap, text, paint, bounds,
+                bitmap.getWidth() - bounds.width() - paddingRight,
+                bitmap.getHeight() - paddingBottom);
+    }
 
     /**
      * 绘制文字到右下角

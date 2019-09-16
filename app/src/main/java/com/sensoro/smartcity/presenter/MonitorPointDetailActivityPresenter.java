@@ -125,7 +125,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             mScheduleNo = null;
             if (isAttachedView()) {
                 getView().dismissOperatingLoadingDialog();
-                getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
+                //若超时 去除显示超时对话框逻辑
+//                getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
             }
         }
     };
