@@ -1558,8 +1558,24 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             @Override
             public void onSuccess(Object o) {
                 if (isAttachedView()) {
-                    getView().dismissOperatingLoadingDialog();
-                    getView().showOperationSuccessToast();
+                    //TODO 蓝牙成功后告诉服务器
+                    ArrayList<String> sns = new ArrayList<>();
+                    sns.add(mDeviceInfo.getSn());
+                    RetrofitServiceHelper.getInstance().doMonitorPointBLEUpdate(sns, mOperationType, null, null, null, null, null, null, finalBeepMuteTimeInt)
+                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(MonitorPointDetailActivityPresenter.this) {
+                        @Override
+                        public void onCompleted(ResponseResult<Object> response) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().showOperationSuccessToast();
+                        }
+
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+
                 }
             }
 

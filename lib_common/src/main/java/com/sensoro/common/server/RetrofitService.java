@@ -484,5 +484,9 @@ public interface RetrofitService {
 
     @POST("applogapi/logService/saveLog")
     Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data);
+
+
+    @POST("devices/blutoothMute")
+    Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(@Body RequestBody requestBody);
 }
 
