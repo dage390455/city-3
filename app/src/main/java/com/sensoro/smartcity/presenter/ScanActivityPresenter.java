@@ -247,7 +247,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                                 getView().toastShort(mContext.getResources().getString(R.string.please_re_scan_try_again));
                             }
                         } else  if(intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))){
-                            startActivity(ARouterConstants.AROUTER_PATH,intent.getExtras(), mContext);
+                            startActivity(intent.getStringExtra(ARouterConstants.AROUTER_PATH),intent.getExtras(), mContext);
                         }else {
                             getView().startAC(intent);
                         }
