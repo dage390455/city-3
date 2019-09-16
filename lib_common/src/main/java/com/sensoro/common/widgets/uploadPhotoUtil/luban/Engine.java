@@ -93,14 +93,14 @@ class Engine {
          int picPaddingBottom = (int) (50 * srcHeight / 667f + 0.5f);
          int textPaddingBottom = (int) (25 * srcHeight / 667f + 0.5f);
          int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
-         int textPaddingRight = (int) (25 * srcWidth / 375f + 0.5f);
+         int textPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
         Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
 
         int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
         try {
             float  rate=(srcWidth/5.0f)/markBitmap.getWidth();
             markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
-            tagFontSize= (int) (srcWidth/25.0f);
+            tagFontSize= (int) (srcWidth/40.0f);
 
             picPaddingBottom= textPaddingBottom+tagFontSize+markBitmap.getHeight()/5;
         }catch (Exception e){
