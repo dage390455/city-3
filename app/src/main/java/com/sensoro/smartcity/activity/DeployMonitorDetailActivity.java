@@ -325,7 +325,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
             @Override
             public void onConfirmClick() {
-                mPresenter.doRetry();
+                mPresenter.doConfirm();
                 retryDialog.dismiss();
 
             }

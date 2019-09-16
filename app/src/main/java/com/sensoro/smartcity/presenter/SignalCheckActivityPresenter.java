@@ -174,7 +174,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 //                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.getSn(), mDeviceInfo.getLonlat()[0], mDeviceInfo.getLonlat()[1])
 //                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
 //                    @Override
-//                    public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+//                    public void onDeployCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
 //                        blePassword = deployDeviceDetailRsp.getData().getBlePassword();
 //                        //todo delete
 ////                        blePassword = "hzmBl4;XTD6*[@}I";
@@ -183,7 +183,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 //                    }
 //
 //                    @Override
-//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                    public void onDeployErrorMsg(int errorCode, String errorMsg) {
 //                        getView().dismissProgressDialog();
 ////                        getView().updateUploadState(true);
 ////                        getView().toastShort("获取配置文件失败，请重试 "+errorMsg);

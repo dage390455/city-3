@@ -1317,6 +1317,7 @@
     <string name="deployment_replacement">Device replacement</string>
     <string name="successful_deployment">Successful deployment</string>
     <string name="nosignal">no_signal</string>
+    <string name="forceload">forceload</string>
 
 
 </resources>

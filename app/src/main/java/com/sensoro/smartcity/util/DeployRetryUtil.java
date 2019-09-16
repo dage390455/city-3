@@ -1,16 +1,18 @@
 package com.sensoro.smartcity.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.RetryWithDelay;
+import com.sensoro.common.server.bean.DeployCameraUploadInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeployStationInfo;
+import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
@@ -70,6 +72,8 @@ public class DeployRetryUtil {
 
 
     /**
+     * * 设备上传任务回调，区分摄像机（部署接口及判断是否在线）
+     *
      * @param context
      * @param deployAnalyzerModel
      */
@@ -77,7 +81,14 @@ public class DeployRetryUtil {
 
         //根据任务类型判断是否调用信号📶接口
 //        if (deployAnalyzerModel.isGetDeviceRealStatusFailure) {
-        getDeviceRealStatus(deployAnalyzerModel, retryListener);
+
+
+        if (deployAnalyzerModel.deployType == Constants.TYPE_SCAN_DEPLOY_CAMERA) {
+
+            getCameraStatus(deployAnalyzerModel, retryListener);
+        } else {
+            getDeviceRealStatus(deployAnalyzerModel, retryListener);
+        }
 //        } else {
 //            if (null != deployAnalyzerModel.imgUrls && deployAnalyzerModel.imgUrls.size() > 0) {
 //                postResult(deployAnalyzerModel, retryListener);
@@ -87,6 +98,7 @@ public class DeployRetryUtil {
 //        }
 
     }
+
 
     /**
      * 上传照片
@@ -150,6 +162,45 @@ public class DeployRetryUtil {
     }
 
     /**
+     * 获取摄像机在线状态
+     *
+     * @param deployAnalyzerModel
+     * @param retryListener
+     */
+
+    private void getCameraStatus(DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
+
+        RetrofitServiceHelper.getInstance().getDeviceCamera(deployAnalyzerModel.sn.toUpperCase()).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(null) {
+            @Override
+            public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
+                DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
+                if (data != null) {
+                    DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
+                    if (camera != null) {
+                        DeviceCameraDetailInfo.CameraBean.InfoBean info = camera.getInfo();
+                        if (info != null) {
+                            String deviceStatus = info.getDeviceStatus();
+                            if (!TextUtils.isEmpty(deviceStatus)) {
+                                deployAnalyzerModel.cameraStatus = deviceStatus;
+                                retryListener.setDeployCameraStatus(deployAnalyzerModel.cameraStatus);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                retryListener.onDeployErrorMsg(errorCode, errorMsg);
+
+            }
+        });
+
+    }
+
+
+    /**
      * 获取信号📶质量状态
      *
      * @param deployAnalyzerModel
@@ -171,7 +222,8 @@ public class DeployRetryUtil {
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                retryListener.onGetDeviceRealStatusErrorMsg(errorCode, errorMsg);
+                retryListener.onDeployErrorMsg(errorCode, errorMsg);
+
             }
         });
     }
@@ -199,12 +251,12 @@ public class DeployRetryUtil {
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
-                                retryListener.onErrorMsg(errorCode, errorMsg);
+                                retryListener.onDeployErrorMsg(errorCode, errorMsg);
                             }
 
                             @Override
                             public void onCompleted(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
-                                retryListener.onCompleted(freshStation(deployAnalyzerModel, deployStationInfoRsp));
+                                retryListener.onDeployCompleted();
                                 removeTask(deployAnalyzerModel);
                             }
                         });
@@ -227,12 +279,12 @@ public class DeployRetryUtil {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
 
-                                retryListener.onErrorMsg(errorCode, errorMsg);
+                                retryListener.onDeployErrorMsg(errorCode, errorMsg);
                             }
 
                             @Override
                             public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
-                                retryListener.onCompleted(freshPoint(deployAnalyzerModel, deviceDeployRsp));
+                                retryListener.onDeployCompleted();
                                 removeTask(deployAnalyzerModel);
 
 
@@ -247,7 +299,7 @@ public class DeployRetryUtil {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
 
-                        retryListener.onErrorMsg(errorCode, errorMsg);
+                        retryListener.onDeployErrorMsg(errorCode, errorMsg);
                     }
 
                     @Override
@@ -257,7 +309,7 @@ public class DeployRetryUtil {
                         removeTask(deployAnalyzerModel);
 
 
-                        retryListener.onCompleted(freshPoint(deployAnalyzerModel, deviceDeployRsp));
+                        retryListener.onDeployCompleted();
 
 
                     }
@@ -270,17 +322,41 @@ public class DeployRetryUtil {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
 
-                        retryListener.onErrorMsg(errorCode, errorMsg);
+                        retryListener.onDeployErrorMsg(errorCode, errorMsg);
                     }
 
                     @Override
                     public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
-                        retryListener.onCompleted(freshPoint(deployAnalyzerModel, deviceDeployRsp));
+                        retryListener.onDeployCompleted();
                         removeTask(deployAnalyzerModel);
 
 
                     }
                 });
+                break;
+
+
+            case Constants.TYPE_SCAN_DEPLOY_CAMERA:
+                RetrofitServiceHelper.getInstance().doUploadDeployCamera(deployAnalyzerModel.sn, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.tagList,
+                        PreferencesHelper.getInstance().getUserData().phone, String.valueOf(lan), String.valueOf(lon), deployAnalyzerModel.imgUrls, deployAnalyzerModel.address,
+                        deployAnalyzerModel.mMethodConfig.code, deployAnalyzerModel.mOrientationConfig.code, deployAnalyzerModel.cameraStatus)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .safeSubscribe(new CityObserver<ResponseResult<DeployCameraUploadInfo>>(null) {
+                            @Override
+                            public void onCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
+
+                                retryListener.onDeployCompleted();
+                                removeTask(deployAnalyzerModel);
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+
+                                retryListener.onDeployErrorMsg(errorCode, errorMsg);
+
+                            }
+                        });
+
                 break;
             default:
                 break;
@@ -289,59 +365,20 @@ public class DeployRetryUtil {
     }
 
 
-    private DeployResultModel freshPoint(DeployAnalyzerModel
-                                                 deployAnalyzerModel, ResponseResult<DeviceInfo> deviceDeployRsp) {
-        DeployResultModel deployResultModel = new DeployResultModel();
-        DeviceInfo deviceInfo = deviceDeployRsp.getData();
-        deployResultModel.deviceInfo = deviceInfo;
-        //
-        deployResultModel.sn = deviceInfo.getSn();
-        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
-        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-        deployResultModel.scanType = deployAnalyzerModel.deployType;
-        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
-        deployResultModel.settingData = deployAnalyzerModel.settingData;
-        //TODO 新版联系人
-        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
-        }
-        deployResultModel.address = deployAnalyzerModel.address;
-        deployResultModel.updateTime = deviceInfo.getUpdatedTime();
-        deployResultModel.deployTime = deviceInfo.getDeployTime();
-        deployResultModel.deviceStatus = deployAnalyzerModel.status;
-        deployResultModel.signal = deviceInfo.getSignal();
-        deployResultModel.name = deployAnalyzerModel.nameAndAddress;
-
-        return deployResultModel;
-    }
-
-    private DeployResultModel freshStation(DeployAnalyzerModel
-                                                   deployAnalyzerModel, ResponseResult<DeployStationInfo> deployStationInfoRsp) {
-        DeployResultModel deployResultModel = new DeployResultModel();
-        //
-        DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
-        deployResultModel.name = deployStationInfo.getName();
-        deployResultModel.sn = deployStationInfo.getSn();
-        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
-        deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
-        deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
-        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-        deployResultModel.scanType = deployAnalyzerModel.deployType;
-        deployResultModel.address = deployAnalyzerModel.address;
-        deployResultModel.signal = deployAnalyzerModel.signal;
-        return deployResultModel;
-    }
 
     public interface OnRetryListener extends UpLoadPhotosUtils.UpLoadPhotoListener {
 
 
-        void onCompleted(DeployResultModel deployResultModel);
+        void onDeployCompleted();
 
-        void onErrorMsg(int errorCode, String errorMsg);
+        void onDeployErrorMsg(int errorCode, String errorMsg);
 
         void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data);
 
-        void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg);
+
+        void setDeployCameraStatus(String status);
+
+
 
     }
 

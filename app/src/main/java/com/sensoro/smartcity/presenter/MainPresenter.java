@@ -871,7 +871,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 getView().setAlarmWarnCount(count);
                 needFreshAlarmCount = false;
                 try {
-                    LogUtils.loge("freshAlarmCount onCompleted count = " + count);
+                    LogUtils.loge("freshAlarmCount onDeployCompleted count = " + count);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
@@ -881,7 +881,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setAlarmWarnCount(0);
                 try {
-                    LogUtils.loge("freshAlarmCount onCompleted errorMsg = " + errorMsg);
+                    LogUtils.loge("freshAlarmCount onDeployCompleted errorMsg = " + errorMsg);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

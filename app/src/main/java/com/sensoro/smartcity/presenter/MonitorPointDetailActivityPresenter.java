@@ -457,7 +457,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 //        RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
 //                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 //            @Override
-//            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+//            public void onDeployCompleted(DeviceInfoListRsp deviceInfoListRsp) {
 //                if (deviceInfoListRsp.getData().size() > 0) {
 //                    mDeviceInfo = deviceInfoListRsp.getData().get(0);
 //                }
@@ -471,7 +471,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 //            }
 //
 //            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
+//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
 //                requestBlePassword();
 //                handleDeployInfo();
 //                handleDeviceModeInfo();

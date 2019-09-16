@@ -69,6 +69,9 @@ public class DeployAnalyzerModel implements Serializable {
      */
     public boolean hasDeployed = false;
 
+    public DeployCameraConfigModel mOrientationConfig;
+    public DeployCameraConfigModel mMethodConfig;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

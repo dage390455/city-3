@@ -17,7 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -26,6 +30,9 @@ import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployCameraDetailActivityPresenter;
+import com.sensoro.smartcity.widget.dialog.DeployRetryDialogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -105,6 +112,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
     private ProgressUtils mLoadBleConfigDialog;
     private ProgressUtils.Builder mLoadBleConfigDialogBuilder;
     private View line1;
+    private DeployRetryDialogUtils retryDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -123,6 +131,8 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
         initUploadDialog();
+        initRetryDialog();
+
         initRcDeployDeviceTag();
     }
 
@@ -144,6 +154,33 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         rcAcDeployDeviceCameraTag.setAdapter(mTagAdapter);
     }
 
+
+    private void initRetryDialog() {
+        retryDialog = new DeployRetryDialogUtils(mActivity);
+        retryDialog.setonRetrylickListener(new DeployRetryDialogUtils.onRetrylickListener() {
+
+            @Override
+            public void onCancelClick() {
+                retryDialog.dismiss();
+                EventData eventData = new EventData();
+                eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_FINISH;
+                EventBus.getDefault().post(eventData);
+                finishAc();
+            }
+
+            @Override
+            public void onDismiss() {
+
+            }
+
+            @Override
+            public void onConfirmClick() {
+                mPresenter.doConfirm();
+                retryDialog.dismiss();
+
+            }
+        });
+    }
     @Override
     protected DeployCameraDetailActivityPresenter createPresenter() {
         return new DeployCameraDetailActivityPresenter();
@@ -451,6 +488,20 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
             tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOffline, null, null, null);
         }
 
+
+    }
+
+    @Override
+    public void showRetryDialog() {
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            if (userData.hasDeployOfflineTask) {
+                if (null != retryDialog) {
+                    retryDialog.show("网络异常是否重试", "离线上传", "立即重试");
+                }
+            }
+
+        }
 
     }
 

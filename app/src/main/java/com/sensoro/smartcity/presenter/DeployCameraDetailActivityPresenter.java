@@ -26,6 +26,7 @@ import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployCameraConfigModel;
 import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
@@ -37,6 +38,7 @@ import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
@@ -46,8 +48,7 @@ import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
-import com.sensoro.smartcity.model.DeployCameraConfigModel;
-import com.sensoro.common.utils.LogUtils;
+import com.sensoro.smartcity.util.DeployRetryUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,6 +65,8 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     private Activity mContext;
     private Handler mHandler;
     private DeployAnalyzerModel deployAnalyzerModel;
+    private DeployRetryUtil deployRetryUtil;
+
     private final Runnable checkCameraStatusTask = new Runnable() {
         @Override
         public void run() {
@@ -104,6 +107,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     public void initData(Context context) {
         mContext = (Activity) context;
         mHandler = new Handler(Looper.getMainLooper());
+        deployRetryUtil = DeployRetryUtil.getInstance();
         onCreate();
         Intent intent = mContext.getIntent();
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
@@ -237,6 +241,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                                     deployOrientations.add(deployCameraConfigModel);
                                     if (deployAnalyzerModel.orientation != null && deployAnalyzerModel.orientation.equals(deployCameraConfigModel.code)) {
                                         mOrientationConfig = deployCameraConfigModel;
+                                        deployAnalyzerModel.mOrientationConfig = mOrientationConfig;
                                     }
                                 }
                             }
@@ -252,6 +257,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                                     deployMethods.add(deployCameraConfigModel);
                                     if (deployAnalyzerModel.installationMode != null && deployAnalyzerModel.installationMode.equals(deployCameraConfigModel.code)) {
                                         mMethodConfig = deployCameraConfigModel;
+                                        deployAnalyzerModel.mMethodConfig = mMethodConfig;
                                     }
                                 }
                             }
@@ -338,6 +344,10 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                         getView().updateUploadState(true);
                         getView().dismissUploadProgressDialog();
                         getView().toastShort(errMsg);
+
+
+                        getView().showRetryDialog();
+                        deployRetryUtil.addTask(deployAnalyzerModel);
                     }
 
                 }
@@ -384,6 +394,10 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
+                            deployRetryUtil.addTask(deployAnalyzerModel);
+                            getView().showRetryDialog();
+
+
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
                             freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
@@ -393,6 +407,101 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                     }
                 });
     }
+
+    // TODO: 2019-09-12 重试
+
+//    public void doRetry() {
+//        getView().showProgressDialog();
+//        deployRetryUtil.retryTry(mContext, deployAnalyzerModel, new DeployRetryUtil.OnRetryListener() {
+//            @Override
+//            public void onStart() {
+//                if (isAttachedView()) {
+//                    getView().showStartUploadProgressDialog();
+//                }
+//            }
+//
+//            @Override
+//            public void onComplete(List<ScenesData> scenesDataList) {
+//
+//            }
+//
+//            @Override
+//            public void onError(String errMsg) {
+//                if (isAttachedView()) {
+//                    getView().setUploadBtnStatus(true);
+//                    getView().dismissUploadProgressDialog();
+//                    getView().toastShort(errMsg);
+//                    //失败，本地照片存储,重试
+//                    getView().showRetryDialog();
+//                    getView().dismissProgressDialog();
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onProgress(String content, double percent) {
+//                if (isAttachedView()) {
+//                    getView().showUploadProgressDialog(content, percent);
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onDeployCompleted(DeployResultModel deployResultModel) {
+//
+//            }
+//
+//            @Override
+//            public void onDeployCameraCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
+//
+//                freshSuccess(deployCameraUploadRsp);
+//                getView().dismissProgressDialog();
+//
+//
+//            }
+//            @Override
+//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
+//                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+//                    getView().toastShort(errorMsg);
+//                    deployRetryUtil.addTask(deployAnalyzerModel);
+//                    getView().showRetryDialog();
+//
+//
+//                } else if (errorCode == 4013101 || errorCode == 4000013) {
+//                    freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+//                } else {
+//                    freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+//                }
+//                getView().dismissProgressDialog();
+//
+//            }
+//
+//
+//            @Override
+//            public void setDeployCameraStatus(String status) {
+//                deployAnalyzerModel.cameraStatus = status;
+//                getView().setDeployCameraStatus(deployAnalyzerModel.cameraStatus);
+//                // TODO: 2019-09-12 摄像机部署 是否在线
+//
+////                deployRetryUtil.doUploadImages();
+//
+//
+//
+//            }
+//            @Override
+//            public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
+//            }
+//
+//            @Override
+//            public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
+//            }
+//
+//
+//        });
+//
+//
+//    }
 
     private void freshError(String errorInfo, int resultCode) {
         //
@@ -554,7 +663,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         boolean need = false;
         for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
             if (deployPicInfo != null) {
-                if (deployPicInfo.isRequired != null &&deployPicInfo.isRequired) {
+                if (deployPicInfo.isRequired != null && deployPicInfo.isRequired) {
                     if (deployPicInfo.photoItem == null) {
                         need = true;
                     }
@@ -737,6 +846,8 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mOrientationConfig = deployOrientations.get(position);
+                deployAnalyzerModel.mOrientationConfig = mOrientationConfig;
+
                 String orientation = mOrientationConfig.name;
                 getView().setDeployOrientation(orientation);
                 getView().setUploadBtnStatus(checkCanUpload());
@@ -755,6 +866,8 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mMethodConfig = deployMethods.get(position);
+                deployAnalyzerModel.mMethodConfig = mMethodConfig;
+
                 String method = mMethodConfig.name;
                 getView().setDeployMethod(method);
                 getView().setUploadBtnStatus(checkCanUpload());

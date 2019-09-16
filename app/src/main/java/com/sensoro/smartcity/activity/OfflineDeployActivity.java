@@ -87,13 +87,13 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
         });
         adapter.setOnContentClickListener(new OfflineDeployAdapter.OnContentItemClickListener() {
 
-            @Override
-            public void onUploadClick(View v, int position) {
-                DeployAnalyzerModel deployAnalyzerModel = adapter.getData().get(position);
-
-                mPresenter.uploadTask(deployAnalyzerModel, false);
-
-            }
+//            @Override
+//            public void onUploadClick(View v, int position) {
+//                DeployAnalyzerModel deployAnalyzerModel = adapter.getData().get(position);
+//
+//                mPresenter.uploadTask(deployAnalyzerModel, false);
+//
+//            }
 
             @Override
             public void onForceUploadClick(View view, int position) {
