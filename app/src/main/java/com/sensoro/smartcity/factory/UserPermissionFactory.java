@@ -733,12 +733,7 @@ public class UserPermissionFactory {
      * @return
      */
     private static boolean getHasDeployOfflineTask(GrantsInfo grants) {
-        if (grants != null) {
-            List<String> grantsMonitorTask = grants.getMonitorTask();
-            if (grantsMonitorTask != null) {
-                return grantsMonitorTask.contains("confirm");
-            }
-        }
+        //TODO 这版暂时不进行离线上传
         return false;
     }
 
