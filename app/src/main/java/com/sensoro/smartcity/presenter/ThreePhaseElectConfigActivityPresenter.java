@@ -568,6 +568,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 String scheduleNo = response.getScheduleNo();
+                try {
+                    LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->> requestCmd scheduleNo = " + scheduleNo);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 if (TextUtils.isEmpty(scheduleNo)) {
                     getView().dismissOperatingLoadingDialog();
                     getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
