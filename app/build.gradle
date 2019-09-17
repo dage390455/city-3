@@ -248,8 +248,7 @@ dependencies {
     //
 //    implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
-    //
-    implementation project(':bottomnavigation')
+
     //Calendar view
     implementation project(':calendarview')
     //
@@ -261,10 +260,7 @@ dependencies {
     }
     //
     implementation project(':indicatorseekbar')
-    //
-    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
-        transitive = true
-    }
+
 
 
     //播放器

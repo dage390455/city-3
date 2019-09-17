@@ -30,4 +30,18 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //
+    api project(':bottomnavigation')
+
+    //
+    api('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+        transitive = true
+    }
+    //3D地图so及jar
+    api deps.amap_3dmap
+    //定位功能
+    api deps.amap_location
+    //搜索功能
+    api deps.amap_search
 }
