@@ -111,41 +111,41 @@ public class DeployConfigurationAnalyzer {
 //            param.valHighSet = 1250; //
 
 
-            sensoroSensor.acrelFires.leakageTh = 1000;//漏电
-            sensoroSensor.acrelFires.t1Th = 80;//A项线温度
-            sensoroSensor.acrelFires.t2Th = 80;//B项线温度
-            sensoroSensor.acrelFires.t3Th = 80;//C项线温度
-            sensoroSensor.acrelFires.t4Th = 60;//箱体温度
-            sensoroSensor.acrelFires.valHighSet = 1200;
-            sensoroSensor.acrelFires.valLowSet = 800;
-            sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / trans; //修改为输入的值
-            sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
-            sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
-            sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
-            sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
-            sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
-            sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
-            sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
-            sensoroSensor.acrelFires.ct = trans / 5;
-            sensoroSensor.acrelFires.cmd = 2; //自检
-            //TODO 新规则 暂时注释掉
 //            sensoroSensor.acrelFires.leakageTh = 1000;//漏电
-//            sensoroSensor.acrelFires.t1Th = 90;//A项线温度
-//            sensoroSensor.acrelFires.t2Th = 90;//B项线温度
-//            sensoroSensor.acrelFires.t3Th = 90;//C项线温度
-//            sensoroSensor.acrelFires.t4Th = 70;//箱体温度
-//            sensoroSensor.acrelFires.valHighSet = 1250;
+//            sensoroSensor.acrelFires.t1Th = 80;//A项线温度
+//            sensoroSensor.acrelFires.t2Th = 80;//B项线温度
+//            sensoroSensor.acrelFires.t3Th = 80;//C项线温度
+//            sensoroSensor.acrelFires.t4Th = 60;//箱体温度
+//            sensoroSensor.acrelFires.valHighSet = 1200;
 //            sensoroSensor.acrelFires.valLowSet = 800;
 //            sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / trans; //修改为输入的值
 //            sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
 //            sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
-//            sensoroSensor.acrelFires.valLowType = 1; // 2019-09-16 更新，欠压报警开关状态 → 1
+//            sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
 //            sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
 //            sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
 //            sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
 //            sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
 //            sensoroSensor.acrelFires.ct = trans / 5;
 //            sensoroSensor.acrelFires.cmd = 2; //自检
+            //新规则
+            sensoroSensor.acrelFires.leakageTh = 1000;//漏电
+            sensoroSensor.acrelFires.t1Th = 90;//A项线温度
+            sensoroSensor.acrelFires.t2Th = 90;//B项线温度
+            sensoroSensor.acrelFires.t3Th = 90;//C项线温度
+            sensoroSensor.acrelFires.t4Th = 70;//箱体温度
+            sensoroSensor.acrelFires.valHighSet = 1250;
+            sensoroSensor.acrelFires.valLowSet = 800;
+            sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / trans; //修改为输入的值
+            sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
+            sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
+            sensoroSensor.acrelFires.valLowType = 1; // 2019-09-16 更新，欠压报警开关状态 → 1
+            sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
+            sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
+            sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
+            sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
+            sensoroSensor.acrelFires.ct = trans / 5;
+            sensoroSensor.acrelFires.cmd = 2; //自检
         }
 
     }
@@ -209,12 +209,28 @@ public class DeployConfigurationAnalyzer {
     }
 
     private static void configAcrelSingle(SensoroSensor sensoroSensor, int value) {
-        sensoroSensor.acrelFires.leakageTh = 300;//漏电
-        sensoroSensor.acrelFires.t1Th = 80;//电线温度 通道1
-        sensoroSensor.acrelFires.t2Th = 60;//箱体温度 通道2
-        sensoroSensor.acrelFires.valHighSet = 1150;//过压
+//        sensoroSensor.acrelFires.leakageTh = 300;//漏电
+//        sensoroSensor.acrelFires.t1Th = 80;//电线温度 通道1
+//        sensoroSensor.acrelFires.t2Th = 60;//箱体温度 通道2
+//        sensoroSensor.acrelFires.valHighSet = 1150;//过压
+//        sensoroSensor.acrelFires.currHighSet = value * 100 * 10 / 60; //过流 10 ： 放大比，100 ： 转换为百分数
+//        sensoroSensor.acrelFires.valLowSet = 850;//欠压
+//        sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
+//        sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
+//        sensoroSensor.acrelFires.ct = 1;
+//        sensoroSensor.acrelFires.cmd = 2;
+//        sensoroSensor.acrelFires.currHighType = 1;
+//        sensoroSensor.acrelFires.valLowType = 1; //
+//        sensoroSensor.acrelFires.valHighType = 1; //
+//        sensoroSensor.acrelFires.chEnable = 0x07; // 打开温度，打开漏电保护
+
+        //新规则
+        sensoroSensor.acrelFires.leakageTh = 600;//漏电
+        sensoroSensor.acrelFires.t1Th = 90;//电线温度 通道1
+        sensoroSensor.acrelFires.t2Th = 70;//箱体温度 通道2
+        sensoroSensor.acrelFires.valHighSet = 1200;//过压
         sensoroSensor.acrelFires.currHighSet = value * 100 * 10 / 60; //过流 10 ： 放大比，100 ： 转换为百分数
-        sensoroSensor.acrelFires.valLowSet = 850;//欠压
+        sensoroSensor.acrelFires.valLowSet = 800;//欠压
         sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = 1;
@@ -223,6 +239,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.valLowType = 1; //
         sensoroSensor.acrelFires.valHighType = 1; //
         sensoroSensor.acrelFires.chEnable = 0x07; // 打开温度，打开漏电保护
+
         //
 //        param.leakageTh = 600; //漏电
 //        param.t1Th = 90; //电线温度，通道1
