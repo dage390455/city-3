@@ -1318,6 +1318,8 @@
     <string name="successful_deployment">Successful deployment</string>
     <string name="nosignal">no_signal</string>
     <string name="forceload">forceload</string>
+    <string name="retries">Whether the network exception retries</string>
+    <string name="retryimmediately">Retry immediately</string>
 
 
 </resources>

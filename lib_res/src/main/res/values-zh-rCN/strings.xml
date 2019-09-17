@@ -1305,6 +1305,8 @@
     <string name="successful_deployment">部署成功</string>
     <string name="nosignal">无信号</string>
     <string name="forceload">强制上传</string>
+    <string name="retries">网络异常是否重试</string>
+    <string name="retryimmediately">立即重试</string>
 
 
 </resources>
