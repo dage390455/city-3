@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.sensoro.common.utils.AppUtils;
 
@@ -36,7 +37,16 @@ public class ImageUtil {
         //在画布 0，0坐标上开始绘制原始图片
         canvas.drawBitmap(src, 0, 0, null);
         //在画布上绘制水印图片
-        canvas.drawBitmap(watermark, paddingLeft, paddingTop, null);
+//        canvas.drawBitmap(watermark, paddingLeft, paddingTop, null);
+
+        Rect rect=new Rect();
+        rect.left=paddingLeft;
+        rect.right=paddingLeft+watermark.getWidth();
+        rect.top=paddingTop;
+        rect.bottom=paddingTop+watermark.getHeight();
+
+        canvas.drawBitmap(watermark, null, rect, null);
+
         // 保存
         canvas.save();
         // 存储
@@ -54,7 +64,6 @@ public class ImageUtil {
 //                src.getWidth() - watermark.getWidth() - AppUtils.dp2px(context, paddingRight),
 //                src.getHeight() - watermark.getHeight() - AppUtils.dp2px(context, paddingBottom));
         //更改为px
-
 
         return createWaterMaskBitmap(src, watermark,
                 src.getWidth() - watermark.getWidth() - paddingRight,
