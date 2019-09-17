@@ -261,6 +261,13 @@ dependencies {
     //
     implementation project(':indicatorseekbar')
 
+    //
+    api project(':bottomnavigation')
+
+    //
+    api('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+        transitive = true
+    }
 
 
     //播放器
@@ -287,7 +294,9 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(path: ':basestation')
     }
-
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':forestfire')
+    }
 
 
 
