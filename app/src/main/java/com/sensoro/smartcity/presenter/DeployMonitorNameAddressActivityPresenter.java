@@ -122,6 +122,9 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
     }
 
     public void doChoose(final String text) {
+        if(!isAttachedView())
+            return;
+
         if (!TextUtils.isEmpty(text)) {
             if (text.contains("[") || text.contains("]") || text.contains("】") || text.contains("【")) {
                 getView().toastShort(mContext.getString(R.string.name_address_no_contain_brackets));

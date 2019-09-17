@@ -712,6 +712,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        if(mPresenter==null||!mPresenter.isAttachedView())
+            return;
+
         if (verticalOffset == 0) {//张开
             toolbarDirection = DIRECTION_DOWN;
             homeToolbarMonitor.setVisibility(View.VISIBLE);
