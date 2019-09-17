@@ -17,10 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -31,8 +29,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployCameraDetailActivityPresenter;
 import com.sensoro.smartcity.widget.dialog.DeployRetryDialogUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -162,10 +158,10 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
             @Override
             public void onCancelClick() {
                 retryDialog.dismiss();
-                EventData eventData = new EventData();
-                eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_FINISH;
-                EventBus.getDefault().post(eventData);
-                finishAc();
+//                EventData eventData = new EventData();
+//                eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_FINISH;
+//                EventBus.getDefault().post(eventData);
+//                finishAc();
             }
 
             @Override
@@ -181,6 +177,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
             }
         });
     }
+
     @Override
     protected DeployCameraDetailActivityPresenter createPresenter() {
         return new DeployCameraDetailActivityPresenter();
@@ -495,11 +492,14 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
     public void showRetryDialog() {
         EventLoginData userData = PreferencesHelper.getInstance().getUserData();
         if (userData != null) {
-            if (userData.hasDeployOfflineTask) {
-                if (null != retryDialog) {
-                    retryDialog.show("网络异常是否重试", "离线上传", "立即重试");
+            if (null != retryDialog) {
+                if (userData.hasDeployOfflineTask) {
+                    retryDialog.show(mActivity.getResources().getString(R.string.retries), mActivity.getResources().getString(R.string.upload_offline), mActivity.getResources().getString(R.string.retryimmediately));
+                } else {
+                    retryDialog.show(mActivity.getResources().getString(R.string.retries), mActivity.getResources().getString(R.string.cancel), mActivity.getResources().getString(R.string.retryimmediately));
                 }
             }
+
 
         }
 
