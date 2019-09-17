@@ -18,6 +18,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
+import com.sensoro.smartcity.constant.CityConstants;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -265,7 +266,7 @@ public class DeployRetryUtil {
 
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
                 DeployControlSettingData settingData = null;
                 if (isFire) {
