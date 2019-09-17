@@ -36,7 +36,7 @@ public class ForestFireTestActivity extends Activity {
             public void onClick(View view) {
 
                 ARouter.getInstance().build(ARouterConstants.ACTIVITY_LOGIN_TEST)
-                        .withString(Constants.ROUTEPATH,ARouterConstants.ACTIVITY_FORESTFIRE_LIST)
+                        .withString(Constants.ROUTEPATH,ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIST)
                         .withTransition(R.anim.slide_left, R.anim.slide_out)
                         .navigation(ForestFireTestActivity.this);
             }

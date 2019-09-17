@@ -15,11 +15,14 @@ import butterknife.ButterKnife;
  * @Author: jack
  * 时  间: 2019-09-17
  * 包  名: com.sensoro.forestfire.activity
- * 简  述: <功能简述>
+ * 简  述: <功能简述:森林防火管理摄像头列表首页>
  */
 
-@Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_LIST)
-public class ForestFireListActivity extends BaseActivity<IForestFireListView, ForestFireListPresenter> {
+@Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIST)
+public class ForestFireCameraListActivity extends BaseActivity<IForestFireListView, ForestFireListPresenter> {
+
+
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_forestfire_list);

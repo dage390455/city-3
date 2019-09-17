@@ -63,7 +63,7 @@ public interface ARouterConstants {
 
 
 //    森林防火组件化
-    String ACTIVITY_FORESTFIRE_LIST = "/forestfire/activity/ForestFireListActivity";
+    String ACTIVITY_FORESTFIRE_CAMERA_LIST = "/forestfire/activity/ForestFireCameraListActivity";
 
 
 }

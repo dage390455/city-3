@@ -6,7 +6,7 @@
 
     <application>
 
-        <activity android:name=".activity.ForestFireListActivity" />
+        <activity android:name=".activity.ForestFireCameraListActivity" />
     </application>
 
 </manifest>
