@@ -1554,23 +1554,33 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             @Override
             public void onSuccess(Object o) {
                 if (isAttachedView()) {
-                    //TODO 蓝牙成功后告诉服务器
-                    ArrayList<String> sns = new ArrayList<>();
-                    sns.add(mDeviceInfo.getSn());
-                    RetrofitServiceHelper.getInstance().doMonitorPointBLEUpdate(sns, mOperationType, null, null, null, null, null, null, finalBeepMuteTimeInt)
-                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(MonitorPointDetailActivityPresenter.this) {
-                        @Override
-                        public void onCompleted(ResponseResult<Object> response) {
+                    //TODO 蓝牙成功后告诉服务器 只针对消音
+                    switch (type) {
+                        case MonitorPointOperationCode.ERASURE:
+                        case MonitorPointOperationCode.ERASURE_LONG:
+                        case MonitorPointOperationCode.ERASURE_TIME:
+                            ArrayList<String> sns = new ArrayList<>();
+                            sns.add(mDeviceInfo.getSn());
+                            RetrofitServiceHelper.getInstance().doMonitorPointBLEUpdate(sns, mOperationType, null, null, null, null, null, null, finalBeepMuteTimeInt)
+                                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(MonitorPointDetailActivityPresenter.this) {
+                                @Override
+                                public void onCompleted(ResponseResult<Object> response) {
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().showOperationSuccessToast();
+                                }
+
+                                @Override
+                                public void onErrorMsg(int errorCode, String errorMsg) {
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().toastShort(errorMsg);
+                                }
+                            });
+                            break;
+                        default:
                             getView().dismissOperatingLoadingDialog();
                             getView().showOperationSuccessToast();
-                        }
-
-                        @Override
-                        public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().toastShort(errorMsg);
-                        }
-                    });
+                            break;
+                    }
 
                 }
             }
