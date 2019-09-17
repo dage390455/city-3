@@ -1,16 +1,17 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,20 @@ public class MalfunctionHistoryRcContentAdapter extends RecyclerView.Adapter<Mal
         MalfunctionListInfo malfunctionListInfo = mData.get(position);
         if (malfunctionListInfo != null) {
             holder.tvMalfunctionHistoryContent.setText(String.format("%s %s", DateUtil.getStrTimeToday(mContext, malfunctionListInfo.getCreatedTime(), 0), mContext.getString(R.string.occur_malfunction_alarm)));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, position);
+                    }
+                }
+            });
         }
+
+    }
+
+    public List<MalfunctionListInfo> getData() {
+        return mData;
     }
 
     @Override
@@ -60,5 +74,15 @@ public class MalfunctionHistoryRcContentAdapter extends RecyclerView.Adapter<Mal
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void setOnMalfunctionHistoryClickListener(OnMalfunctionHistoryClickListener listener) {
+        this.listener = listener;
+    }
+
+    private OnMalfunctionHistoryClickListener listener;
+
+    public interface OnMalfunctionHistoryClickListener {
+        void onItemClick(View v, int position);
     }
 }

@@ -67,6 +67,12 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
+        boolean needHideHistory = mContext.getIntent().getBooleanExtra(Constants.EXTRA_ALARM_HISTORY_VISIBLE, false);
+        if (needHideHistory) {
+            getView().setHistoryLogVisible(false);
+        } else {
+            getView().setHistoryLogVisible(true);
+        }
         deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_ALARM_INFO);
 
         getAlarmCount();

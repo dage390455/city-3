@@ -19,6 +19,7 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
@@ -167,7 +168,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         if (tempValue != 0) {
             getView().setInputRated(String.valueOf(tempValue));
         }
-
     }
 
     @Override
@@ -553,6 +553,12 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     }
 
     private void requestCmd() {
+        long deviceTaskOvertimeMillis;
+        if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            deviceTaskOvertimeMillis = 30 * 1000;
+        } else {
+            deviceTaskOvertimeMillis = 15 * 1000;
+        }
         ArrayList<String> sns = new ArrayList<>();
         sns.add(deployAnalyzerModel.sn);
         getView().showOperationTipLoadingDialog();
@@ -562,6 +568,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 String scheduleNo = response.getScheduleNo();
+                try {
+                    LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->> requestCmd scheduleNo = " + scheduleNo);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 if (TextUtils.isEmpty(scheduleNo)) {
                     getView().dismissOperatingLoadingDialog();
                     getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -570,7 +581,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, deviceTaskOvertimeMillis);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -605,6 +616,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                         @Override
                         public void run() {
                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                try {
+                                    LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->> mScheduleNo = " + mScheduleNo + ",temp = " + temp);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 mHandler.removeCallbacks(DeviceTaskOvertime);
                                 if (isAttachedView()) {
                                     getView().dismissPickerView();

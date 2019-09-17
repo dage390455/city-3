@@ -53,6 +53,12 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
     public void initData(Context context) {
         mActivity = (Activity) context;
         onCreate();
+        boolean needHideHistory = mActivity.getIntent().getBooleanExtra(Constants.EXTRA_ALARM_HISTORY_VISIBLE, false);
+        if (needHideHistory) {
+            getView().setHistoryLogVisible(false);
+        } else {
+            getView().setHistoryLogVisible(true);
+        }
         mMalfunctionInfo = (MalfunctionListInfo) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_MALFUNCTION_INFO);
         if (mMalfunctionInfo != null) {
             refreshUI();

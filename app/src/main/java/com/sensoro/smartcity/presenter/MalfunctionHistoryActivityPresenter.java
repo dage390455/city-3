@@ -2,17 +2,19 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
-import com.sensoro.common.model.CalendarDateModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -156,5 +158,12 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
 //                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         requestDataByFilter(Constants.DIRECTION_DOWN);
+    }
+
+    public void doClickHistory(MalfunctionListInfo malfunctionListInfo) {
+        Intent intent = new Intent(mActivity, MalfunctionDetailActivity.class);
+        intent.putExtra(Constants.EXTRA_MALFUNCTION_INFO, malfunctionListInfo);
+        intent.putExtra(Constants.EXTRA_ALARM_HISTORY_VISIBLE, true);
+        getView().startAC(intent);
     }
 }
