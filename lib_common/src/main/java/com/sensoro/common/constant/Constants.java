@@ -2,9 +2,6 @@ package com.sensoro.common.constant;
 
 import com.sensoro.common.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public interface Constants {
     String ROUTEPATH = "routerpath";
     //
@@ -339,38 +336,6 @@ public interface Constants {
     int EVENT_DATA_SEARCH_NAMEPLATE = 0x64;
     int EVENT_DATA_PERMISSIONCHANGE = 0x65;
 
-
-    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
-        add("elec_fire");
-        add("smoke");
-        add("natural_gas");
-        add("lpg");
-    }};
-
-    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(3) {
-        {
-            add("fhsj_elec_fires");
-            add("acrel_fires");
-            add("acrel_single");
-//            add("mantun_fires");
-            add("acrel_alpha");
-        }
-    };
-    ArrayList<String> DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES = new ArrayList<String>(2) {
-        {
-            add("acrel_fires");
-            add("acrel_alpha");
-            //2g版三相电
-            add("acrel300T_fires_2G");
-        }
-    };
-    ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
-        {
-            add("t1");
-            add("chip_e");
-            add("bigbang_tracker");
-        }
-    };
 
     //camera
     String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";

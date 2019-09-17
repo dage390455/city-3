@@ -32,6 +32,7 @@ import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.WidgetUtil;
@@ -476,7 +477,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 //设备部署
                 getView().showProgressDialog();
                 //TODO 添加电气火灾配置支持
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
                 DeployControlSettingData settingData = null;
                 if (isFire) {

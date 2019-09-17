@@ -20,6 +20,7 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployRecordContactDialogUtils;
@@ -153,7 +154,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
             getView().setDeployDeviceRecordDeviceType(deviceTypeName);
             //
-            boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
+            boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
             getView().setDeployDetailDeploySettingVisible(isFire);
             if (isFire) {
                 DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();

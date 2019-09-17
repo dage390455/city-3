@@ -16,6 +16,7 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -119,7 +120,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     private void init() {
         try {
-            getView().setResultSettingVisible(Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType));
+            getView().setResultSettingVisible(CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType));
             switch (deployResultModel.resultCode) {
                 case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
                     //失败
@@ -319,7 +320,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 //                    getView().setUpdateTextView(DateUtil
 //                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
 //                }
-                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
+                if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
                     DeployControlSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
                         getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting));
@@ -508,7 +509,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 //                    getView().setUpdateTextView(DateUtil
 //                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
 //                }
-                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
+                if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
                     DeployControlSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
                         getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting));
