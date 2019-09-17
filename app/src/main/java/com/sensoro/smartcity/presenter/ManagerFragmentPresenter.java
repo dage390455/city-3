@@ -68,6 +68,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setNameplateVisible(userData.hasNameplateList);
             //TODO 设置是否有IBeacon功能
             getView().setIBeaconVisible(userData.hasIBeaconSearchDemo);
+
+            //TODO  是否显示森林防火管理
+            getView().setForestfireManagerVisible(true);
+
         }
     }
 
@@ -288,5 +292,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     public void doBaseStationList() {
         startActivity(ARouterConstants.ACTIVITY_BASESTATION_LIST, null, mContext);
+    }
+
+    public void doManageForestFire() {
+        startActivity(ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIST, null, mContext);
     }
 }
