@@ -525,7 +525,7 @@ public class RetrofitServiceHelper {
                 sensorTypes, mergeTypes, status, search);
     }
 
-    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page,int count, String sensorTypes, String mergeTypes, Integer status, String
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, int count, String sensorTypes, String mergeTypes, Integer status, String
             search) {
         return retrofitService.getDeviceBriefInfoList(null, null, sns, page, count, 1, 1,
                 sensorTypes, mergeTypes, status, search);
@@ -2617,10 +2617,24 @@ public class RetrofitServiceHelper {
 
     /**
      * 获取摄像头 数组sn
-     * @param sn
+     *
+     * @param sn 默认先给10000条
      * @return
      */
-    public Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(@Body List<String> sn) {
-        return retrofitService.getCameraList(sn);
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(List<String> sn) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            if (sn != null && sn.size() > 0) {
+                jsonArray.put(sn);
+            }
+            jsonObject.put("sn", jsonArray);
+            jsonObject.put("page", 1);
+            jsonObject.put("pageSize", 10000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getCameraList(requestBody);
     }
 }

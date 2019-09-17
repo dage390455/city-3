@@ -486,6 +486,6 @@ public interface RetrofitService {
     Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data);
 
     @POST("camera-center/camera/getCamera")
-    Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(@Body List<String> sn);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(@Body RequestBody requestBody);
 }
 

@@ -11,7 +11,6 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
@@ -27,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivityView> {
@@ -40,9 +40,9 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         mContext = (Activity) context;
         List<String> deviceSN = new ArrayList<>();
         List<String> cameraSN = new ArrayList<>();
-        List<String> stationSN = new ArrayList<>();
         LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
         if (null != allTask && allTask.size() > 0) {
+            getView().showProgressDialog();
             Iterator iter = allTask.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
@@ -50,42 +50,102 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 if (Constants.TYPE_SCAN_DEPLOY_CAMERA == val.deployType) {
                     cameraSN.add(val.sn);
                 } else if (Constants.TYPE_SCAN_DEPLOY_STATION == val.deployType) {
-                    stationSN.add(val.sn);
+                    //重新部署
                 } else {
                     deviceSN.add(val.sn);
                 }
                 deviceInfos.add(val);
             }
-//            Collections.reverse(deviceInfos);
-            getView().updateAdapter(deviceInfos);
+            //TODO 查找设备的部署状态 走三个接口 设备 camera station 目前 camera接口数据不匹配 需要修改 station接口未提供
+            LinkedHashMap<String, Long> longLinkedHashMap = new LinkedHashMap<>();
+//            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(deviceSN, 1, 10000, null, null, null, null).subscribeOn
+//                    (Schedulers.io()).flatMap(new Function<ResponseResult<List<DeviceInfo>>, ObservableSource<ResponseResult<List<DeviceCameraInfo>>>>() {
+//                @Override
+//                public ObservableSource<ResponseResult<List<DeviceCameraInfo>>> apply(ResponseResult<List<DeviceInfo>> listResponseResult) throws Exception {
+//                    List<DeviceInfo> data = listResponseResult.getData();
+//                    if (data != null && data.size() > 0) {
+//                        for (DeviceInfo deviceInfo : data) {
+//                            Long deployTime = deviceInfo.getDeployTime();
+//                            if (deployTime != null) {
+//                                String sn = deviceInfo.getSn();
+//                                longLinkedHashMap.put(sn, deployTime);
+//                            }
+//                        }
+//                    }
+//                    return RetrofitServiceHelper.getInstance().getCameraList(cameraSN);
+//                }
+//            }).doOnNext(new Consumer<ResponseResult<List<DeviceCameraInfo>>>() {
+//                @Override
+//                public void accept(ResponseResult<List<DeviceCameraInfo>> responseResult) throws Exception {
+//                    List<DeviceCameraInfo> data = responseResult.getData();
+//                    if (data != null && data.size() > 0) {
+//                        for (DeviceCameraInfo cameraInfo : data) {
+//                            String sn = cameraInfo.getSn();
+//                            Long createTime = cameraInfo.getCreateTime();
+//                            if (createTime != null) {
+//                                longLinkedHashMap.put(sn, createTime);
+//                            }
+//                        }
+//                    }
+//                }
+//            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(this) {
+//                @Override
+//                public void onCompleted(ResponseResult<List<DeviceCameraInfo>> responseResult) {
+//                    for (DeployAnalyzerModel deployAnalyzerModel : deviceInfos) {
+//                        Long deployTimeLong = longLinkedHashMap.get(deployAnalyzerModel.sn);
+//                        if (deployTimeLong != null) {
+//                            deployAnalyzerModel.deployTime = deployTimeLong;
+//                        }
+//                    }
+//                    getView().dismissProgressDialog();
+//                    getView().updateAdapter(deviceInfos);
+//                }
+//
+//                @Override
+//                public void onErrorMsg(int errorCode, String errorMsg) {
+//                    getView().dismissProgressDialog();
+//                    getView().toastShort(errorMsg);
+//
+//                }
+//            });
+            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(deviceSN, 1, 10000, null, null, null, null).subscribeOn
+                    (Schedulers.io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
+                @Override
+                public void accept(ResponseResult<List<DeviceInfo>> listResponseResult) throws Exception {
+                    List<DeviceInfo> data = listResponseResult.getData();
+                    if (data != null && data.size() > 0) {
+                        for (DeviceInfo deviceInfo : data) {
+                            Long deployTime = deviceInfo.getDeployTime();
+                            if (deployTime != null) {
+                                String sn = deviceInfo.getSn();
+                                longLinkedHashMap.put(sn, deployTime);
+                            }
+                        }
+                    }
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+                @Override
+                public void onCompleted(ResponseResult<List<DeviceInfo>> responseResult) {
+                    for (DeployAnalyzerModel deployAnalyzerModel : deviceInfos) {
+                        Long deployTimeLong = longLinkedHashMap.get(deployAnalyzerModel.sn);
+                        if (deployTimeLong != null) {
+                            deployAnalyzerModel.deployTime = deployTimeLong;
+                        }
+                    }
+                    getView().dismissProgressDialog();
+                    getView().updateAdapter(deviceInfos);
+                }
 
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    getView().dismissProgressDialog();
+                    getView().toastShort(errorMsg);
+
+                }
+            });
         } else {
             getView().updateAdapter(null);
-
         }
-        //TODO 查找设备的部署状态 走三个接口 设备 camera station
-        RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(deviceSN, 1, 10000, null, null, null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
-            @Override
-            public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-
-            }
-        });
-        RetrofitServiceHelper.getInstance().getCameraList(cameraSN).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(this) {
-            @Override
-            public void onCompleted(ResponseResult<List<DeviceCameraInfo>> responseResult) {
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-
-            }
-        });
 
     }
 

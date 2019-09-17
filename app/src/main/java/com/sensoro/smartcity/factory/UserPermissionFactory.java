@@ -734,7 +734,7 @@ public class UserPermissionFactory {
      */
     private static boolean getHasDeployOfflineTask(GrantsInfo grants) {
         //TODO 这版暂时不进行离线上传
-        return false;
+        return true;
     }
 
 

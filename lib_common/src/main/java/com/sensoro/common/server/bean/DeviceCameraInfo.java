@@ -18,7 +18,7 @@ public class DeviceCameraInfo implements Serializable {
      * id : 5caaf4cd5f28d000108fe841
      */
 
-    private String createTime;
+    private Long createTime;
     private String _id;
     private String sn;
     private String cid;
@@ -52,11 +52,11 @@ public class DeviceCameraInfo implements Serializable {
 
     private List<?> label;
 
-    public String getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
