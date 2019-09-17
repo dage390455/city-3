@@ -290,12 +290,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_nameplate:
                 mPresenter.doManageNameplate();
-//                ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_LIST).navigation(mRootFragment.getActivity());
-//                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:
-
-//                startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
                 mPresenter.doBaseStationList();
                 break;
             case R.id.fg_main_manage_ll_nearby:
