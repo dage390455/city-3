@@ -1,9 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <array name="sortcondition">
-        <item>Defalut Order</item>
-        <item>Name Order</item>
-        <item>Name Reverse</item>
-    </array>
+
     <!--camera-->
     <string name="capture_time">Capture time</string>
     <string name="process_status">Processing status</string>
