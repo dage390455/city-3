@@ -1310,5 +1310,7 @@
 
     <string name="server_error_alert">服务器数据返回错误 设备类型</string>
     <string name="alarm_log_alarm_contact_close_warn">关闭火警</string>
+    <string name="confirm_to_turn_off_the_fire">确认关闭火警</string>
+    <string name="turn_off_the_fire_tips">确认火警已处理，关闭该火警事件后，若再次检测到森林火灾后，平台会重启一次新预警事件</string>
 
 </resources>

@@ -1324,5 +1324,7 @@
 
     <string name="server_error_alert">server data error deviceTypes</string>
     <string name="alarm_log_alarm_contact_close_warn">Close Warn</string>
+    <string name="confirm_to_turn_off_the_fire">Confirm close fire</string>
+    <string name="turn_off_the_fire_tips">Confirm that the fire has been dealt with. After the fire incident is closed, if the forest fire is detected again, the platform will restart a new warning event</string>
 
 </resources>
