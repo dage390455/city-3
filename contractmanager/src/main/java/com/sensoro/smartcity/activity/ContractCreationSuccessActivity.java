@@ -91,12 +91,12 @@ public class ContractCreationSuccessActivity extends BaseActivity<IContractCreat
 
     @OnClick({R2.id.ac_contract_creation_success_tv_finish, R2.id.ac_contract_creation_success_tv_contract_preview, R2.id.ac_contract_creation_success_tv_create_qr_code})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.ac_contract_creation_success_tv_finish){
+        int viewID = view.getId();
+        if (viewID == R.id.ac_contract_creation_success_tv_finish) {
             mPresenter.finish();
-        }else  if(viewID==R.id.ac_contract_creation_success_tv_contract_preview){
+        } else if (viewID == R.id.ac_contract_creation_success_tv_contract_preview) {
             mPresenter.doContractPreview();
-        }else  if(viewID==R.id.ac_contract_creation_success_tv_create_qr_code){
+        } else if (viewID == R.id.ac_contract_creation_success_tv_create_qr_code) {
             mPresenter.doShareCode();
         }
 

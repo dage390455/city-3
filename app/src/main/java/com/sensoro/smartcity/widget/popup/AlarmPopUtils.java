@@ -138,10 +138,10 @@ public class AlarmPopUtils implements Constants,
             mRealFireDialog = null;
         }
 
-//        if (mSlidePopUtils != null) {
-//            mSlidePopUtils.destroySlideVerifyDialog();
-//            mSlidePopUtils = null;
-//        }
+        if (mSlidePopUtils != null) {
+            mSlidePopUtils.destroySlideVerifyDialog();
+            mSlidePopUtils = null;
+        }
 
         if (bind != null) {
             bind.unbind();
@@ -342,7 +342,7 @@ public class AlarmPopUtils implements Constants,
         });
     }
 
-//    private SlidePopUtils mSlidePopUtils;
+    private SlidePopUtils mSlidePopUtils;
 
     private void initRealFireDialog() {
         mRealFireDialog = new TipDialogUtils(mActivity);
@@ -364,29 +364,28 @@ public class AlarmPopUtils implements Constants,
         });
 
 
-//        mSlidePopUtils = new SlidePopUtils();
-//        mSlidePopUtils.setTitle(mActivity.getResources().getString(R.string.slide_dialog_title))
-//                .setDesc(mActivity.getResources().getString(R.string.slide_dialog_desc))
-//                .setListener(new SlidePopUtils.VerifityResultListener() {
-//                    @Override
-//                    public void onAccess(long time) {
-//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_success), Toast.LENGTH_SHORT).show();
-//                        mSlidePopUtils.dismissDialog();
-//                        doCommit();
-//                    }
-//
-//                    @Override
-//                    public void onFailed(int failCount) {
-//                        mSlidePopUtils.dismissDialog();
-//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onMaxFailed() {
-//                        mSlidePopUtils.dismissDialog();
-//                        Toast.makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+        mSlidePopUtils = new SlidePopUtils();
+        mSlidePopUtils.setTitle(mActivity.getResources().getString(R.string.slide_dialog_title))
+                .setDesc(mActivity.getResources().getString(R.string.slide_dialog_desc))
+                .setListener(new SlidePopUtils.VerifityResultListener() {
+                    @Override
+                    public void onAccess(long time) {
+                        mSlidePopUtils.dismissDialog();
+                        doCommit();
+                    }
+
+                    @Override
+                    public void onFailed(int failCount) {
+                        mSlidePopUtils.dismissDialog();
+                        SensoroToast.getInstance().makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onMaxFailed() {
+                        mSlidePopUtils.dismissDialog();
+                        SensoroToast.getInstance().makeText(mActivity, mActivity.getResources().getString(R.string.slide_dialog_failed_maxcount), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
     }
@@ -473,8 +472,8 @@ public class AlarmPopUtils implements Constants,
             return;
         }
         if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
-            mRealFireDialog.show();
-//            mSlidePopUtils.showDialog(mActivity);
+//            mRealFireDialog.show();
+            mSlidePopUtils.showDialog(mActivity);
             return;
         }
         setUpdateButtonClickable(false);

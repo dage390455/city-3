@@ -34,13 +34,12 @@ public abstract class SlideVerifityStrategy {
     /**
      * 定义缺块的位置信息
      *
-     * @param width  picture width unit:px
-     * @param height picture height unit:px
+     * @param width     picture width unit:px
+     * @param height    picture height unit:px
      * @param blockSize
      * @return position info of the block
      */
     public abstract PositionInfo getBlockPostionInfo(int width, int height, int blockSize);
-
 
 
 }

@@ -648,8 +648,8 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     public void doMonitorMapLocation() {
-        if(preBean!=null){
-            CameraPosition   cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(), preBean.getLongitude()), mMapZoom, 0, 30);
+        if (preBean != null) {
+            CameraPosition cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(), preBean.getLongitude()), mMapZoom, 0, 30);
             getView().setMapCenter(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 //        CameraPosition cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(), preBean.getLongitude()), mMapZoom, 0, 30);

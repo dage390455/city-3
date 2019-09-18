@@ -33,7 +33,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate{
+public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate {
 
     private Activity mContext;
     private int serviceType;
@@ -142,7 +142,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = createdAt.split("T");
-                                    createdAt = ts[0].replaceAll("-",".");
+                                    createdAt = ts[0].replaceAll("-", ".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     createdAt = "-";
@@ -156,7 +156,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = confirmTime.split("T");
-                                    confirmTime = ts[0].replaceAll("-",".");
+                                    confirmTime = ts[0].replaceAll("-", ".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     confirmTime = "-";

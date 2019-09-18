@@ -525,6 +525,13 @@ public class RetrofitServiceHelper {
                 sensorTypes, mergeTypes, status, search);
     }
 
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, int count, String sensorTypes, String mergeTypes, Integer status, String
+            search) {
+        return retrofitService.getDeviceBriefInfoList(null, null, sns, page, count, 1, 1,
+                sensorTypes, mergeTypes, status, search);
+    }
+
+
     /**
      * 主页top信息
      *
@@ -1731,6 +1738,70 @@ public class RetrofitServiceHelper {
     }
 
     /**
+     * 上传蓝牙记录
+     *
+     * @param snList
+     * @param type
+     * @param interval
+     * @param rules
+     * @param inputValue
+     * @param switchSpec
+     * @param wireMaterial
+     * @param diameter
+     * @param beepMuteTime
+     * @return
+     */
+    public Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter, Integer beepMuteTime) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONArray jsonSnList = new JSONArray();
+            for (String sn : snList) {
+                jsonSnList.put(sn);
+            }
+            jsonObject.put("snList", jsonSnList);
+            jsonObject.put("type", type);
+
+            if (interval != null) {
+                jsonObject.put("interval", type);
+            }
+            if (rules != null) {
+                JSONArray jsonRules = new JSONArray();
+                for (String rule : rules) {
+                    jsonRules.put(rule);
+                }
+                jsonObject.put("rules", jsonRules);
+            }
+            JSONObject jsonObjectConfig = new JSONObject();
+            if (inputValue != null) {
+                jsonObjectConfig.put("inputValue", inputValue);
+            }
+            if (switchSpec != null) {
+                jsonObjectConfig.put("switchSpec", switchSpec);
+            }
+            if (wireMaterial != null) {
+                jsonObjectConfig.put("wireMaterial", wireMaterial);
+            }
+            if (diameter != null) {
+                jsonObjectConfig.put("wireDiameter", diameter);
+            }
+            if (switchSpec != null || wireMaterial != null || diameter != null) {
+                jsonObject.put("config", jsonObjectConfig);
+            }
+            if (beepMuteTime != null) {
+                JSONObject jsonParameters = new JSONObject();
+                jsonParameters.put("beepMuteTime", beepMuteTime);
+                jsonObject.put("parameters", jsonParameters);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doMonitorPointBLEUpdate(body);
+    }
+
+    /**
      * 针对三相电的
      *
      * @param snList
@@ -2606,5 +2677,28 @@ public class RetrofitServiceHelper {
      */
     public Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data) {
         return retrofitService.updateSensoroData(data);
+    }
+
+    /**
+     * 获取摄像头 数组sn
+     *
+     * @param sn 默认先给10000条
+     * @return
+     */
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(List<String> sn) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            if (sn != null && sn.size() > 0) {
+                jsonArray.put(sn);
+            }
+            jsonObject.put("sn", jsonArray);
+            jsonObject.put("page", 1);
+            jsonObject.put("pageSize", 10000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getCameraList(requestBody);
     }
 }

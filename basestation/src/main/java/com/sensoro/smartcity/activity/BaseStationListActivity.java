@@ -527,26 +527,26 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
     @Override
     public void onClick(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.iv_alarm_log_date_close){
+        int viewID = view.getId();
+        if (viewID == R.id.iv_alarm_log_date_close) {
 
-        }else  if(viewID==R.id.alarm_return_top){
+        } else if (viewID == R.id.alarm_return_top) {
             acHistoryLogRcContent.smoothScrollToPosition(0);
             mReturnTopImageView.setVisibility(View.GONE);
             refreshLayout.closeHeaderOrFooter();
-        }else if(viewID==R.id.camera_list_iv_top_back){
+        } else if (viewID == R.id.camera_list_iv_top_back) {
             finishAc();
             AppUtils.dismissInputMethodManager(mActivity, cameraListEtSearch);
-        }else if(viewID==R.id.camera_list_iv_filter){
+        } else if (viewID == R.id.camera_list_iv_filter) {
             mPresenter.doShowCameraListFilterPopupWindow(mCameraListFilterPopupWindow.isShowing());
-        }else if(viewID==R.id.camera_list_et_search){
+        } else if (viewID == R.id.camera_list_et_search) {
             //                forceOpenSoftKeyboard();
-        }else if(viewID==R.id.camera_list_iv_search_clear){
+        } else if (viewID == R.id.camera_list_iv_search_clear) {
             cameraListEtSearch.setText("");
             cameraListEtSearch.requestFocus();
             AppUtils.openInputMethodManager(BaseStationListActivity.this, cameraListEtSearch);
             setSearchHistoryVisible(true);
-        }else if(viewID==R.id.camera_list_tv_search_cancel){
+        } else if (viewID == R.id.camera_list_tv_search_cancel) {
             if (cameraListTvSearchCancel.getVisibility() == View.VISIBLE) {
                 cameraListEtSearch.getText().clear();
             }
@@ -554,7 +554,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
             setSearchHistoryVisible(false);
             AppUtils.dismissInputMethodManager(BaseStationListActivity.this, cameraListEtSearch);
 
-        }else if(viewID==R.id.btn_search_clear){
+        } else if (viewID == R.id.btn_search_clear) {
             showHistoryClearDialog();
         }
 

@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.gson.reflect.TypeToken;
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.model.SecurityRisksTagModel;
@@ -27,6 +29,7 @@ import com.sensoro.common.utils.LogUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +128,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, eventLoginData.hasIBeaconSearchDemo);
         editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, eventLoginData.hasMonitorTaskList);
         editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, eventLoginData.hasMonitorTaskConfirm);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEPLOY_OFFLINE_TASK, eventLoginData.hasDeployOfflineTask);
         //
         editor.apply();
     }
@@ -191,6 +195,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
             eventLoginData.hasMonitorTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, false);
             eventLoginData.hasMonitorTaskConfirm = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, false);
+            eventLoginData.hasDeployOfflineTask = sp.getBoolean(EXTRA_GRANTS_HAS_DEPLOY_OFFLINE_TASK, false);
 
             mEventLoginData = eventLoginData;
         }
@@ -925,6 +930,30 @@ public final class PreferencesHelper implements Constants {
                 .getString(Constants.PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG, null);
         if (!TextUtils.isEmpty(data)) {
             return RetrofitServiceHelper.getInstance().getGson().fromJson(data, IbeaconSettingData.class);
+        }
+        return null;
+    }
+
+    public boolean setOfflineDeployData(LinkedHashMap<String, DeployAnalyzerModel> linkedHashMap) {
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null && linkedHashMap != null) {
+            String json = RetrofitServiceHelper.getInstance().getGson().toJson(linkedHashMap);
+            ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP + userData.accountId, Context.MODE_PRIVATE)
+                    .edit().putString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, json).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public LinkedHashMap<String, DeployAnalyzerModel> getOfflineDeployData() {
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            String data = ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP + userData.accountId, Context.MODE_PRIVATE)
+                    .getString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, null);
+            if (!TextUtils.isEmpty(data)) {
+                return RetrofitServiceHelper.getInstance().getGson().fromJson(data, new TypeToken<LinkedHashMap<String, DeployAnalyzerModel>>() {
+                }.getType());
+            }
         }
         return null;
     }

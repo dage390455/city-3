@@ -118,7 +118,7 @@ public class SlideVerifity extends LinearLayout {
         seekbar = (TextSeekbar) parentView.findViewById(R.id.seekbar);
 
         setMode(mMode);
-        if(drawableId!=-1){
+        if (drawableId != -1) {
             vertifyView.setImageResource(drawableId);
         }
         setBlockSize(blockSize);
@@ -280,7 +280,7 @@ public class SlideVerifity extends LinearLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        if(mTask!=null&&mTask.getStatus().equals(AsyncTask.Status.RUNNING)){
+        if (mTask != null && mTask.getStatus().equals(AsyncTask.Status.RUNNING)) {
             mTask.cancel(true);
         }
         super.onDetachedFromWindow();
@@ -288,6 +288,7 @@ public class SlideVerifity extends LinearLayout {
 
     /**
      * 复位
+     *
      * @param clearFailed 是否清除失败次数
      */
     public void reset(boolean clearFailed) {
@@ -302,8 +303,6 @@ public class SlideVerifity extends LinearLayout {
             vertifyView.setTouchEnable(true);
         }
     }
-    
-
 
 
 }

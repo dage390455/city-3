@@ -86,7 +86,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         });
 //        RetrofitServiceHelper.getInstance().getDeviceCameraList(null, null, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
 //            @Override
-//            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+//            public void onDeployCompleted(DeviceCameraListRsp deviceCameraListRsp) {
 //                List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
 //                ArrayList<VideoModel> videoModels = new ArrayList<>();
 //                if (data != null && data.size() > 0) {
@@ -102,7 +102,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 //            }
 //
 //            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
+//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
 //                SensoroToast.getInstance().makeText(errorMsg, Toast.LENGTH_SHORT).show();
 //            }
 //        });

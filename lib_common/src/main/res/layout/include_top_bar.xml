@@ -7,16 +7,16 @@
     android:clickable="true">
 
     <!--<ImageView-->
-        <!--android:id="@+id/btn_back"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginLeft="2dp"-->
-        <!--android:adjustViewBounds="true"-->
-        <!--android:cropToPadding="true"-->
-        <!--android:padding="15dp"-->
-        <!--app:srcCompat="@drawable/arrows_left" />-->
+    <!--android:id="@+id/btn_back"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginLeft="2dp"-->
+    <!--android:adjustViewBounds="true"-->
+    <!--android:cropToPadding="true"-->
+    <!--android:padding="15dp"-->
+    <!--app:srcCompat="@drawable/arrows_left" />-->
 
     <ImageView
         android:id="@+id/btn_back"

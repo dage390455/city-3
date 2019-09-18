@@ -60,11 +60,6 @@ public class ImagePicker {
     public static final String EXTRA_FROM_ITEMS = "extra_from_items";
 
 
-
-
-
-
-
     private boolean multiMode = true;    //图片选择模式
     private int selectLimit = 9;         //最大选择图片数量
     private boolean crop = true;         //裁剪

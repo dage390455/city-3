@@ -26,7 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-
 public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAdapter.InspectionTaskHolder> {
     private final Context mContext;
     private RecycleViewItemClickListener listener;
@@ -47,11 +46,11 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         InspectionIndexTaskInfo tasksBean = mTasks.get(position);
 
         holder.itemInspectionAdapterTvTitle.setText(tasksBean.getName());
-        holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormatPoint(tasksBean.getBeginTime())+" - "+DateUtil.getDateByOtherFormatPoint(tasksBean.getEndTime()));
+        holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormatPoint(tasksBean.getBeginTime()) + " - " + DateUtil.getDateByOtherFormatPoint(tasksBean.getEndTime()));
 
         //防止status 后台瞎给 造成崩溃，如status 给个6，索引越界
         try {
-            setTvState(holder, InspectionConstant.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],mContext.getString(InspectionConstant.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]));
+            setTvState(holder, InspectionConstant.INSPECTION_STATUS_COLORS[tasksBean.getStatus()], mContext.getString(InspectionConstant.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,14 +58,14 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onItemClick(v,position);
+                    listener.onItemClick(v, position);
                 }
             }
         });
 
     }
 
-    public void setOnRecycleViewItemClickListener(RecycleViewItemClickListener listener){
+    public void setOnRecycleViewItemClickListener(RecycleViewItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -76,7 +75,7 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
 //
 //        holder.itemInspectionAdapterTvState.setText(text);
 //        holder.itemInspectionAdapterTvState.setTextColor(mContext.getResources().getColor(color));
-        WidgetUtil.changeTvState(mContext,holder.itemInspectionAdapterTvState,color,text);
+        WidgetUtil.changeTvState(mContext, holder.itemInspectionAdapterTvState, color, text);
 
     }
 

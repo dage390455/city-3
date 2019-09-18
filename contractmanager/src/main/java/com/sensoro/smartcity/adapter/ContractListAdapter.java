@@ -1,8 +1,10 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  */
 
 public class ContractListAdapter extends RecyclerView.Adapter<ContractListAdapter.ContractViewHolder> implements Constants {

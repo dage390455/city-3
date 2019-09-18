@@ -2,7 +2,9 @@ package com.sensoro.common.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,18 +46,18 @@ public class StateSelectAdapter extends RecyclerView.Adapter<StateSelectAdapter.
     public void onBindViewHolder(StateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
         StatusCountModel ic = mStateCountList.get(position);
-        if(ic.count == -1){
+        if (ic.count == -1) {
             holder.itemPopTvSelectCount.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.itemPopTvSelectCount.setVisibility(View.VISIBLE);
-            holder.itemPopTvSelectCount.setText(ic.count+"");
+            holder.itemPopTvSelectCount.setText(ic.count + "");
         }
         holder.itemPopTvSelectState.setText(ic.statusTitle);
 
         holder.itemPopSelectLlRoot.setBackgroundResource(position != selectPosition ? R.drawable.shape_bg_solid_ff_stroke_df_corner
-        : R.drawable.shape_bg_corner_29c_shadow);
-        holder.itemPopTvSelectCount.setTextColor(resources.getColor(position != selectPosition ? R.color.c_a6a6a6: R.color.white));
-        holder.itemPopTvSelectState.setTextColor(resources.getColor(position != selectPosition ? R.color.c_252525: R.color.white));
+                : R.drawable.shape_bg_corner_29c_shadow);
+        holder.itemPopTvSelectCount.setTextColor(resources.getColor(position != selectPosition ? R.color.c_a6a6a6 : R.color.white));
+        holder.itemPopTvSelectState.setTextColor(resources.getColor(position != selectPosition ? R.color.c_252525 : R.color.white));
 
         holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +102,6 @@ public class StateSelectAdapter extends RecyclerView.Adapter<StateSelectAdapter.
     }
 
 
-
     @Override
     public int getItemCount() {
         return mStateCountList.size();
@@ -114,6 +115,7 @@ public class StateSelectAdapter extends RecyclerView.Adapter<StateSelectAdapter.
         TextView itemPopTvSelectCount;
         @BindView(R2.id.item_pop_select_ll_root)
         LinearLayout itemPopSelectLlRoot;
+
         StateSelectHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

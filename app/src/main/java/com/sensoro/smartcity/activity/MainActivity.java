@@ -16,6 +16,9 @@ import com.sensoro.bottomnavigation.TextBadgeItem;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -23,15 +26,17 @@ import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.HomeViewPager;
+import com.sensoro.smartcity.widget.dialog.DefaultTipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
-        , BottomNavigationBar.OnTabSelectedListener {
+        , BottomNavigationBar.OnTabSelectedListener, Repause.Listener {
 
     @BindView(R.id.ac_main_hvp_content)
     HomeViewPager acMainHvpContent;
@@ -43,12 +48,23 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private PermissionChangeDialogUtils permissionChangeDialogUtils;
 
+    private long lastOpenTime;
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+        lastOpenTime = System.currentTimeMillis();
+        //TODO 这里应该是在application中 注册过 目前不需要多处注册 只需要在初始化检查一次就可以了
+        Repause.registerListener(this);
+
+        //冷启动显示
+        LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
+        if (null != allTask && allTask.size() > 0) {
+            showOffLineDialog();
+        }
 
     }
 
@@ -90,6 +106,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     protected MainPresenter createPresenter() {
+
         return new MainPresenter();
     }
 
@@ -267,13 +284,67 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         //
     }
 
+
     @Override
     protected void onDestroy() {
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        Repause.unregisterListener(this);
         super.onDestroy();
     }
 
+    @Override
+    public void onApplicationResumed() {
+        Long s = (System.currentTimeMillis() - lastOpenTime) / (1000 * 60);
+        if (s > 60) {
+            LinkedHashMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getOfflineDeployData();
+            if (null != allTask && allTask.size() > 0) {
+                showOffLineDialog();
+                lastOpenTime = System.currentTimeMillis();
+            }
+        }
+    }
+
+    /**
+     * 提示离线上传
+     */
+    public void showOffLineDialog() {
+
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            if (userData.hasDeployOfflineTask) {
+
+                Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+                DefaultTipDialogUtils offlineDialogUtils = new DefaultTipDialogUtils(topActivity);
+
+                offlineDialogUtils.setTipMessageText(getResources().getString(R.string.offline_dialog_content));
+                offlineDialogUtils.setTipConfirmText(getResources().getString(R.string.determine), getResources().getColor(R.color.c_1dbb99));
+                offlineDialogUtils.setTipCacnleText(getResources().getString(R.string.cancel), getResources().getColor(R.color.c_a6a6a6));
+                offlineDialogUtils.setUtilsClickListener(new DefaultTipDialogUtils.DialogUtilsClickListener() {
+                    @Override
+                    public void onCancelClick() {
+                        offlineDialogUtils.dismiss();
+                    }
+
+                    @Override
+                    public void onConfirmClick() {
+                        offlineDialogUtils.dismiss();
+                        mActivity.startActivity(new Intent(mActivity, OfflineDeployActivity.class));
+                    }
+                });
+                offlineDialogUtils.show();
+            }
+
+        }
+
+
+    }
+
+
+    @Override
+    public void onApplicationPaused() {
+
+    }
 }

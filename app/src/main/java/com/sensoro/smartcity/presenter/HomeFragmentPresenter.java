@@ -535,8 +535,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             throwable.printStackTrace();
         }
 
-        StringBuffer sb_last_model=new StringBuffer();
-        for(HomeTopModel item:mHomeTopModels){
+        StringBuffer sb_last_model = new StringBuffer();
+        for (HomeTopModel item : mHomeTopModels) {
             sb_last_model.append(item.status);
         }
 
@@ -595,14 +595,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
         //次数判断model集合状态是否发生变化，比较header状态拼接的字符串
-            StringBuffer sb_new_model=new StringBuffer();
-            for(HomeTopModel item:mHomeTopModels){
-                sb_new_model.append(item.status);
-            }
-            if(!sb_last_model.toString().equalsIgnoreCase(sb_new_model.toString())){
-                needResetHeaderPosition = true;
-                needFreshAll=true;
-            }
+        StringBuffer sb_new_model = new StringBuffer();
+        for (HomeTopModel item : mHomeTopModels) {
+            sb_new_model.append(item.status);
+        }
+        if (!sb_last_model.toString().equalsIgnoreCase(sb_new_model.toString())) {
+            needResetHeaderPosition = true;
+            needFreshAll = true;
+        }
 
         try {
             LogUtils.loge("needResetHeaderPosition", needResetHeaderPosition + "");
@@ -614,7 +614,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
 //        needRefreshHeader=isNeedFresh;
-
 
 
         try {
@@ -657,8 +656,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         throwable.printStackTrace();
                     }
                     needResetHeaderPosition = true;
-                    mTypeSelectedType=null;
-                    mSelectedCondition=null;
+                    mTypeSelectedType = null;
+                    mSelectedCondition = null;
                     getView().resetTypeAndSortCondition();
                     requestInitData(true, true);
                 }
@@ -751,10 +750,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
                         //此处容错，如果当前的model为空或者model中的设备数量小于等于一页的数量同时返回的列表数量与当前modeltop的设备数量不等，整体刷新
-                        if(mCurrentHomeTopModel==null||(mCurrentHomeTopModel.value<=Constants.DEFAULT_PAGE_SIZE &&mDeviceInfoList.size()!=mCurrentHomeTopModel.value)){
-                            needResetHeaderPosition=true;
-                            needFreshAll=true;
-                            requestInitData(true,true);
+                        if (mCurrentHomeTopModel == null || (mCurrentHomeTopModel.value <= Constants.DEFAULT_PAGE_SIZE && mDeviceInfoList.size() != mCurrentHomeTopModel.value)) {
+                            needResetHeaderPosition = true;
+                            needFreshAll = true;
+                            requestInitData(true, true);
                         }
                     }
 
@@ -764,7 +763,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             mDeviceInfoList.clear();
                         }
                         try {
-                            LogUtils.loge("onErrorMsg", "mDeviceInfoList.size=" + mDeviceInfoList.size());
+                            LogUtils.loge("onDeployErrorMsg", "mDeviceInfoList.size=" + mDeviceInfoList.size());
 
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
@@ -918,7 +917,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
-                startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mContext);
+                startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mContext);
                 return;
             }
         }
@@ -1016,7 +1015,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doScanDeploy() {
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
-        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mContext);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mContext);
     }
 
     public void doSearch() {
@@ -1031,9 +1030,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 //                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
 //                getView().startAC(intent);
 
-                Bundle bundle=new Bundle();
-                bundle.putInt(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
-                startActivity(ARouterConstants.ACTIVITY_CONTRACT_EDITOR,bundle,mContext);
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
+                startActivity(ARouterConstants.ACTIVITY_CONTRACT_EDITOR, bundle, mContext);
                 return;
             }
         }
@@ -1065,7 +1064,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     private void initSortCondition() {
-        mSortConditionList.clear();;
+        mSortConditionList.clear();
+        ;
         String[] titleArray = mContext.getResources().getStringArray(R.array.sortcondition);
         mSortConditionList.add(mSelectedCondition = new SortConditionModel("init", "status", titleArray[0], true));
         mSortConditionList.add(new SortConditionModel("asc", "name", titleArray[1], false));
@@ -1073,10 +1073,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     }
 
-    public void resetConditionList(){
+    public void resetConditionList() {
         initSortCondition();
         getView().updateSelectFilterCondition(mSortConditionList, mSelectedCondition);
     }
+
     public void updateSelectSortConditionPopAndShow() {
         if (mSortConditionList.size() == 0) {
             initSortCondition();

@@ -254,7 +254,7 @@
             android:layout_marginTop="40dp"
             android:textColor="@color/c_252525"
             android:textSize="40dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <com.sensoro.smartcity.widget.NumKeyboard

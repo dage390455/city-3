@@ -21,16 +21,16 @@
             android:orientation="horizontal">
 
             <!--<ImageView-->
-                <!--android:id="@+id/contract_iv_menu_list"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:layout_marginStart="6dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:layout_marginBottom="8dp"-->
-                <!--android:contentDescription="@null"-->
-                <!--android:padding="8dp"-->
-                <!--android:src="@drawable/arrows_left" />-->
+            <!--android:id="@+id/contract_iv_menu_list"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginStart="6dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:padding="8dp"-->
+            <!--android:src="@drawable/arrows_left" />-->
 
             <ImageView
                 android:id="@+id/contract_iv_menu_list"

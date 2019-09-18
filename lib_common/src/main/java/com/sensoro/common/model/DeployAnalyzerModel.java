@@ -8,6 +8,7 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DeployAnalyzerModel implements Serializable {
     public String sn;
@@ -49,4 +50,39 @@ public class DeployAnalyzerModel implements Serializable {
     public int whiteListDeployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
     //铭牌部署 标识该铭牌是否被部署过，被部署过 跳转铭牌详情页
     public Boolean deployNameplateFlag;
+
+    public List<ImageItem> imageItems;
+    public List<String> imgUrls;
+    public long deployTime;
+    /**
+     * getstatus接口失败
+     */
+//    public boolean isGetDeviceRealStatusFailure = false;
+    public long lastOperateTime;
+    public String getStateErrorMsg;
+    /**
+     * 离线最最新调用status接口
+     */
+    public int realStatus = -1;
+    public boolean isShowForce = false;
+    /**
+     * 是否已部署
+     */
+    public boolean hasDeployed = false;
+
+    public DeployCameraConfigModel mOrientationConfig;
+    public DeployCameraConfigModel mMethodConfig;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DeployAnalyzerModel that = (DeployAnalyzerModel) o;
+        return sn.equals(that.sn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sn);
+    }
 }

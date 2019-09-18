@@ -33,6 +33,8 @@ public interface IManagerFragmentView extends IToast, IActivityIntent, IProgress
 
     void setForestfireManagerVisible(boolean isVisible);
 
+    void setDeployOfflineTaskVisible(boolean hasDeployOfflineTask);
+
     void showBleTips();
 
     void hideBleTips();

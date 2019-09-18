@@ -247,26 +247,26 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
             R2.id.ac_inspection_task_list_imv_date_close})
     public void onViewClicked(View view) {
 
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.ac_inspection_task_list_rb_current){
+        } else if (viewID == R.id.ac_inspection_task_list_rb_current) {
             refreshLayout.setNoMoreData(false);
             acInspectionTaskListImvCalendar.setVisibility(View.GONE);
             if (getRlDateEditIsVisible()) {
                 acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
             }
             mPresenter.doUndone();
-        }else if(viewID==R.id.ac_inspection_task_list_rb_history){
+        } else if (viewID == R.id.ac_inspection_task_list_rb_history) {
             refreshLayout.setNoMoreData(false);
             if (getRlDateEditIsVisible()) {
                 acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
             }
             acInspectionTaskListImvCalendar.setVisibility(View.VISIBLE);
             mPresenter.doDone();
-        }else if(viewID==R.id.ac_inspection_task_list_imv_calendar){
+        } else if (viewID == R.id.ac_inspection_task_list_imv_calendar) {
             doCalendar();
-        }else if(viewID==R.id.ac_inspection_task_list_imv_date_close){
+        } else if (viewID == R.id.ac_inspection_task_list_imv_date_close) {
             acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
             mPresenter.doDone();
         }

@@ -248,10 +248,10 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.ac_inspection_upload_exception_tv_upload, R2.id.ac_inspection_upload_exception_sf})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else   if(viewID==R.id.ac_inspection_upload_exception_tv_upload){
+        } else if (viewID == R.id.ac_inspection_upload_exception_tv_upload) {
             List<Integer> selectTags = getSelectTags();
             if (selectTags.size() == 0) {
                 toastShort(mActivity.getString(R.string.must_select_a_tag_type));
@@ -262,7 +262,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
             } else {
                 toastShort(mActivity.getString(R.string.upload_at_least_one_photo_or_a_video));
             }
-        }else  if(viewID==R.id.ac_inspection_upload_exception_sf){
+        } else if (viewID == R.id.ac_inspection_upload_exception_sf) {
             acInspectionUploadExceptionEtRemark.setFocusable(true);
             acInspectionUploadExceptionEtRemark.setFocusableInTouchMode(true);
             acInspectionUploadExceptionEtRemark.requestFocus();

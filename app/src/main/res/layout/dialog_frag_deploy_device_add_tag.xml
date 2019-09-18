@@ -50,7 +50,7 @@
             android:contentDescription="@null"
             android:padding="8dp"
             android:src="@drawable/delete_tag"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <View

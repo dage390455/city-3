@@ -18,7 +18,7 @@ public class ContractPreviewActivityPresenter extends BasePresenter<IContractPre
         String url = mContext.getIntent().getStringExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL);
         if (!TextUtils.isEmpty(url)) {
             getView().loadUrl(url);
-        }else{
+        } else {
             getView().toastLong(mContext.getString(R.string.preview_contract_failed));
         }
     }

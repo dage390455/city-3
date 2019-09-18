@@ -21,9 +21,9 @@ public class DataHolder {
     private Map<String, List<ImageItem>> data;
 
     public static DataHolder getInstance() {
-        if (mInstance == null){
-            synchronized (DataHolder.class){
-                if (mInstance == null){
+        if (mInstance == null) {
+            synchronized (DataHolder.class) {
+                if (mInstance == null) {
                     mInstance = new DataHolder();
                 }
             }
@@ -36,13 +36,13 @@ public class DataHolder {
     }
 
     public void save(String id, List<ImageItem> object) {
-        if (data != null){
+        if (data != null) {
             data.put(id, object);
         }
     }
 
     public Object retrieve(String id) {
-        if (data == null || mInstance == null){
+        if (data == null || mInstance == null) {
             throw new RuntimeException("你必须先初始化");
         }
         return data.get(id);

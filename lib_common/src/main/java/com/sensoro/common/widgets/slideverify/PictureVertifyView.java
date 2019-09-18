@@ -44,13 +44,11 @@ class PictureVertifyView extends AppCompatImageView {
     private PositionInfo blockInfo;     //拼图缺块的位置
     private Bitmap verfityBlock;        //拼图缺块Bitmap
 
-    private Paint  mMaskShadowPaint;
+    private Paint mMaskShadowPaint;
     private Bitmap mMaskShadowBitmap;//拼图缺块阴影
 
 
-    private Paint  mTargetMaskShadowPaint;
-
-
+    private Paint mTargetMaskShadowPaint;
 
 
     private Path blockShape;            //拼图缺块形状
@@ -61,7 +59,7 @@ class PictureVertifyView extends AppCompatImageView {
     private int blockSize = 96;
 
     private boolean mTouchEnable = true;   //是否可触动
-    public   int blockMinLeft=10;
+    public int blockMinLeft = 10;
 
 
     private Callback callback;
@@ -73,7 +71,9 @@ class PictureVertifyView extends AppCompatImageView {
 
     interface Callback {
         void onSuccess(long time);
+
         void onFailed();
+
         void onCancel();
     }
 
@@ -94,9 +94,9 @@ class PictureVertifyView extends AppCompatImageView {
 
     }
 
-    private void ininPaint(Context context){
-        blockSize= DpUtils.dp2px(context,blockSize);
-        blockMinLeft= DpUtils.dp2px(context,blockMinLeft);
+    private void ininPaint(Context context) {
+        blockSize = DpUtils.dp2px(context, blockSize);
+        blockMinLeft = DpUtils.dp2px(context, blockMinLeft);
         mPorterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
         mStrategy = new DefaultSlideVerifityStrategy(context);
 
@@ -104,7 +104,7 @@ class PictureVertifyView extends AppCompatImageView {
         shadowPaint = new Paint();
         shadowPaint.setAlpha(180);
         //绘制左侧滑块部分
-        bitmapPaint=  new Paint();
+        bitmapPaint = new Paint();
         setLayerType(View.LAYER_TYPE_SOFTWARE, bitmapPaint);
 
 
@@ -113,12 +113,12 @@ class PictureVertifyView extends AppCompatImageView {
         mMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.OUTER));
 
         // 绘制右侧滑块阴影部分
-        mTargetMaskShadowPaint= new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
+        mTargetMaskShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mTargetMaskShadowPaint.setMaskFilter(new BlurMaskFilter(15, BlurMaskFilter.Blur.SOLID));
 
     }
 
-    private void initDrawElements(){
+    private void initDrawElements() {
         if (shadowInfo == null) {
             shadowInfo = mStrategy.getBlockPostionInfo(getWidth(), getHeight(), blockSize);
             blockInfo = new PositionInfo(blockMinLeft, shadowInfo.top);
@@ -129,7 +129,7 @@ class PictureVertifyView extends AppCompatImageView {
         }
         if (verfityBlock == null) {
             verfityBlock = createBlockBitmap();
-            mMaskShadowBitmap=verfityBlock.extractAlpha();
+            mMaskShadowBitmap = verfityBlock.extractAlpha();
         }
 
     }
@@ -157,8 +157,8 @@ class PictureVertifyView extends AppCompatImageView {
     }
 
     /**
-     *按下滑动条(滑动条模式)
-     * */
+     * 按下滑动条(滑动条模式)
+     */
     void down(int progress) {
         startTouchTime = System.currentTimeMillis();
         mState = STATE_DOWN;
@@ -167,8 +167,8 @@ class PictureVertifyView extends AppCompatImageView {
     }
 
     /**
-     *触动拼图块(触动模式)
-     * */
+     * 触动拼图块(触动模式)
+     */
     void downByTouch(float x, float y) {
         mState = STATE_DOWN;
         blockInfo.left = (int) (x - blockSize / 2f);
@@ -182,12 +182,13 @@ class PictureVertifyView extends AppCompatImageView {
      */
     void move(int progress) {
         mState = STATE_MOVE;
-        blockInfo.left = (int) (progress / 100f * (getWidth() - blockSize))+blockMinLeft;
-        if(blockInfo.left>getWidth()-blockSize-blockMinLeft){
-            blockInfo.left=getWidth()-blockSize-blockMinLeft;
+        blockInfo.left = (int) (progress / 100f * (getWidth() - blockSize)) + blockMinLeft;
+        if (blockInfo.left > getWidth() - blockSize - blockMinLeft) {
+            blockInfo.left = getWidth() - blockSize - blockMinLeft;
         }
         invalidate();
     }
+
     /**
      * 触动拼图缺块(触动模式)
      */
@@ -200,14 +201,14 @@ class PictureVertifyView extends AppCompatImageView {
 
     /**
      * 松开
-     * */
+     */
     void loose() {
         mState = STATE_LOOSEN;
         looseTime = System.currentTimeMillis();
-        if(checkAccess()){
+        if (checkAccess()) {
             invalidate();
-        }else{
-            move(blockMinLeft*100/getWidth());
+        } else {
+            move(blockMinLeft * 100 / getWidth());
         }
 
 
@@ -216,15 +217,15 @@ class PictureVertifyView extends AppCompatImageView {
 
     /**
      * 复位
-     * */
+     */
     public void reset() {
         mState = STATE_IDEL;
         verfityBlock = null;
         shadowInfo = null;
         blockShape = null;
-        if(mMaskShadowBitmap!=null){
+        if (mMaskShadowBitmap != null) {
             mMaskShadowBitmap.recycle();
-            mMaskShadowBitmap=null;
+            mMaskShadowBitmap = null;
         }
         invalidate();
     }
@@ -280,12 +281,13 @@ class PictureVertifyView extends AppCompatImageView {
     void setTouchEnable(boolean enable) {
         this.mTouchEnable = enable;
     }
+
     private PorterDuffXfermode mPorterDuffXfermode;
 
 
     /**
      * 生成拼图缺块的Bitmap
-     * */
+     */
     private Bitmap createBlockBitmap() {
         Bitmap tempBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(tempBitmap);
@@ -294,7 +296,7 @@ class PictureVertifyView extends AppCompatImageView {
         getDrawable().draw(canvas);
 //        mStrategy.decoreateSwipeBlockBitmap(canvas, blockShape,this);
 
-        
+
 //       Bitmap  tempBitmap1= cropBitmap(tempBitmap);
 //
 //
@@ -322,14 +324,13 @@ class PictureVertifyView extends AppCompatImageView {
 //        mMaskPaint.setXfermode(null);
 
 
-
         return cropBitmap(tempBitmap);
     }
 
 
     /**
      * 保留拼图缺块大小的bitmap
-     * */
+     */
     private Bitmap cropBitmap(Bitmap bmp) {
         Bitmap result = null;
         result = Bitmap.createBitmap(bmp, shadowInfo.left, shadowInfo.top, blockSize, blockSize);
@@ -375,7 +376,7 @@ class PictureVertifyView extends AppCompatImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mMode == SlideVerifity.MODE_NONBAR&& verfityBlock != null && mTouchEnable) {
+        if (mMode == SlideVerifity.MODE_NONBAR && verfityBlock != null && mTouchEnable) {
             float x = event.getX();
             float y = event.getY();
             switch (event.getAction()) {

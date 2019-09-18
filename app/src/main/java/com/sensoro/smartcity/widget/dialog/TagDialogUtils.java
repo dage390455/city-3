@@ -66,9 +66,9 @@ public class TagDialogUtils implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().length()==0){
+                if (s.toString().length() == 0) {
                     mDialogImvClear.setVisibility(View.GONE);
-                }else{
+                } else {
                     mDialogImvClear.setVisibility(View.VISIBLE);
                 }
             }

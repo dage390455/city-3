@@ -63,6 +63,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/white">
+
                 <TextView
                     android:id="@+id/ac_inspection_upload_exception_tv_word_count"
                     android:layout_width="wrap_content"
@@ -73,11 +74,13 @@
                     android:layout_marginBottom="12dp"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="12dp" />
+
                 <com.sensoro.common.widgets.ScrollFrameLayout
                     android:id="@+id/ac_inspection_upload_exception_sf"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@id/ac_inspection_upload_exception_tv_word_count">
+
                     <EditText
                         android:id="@+id/ac_inspection_upload_exception_et_remark"
                         android:layout_width="match_parent"
@@ -96,7 +99,6 @@
                         android:textColorHint="@color/c_a6a6a6"
                         android:textSize="14dp" />
                 </com.sensoro.common.widgets.ScrollFrameLayout>
-
 
 
             </RelativeLayout>
@@ -120,9 +122,10 @@
                 android:background="@color/c_f4f4f4">
 
             </androidx.recyclerview.widget.RecyclerView>
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="40dp"/>
+                android:layout_height="40dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

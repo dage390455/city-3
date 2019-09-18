@@ -199,12 +199,12 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
             int pxL = AppUtils.dp2px(mContext, 14);
             lp.setMargins(pxL, 0, 0, 0);
             holder.homeStatusRoot.setLayoutParams(lp);
-        } else  if (position == mData.size() - 1) {
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
-                int pxR = AppUtils.dp2px(mContext, 14);
-                lp.setMargins(0, 0, pxR, 0);
-                holder.homeStatusRoot.setLayoutParams(lp);
-         }else{
+        } else if (position == mData.size() - 1) {
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
+            int pxR = AppUtils.dp2px(mContext, 14);
+            lp.setMargins(0, 0, pxR, 0);
+            holder.homeStatusRoot.setLayoutParams(lp);
+        } else {
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
             int pxR = AppUtils.dp2px(mContext, 14);
             lp.setMargins(0, 0, 0, 0);

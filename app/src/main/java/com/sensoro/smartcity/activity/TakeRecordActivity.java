@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.Serializable;
 
 import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
+
 @Route(path = ARouterConstants.ACTIVITY_TAKE_RECORD)
 public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, TakeRecordActivityPresenter> implements ITakeRecordActivityView, View.OnClickListener {
 

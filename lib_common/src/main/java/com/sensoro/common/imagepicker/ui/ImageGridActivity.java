@@ -72,7 +72,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     private ImageRecyclerAdapter mRecyclerAdapter;
 
 
-    ProgressUtils  mProgressUtils ;
+    ProgressUtils mProgressUtils;
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -137,8 +138,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         mRecyclerAdapter = new ImageRecyclerAdapter(this, null);
 
 
-
-        if(!directPhoto) {
+        if (!directPhoto) {
 
             imagePicker.addOnImageSelectedListener(this);
             onImageSelected(0, null, false);
@@ -298,7 +298,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     public void onImagesLoaded(List<ImageFolder> imageFolders) {
         mProgressUtils.dismissProgress();
 
-        Log.d("onActivityResult","onImagesLoaded");
+        Log.d("onActivityResult", "onImagesLoaded");
         Log.e("", "onImagesLoaded----->>" + imageFolders.size());
         this.mImageFolders = imageFolders;
         imagePicker.setImageFolders(imageFolders);
@@ -359,7 +359,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @SuppressLint("StringFormatMatches")
     @Override
     public void onImageSelected(int position, ImageItem item, boolean isAdd) {
-        Log.d("onActivityResult","onImageSelected");
+        Log.d("onActivityResult", "onImageSelected");
 
         if (imagePicker.getSelectImageCount() > 0) {
             mBtnOk.setText(getString(R.string.ip_select_complete, imagePicker.getSelectImageCount(), imagePicker
@@ -392,7 +392,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("onActivityResult","onActivityResult");
+        Log.d("onActivityResult", "onActivityResult");
 
         if (data != null && data.getExtras() != null) {
             if (resultCode == ImagePicker.RESULT_CODE_BACK) {

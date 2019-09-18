@@ -37,7 +37,7 @@ public class ScrollFrameLayout extends FrameLayout {
             case MotionEvent.ACTION_MOVE: {
                 int deltaX = Math.abs(x - mLastX);
                 int deltaY = Math.abs(y - mLastY);
-                if (deltaY>deltaX) {
+                if (deltaY > deltaX) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 break;

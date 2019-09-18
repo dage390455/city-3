@@ -1,21 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.sensoro.contractmanager" >
+    package="com.sensoro.contractmanager">
 
 
-<application>
-    <activity android:name="com.sensoro.smartcity.activity.ContractIndexActivity" />
-    <activity
-        android:name="com.sensoro.smartcity.activity.ContractServiceActivity"
-        android:windowSoftInputMode="stateHidden|stateUnchanged" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractInfoActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractResultActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractManagerActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractEditorActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractCreationSuccessActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractDetailActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.ContractPreviewActivity" />
+    <application>
+        <activity android:name="com.sensoro.smartcity.activity.ContractIndexActivity" />
+        <activity
+            android:name="com.sensoro.smartcity.activity.ContractServiceActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractInfoActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractResultActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractManagerActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractEditorActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractCreationSuccessActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractDetailActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.ContractPreviewActivity" />
 
 
-</application>
+    </application>
 
 </manifest>

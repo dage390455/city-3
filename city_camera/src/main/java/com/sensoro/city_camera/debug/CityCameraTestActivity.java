@@ -35,7 +35,7 @@ public class CityCameraTestActivity extends Activity {
             public void onClick(View view) {
 
                 ARouter.getInstance().build(ARouterConstants.ACTIVITY_LOGIN_TEST)
-                        .withString(Constants.ROUTEPATH,ARouterConstants.ACTIVITY_CITY_CAMERA_LAUNCHER)
+                        .withString(Constants.ROUTEPATH, ARouterConstants.ACTIVITY_CITY_CAMERA_LAUNCHER)
                         .withTransition(R.anim.slide_left, R.anim.slide_out)
                         .navigation(CityCameraTestActivity.this);
             }
@@ -55,6 +55,7 @@ public class CityCameraTestActivity extends Activity {
 
 
     private PermissionDialogUtils permissionDialogUtils;
+
     private void requestPermissions(final String[] permissions) {
         AndPermission.with(this).runtime()
                 .permission(permissions)
@@ -71,7 +72,7 @@ public class CityCameraTestActivity extends Activity {
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        permissionDialogUtils.setTipMessageText(getString(R.string.permission_descript)).setTipConfirmText(getString(R.string.reauthorization),getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                        permissionDialogUtils.setTipMessageText(getString(R.string.permission_descript)).setTipConfirmText(getString(R.string.reauthorization), getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
                             @Override
                             public void onCancelClick() {
                                 executor.cancel();

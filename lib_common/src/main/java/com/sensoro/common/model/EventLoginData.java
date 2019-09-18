@@ -55,6 +55,7 @@ public final class EventLoginData implements Serializable {
     //    _iBeaconSearchDemo
     public boolean hasMonitorTaskList = false;
     public boolean hasMonitorTaskConfirm = false;
+    public boolean hasDeployOfflineTask = false;
 
     @Override
     public boolean equals(Object o) {
@@ -101,6 +102,7 @@ public final class EventLoginData implements Serializable {
                     hasNameplateDeploy == that.hasNameplateDeploy &&
                     hasMonitorTaskList == that.hasMonitorTaskList &&
                     hasMonitorTaskConfirm == that.hasMonitorTaskConfirm &&
+                    hasDeployOfflineTask == that.hasDeployOfflineTask &&
                     userId.equals(that.userId) &&
                     phone.equals(that.phone) &&
                     accountId.equals(that.accountId) &&
@@ -175,6 +177,7 @@ public final class EventLoginData implements Serializable {
                 ", hasDeviceControlConfig=" + hasDeviceControlConfig +
                 ", hasDeviceControlOpen=" + hasDeviceControlOpen +
                 ", hasDeviceControlClose=" + hasDeviceControlClose +
+                ", hasDeployOfflineTask=" + hasDeployOfflineTask +
                 '}';
     }
 }

@@ -22,11 +22,11 @@ public class SliderVertifyDialog extends Dialog {
     }
 
     public SliderVertifyDialog(@NonNull Context context, int themeResId, View view) {
-        this(context,themeResId,view,0.8f);
+        this(context, themeResId, view, 0.8f);
     }
 
     public SliderVertifyDialog(@NonNull Context context, View view, float percentWidth) {
-        this(context, R.style.SliderVertifyDialogStyle,view,percentWidth);
+        this(context, R.style.SliderVertifyDialogStyle, view, percentWidth);
     }
 
     /**
@@ -38,7 +38,7 @@ public class SliderVertifyDialog extends Dialog {
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();
         WindowManager.LayoutParams p = getWindow().getAttributes();
-        p.width = (int) (d.getWidth()*percentWidth);
+        p.width = (int) (d.getWidth() * percentWidth);
         getWindow().setAttributes(p);
     }
 
@@ -50,6 +50,7 @@ public class SliderVertifyDialog extends Dialog {
         setContentView(view);
 
     }
+
     /**
      * 不会设置dilog的总体宽度
      */
@@ -79,7 +80,8 @@ public class SliderVertifyDialog extends Dialog {
         if (mDismissKeyboard) {
             View currentFocus = getCurrentFocus();
             if (currentFocus instanceof EditText) {
-                InputMethodManager imm = (InputMethodManager) currentFocus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
+                InputMethodManager imm = (InputMethodManager) currentFocus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                ;
                 if (imm != null && imm.isActive(currentFocus)) {
                     imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                 }

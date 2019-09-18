@@ -59,7 +59,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     public void onMessageEvent(String msg) {
         if ("ocr_ui__file_success".equals(msg)) {
             recBusinessLicense();
-        }else if("ocr_ui__file_failed".equals(msg)){
+        } else if ("ocr_ui__file_failed".equals(msg)) {
             if (isAttachedView()) {
                 getView().dismissProgressDialog();
                 getView().toastShort(mActivity.getString(R.string.identification_failed_try_again));

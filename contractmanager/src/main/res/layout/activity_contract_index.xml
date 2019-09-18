@@ -13,29 +13,29 @@
         android:background="@color/white">
 
         <!--<ImageView-->
-            <!--android:id="@+id/contract_index_back"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="@dimen/x10"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:cropToPadding="true"-->
-            <!--android:padding="15dp"-->
-            <!--android:src="@drawable/arrows_left" />-->
+        <!--android:id="@+id/contract_index_back"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginLeft="@dimen/x10"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:cropToPadding="true"-->
+        <!--android:padding="15dp"-->
+        <!--android:src="@drawable/arrows_left" />-->
 
         <ImageView
             android:id="@+id/contract_index_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="6dp"
-        android:contentDescription="@null"
-        android:padding="10dp"
-        android:src="@drawable/arrows_left"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="6dp"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:src="@drawable/arrows_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView

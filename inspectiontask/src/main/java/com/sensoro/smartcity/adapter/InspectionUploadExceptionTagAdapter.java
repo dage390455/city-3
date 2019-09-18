@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +52,11 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
         gd.setBounds(0, 0, gd.getMinimumWidth(), gd.getMinimumHeight());
         if (selectedTags.contains(position)) {
             holder.itemAdapterInspectionUploadExceptionTv.setTextColor(Color.WHITE);
-            gd.setStroke(0,Color.WHITE);
+            gd.setStroke(0, Color.WHITE);
             gd.setColor(resources.getColor(R.color.c_ff8d34));
         } else {
             gd.setColor(Color.WHITE);
-            gd.setStroke(AppUtils.dp2px(mContext,1),mContext.getResources().getColor(R.color.c_dfdfdf));
+            gd.setStroke(AppUtils.dp2px(mContext, 1), mContext.getResources().getColor(R.color.c_dfdfdf));
             holder.itemAdapterInspectionUploadExceptionTv.setTextColor(resources.getColor(R.color.c_252525));
         }
 

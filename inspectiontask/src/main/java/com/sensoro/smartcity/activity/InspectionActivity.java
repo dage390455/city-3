@@ -29,7 +29,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-@Route(path= ARouterConstants.ACTIVITY_INSPECTION)
+
+@Route(path = ARouterConstants.ACTIVITY_INSPECTION)
 public class InspectionActivity extends BaseActivity<IInspectionActivityView, InspectionActivityPresenter>
         implements IInspectionActivityView, TipDialogUtils.TipDialogUtilsClickListener {
     @BindView(R2.id.include_text_title_imv_arrows_left)
@@ -166,14 +167,14 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.include_text_title_tv_subtitle, R2.id.ac_inspection_tv_exception, R2.id.ac_inspection_tv_normal})
     public void onViewClicked(View view) {
-        int id=view.getId();
-        if(id==R.id.include_text_title_imv_arrows_left){
+        int id = view.getId();
+        if (id == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if(id==R.id.include_text_title_tv_subtitle){
+        } else if (id == R.id.include_text_title_tv_subtitle) {
             mPresenter.doInspectionInstruction();
-        }else if(id==R.id.ac_inspection_tv_exception){
+        } else if (id == R.id.ac_inspection_tv_exception) {
             mPresenter.doUploadException();
-        }else if(id==R.id.ac_inspection_tv_normal){
+        } else if (id == R.id.ac_inspection_tv_normal) {
             showNormalDialog();
         }
     }

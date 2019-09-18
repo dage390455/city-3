@@ -99,7 +99,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
                     ImageItem imageItem = mImageItems.get(position);
                     ARouter.getInstance().build(ARouterConstants.ACTIVITY_VIDEP_PLAY)
-                            .withSerializable(Constants.EXTRA_PATH_RECORD,imageItem).withBoolean(Constants.EXTRA_VIDEO_DEL, true).withTransition(R.anim.slide_left, R.anim.slide_out)
+                            .withSerializable(Constants.EXTRA_PATH_RECORD, imageItem).withBoolean(Constants.EXTRA_VIDEO_DEL, true).withTransition(R.anim.slide_left, R.anim.slide_out)
                             .navigation(ImagePreviewBaseActivity.this);
                 } catch (Exception e) {
                     e.printStackTrace();

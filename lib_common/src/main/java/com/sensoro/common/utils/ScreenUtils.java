@@ -25,8 +25,9 @@ import java.lang.reflect.Method;
 import static android.view.View.NO_ID;
 
 public class ScreenUtils {
-    public static  int  heightNavBarNotExisted;
-    public  static int  heightNavBarExisted;
+    public static int heightNavBarNotExisted;
+    public static int heightNavBarExisted;
+
     //    以下代码为判断底部导航的高度问题
 //获取底部导航的高度
     public static int getBottomStatusHeight(Context context) {
@@ -35,7 +36,6 @@ public class ScreenUtils {
         int contentHeight = getScreenHeight(context);
         return totalHeight - contentHeight;
     }
-
 
 
     //获取屏幕原始尺寸高度，包括虚拟功能键高度
@@ -58,8 +58,9 @@ public class ScreenUtils {
 
         }
 
-        return realHeight>0?realHeight: getScreenHeight(context);
+        return realHeight > 0 ? realHeight : getScreenHeight(context);
     }
+
     //获取屏幕高度 不包含虚拟按键=
     public static int getScreenHeight(Context context) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -67,21 +68,16 @@ public class ScreenUtils {
     }
 
 
-
-
-
-
-
-    private static final String NAVIGATION= "navigationBarBackground";
+    private static final String NAVIGATION = "navigationBarBackground";
 
     // 该方法需要在View完全被绘制出来之后调用，否则判断不了
     //在比如 onWindowFocusChanged（）方法中可以得到正确的结果
-    public static  boolean isNavigationBarExist(@NonNull Activity activity){
+    public static boolean isNavigationBarExist(@NonNull Activity activity) {
         ViewGroup vp = (ViewGroup) activity.getWindow().getDecorView();
         if (vp != null) {
             for (int i = 0; i < vp.getChildCount(); i++) {
                 vp.getChildAt(i).getContext().getPackageName();
-                if (vp.getChildAt(i).getId()!= NO_ID && NAVIGATION.equals(activity.getResources().getResourceEntryName(vp.getChildAt(i).getId()))&&vp.getChildAt(i).getVisibility()==View.VISIBLE) {
+                if (vp.getChildAt(i).getId() != NO_ID && NAVIGATION.equals(activity.getResources().getResourceEntryName(vp.getChildAt(i).getId())) && vp.getChildAt(i).getVisibility() == View.VISIBLE) {
                     return true;
                 }
             }
@@ -90,23 +86,23 @@ public class ScreenUtils {
     }
 
 
-   public  abstract static class OnNavigationStateListener{
-       public abstract void onNavigationState(boolean isShowing, int height);
-   }
+    public abstract static class OnNavigationStateListener {
+        public abstract void onNavigationState(boolean isShowing, int height);
+    }
 
 
     public static void isNavigationBarExist(Activity activity, final OnNavigationStateListener onNavigationStateListener) {
         if (activity == null) {
             return;
         }
-        View rootView= activity.getWindow().getDecorView();
+        View rootView = activity.getWindow().getDecorView();
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (onNavigationStateListener != null) {
-                  boolean  isShown=  checkNavigationBarShow(activity,activity.getWindow());
+                    boolean isShown = checkNavigationBarShow(activity, activity.getWindow());
 
-                    onNavigationStateListener.onNavigationState(isShown,0);
+                    onNavigationStateListener.onNavigationState(isShown, 0);
                 }
             }
         });
@@ -138,12 +134,12 @@ public class ScreenUtils {
 
         Resources resources = mActivity.getResources();
 
-        int resourceId=resources.getIdentifier("navigation_bar_height","dimen","android");
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
 
         int height = resources.getDimensionPixelSize(resourceId);
 
 
-        return  height;
+        return height;
 
     }
 
@@ -152,7 +148,7 @@ public class ScreenUtils {
 
         Resources resources = mActivity.getResources();
 
-        int resourceId = resources.getIdentifier("status_bar_height","dimen","android");
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
 
         int height = resources.getDimensionPixelSize(resourceId);
 

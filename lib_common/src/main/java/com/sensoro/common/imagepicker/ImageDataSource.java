@@ -87,7 +87,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     ArrayList<ImageFolder> currentFolder = new ArrayList<>(imageFolders);
                     imageFolders.clear();
                     if (data != null) {
@@ -151,14 +151,14 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
                     }
 
                     mHandler.sendEmptyMessage(0);
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     try {
-                        if(data!=null){
+                        if (data != null) {
                             data.close();
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 }
@@ -173,8 +173,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
 
-
-    Handler mHandler=new Handler(){
+    Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -183,6 +182,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
             loadedListener.onImagesLoaded(imageFolders);
         }
     };
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         System.out.println("--------");

@@ -166,7 +166,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     public void doDeployNewDevice() {
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
-        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle,mActivity);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mActivity);
 //        Intent intent = new Intent(mActivity, ScanActivity.class);
 //        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
 //        getView().startAC(intent);

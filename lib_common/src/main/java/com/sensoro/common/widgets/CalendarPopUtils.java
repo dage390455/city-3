@@ -159,8 +159,8 @@ public class CalendarPopUtils implements
     /**
      * 隐藏日历
      */
-    public  void  dismissNoAnimation(){
-        if(mPopupWindow!=null){
+    public void dismissNoAnimation() {
+        if (mPopupWindow != null) {
             mPopupWindow.dismiss();
         }
     }
@@ -198,15 +198,16 @@ public class CalendarPopUtils implements
 
     /**
      * 根据年月显示一下月Arrawbtn状态
+     *
      * @param year
      * @param month
      */
-    private void setNextBtnState(int year,int  month){
-        if(year==calendarView.getCurYear()&& month==calendarView.getCurMonth()){
+    private void setNextBtnState(int year, int month) {
+        if (year == calendarView.getCurYear() && month == calendarView.getCurMonth()) {
             acCalendarImvArrowRight.setEnabled(false);
             acCalendarImvArrowRight.setImageResource(R.drawable.calendar_arrow_right_disabled);
 
-        }else{
+        } else {
             acCalendarImvArrowRight.setEnabled(true);
             acCalendarImvArrowRight.setImageResource(R.drawable.calendar_arrow_right);
         }
@@ -302,16 +303,16 @@ public class CalendarPopUtils implements
 
     @OnClick({R2.id.ac_calendar_tv_cancel, R2.id.ac_calendar_tv_save, R2.id.ac_calendar_view_dismiss, R2.id.ac_calendar_imv_arrow_left, R2.id.ac_calendar_imv_arrow_right})
     public void onViewClicked(View view) {
-        int id=view.getId();
-        if(id==R.id.ac_calendar_tv_cancel){
+        int id = view.getId();
+        if (id == R.id.ac_calendar_tv_cancel) {
             calendarViewLl.startAnimation(dismissTranslateAnimation);
-        }else  if(id==R.id.ac_calendar_tv_save){
+        } else if (id == R.id.ac_calendar_tv_save) {
             saveDate();
-        }else if(id==R.id.ac_calendar_view_dismiss){
+        } else if (id == R.id.ac_calendar_view_dismiss) {
             calendarViewLl.startAnimation(dismissTranslateAnimation);
-        }else if(id==R.id.ac_calendar_imv_arrow_left){
+        } else if (id == R.id.ac_calendar_imv_arrow_left) {
             calendarView.scrollToPre();
-        }else if(id==R.id.ac_calendar_imv_arrow_right){
+        } else if (id == R.id.ac_calendar_imv_arrow_right) {
             calendarView.scrollToNext();
         }
 
@@ -442,7 +443,7 @@ public class CalendarPopUtils implements
     @Override
     public void onMonthChange(int year, int month) {
         setMonthYearText(month);
-       setNextBtnState(year,month);
+        setNextBtnState(year, month);
     }
 
 
