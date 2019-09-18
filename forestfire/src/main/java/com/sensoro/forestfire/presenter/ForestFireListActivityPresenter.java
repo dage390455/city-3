@@ -11,7 +11,7 @@ import com.sensoro.forestfire.imainviews.IForestFireListView;
  * 包  名: com.sensoro.forestfire.presenter
  * 简  述: <功能简述>
  */
-public class ForestFireListPresenter extends BasePresenter<IForestFireListView> {
+public class ForestFireListActivityPresenter extends BasePresenter<IForestFireListView> {
     @Override
     public void initData(Context context) {
 

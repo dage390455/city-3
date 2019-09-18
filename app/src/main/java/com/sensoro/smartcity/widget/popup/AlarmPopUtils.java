@@ -38,6 +38,7 @@ import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.widgets.FirewaringCloseDialogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
@@ -670,14 +671,23 @@ public class AlarmPopUtils implements Constants,
     }
 
     public void exitDialogShow(View view) {
-        if (mExitDialog != null) {
-            mExitDialog.show();
-        } else {
-            dismissInputMethodManager(view);
-            etAlarmPopupRemark.clearFocus();
-            etAlarmPopupRemark.getText().clear();
-            dismiss();
-        }
+//        if (mExitDialog != null) {
+//            mExitDialog.show();
+//        } else {
+//            dismissInputMethodManager(view);
+//            etAlarmPopupRemark.clearFocus();
+//            etAlarmPopupRemark.getText().clear();
+//            dismiss();
+//        }
+
+
+        FirewaringCloseDialogUtils  mFirewaringCloseDialogUtils=new FirewaringCloseDialogUtils(mActivity,true);
+        mFirewaringCloseDialogUtils.setTipTitleText("确认关闭火警");
+        mFirewaringCloseDialogUtils.setTipMessageText("确认火警已处理，关闭该火警事件\n后，若再次监测到森林火灾后，平台\n会重启一次新的预警事件");
+        mFirewaringCloseDialogUtils.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_252525));
+        mFirewaringCloseDialogUtils.setTipConfirmText(mActivity.getString(R.string.confirm_close), mActivity.getResources().getColor(R.color.c_f35a58));
+        mFirewaringCloseDialogUtils.show();
+
     }
 
     public void exitDialogShow() {

@@ -21,8 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:lineSpacingExtra="4dp"
+        android:gravity="center"
         android:text="@string/open_ble_to_location"
         android:textColor="@color/c_252525"
         android:textSize="14dp" />
