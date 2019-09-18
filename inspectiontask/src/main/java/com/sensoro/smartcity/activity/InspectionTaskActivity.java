@@ -469,10 +469,10 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     @OnClick({R2.id.ac_inspection_task_imv_arrows_left, R2.id.ac_inspection_task_tv_state, R2.id.ac_inspection_task_tv_type, R2.id.ac_inspection_task_imv_scan, R2.id.tv_inspection_task_search_cancel
             , R2.id.ac_inspection_task_imv_map, R2.id.fg_main_top_search_imv_clear, R2.id.btn_search_clear})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.ac_inspection_task_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.ac_inspection_task_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.ac_inspection_task_tv_state){
+        } else if (viewID == R.id.ac_inspection_task_tv_state) {
             if (mSelectDeviceTypePop != null) {
                 if (mSelectStatusPop.isData()) {
                     showSelectDeviceStatusPop();
@@ -480,22 +480,22 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                     mPresenter.doInspectionStatus(true);
                 }
             }
-        }else if(viewID==R.id.ac_inspection_task_tv_type){
+        } else if (viewID == R.id.ac_inspection_task_tv_type) {
             if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                 mSelectStatusPop.dismiss();
             }
             mPresenter.doInspectionType(true);
-        }else if(viewID==R.id.ac_inspection_task_imv_scan){
+        } else if (viewID == R.id.ac_inspection_task_imv_scan) {
             mPresenter.doInspectionScan();
-        }else if(viewID==R.id.tv_inspection_task_search_cancel){
+        } else if (viewID == R.id.tv_inspection_task_search_cancel) {
             doCancelSearch();
             dismissInputMethodManager(acInspectionTaskEtSearch);
             setSearchHistoryVisible(false);
-        }else if(viewID==R.id.ac_inspection_task_imv_map){
+        } else if (viewID == R.id.ac_inspection_task_imv_map) {
 
-        }else if(viewID==R.id.btn_search_clear){
+        } else if (viewID == R.id.btn_search_clear) {
             showHistoryClearDialog();
-        }else if(viewID==R.id.fg_main_top_search_imv_clear){
+        } else if (viewID == R.id.fg_main_top_search_imv_clear) {
             acInspectionTaskEtSearch.getText().clear();
             acInspectionTaskEtSearch.requestFocus();
             AppUtils.openInputMethodManager(mActivity, acInspectionTaskEtSearch);

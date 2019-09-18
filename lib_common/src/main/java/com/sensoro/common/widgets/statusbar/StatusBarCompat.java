@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 public class StatusBarCompat {
 
     private static int color = 0;
+
     //Get alpha color
     static int calculateStatusBarColor(int color, int alpha) {
         float a = 1 - alpha / 255f;

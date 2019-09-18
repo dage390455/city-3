@@ -23,9 +23,10 @@ class BitmapLoaderTask extends AsyncTask<String, Integer, Bitmap> {
         this.callback = callback;
     }
 
-    interface Callback{
-         void result(Bitmap bitmap);
+    interface Callback {
+        void result(Bitmap bitmap);
     }
+
     @Override
     protected Bitmap doInBackground(String... params) {
         Bitmap result = null;

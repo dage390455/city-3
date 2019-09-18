@@ -10,9 +10,11 @@ package com.sensoro.smartcity.activity;
  */
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,7 +84,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
         mContentAdapter.setOnInspectionInstructionContentPicClickListenter(new InspectionInstructionContentAdapter.OnInspectionInstructionContentPicClickListenter() {
             @Override
             public void onInspectionInstructionContentPicClick(List<ScenesData> dataList, int position) {
-                mPresenter.doPreviewPhoto(dataList,position);
+                mPresenter.doPreviewPhoto(dataList, position);
             }
         });
     }

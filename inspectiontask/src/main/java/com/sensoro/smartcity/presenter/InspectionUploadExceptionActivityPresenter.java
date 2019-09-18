@@ -103,10 +103,17 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             //打开预览
             ImageItem imageItem = selImageList.get(position);
             if (imageItem.isRecord) {
-                Bundle bundle=new Bundle();
-                bundle.putSerializable(Constants.EXTRA_PATH_RECORD,imageItem);
-                bundle.putBoolean(Constants.EXTRA_VIDEO_DEL,true);
-                startActivityForResult(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext,Constants.REQUEST_CODE_PLAY_RECORD);
+//                Intent intent = new Intent();
+//                intent.setClass(mContext, VideoPlayActivity.class);
+//                intent.putExtra("path_record", (Serializable) imageItem);
+//                intent.putExtra("video_del", true);
+//                mContext.startActivityForResult(intent, Constants.REQUEST_CODE_PLAY_RECORD);
+
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.EXTRA_PATH_RECORD, imageItem);
+                bundle.putBoolean(Constants.EXTRA_VIDEO_DEL, true);
+                startActivityForResult(ARouterConstants.ACTIVITY_VIDEP_PLAY, bundle, mContext, Constants.REQUEST_CODE_PLAY_RECORD);
 
             } else {
                 Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
@@ -124,16 +131,16 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
      */
     @Override
     public void onClick(View v) {
-        int viewID=v.getId();
-        if(viewID==R.id.dialog_tv_exception){
+        int viewID = v.getId();
+        if (viewID == R.id.dialog_tv_exception) {
             needChangeDevice = false;
             getView().dismissExceptionDialog();
             doException();
-        }else   if(viewID==R.id.dialog_tv_upload_change_device){
+        } else if (viewID == R.id.dialog_tv_upload_change_device) {
             needChangeDevice = true;
             getView().dismissExceptionDialog();
             doException();
-        }else  if(viewID==R.id.dialog_tv_waite){
+        } else if (viewID == R.id.dialog_tv_waite) {
             getView().dismissExceptionDialog();
         }
     }
@@ -150,10 +157,10 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
     private void doUploadAndChange() {
 
-        Bundle bundle=new Bundle();
-        bundle.putSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO,mDeviceDetail);
-        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE,Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
-        startActivity(ARouterConstants.ACTIVITY_SCAN,bundle,mContext);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mContext);
 
     }
 
@@ -266,7 +273,12 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 mContext.startActivityForResult(intent, Constants.REQUEST_CODE_SELECT);
                 break;
             case 1:
-                startActivityForResult(ARouterConstants.ACTIVITY_TAKE_RECORD,null,mContext,Constants.REQUEST_CODE_RECORD);
+//                Intent intent2 = new Intent(mContext, TakeRecordActivity.class);
+////                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+//                mContext.startActivityForResult(intent2, Constants.REQUEST_CODE_RECORD);
+
+
+                startActivityForResult(ARouterConstants.ACTIVITY_TAKE_RECORD, null, mContext, Constants.REQUEST_CODE_RECORD);
                 break;
             default:
                 break;

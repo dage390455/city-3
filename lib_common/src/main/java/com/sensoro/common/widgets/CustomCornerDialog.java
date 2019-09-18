@@ -49,10 +49,11 @@ public class CustomCornerDialog extends Dialog {
         setContentView(view);
 
     }
+
     /**
      * 不会设置dilog的总体宽度
      */
-    public CustomCornerDialog(@NonNull Context context, View view,int theme) {
+    public CustomCornerDialog(@NonNull Context context, View view, int theme) {
         super(context, theme);
         setContentView(view);
 

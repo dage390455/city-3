@@ -72,6 +72,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             //TODO  是否显示森林防火管理
             getView().setForestfireManagerVisible(true);
 
+            getView().setDeployOfflineTaskVisible(userData.hasDeployOfflineTask);
         }
     }
 
@@ -156,7 +157,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContract) {
-                startActivity(ARouterConstants.ACTIVITY_CONTRACT_MANAGER,null,mContext);
+                startActivity(ARouterConstants.ACTIVITY_CONTRACT_MANAGER, null, mContext);
                 return;
             }
         }
@@ -205,7 +206,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doInspection() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasInspectionTaskList) {
-                startActivity(ARouterConstants.ACTIVITY_INSPECTIONTASK_List,null,mContext);
+                startActivity(ARouterConstants.ACTIVITY_INSPECTIONTASK_List, null, mContext);
                 return;
             }
         }
@@ -232,14 +233,14 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 //        data.setData(dataBean);
 //        RetrofitServiceHelper.getInstance().updateSensoroData(data).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(this) {
 //            @Override
-//            public void onCompleted(ResponseResult<Object> objectResponseResult) {
+//            public void onDeployCompleted(ResponseResult<Object> objectResponseResult) {
 //                int code = objectResponseResult.getCode();
 //                String message = objectResponseResult.getMessage();
 //                getView().toastShort("updateSensoroData code = " + code + ",message = " + message);
 //            }
 //
 //            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
+//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
 //                getView().toastShort("updateSensoroData " + errorMsg);
 //            }
 //        });

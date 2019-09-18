@@ -38,14 +38,14 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
         this.mSelectSortCondition = mSelectSortCondition;
     }
 
-    private SortConditionModel  mSelectSortCondition;
+    private SortConditionModel mSelectSortCondition;
 
     public SortConditionSelectAdapter(Context context) {
         mContext = context;
     }
 
 
-    public void updateSortConditionList(List<SortConditionModel>  mSortConditionList){
+    public void updateSortConditionList(List<SortConditionModel> mSortConditionList) {
 
         this.mSortConditionList.clear();
         this.mSortConditionList.addAll(mSortConditionList);
@@ -63,11 +63,11 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
     @Override
     public void onBindViewHolder(final SortConditionSelectHolder mHolder, final int position) {
 
-        final  SortConditionModel  mSortCondition=mSortConditionList.get(position);
-        if(mSortCondition.isSelected){
+        final SortConditionModel mSortCondition = mSortConditionList.get(position);
+        if (mSortCondition.isSelected) {
             mHolder.itemPopSelectImvSortconditionIcon.setVisibility(View.VISIBLE);
             mHolder.itemPopSelectTvSortconditionName.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
-        }else{
+        } else {
             mHolder.itemPopSelectImvSortconditionIcon.setVisibility(View.INVISIBLE);
             mHolder.itemPopSelectTvSortconditionName.setTextColor(mContext.getResources().getColor(R.color.c_252525));
         }
@@ -76,11 +76,11 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
         mHolder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mSelectSortCondition!=null){
-                    mSelectSortCondition.isSelected=false;
+                if (mSelectSortCondition != null) {
+                    mSelectSortCondition.isSelected = false;
                 }
-                mSelectSortCondition=getItem(position);
-                mSelectSortCondition.isSelected=true;
+                mSelectSortCondition = getItem(position);
+                mSelectSortCondition.isSelected = true;
                 notifyDataSetChanged();
                 if (mListener != null) {
                     mListener.onItemClick(v, position);
@@ -102,13 +102,13 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
 
     }
 
-    public  SortConditionModel getItem(int position){
-            return    mSortConditionList.get(position);
+    public SortConditionModel getItem(int position) {
+        return mSortConditionList.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mSortConditionList.size() ;
+        return mSortConditionList.size();
     }
 
     public List<SortConditionModel> getDataList() {

@@ -450,31 +450,31 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             .iv_contract_age_del, R2.id.iv_contract_age_add, R2.id.bt_next, R2.id.iv_contract_age_first_del, R2.id.iv_contract_age_first_add
             , R2.id.iv_contract_age_period_del, R2.id.iv_contract_age_period_add})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.include_text_title_tv_subtitle){
+        } else if (viewID == R.id.include_text_title_tv_subtitle) {
             mPresenter.retake();
-        }else if(viewID==R.id.iv_contract_service_line1){
+        } else if (viewID == R.id.iv_contract_service_line1) {
 
-        }else if(viewID==R.id.iv_contract_service_line2){
+        } else if (viewID == R.id.iv_contract_service_line2) {
 
-        }else if(viewID==R.id.iv_contract_service_line3){
+        } else if (viewID == R.id.iv_contract_service_line3) {
 
-        }else if(viewID==R.id.iv_contract_service_line4){
+        } else if (viewID == R.id.iv_contract_service_line4) {
 
-        }else if(viewID==R.id.iv_contract_service_line5){
+        } else if (viewID == R.id.iv_contract_service_line5) {
 
-        }else if(viewID==R.id.iv_contract_service_line6){
+        } else if (viewID == R.id.iv_contract_service_line6) {
 
-        }else if(viewID==R.id.ll_contract_service_place_type){
+        } else if (viewID == R.id.ll_contract_service_place_type) {
             showDialog(new SelectDialog.SelectDialogListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     tvContractServicePlace.setText(names.get(position));
                 }
             }, names, getResources().getString(R.string.contract_info_site_nature));
-        }else if(viewID==R.id.iv_contract_age_del){
+        } else if (viewID == R.id.iv_contract_age_del) {
             String contractAgeDel = etContractAge.getText().toString();
             if (!TextUtils.isEmpty(contractAgeDel)) {
                 int i = Integer.parseInt(contractAgeDel);
@@ -485,7 +485,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             } else {
                 etContractAge.setText(1 + "");
             }
-        }else if(viewID==R.id.iv_contract_age_add){
+        } else if (viewID == R.id.iv_contract_age_add) {
             String contractAgeAdd = etContractAge.getText().toString();
             if (!TextUtils.isEmpty(contractAgeAdd)) {
                 int i = Integer.parseInt(contractAgeAdd);
@@ -496,7 +496,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             } else {
                 etContractAge.setText(1 + "");
             }
-        }else if(viewID==R.id.iv_contract_age_first_del){
+        } else if (viewID == R.id.iv_contract_age_first_del) {
             String contractAgeFirstDel = etContractAgeFirst.getText().toString();
             if (!TextUtils.isEmpty(contractAgeFirstDel)) {
                 int i = Integer.parseInt(contractAgeFirstDel);
@@ -507,7 +507,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             } else {
                 etContractAgeFirst.setText(1 + "");
             }
-        }else if(viewID==R.id.iv_contract_age_first_add){
+        } else if (viewID == R.id.iv_contract_age_first_add) {
             String contractAgeAddFirst = etContractAgeFirst.getText().toString();
             if (!TextUtils.isEmpty(contractAgeAddFirst)) {
                 int i = Integer.parseInt(contractAgeAddFirst);
@@ -518,7 +518,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             } else {
                 etContractAgeFirst.setText(1 + "");
             }
-        }else if(viewID==R.id.iv_contract_age_period_del){
+        } else if (viewID == R.id.iv_contract_age_period_del) {
             String contractAgeDelPeriod = etContractAgePeriod.getText().toString();
             if (!TextUtils.isEmpty(contractAgeDelPeriod)) {
                 int i = Integer.parseInt(contractAgeDelPeriod);
@@ -529,7 +529,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             } else {
                 etContractAgePeriod.setText(1 + "");
             }
-        }else if(viewID==R.id.iv_contract_age_period_add){
+        } else if (viewID == R.id.iv_contract_age_period_add) {
             String contractAgeAddPeriod = etContractAgePeriod.getText().toString();
             if (!TextUtils.isEmpty(contractAgeAddPeriod)) {
                 int i = Integer.parseInt(contractAgeAddPeriod);
@@ -540,7 +540,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             } else {
                 etContractAgePeriod.setText(1 + "");
             }
-        }else if(viewID==R.id.bt_next){
+        } else if (viewID == R.id.bt_next) {
             String line1 = etContractServiceLine1.getText().toString();
             String line2 = etContractServiceLine2.getText().toString();
             //身份证性别tv

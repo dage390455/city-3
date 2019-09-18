@@ -411,16 +411,16 @@ public class LoginTestActivity extends BaseActivity<ILoginView, LoginPresenter> 
     @OnClick({R2.id.ac_login_et_account, R2.id.ac_login_et_psd, R2.id.ac_login_imv_account_clear,
             R2.id.ac_login_imv_psd_clear, R2.id.login_btn})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.ac_login_et_account){
+        int viewID = view.getId();
+        if (viewID == R.id.ac_login_et_account) {
 
-        }else  if(viewID==R.id.ac_login_et_psd){
+        } else if (viewID == R.id.ac_login_et_psd) {
 
-        }else if(viewID==R.id.ac_login_imv_account_clear){
+        } else if (viewID == R.id.ac_login_imv_account_clear) {
             acLoginEtAccount.getText().clear();
-        }else if(viewID==R.id.ac_login_imv_psd_clear){
+        } else if (viewID == R.id.ac_login_imv_psd_clear) {
             acLoginEtPsd.getText().clear();
-        }else if(viewID==R.id.login_btn){
+        } else if (viewID == R.id.login_btn) {
             String account = acLoginEtAccount.getText().toString();
             String pwd = acLoginEtPsd.getText().toString();
             mPresenter.login(account, pwd);

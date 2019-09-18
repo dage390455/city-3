@@ -14,8 +14,7 @@
         app:cardBackgroundColor="@color/c_1dbb99"
         app:cardCornerRadius="4dp"
         app:cardElevation="6dp"
-        app:cardUseCompatPadding="true"
-        >
+        app:cardUseCompatPadding="true">
 
 
         <ImageView

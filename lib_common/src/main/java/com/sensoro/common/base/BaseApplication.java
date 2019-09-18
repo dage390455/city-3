@@ -260,7 +260,6 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     protected abstract void onMyApplicationPaused();
 
 
-
 //    public  void   setHasGotToken(AccessToken result){
 //        // 调用成功，返回AccessToken对象
 //        String token = result.getAccessToken();

@@ -15,6 +15,7 @@ import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.WidgetUtil;
@@ -48,7 +49,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         if (bundle != null) {
             deviceType = bundle.getString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
             mergeType = WidgetUtil.handleMergeType(deviceType);
-            getView().setDeployPicTvInstallationSiteTipVisible(Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
+            getView().setDeployPicTvInstallationSiteTipVisible(CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
             Serializable serializable = bundle.getSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO);
             if (serializable instanceof ArrayList) {
                 ArrayList<DeployPicInfo> picInfos = (ArrayList<DeployPicInfo>) serializable;

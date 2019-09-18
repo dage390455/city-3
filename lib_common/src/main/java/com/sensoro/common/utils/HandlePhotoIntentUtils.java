@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import static com.sensoro.common.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
-public class HandlePhotoIntentUtils implements Constants{
+public class HandlePhotoIntentUtils implements Constants {
     public static void handlePhotoIntent(int requestCode, int resultCode, Intent data) {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回

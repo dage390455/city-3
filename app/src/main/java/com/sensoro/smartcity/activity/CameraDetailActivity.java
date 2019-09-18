@@ -490,7 +490,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         loadCover(imageView, url);
 
 
-
     }
 
     @Override

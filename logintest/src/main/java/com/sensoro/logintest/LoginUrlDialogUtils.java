@@ -116,11 +116,11 @@ public class LoginUrlDialogUtils implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.dialog_add_tag_tv_cancel){
+        int viewID = view.getId();
+        if (viewID == R.id.dialog_add_tag_tv_cancel) {
             AppUtils.dismissInputMethodManager(mActivity, mDialogEtInput);
             dismissDialog();
-        }else if(viewID==R.id.dialog_add_tag_tv_confirm){
+        } else if (viewID == R.id.dialog_add_tag_tv_confirm) {
             if (mDialogEtInput != null) {
                 AppUtils.dismissInputMethodManager(mActivity, mDialogEtInput);
                 String tag = mDialogEtInput.getText().toString();

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.sensoro.common.utils.AppUtils;
 
 public class MaxHeightGridLayoutManager extends GridLayoutManager {
-    private  Context mContext;
+    private Context mContext;
 
     public MaxHeightGridLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -30,6 +30,6 @@ public class MaxHeightGridLayoutManager extends GridLayoutManager {
 
     @Override
     public void setMeasuredDimension(Rect childrenBounds, int wSpec, int hSpec) {
-        super.setMeasuredDimension(childrenBounds, wSpec, View.MeasureSpec.makeMeasureSpec(AppUtils.dp2px(mContext,500), View.MeasureSpec.AT_MOST));
+        super.setMeasuredDimension(childrenBounds, wSpec, View.MeasureSpec.makeMeasureSpec(AppUtils.dp2px(mContext, 500), View.MeasureSpec.AT_MOST));
     }
 }

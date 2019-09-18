@@ -650,7 +650,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     @Override
     public void onError(int what, int extra) {
         try {
-            LogUtils.loge("GSYVideoManager onError what = "+what+",extra = "+extra);
+            LogUtils.loge("GSYVideoManager onError what = " + what + ",extra = " + extra);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

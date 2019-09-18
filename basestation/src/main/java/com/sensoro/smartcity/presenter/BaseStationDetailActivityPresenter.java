@@ -478,13 +478,13 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION);
         mDeviceInfo.setSn(sn);
 
-        Bundle bundle=new Bundle();
-        bundle.putSerializable(Constants.EXTRA_DEVICE_INFO,mDeviceInfo);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.EXTRA_DEVICE_INFO, mDeviceInfo);
 
         if (AppUtils.isChineseLanguage()) {
-            startActivity(ARouterConstants.ACTIVITY_MonitorPointMap_Activity,bundle,mContext);
+            startActivity(ARouterConstants.ACTIVITY_MonitorPointMap_Activity, bundle, mContext);
         } else {
-            startActivity(ARouterConstants.ACTIVITY_MonitorPointMap_ENActivity,bundle,mContext);
+            startActivity(ARouterConstants.ACTIVITY_MonitorPointMap_ENActivity, bundle, mContext);
         }
 
 

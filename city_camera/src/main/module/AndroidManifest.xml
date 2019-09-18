@@ -32,9 +32,9 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="feb394e9f7754ae572cc77a0bfc723e5" />
-<!--        <meta-data-->
-<!--            android:name="com.fengmap.mapapi.appkey"-->
-<!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
+        <!--        <meta-data-->
+        <!--            android:name="com.fengmap.mapapi.appkey"-->
+        <!--            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />-->
         <service android:name="com.amap.api.location.APSService" />
     </application>
 

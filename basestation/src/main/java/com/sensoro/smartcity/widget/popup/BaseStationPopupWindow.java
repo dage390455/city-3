@@ -152,11 +152,11 @@ public class BaseStationPopupWindow {
         } else {  // 适配 android 7.0
             int[] location = new int[2];
             view.getLocationOnScreen(location);
-            ScreenUtils.heightNavBarExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight()-ScreenUtils.getNavigationBarHeight(mActivity);
-            ScreenUtils.heightNavBarNotExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1]- view.getHeight() ;
-            if(ScreenUtils.isNavigationBarExist(mActivity)){
+            ScreenUtils.heightNavBarExisted = ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight() - ScreenUtils.getNavigationBarHeight(mActivity);
+            ScreenUtils.heightNavBarNotExisted = ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight();
+            if (ScreenUtils.isNavigationBarExist(mActivity)) {
                 mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
-            }else{
+            } else {
                 mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
             }
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
@@ -165,33 +165,31 @@ public class BaseStationPopupWindow {
                 public void run() {
                     ScreenUtils.isNavigationBarExist(mActivity, new ScreenUtils.OnNavigationStateListener() {
                         @Override
-                        public void onNavigationState(boolean isShowing,  int height) {
+                        public void onNavigationState(boolean isShowing, int height) {
                             try {
-                                if(isShowing){
+                                if (isShowing) {
                                     mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
-                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarExisted);
-                                }else{
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT, ScreenUtils.heightNavBarExisted);
+                                } else {
                                     mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
-                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarNotExisted);
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT, ScreenUtils.heightNavBarNotExisted);
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                 }
-            },500);
+            }, 500);
         }
         int i = cameraListPopAdapter.getItemCount() / 3;
         i *= 100;
-        if(i<300){
+        if (i < 300) {
             i = 300;
         }
         showTranslateAnimation.setDuration(i);
         dismissTranslateAnimation.setDuration(i);
         mFl.startAnimation(showTranslateAnimation);
-
-
 
 
     }

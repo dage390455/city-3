@@ -51,6 +51,7 @@ import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.common.callback.BleObserver;
 import com.sensoro.common.callback.OnConfigInfoObserver;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
@@ -262,7 +263,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         getView().setDeployDeviceConfigVisible(false);
                         break;
                     default:
-                        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                         getView().setDeployDeviceConfigVisible(isFire);
                         break;
                 }
@@ -427,7 +428,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                 public void onWriteSuccess(Object o, int cmd) {
                                     if (isAttachedView()) {
                                         //需要写频点信息
-                                        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                                        if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                             if (deployAnalyzerModel.settingData != null) {
                                                 SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
                                                 if (sensoroDevice != null) {
@@ -486,7 +487,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                             };
                             sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, SignalWriteCallback);
                         } else {
-                            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                            if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 //需要写入配置信息
                                 if (deployAnalyzerModel.settingData != null) {
                                     SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
@@ -562,7 +563,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             if (Constants.TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
                 getView().setDeployLocalCheckTipText("");
             } else {
-                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
                     getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_is_powered_on));
                 } else {
                     DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
@@ -818,7 +819,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         //不论更换还是部署都需要安装检测
                         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
                         getView().setDeployDeviceType(deviceTypeName);
-                        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                         if (isFire) {
                             //做初始配置检查
                             //开始检查操作并更新UI
@@ -1264,7 +1265,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         return checkHasLatLng();
                     default:
                         //不论更换还是部署都需要安装检测
-                        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                         if (isFire) {
                             //需要安装检测的
                             return checkHasLatLng() && checkHasConfig();

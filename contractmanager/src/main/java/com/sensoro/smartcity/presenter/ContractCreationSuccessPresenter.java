@@ -23,7 +23,7 @@ public class ContractCreationSuccessPresenter extends BasePresenter<IContractCre
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        id = mActivity.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_ID,0);
+        id = mActivity.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_ID, 0);
         url = mActivity.getIntent().getStringExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL);
 
     }
@@ -52,7 +52,7 @@ public class ContractCreationSuccessPresenter extends BasePresenter<IContractCre
     }
 
     public void doShareCode() {
-        if (id==0) {
+        if (id == 0) {
             getView().toastShort(mActivity.getString(R.string.contract_id_failed));
             return;
         }

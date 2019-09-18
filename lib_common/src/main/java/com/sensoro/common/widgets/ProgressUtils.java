@@ -87,7 +87,7 @@ public class ProgressUtils {
             View view = View.inflate(activity.get(), R.layout.item_progress_dilog, null);
             mImv = view.findViewById(R.id.progress_imv);
             mTv = view.findViewById(R.id.progress_tv);
-            progressDialog = new CustomCornerDialog(activity.get(), view,R.style.ProgressDialogStyle);
+            progressDialog = new CustomCornerDialog(activity.get(), view, R.style.ProgressDialogStyle);
             progressDialog.setCancelable(cancelable);
             progressDialog.setCanceledOnTouchOutside(cancelable);
             mTv.setText(message);

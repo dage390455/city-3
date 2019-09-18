@@ -19,6 +19,8 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.callback.BleObserver;
+import com.sensoro.common.callback.OnConfigInfoObserver;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.handler.HandlerDeployCheck;
@@ -30,6 +32,7 @@ import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.RetryWithDelay;
@@ -48,7 +51,9 @@ import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.RegexUtils;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -61,20 +66,18 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
-import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
+import com.sensoro.smartcity.activity.SingleMonitorConfigurationActivity;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
-import com.sensoro.common.callback.BleObserver;
-import com.sensoro.common.callback.OnConfigInfoObserver;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
-import com.sensoro.common.utils.LogUtils;
-import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.smartcity.model.DeployTask;
+import com.sensoro.smartcity.util.DeployRetryUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -99,6 +102,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private Handler mHandler;
     private final HashMap<String, BLEDevice> BLE_DEVICE_SET = new HashMap<>();
     private DeployAnalyzerModel deployAnalyzerModel;
+    private DeployRetryUtil deployRetryUtil;
     private final Runnable signalTask = new Runnable() {
         @Override
         public void run() {
@@ -153,6 +157,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        deployRetryUtil = DeployRetryUtil.getInstance();
         mHandler = new Handler(Looper.getMainLooper());
         onCreate();
         Intent intent = mContext.getIntent();
@@ -164,7 +169,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -307,7 +312,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
         }
         //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
-        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段
@@ -350,7 +355,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             if (Constants.TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
                 getView().setDeployLocalCheckTipText("");
             } else {
-                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
                     getView().setDeployLocalCheckTipText(mContext.getString(R.string.deploy_device_detail_check_tip_is_powered_on));
                 } else {
                     DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
@@ -374,11 +379,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     //
     private void requestUpload() {
+
+
+        DeployTask deployTask = new DeployTask();
+        deployTask.deployType = deployAnalyzerModel.deployType;
         final double lon = deployAnalyzerModel.latLng.get(0);
         final double lan = deployAnalyzerModel.latLng.get(1);
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_STATION:
-                //基站部署
+                //基站部署失败，单独处理
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -386,9 +395,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
+
+
                                 getView().dismissProgressDialog();
                                 getView().setUploadBtnStatus(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    deployRetryUtil.addTask(deployAnalyzerModel);
+                                    getView().showRetryDialog();
                                     getView().toastShort(errorMsg);
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
                                     freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
@@ -399,6 +412,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                             @Override
                             public void onCompleted(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
+
                                 freshStation(deployStationInfoRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
@@ -411,18 +425,17 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
                 //TODO 暂时注释掉2g电气火灾的部署
-//                if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
-//                    //2g电气火灾的配置
-//                    handle2GDeviceConfig();
-//                } else {
+                if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
+                    //2g电气火灾的配置
+                    handle2GDeviceConfig();
+                } else {
                     if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
                         // 白名单设备
-                        doUploadImages(lon, lan);
+                        doUploadImages();
                     } else {
                         handleDeviceSignalStatusAndBleSetting();
                     }
-//                }
-
+                }
                 break;
             default:
                 break;
@@ -450,7 +463,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 30 * 1000);
                     } else {
                         getView().dismissBleConfigDialog();
                         getView().toastShort(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -548,7 +561,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
                 //需要配置频点信息
                 if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                    if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (deployAnalyzerModel.settingData != null) {
                             //配置频点信息和初始配置
                             connectDevice(onConfigInfoObserver);
@@ -570,7 +583,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
             return;
         } else {
-            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                 //单独配置初始配置
                 if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                     connectDevice(onConfigInfoObserver);
@@ -639,7 +652,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
 
-    private void doUploadImages(final double lon, final double lan) {
+    private void doUploadImages() {
         if (getRealImageSize() > 0) {
             //TODO 图片提交
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
@@ -668,7 +681,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     if (isAttachedView()) {
                         getView().dismissUploadProgressDialog();
                         // 上传结果
-                        doDeployResult(lon, lan, strings);
+                        doDeployResult(strings);
+                        deployAnalyzerModel.imgUrls = strings;
+                        deployAnalyzerModel.imageItems = null;
+
                     }
 
 
@@ -680,6 +696,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().setUploadBtnStatus(true);
                         getView().dismissUploadProgressDialog();
                         getView().toastShort(errMsg);
+                        //失败，本地照片存储,重试
+                        getView().showRetryDialog();
+                        deployRetryUtil.addTask(deployAnalyzerModel);
+
+
                     }
 
                 }
@@ -702,25 +723,33 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                 }
             }
+            deployAnalyzerModel.imageItems = list;
+
+
+            //本地照片
             upLoadPhotosUtils.doUploadPhoto(list);
         } else {
-            doDeployResult(lon, lan, null);
+            doDeployResult(null);
         }
     }
 
     //TODO 添加设备状态字段
-    private void doDeployResult(double lon, double lan, List<String> imgUrls) {
+    private void doDeployResult(List<String> imgUrls) {
 //        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+        double lon = deployAnalyzerModel.latLng.get(0);
+        double lan = deployAnalyzerModel.latLng.get(1);
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().showProgressDialog();
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
                 DeployControlSettingData settingData = null;
                 if (isFire) {
                     settingData = deployAnalyzerModel.settingData;
                 }
+
+
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
                         deployAnalyzerModel.deployContactModelList, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
@@ -730,6 +759,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 getView().setUploadBtnStatus(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     getView().toastShort(errorMsg);
+                                    deployRetryUtil.addTask(deployAnalyzerModel);
+                                    getView().showRetryDialog();
+
+
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
                                     freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                                 } else {
@@ -742,6 +775,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 freshPoint(deviceDeployRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
+
+
                             }
                         });
                 break;
@@ -753,9 +788,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                     @Override
                     public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
+
                         freshPoint(deviceDeployRsp);
                         getView().dismissProgressDialog();
                         getView().finishAc();
+
                     }
 
                     @Override
@@ -764,6 +801,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().setUploadBtnStatus(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
+                            deployRetryUtil.addTask(deployAnalyzerModel);
+                            getView().showRetryDialog();
+
+
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
                             freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
@@ -791,6 +832,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().setUploadBtnStatus(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
+                            deployRetryUtil.addTask(deployAnalyzerModel);
+                            getView().showRetryDialog();
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
                             freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
@@ -804,6 +847,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
 
     }
+
 
     private void freshError(String scanSN, String errorInfo, int resultCode) {
         //
@@ -837,6 +881,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void freshPoint(ResponseResult<DeviceInfo> deviceDeployRsp) {
+
         DeployResultModel deployResultModel = new DeployResultModel();
         DeviceInfo deviceInfo = deviceDeployRsp.getData();
         deployResultModel.deviceInfo = deviceInfo;
@@ -864,9 +909,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
+
     }
 
     private void freshStation(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
+
         DeployResultModel deployResultModel = new DeployResultModel();
         //
         Intent intent = new Intent(mContext, DeployResultActivity.class);
@@ -1061,7 +1108,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
                     Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
                     Integer transformer = deployAnalyzerModel.settingData.getTransformer();
-                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                    if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (transformer != null) {
                             if (initValue != null) {
                                 getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A" + "\n" + mContext.getString(R.string.device_detail_config_trans) + ":" + transformer + "A");
@@ -1135,7 +1182,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (checkHasPhoto()) return;
                 //经纬度校验
                 if (checkHasNoLatLng()) return;
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
                         getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
@@ -1198,7 +1245,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (deployAnalyzerModel.latLng.size() != 2) {
                     return false;
                 }
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
                         return false;
@@ -1420,14 +1467,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployBleSetting() {
         //TODO
-        if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if (CityConstants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
             bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
             bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
             startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
         } else {
-            Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+            Intent intent = new Intent(mContext, SingleMonitorConfigurationActivity.class);
             if (deployAnalyzerModel.settingData != null) {
                 intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
             }
@@ -1481,7 +1528,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 public void onWriteSuccess(Object o, int cmd) {
                                     if (isAttachedView()) {
                                         //需要写频点信息
-                                        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                                        if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                             if (deployAnalyzerModel.settingData != null) {
                                                 SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
                                                 if (sensoroDevice != null) {
@@ -1540,7 +1587,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             };
                             sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, SignalWriteCallback);
                         } else {
-                            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                            if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 //需要写入配置信息
                                 if (deployAnalyzerModel.settingData != null) {
                                     SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
@@ -1661,6 +1708,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 // 获取不到当前状态是否强制上传
                 getView().toastShort(errorMsg);
                 getView().dismissBleConfigDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+//                    deployAnalyzerModel.isGetDeviceRealStatusFailure = true;
+                    deployRetryUtil.addTask(deployAnalyzerModel);
+                    getView().showRetryDialog();
+                }
             }
         });
     }
@@ -1688,7 +1740,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     tempForceReason = null;
                     //TODO 成功
                     getView().dismissBleConfigDialog();
-                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                    doUploadImages();
                     break;
             }
         } else {
@@ -1787,7 +1839,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void doForceUpload() {
         deployAnalyzerModel.forceReason = tempForceReason;
         deployAnalyzerModel.currentStatus = tempStatus;
-        doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+        doUploadImages();
 
     }
 
@@ -1803,7 +1855,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);

@@ -203,8 +203,8 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @OnClick({R2.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID== R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
         }
     }

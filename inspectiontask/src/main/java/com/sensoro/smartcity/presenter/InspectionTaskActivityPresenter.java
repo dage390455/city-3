@@ -485,10 +485,15 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionScan() {
-        Bundle bundle=new Bundle();
+//        Intent intent = new Intent(mContext, ScanActivity.class);
+//        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
+//        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+//        getView().startAC(intent);
+
+        Bundle bundle = new Bundle();
         bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
         bundle.putSerializable(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-        startActivity(ARouterConstants.ACTIVITY_SCAN,bundle,mContext);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mContext);
 
     }
 

@@ -52,6 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCreate {
     private Activity mContext;
     String TargetActivity;
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -66,7 +67,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
         numberList.add("(010)53876304");
         AppUtils.addToPhoneContact(mContext, nameList, numberList);
 
-        TargetActivity=mContext.getIntent().getStringExtra(Constants.ROUTEPATH);
+        TargetActivity = mContext.getIntent().getStringExtra(Constants.ROUTEPATH);
     }
 
     private void readLoginData() {
@@ -130,7 +131,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
         } else if (TextUtils.isEmpty(pwd)) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_login_pwd_empty));
         } else {
-            final String phoneId ="";
+            final String phoneId = "";
             try {
                 LogUtils.loge(this, "------phoneId = " + phoneId);
             } catch (Throwable throwable) {
@@ -144,7 +145,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
                 public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
                     String token = loginRsp.getData().getToken();
-                    RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
+                    RetrofitServiceHelper.getInstance().saveSessionId(sessionID, token);
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
@@ -241,7 +242,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
                 .withTransition(R.anim.slide_left, R.anim.slide_out)
                 .navigation(mContext);
         getView().finishAc();
-
 
 
     }

@@ -41,7 +41,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         isNeedInitScrollToPosition = needInitScrollToPosition;
     }
 
-    private boolean  isNeedInitScrollToPosition=true;
+    private boolean isNeedInitScrollToPosition = true;
 
     public void attachToRecyclerView(final BannerRecyclerView mRecyclerView) {
         if (mRecyclerView == null) {
@@ -56,7 +56,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
                 super.onScrollStateChanged(recyclerView, newState);
 
                 try {
-                    LogUtils.loge("onScrollStateChanged" ,"newState = "+ newState);
+                    LogUtils.loge("onScrollStateChanged", "newState = " + newState);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
@@ -68,7 +68,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
+                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 || currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
                         if (mLinearSnapHelper.finalSnapDistance[0] == 0 && mLinearSnapHelper.finalSnapDistance[1] == 0) {
                             mCurrentItemOffset = 0;
                             mLastPos = currentItem;
@@ -175,7 +175,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         //mRecyclerView.smoothScrollToPosition 方法会回调  RecyclerView.OnScrollListener 的onScrollStateChanged方法 并且是自动居中，有滚动过程的滑动到指定位置
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).
                 scrollToPositionWithOffset(pos,
-                        AppUtils.dp2px(mContext, mPagePadding+mShowLeftCardWidth ));
+                        AppUtils.dp2px(mContext, mPagePadding + mShowLeftCardWidth));
 
         mCurrentItemOffset = 0;
         mLastPos = pos;
@@ -261,7 +261,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         mCardGalleryWidth = mRecyclerView.getWidth();
         mCardWidth = mCardGalleryWidth - AppUtils.dp2px(mContext, 2 * (mPagePadding + mShowLeftCardWidth));
         mOnePageWidth = mCardWidth;
-        if(isNeedInitScrollToPosition){
+        if (isNeedInitScrollToPosition) {
             scrollToPosition(mFirstItemPos);
         }
 

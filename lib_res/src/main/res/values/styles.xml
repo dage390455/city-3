@@ -1,11 +1,12 @@
 <resources xmlns:xsl="http://schemas.android.com/tools">
     <declare-styleable name="Custom_Round_Image_View">
-        <attr name="radius" format="dimension"/>
-        <attr name="left_top_radius" format="dimension"/>
-        <attr name="right_top_radius" format="dimension"/>
-        <attr name="right_bottom_radius" format="dimension"/>
-        <attr name="left_bottom_radius" format="dimension"/>
+        <attr name="radius" format="dimension" />
+        <attr name="left_top_radius" format="dimension" />
+        <attr name="right_top_radius" format="dimension" />
+        <attr name="right_bottom_radius" format="dimension" />
+        <attr name="left_bottom_radius" format="dimension" />
     </declare-styleable>
+
     <style name="ImagePickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:fitsSystemWindows">true</item>
     </style>
@@ -239,8 +240,6 @@
     </style>
 
 
-
-
     <style name="SlideSeekbarSytle" parent="Base.Widget.AppCompat.SeekBar">
         <item name="android:thumb">@mipmap/thumb_slide_verification</item>
         <item name="android:progressDrawable">@drawable/pop_seekbar</item>
@@ -256,4 +255,13 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:fitsSystemWindows">false</item>
     </style>
+
+    <style name="CustomProgressBar_Small">
+        <item name="android:indeterminateDrawable">@drawable/progress_small_holo</item>
+        <item name="android:minWidth">27dip</item>
+        <item name="android:maxWidth">27dip</item>
+        <item name="android:minHeight">27dip</item>
+        <item name="android:maxHeight">27dip</item>
+    </style>
+
 </resources>

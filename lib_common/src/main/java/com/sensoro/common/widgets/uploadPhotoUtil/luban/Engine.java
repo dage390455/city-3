@@ -95,7 +95,7 @@ class Engine {
         int textPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
         Bitmap markBitmap = BitmapFactory.decodeResource(ContextUtils.getContext().getResources(), R.drawable.photo_mark);
 
-        int tagFontSize= DpUtils.dp2px(ContextUtils.getContext(),21);
+        int tagFontSize = DpUtils.dp2px(ContextUtils.getContext(), 21);
         try {
             float  rate=(srcWidth/2-picPaddingRight)*1.0f/markBitmap.getWidth();
             markBitmap= BitmapUtil.scaleBitmap(markBitmap,rate);
@@ -114,7 +114,7 @@ class Engine {
         tagBitmap = ImageUtil.drawTextToRightBottom(ContextUtils.getContext(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
                 tagFontSize, ContextUtils.getContext().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
 
-        if(mBitmapDegree>0) {
+        if (mBitmapDegree > 0) {
             tagBitmap = BitmapUtil.rotateBitmapByDegree(tagBitmap, -mBitmapDegree);
         }
 

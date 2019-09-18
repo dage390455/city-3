@@ -41,8 +41,9 @@ public class DeployConfigurationAnalyzer {
                 result[1] = 400;
                 break;
             case "acrel_single":
+            case "acrel300D_fires_2G":
                 //安科瑞单相电
-                result[0] = 12;
+                result[0] = 1;
                 result[1] = 84;
                 break;
             case "mantun_fires":
@@ -98,6 +99,19 @@ public class DeployConfigurationAnalyzer {
 //        } else {
 //            enterDev = 400;
 //        }
+            //
+//            param.t1Th = 90; //A项线温度
+//            param.t2Th = 90; //B项线温度
+//            param.t3Th = 90; //C项线温度
+//            param.t4Th = 70; //箱体温度
+//
+//            杨志强 9-16 下午 8:19
+//            param.valLowType = 1; // 2019-09-16 更新，欠压报警开关状态 → 1
+//
+//            杨志强 9-16 下午 8:19
+//            param.valHighSet = 1250; //
+
+
 //            sensoroSensor.acrelFires.leakageTh = 1000;//漏电
 //            sensoroSensor.acrelFires.t1Th = 80;//A项线温度
 //            sensoroSensor.acrelFires.t2Th = 80;//B项线温度
@@ -226,6 +240,37 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.valLowType = 1; //
         sensoroSensor.acrelFires.valHighType = 1; //
         sensoroSensor.acrelFires.chEnable = 0x07; // 打开温度，打开漏电保护
+
+        //
+//        param.leakageTh = 600; //漏电
+//        param.t1Th = 90; //电线温度，通道1
+//        param.t2Th = 70; //箱体温度，通道2
+//        param.currHighSet = initialValue * 100 * 10 / 60; //过流 10 ： 放大比，100 ： 转换为百分数
+//        param.valHighSet = 1200; //过压
+//        param.valLowSet = 800; //欠压
+//        param.currHighType = 1;//打开过流开关
+//        param.valLowType = 1; //
+//        param.valHighType = 1; //
+//        param.chEnable = 0x07 // 打开温度，打开漏电保护
+//        param.passwd = UInt32.random(in: 1...9999); //生成4位随机数
+//        param.ict = 2000; //漏电互感器变比 2000
+//        param.ct = 1; //
+//        param.cmd = 2; //自检命令
+        //TODO 新规则 暂时注释掉
+//        sensoroSensor.acrelFires.leakageTh = 600;//漏电
+//        sensoroSensor.acrelFires.t1Th = 90;//电线温度 通道1
+//        sensoroSensor.acrelFires.t2Th = 70;//箱体温度 通道2
+//        sensoroSensor.acrelFires.valHighSet = 1200;//过压
+//        sensoroSensor.acrelFires.currHighSet = value * 100 * 10 / 60; //过流 10 ： 放大比，100 ： 转换为百分数
+//        sensoroSensor.acrelFires.valLowSet = 800;//欠压
+//        sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
+//        sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
+//        sensoroSensor.acrelFires.ct = 1;
+//        sensoroSensor.acrelFires.cmd = 2;
+//        sensoroSensor.acrelFires.currHighType = 1;
+//        sensoroSensor.acrelFires.valLowType = 1; //
+//        sensoroSensor.acrelFires.valHighType = 1; //
+//        sensoroSensor.acrelFires.chEnable = 0x07; // 打开温度，打开漏电保护
 
         //
 //        param.leakageTh = 300; //漏电

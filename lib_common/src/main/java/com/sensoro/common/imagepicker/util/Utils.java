@@ -23,7 +23,9 @@ import android.view.WindowManager;
  */
 public class Utils {
 
-    /** 获得状态栏的高度 */
+    /**
+     * 获得状态栏的高度
+     */
     public static int getStatusHeight(Context context) {
         int statusHeight = -1;
         try {
@@ -37,7 +39,9 @@ public class Utils {
         return statusHeight;
     }
 
-    /** 根据屏幕宽度与密度计算GridView显示的列数， 最少为三列，并获取Item宽度 */
+    /**
+     * 根据屏幕宽度与密度计算GridView显示的列数， 最少为三列，并获取Item宽度
+     */
     public static int getImageItemWidth(Activity activity) {
         int screenWidth = activity.getResources().getDisplayMetrics().widthPixels;
         int densityDpi = activity.getResources().getDisplayMetrics().densityDpi;
@@ -63,7 +67,9 @@ public class Utils {
         return displaysMetrics;
     }
 
-    /** dp转px */
+    /**
+     * dp转px
+     */
     public static int dp2px(Context context, float dpVal) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, context.getResources().getDisplayMetrics());
     }

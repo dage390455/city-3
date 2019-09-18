@@ -183,7 +183,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             public void onSelectSortConditionItemClick(View view, int position, SortConditionModel sortCondition) {
                 fgMainHomeTvSelectSortCondition.setText(sortCondition.title);
                 mPresenter.setSelectedCondition(sortCondition);
-                if(mPresenter.getCurrentHomeModel()!=null){
+                if (mPresenter.getCurrentHomeModel() != null) {
                     mPresenter.freshContentView(mPresenter.getCurrentHomeModel(), false);
                 }
                 mSelectSortConditionPopUtils.dismiss();
@@ -195,7 +195,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     /**
      * 切换商户重置类型和排序条件
      */
-    public  void resetTypeAndSortCondition(){
+    public void resetTypeAndSortCondition() {
 
         //重置类型
         mSelectDeviceTypePop.resetDeviceTypeList();
@@ -239,7 +239,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 } catch (Exception e) {
                     e.printStackTrace();
                     //TODO 可以考虑异常刷新所有 并重置
-                    mPresenter.requestInitData(true,true);
+                    mPresenter.requestInitData(true, true);
                 }
 
             }

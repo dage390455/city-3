@@ -30,18 +30,18 @@ public class DefaultSlideVerifityStrategy extends SlideVerifityStrategy {
         int gap = (int) (blockSize / 8f);
         Path path = new Path();
         path.moveTo(0, gap);
-        path.rLineTo(2*gap,0);
-        path.rLineTo(gap,gap);
-        path.rLineTo(gap,0);
-        path.rLineTo(gap,-gap);
-        path.rLineTo(2*gap,0);
-        path.rLineTo(0,2*gap);
-        path.rLineTo(gap,gap);
-        path.rLineTo(0,gap);
-        path.rLineTo(-gap,gap);
-        path.rLineTo(0,2*gap);
-        path.rLineTo(-7*gap,0);
-        path.rLineTo(0,-8*gap);
+        path.rLineTo(2 * gap, 0);
+        path.rLineTo(gap, gap);
+        path.rLineTo(gap, 0);
+        path.rLineTo(gap, -gap);
+        path.rLineTo(2 * gap, 0);
+        path.rLineTo(0, 2 * gap);
+        path.rLineTo(gap, gap);
+        path.rLineTo(0, gap);
+        path.rLineTo(-gap, gap);
+        path.rLineTo(0, 2 * gap);
+        path.rLineTo(-7 * gap, 0);
+        path.rLineTo(0, -8 * gap);
         path.close();
 
         return path;
@@ -52,18 +52,17 @@ public class DefaultSlideVerifityStrategy extends SlideVerifityStrategy {
     PositionInfo getBlockPostionInfo(int width, int height, int blockSize) {
         Random random = new Random();
 
-        int left = width/2+random.nextInt(width/2 - blockSize + 1);
+        int left = width / 2 + random.nextInt(width / 2 - blockSize + 1);
         //Avoid robot frequently and quickly click the start point to access the captcha.
         if (left < blockSize) {
-            left = blockSize- DpUtils.dp2px(mContext,10);
+            left = blockSize - DpUtils.dp2px(mContext, 10);
         }
-        int top = random.nextInt(height - blockSize -blockSize);
+        int top = random.nextInt(height - blockSize - blockSize);
         if (top < 0) {
             top = 0;
         }
         return new PositionInfo(left, top);
     }
 
-  
 
 }

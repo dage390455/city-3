@@ -19,7 +19,8 @@ import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
-import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
+import com.sensoro.smartcity.constant.CityConstants;
+import com.sensoro.smartcity.imainviews.ISingleMonitorConfigurationView;
 import com.sensoro.common.utils.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,7 +37,7 @@ import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_
 import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL;
 import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
-public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView> implements IOnCreate {
+public class SingleMonitorConfigurationPresenter extends BasePresenter<ISingleMonitorConfigurationView> implements IOnCreate {
     private Activity mActivity;
     private DeployAnalyzerModel deployAnalyzerModel;
     private int[] mMinMaxValue;
@@ -243,6 +244,12 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         sns.add(deployAnalyzerModel.sn);
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
+        long deviceTaskOvertimeMillis;
+        if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            deviceTaskOvertimeMillis = 30 * 1000;
+        } else {
+            deviceTaskOvertimeMillis = 15 * 1000;
+        }
         RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", null, null, inputValue, value, material, diameter,null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
@@ -256,7 +263,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, deviceTaskOvertimeMillis);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -280,7 +287,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     public boolean needDiameter() {
-        return Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        return CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

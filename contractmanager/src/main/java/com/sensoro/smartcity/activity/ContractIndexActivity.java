@@ -60,14 +60,14 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
     @OnClick({R2.id.contract_index_back, R2.id.contract_index_name_license_rl, R2.id.contract_index_person_rl, R2.id
             .contract_index_manual_rl})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.contract_index_back){
+        int viewID = view.getId();
+        if (viewID == R.id.contract_index_back) {
             finishAc();
-        }else  if(viewID==R.id.contract_index_name_license_rl){
+        } else if (viewID == R.id.contract_index_name_license_rl) {
             mPresenter.startLicense();
-        }else  if(viewID==R.id.contract_index_person_rl){
+        } else if (viewID == R.id.contract_index_person_rl) {
             mPresenter.startPerson();
-        }else  if(viewID==R.id.contract_index_manual_rl){
+        } else if (viewID == R.id.contract_index_manual_rl) {
             mPresenter.startManual();
         }
 

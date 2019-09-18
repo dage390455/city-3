@@ -17,8 +17,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/c_dfdfdf"
-            />
+            android:background="@color/c_dfdfdf" />
         <com.sensoro.smartcity.calendarview.CalendarView
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
@@ -144,8 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_252525"
-                android:textSize="28dp"
-                />
+                android:textSize="28dp" />
 
             <TextView
                 android:id="@+id/ac_calendar_tv_start_year"
@@ -178,8 +176,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_252525"
-                android:textSize="28dp"
-                />
+                android:textSize="28dp" />
 
             <TextView
                 android:id="@+id/ac_calendar_tv_end_year"
@@ -195,7 +192,7 @@
         android:id="@+id/ac_calendar_view_dismiss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/calendar_view_ll"/>
+        android:layout_below="@id/calendar_view_ll" />
 </RelativeLayout>
 
 

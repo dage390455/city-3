@@ -83,6 +83,13 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.malfunction_history_log));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mMalfunctionHistoryRcContentAdapter = new MalfunctionHistoryRcContentAdapter(mActivity);
+        mMalfunctionHistoryRcContentAdapter.setOnMalfunctionHistoryClickListener(new MalfunctionHistoryRcContentAdapter.OnMalfunctionHistoryClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                MalfunctionListInfo malfunctionListInfo = mMalfunctionHistoryRcContentAdapter.getData().get(position);
+                mPresenter.doClickHistory(malfunctionListInfo);
+            }
+        });
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         acHistoryLogRcContent.setLayoutManager(linearLayoutManager);

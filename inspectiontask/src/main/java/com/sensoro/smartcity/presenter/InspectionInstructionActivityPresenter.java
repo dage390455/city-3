@@ -29,7 +29,7 @@ public class InspectionInstructionActivityPresenter extends BasePresenter<IInspe
     public void initData(Context context) {
         mActivity = (Activity) context;
         ArrayList<String> deviceTypes = mActivity.getIntent().getStringArrayListExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
-        if (deviceTypes != null && deviceTypes.size()>0) {
+        if (deviceTypes != null && deviceTypes.size() > 0) {
             getView().updateRcTag(deviceTypes);
             requestContentData(deviceTypes.get(0));
         }

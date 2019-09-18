@@ -50,7 +50,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                 absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE,
                 CameraActivity.CONTENT_TYPE_GENERAL);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().startACForResult(intent, Constants.REQUEST_CODE_BUSINESS_LICENSE);
         }
     }
@@ -64,7 +64,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,
                 absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().startACForResult(intent, Constants.REQUEST_CODE_CAMERA);
         }
     }
@@ -72,7 +72,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
     public void startManual() {
         Intent intent = new Intent(mContext, ContractServiceActivity.class);
         intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 3);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().startAC(intent);
         }
 
@@ -81,7 +81,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
     public void handActivityResult(int requestCode, int resultCode, Intent data) {
         // 识别成功回调，营业执照识别
         if (requestCode == Constants.REQUEST_CODE_BUSINESS_LICENSE && resultCode == Activity.RESULT_OK) {
-            if (isAttachedView()){
+            if (isAttachedView()) {
                 getView().showProgressDialog();
             }
             try {
@@ -90,7 +90,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                         new RecognizeService.ServiceListener() {
                             @Override
                             public void onResult(final String result) {
-                                if (isAttachedView()){
+                                if (isAttachedView()) {
                                     getView().dismissProgressDialog();
                                 }
                                 String 单位名称 = "无";
@@ -159,7 +159,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                         });
             } catch (Exception e) {
                 e.printStackTrace();
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort("读取失败请重试");
                 }
@@ -168,7 +168,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         }
         if (requestCode == Constants.REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
                 try {
@@ -183,7 +183,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (isAttachedView()){
+                    if (isAttachedView()) {
                         getView().dismissProgressDialog();
                         getView().toastShort("读取失败请重试");
                     }
@@ -205,7 +205,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         OCR.getInstance(mContext).recognizeIDCard(param, new OnResultListener<IDCardResult>() {
             @Override
             public void onResult(IDCardResult result) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                 }
                 String name = "无";
@@ -244,7 +244,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
 
             @Override
             public void onError(OCRError error) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort("身份证识别失败：" + error.getMessage());
                 }
@@ -311,7 +311,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        switch (code){
+        switch (code) {
             case Constants.EVENT_DATA_FINISH_CODE:
                 getView().finishAc();
                 break;

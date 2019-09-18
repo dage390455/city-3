@@ -39,14 +39,12 @@ public class SelectSortConditionPopUtils {
     private final Activity mActivity;
 
 
-
     private SelectSortConditionItemClickListener mSelectFilterConditionItemClickListener;
     private SortConditionSelectAdapter mSortConditionSelectAdapter;
     private final RelativeLayout mRlTitle;
     private TranslateAnimation showTranslateAnimation;
     private final FrameLayout mFl;
     private TranslateAnimation dismissTranslateAnimation;
-
 
 
     public SelectSortConditionPopUtils(Activity activity) {
@@ -88,11 +86,9 @@ public class SelectSortConditionPopUtils {
 //        mPopupWindow.setFocusable(true);
 
 
-
         initAnimation();
 
     }
-
 
 
     private void initAnimation() {
@@ -118,7 +114,7 @@ public class SelectSortConditionPopUtils {
     }
 
 
-    public void updateSortConditionList(List mSortConditionList,SortConditionModel selectedCondition){
+    public void updateSortConditionList(List mSortConditionList, SortConditionModel selectedCondition) {
         mSortConditionSelectAdapter.setmSelectSortCondition(selectedCondition);
         mSortConditionSelectAdapter.updateSortConditionList(mSortConditionList);
     }

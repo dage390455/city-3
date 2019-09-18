@@ -33,7 +33,7 @@ import java.util.LinkedHashMap;
  * Created by sensoro on 17/7/24.
  */
 
-public class InspectionTestApplication extends BaseApplication implements  AMapLocationListener, Runnable {
+public class InspectionTestApplication extends BaseApplication implements AMapLocationListener, Runnable {
     private static volatile InspectionTestApplication instance;
     private final Handler taskHandler = new Handler(Looper.getMainLooper());
 
@@ -188,7 +188,6 @@ public class InspectionTestApplication extends BaseApplication implements  AMapL
         }
 
     }
-
 
 
     private void initImagePicker() {
