@@ -1110,6 +1110,7 @@
 
     <string name="mobile_network">You are now using mobile network,  please mind your data usage.</string>
     <string name="camera_manager">Camera Manager</string>
+    <string name="forest_fire_manager">Forest Fire Manager</string>
     <string name="basestation_manager">Basestation Manager</string>
     <string name="camera_living">Living</string>
     <string name="click_select_date">Click to select date</string>

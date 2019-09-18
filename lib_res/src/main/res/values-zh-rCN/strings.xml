@@ -1099,6 +1099,7 @@
     <string name="retry_play">"视频加载失败，请重试"</string>
 
     <string name="camera_manager">摄像机管理</string>
+    <string name="forest_fire_manager">森林防火管理</string>
     <string name="camera_nameplate">铭牌管理</string>
     <string name="basestation_manager">基站管理</string>
 

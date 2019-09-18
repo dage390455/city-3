@@ -101,10 +101,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @BindView(R.id.line11)
     FrameLayout line11;
 
-    @BindView(R.id.fg_main_manage_ll_forestfire_manage)
-    LinearLayout fgMainManageLlForestfireCamera;
     @BindView(R.id.line12)
     FrameLayout line12;
+    @BindView(R.id.fg_main_manage_ll_forestfire_manage)
+    LinearLayout fgMainManageLlForestfireCamera;
+    @BindView(R.id.line13)
+    FrameLayout line13;
+
+
 
 
     private ProgressUtils mProgressUtils;
@@ -392,7 +396,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     @Override
     public void setForestfireManagerVisible(boolean isVisible) {
-        line12.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        line13.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         fgMainManageLlForestfireCamera.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 

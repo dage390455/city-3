@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.popup;
+package com.sensoro.common.widgets;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,9 +18,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.R;
+import com.sensoro.common.adapter.CameraListPopAdapter;
 import com.sensoro.common.utils.ScreenUtils;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.CameraListPopAdapter;
+
 import com.sensoro.common.model.CameraFilterModel;
 
 import java.util.ArrayList;

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -31,20 +31,23 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.CameraListFilterPopupWindow;
 import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
 import com.sensoro.forestfire.adapter.ForestFireCameraListAdapter;
-import com.sensoro.forestfire.imainviews.IForestFireListView;
+import com.sensoro.forestfire.imainviews.IForestFireListActivityView;
 import com.sensoro.forestfire.presenter.ForestFireListActivityPresenter;
 
 import java.util.List;
@@ -60,8 +63,8 @@ import butterknife.ButterKnife;
  */
 
 @Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIST)
-public class ForestFireCameraListActivity extends BaseActivity<IForestFireListView, ForestFireListActivityPresenter>
-        implements IForestFireListView, ForestFireCameraListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, CameraListFilterPopupWindow.OnCameraListFilterPopupWindowListener {
+public class ForestFireCameraListActivity extends BaseActivity<IForestFireListActivityView, ForestFireListActivityPresenter>
+        implements IForestFireListActivityView, ForestFireCameraListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, CameraListFilterPopupWindow.OnCameraListFilterPopupWindowListener {
 
 
     @BindView(R2.id.refreshLayout)
@@ -187,23 +190,20 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListVi
         mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity);
         mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
-        cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    String text = getSearchText();
-                    cameraListEtSearch.clearFocus();
-                    if (!TextUtils.isEmpty(text)) {
-                        mPresenter.save(text);
-                    }
-                    mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(ForestFireForestFireCameraListActivity.this, cameraListEtSearch);
-                    setSearchHistoryVisible(false);
-
-                    return true;
+        cameraListEtSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                String text = getSearchText();
+                cameraListEtSearch.clearFocus();
+                if (!TextUtils.isEmpty(text)) {
+                    mPresenter.save(text);
                 }
-                return false;
+                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, text);
+                AppUtils.dismissInputMethodManager(ForestFireCameraListActivity.this, cameraListEtSearch);
+                setSearchHistoryVisible(false);
+
+                return true;
             }
+            return false;
         });
 
         cameraListEtSearch.setOnTouchListener(new View.OnTouchListener() {
@@ -292,26 +292,22 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListVi
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
         rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(ForestFireCameraListActivity.this, 6)));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(ForestFireCameraListActivity.this, new
-                RecycleViewItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        String searchText = null;
-                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
-                        if (!TextUtils.isEmpty(text)) {
-                            searchText = text;
-                            cameraListEtSearch.setText(searchText);
-                            cameraListEtSearch.setSelection(cameraListEtSearch.getText().toString().length());
-                        }
-                        cameraListIvSearchClear.setVisibility(View.VISIBLE);
-                        cameraListEtSearch.clearFocus();
-                        AppUtils.dismissInputMethodManager(ForestFireCameraListActivity.this, cameraListEtSearch);
-                        setSearchHistoryVisible(false);
-                        mPresenter.save(searchText);
-                        mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, searchText);
+        mSearchHistoryAdapter = new SearchHistoryAdapter(ForestFireCameraListActivity.this, (view, position) -> {
+            String searchText = null;
+            String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
+            if (!TextUtils.isEmpty(text)) {
+                searchText = text;
+                cameraListEtSearch.setText(searchText);
+                cameraListEtSearch.setSelection(cameraListEtSearch.getText().toString().length());
+            }
+            cameraListIvSearchClear.setVisibility(View.VISIBLE);
+            cameraListEtSearch.clearFocus();
+            AppUtils.dismissInputMethodManager(ForestFireCameraListActivity.this, cameraListEtSearch);
+            setSearchHistoryVisible(false);
+            mPresenter.save(searchText);
+            mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, searchText);
 
-                    }
-                });
+        });
         rvSearchHistory.setAdapter(mSearchHistoryAdapter);
     }
 
