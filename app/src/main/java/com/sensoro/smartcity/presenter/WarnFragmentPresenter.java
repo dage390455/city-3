@@ -563,7 +563,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(this) {
             @Override
             public void onCompleted(ResponseResult<Object> objectResponseResult) {
-
+                getView().toastShort("success");
                 getView().showProgressDialog();
             }
 

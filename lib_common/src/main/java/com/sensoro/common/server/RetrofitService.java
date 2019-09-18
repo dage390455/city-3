@@ -497,7 +497,7 @@ public interface RetrofitService {
     @POST("devices/blutoothMute")
     Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(@Body RequestBody requestBody);
 
-    @PUT("fireForest/closeAlarm")
+    @PUT("camera-center/fireForest/closeAlarm")
     Observable<ResponseResult<Object>> doCloseFireWarn(@Body String sn);
 
 }
