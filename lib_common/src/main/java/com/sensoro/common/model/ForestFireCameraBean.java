@@ -9,7 +9,7 @@ import java.util.List;
  * 包  名: com.sensoro.forestfire.model
  * 简  述: <功能简述>
  */
-public class ForestGatewayBean implements Serializable {
+public class ForestFireCameraBean implements Serializable {
 
     /**
      * cigId : 204117050002

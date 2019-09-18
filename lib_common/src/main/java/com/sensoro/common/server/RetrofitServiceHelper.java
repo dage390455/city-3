@@ -19,7 +19,7 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.common.model.ForestFireGatewayInfo;
+import com.sensoro.common.model.ForestFireCameraListInfo;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
@@ -2310,7 +2310,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
-    public Observable<ResponseResult<ForestFireGatewayInfo>> getForestFireDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+    public Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getForestFireDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 

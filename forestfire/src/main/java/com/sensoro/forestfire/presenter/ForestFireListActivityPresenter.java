@@ -2,7 +2,6 @@ package com.sensoro.forestfire.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -13,14 +12,11 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.forestfire.R;
-import com.sensoro.forestfire.activity.ForestFireCameraListActivity;
 import com.sensoro.forestfire.imainviews.IForestFireListActivityView;
-import com.sensoro.common.model.ForestFireGatewayInfo;
-import com.sensoro.common.model.ForestGatewayBean;
+import com.sensoro.common.model.ForestFireCameraListInfo;
+import com.sensoro.common.model.ForestFireCameraBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,7 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ForestFireListActivityPresenter extends BasePresenter<IForestFireListActivityView> {
     private Activity mContext;
     private volatile int cur_page = 1;
-    private final List<ForestGatewayBean> deviceCameraInfos = new ArrayList<>();
+    private final List<ForestFireCameraBean> deviceCameraInfos = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
 
     private final List<CameraFilterModel> cameraFilterModelList = new ArrayList<>();
@@ -54,7 +50,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
         if (serializableExtra instanceof ArrayList) {
             getView().setSmartRefreshEnable(false);
             deviceCameraInfos.clear();
-            List<ForestGatewayBean> data = (List<ForestGatewayBean>) serializableExtra;
+            List<ForestFireCameraBean> data = (List<ForestFireCameraBean>) serializableExtra;
             deviceCameraInfos.addAll(data);
             getView().updateDeviceCameraAdapter(deviceCameraInfos);
             getView().onPullRefreshComplete();
@@ -92,7 +88,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
         selectedHashMap.clear();
     }
 
-    public void onClickDeviceCamera(final ForestGatewayBean mForestGatewayBean) {
+    public void onClickDeviceCamera(final ForestFireCameraBean mForestFireCameraBean) {
 //        final String sn = deviceCameraInfo.getSn();
 //        final String cid = deviceCameraInfo.getCid();
 //        getView().showProgressDialog();
@@ -145,10 +141,10 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                 }
 
                 RetrofitServiceHelper.getInstance().getForestFireDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, search, selectedHashMap).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraListInfo>>(this) {
                     @Override
-                    public void onCompleted(ResponseResult<ForestFireGatewayInfo> forestFireGatewayInfoResponseResult) {
-                        ForestFireGatewayInfo data = forestFireGatewayInfoResponseResult.getData();
+                    public void onCompleted(ResponseResult<ForestFireCameraListInfo> forestFireGatewayInfoResponseResult) {
+                        ForestFireCameraListInfo data = forestFireGatewayInfoResponseResult.getData();
                         deviceCameraInfos.clear();
                         if (data != null && data.getList() != null && data.getList().size() > 0) {
                             deviceCameraInfos.addAll(data.getList());
@@ -175,11 +171,11 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
 
 
                 RetrofitServiceHelper.getInstance().getForestFireDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraListInfo>>(this) {
                     @Override
-                    public void onCompleted(ResponseResult<ForestFireGatewayInfo> deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<ForestFireCameraListInfo> deviceCameraListRsp) {
 
-                        ForestFireGatewayInfo data = deviceCameraListRsp.getData();
+                        ForestFireCameraListInfo data = deviceCameraListRsp.getData();
                         if (data != null && data.getList() != null && data.getList().size() > 0) {
                             deviceCameraInfos.addAll(data.getList());
                             getView().updateDeviceCameraAdapter(deviceCameraInfos);
@@ -287,11 +283,11 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
             getView().showProgressDialog();
         }
         RetrofitServiceHelper.getInstance().getForestFireDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraListInfo>>(this) {
             @Override
-            public void onCompleted(ResponseResult<ForestFireGatewayInfo> deviceCameraListRsp) {
+            public void onCompleted(ResponseResult<ForestFireCameraListInfo> deviceCameraListRsp) {
 
-                ForestFireGatewayInfo data = deviceCameraListRsp.getData();
+                ForestFireCameraListInfo data = deviceCameraListRsp.getData();
                 deviceCameraInfos.clear();
                 if (data != null && data.getList() != null && data.getList().size() > 0) {
                     deviceCameraInfos.addAll(data.getList());
@@ -335,11 +331,11 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
             getView().showProgressDialog();
         }
         RetrofitServiceHelper.getInstance().getForestFireDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraListInfo>>(this) {
             @Override
-            public void onCompleted(ResponseResult<ForestFireGatewayInfo> deviceCameraListRsp) {
+            public void onCompleted(ResponseResult<ForestFireCameraListInfo> deviceCameraListRsp) {
 
-                ForestFireGatewayInfo data = deviceCameraListRsp.getData();
+                ForestFireCameraListInfo data = deviceCameraListRsp.getData();
 
                 deviceCameraInfos.clear();
                 if (data != null && data.getList() != null && data.getList().size() > 0) {

@@ -2,7 +2,7 @@ package com.sensoro.common.server;
 
 
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.model.ForestFireGatewayInfo;
+import com.sensoro.common.model.ForestFireCameraListInfo;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
@@ -409,8 +409,8 @@ public interface RetrofitService {
     @GET("cameras")
     Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
-    @GET("forest/getForestGateway")
-    Observable<ResponseResult<ForestFireGatewayInfo>> getForestFireDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    @POST("camera-center/forest/getForestGateway")
+    Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
 
 

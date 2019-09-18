@@ -9,7 +9,7 @@ import java.util.List;
  * 包  名: com.sensoro.forestfire.model
  * 简  述: <功能简述>
  */
-public  class ForestFireGatewayInfo  implements Serializable {
+public  class ForestFireCameraListInfo implements Serializable {
 
 
     /**
@@ -20,7 +20,7 @@ public  class ForestFireGatewayInfo  implements Serializable {
 
     private int count;
     private TitleInfoBean titleInfo;
-    private List<ForestGatewayBean> list;
+    private List<ForestFireCameraBean> list;
 
     public int getCount() {
         return count;
@@ -38,11 +38,11 @@ public  class ForestFireGatewayInfo  implements Serializable {
         this.titleInfo = titleInfo;
     }
 
-    public List<ForestGatewayBean> getList() {
+    public List<ForestFireCameraBean> getList() {
         return list;
     }
 
-    public void setList(List<ForestGatewayBean> list) {
+    public void setList(List<ForestFireCameraBean> list) {
         this.list = list;
     }
 

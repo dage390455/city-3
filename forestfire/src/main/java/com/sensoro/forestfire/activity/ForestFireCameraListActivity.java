@@ -35,9 +35,7 @@ import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.model.ForestGatewayBean;
-import com.sensoro.common.server.bean.BaseStationInfo;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.model.ForestFireCameraBean;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CameraListFilterPopupWindow;
 import com.sensoro.common.widgets.CustomDivider;
@@ -381,12 +379,12 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListAc
 
     @Override
     public void onItemClick(View v, int position) {
-        ForestGatewayBean mForestGatewayBean = mDeviceCameraContentAdapter.getData().get(position);
-        mPresenter.onClickDeviceCamera(mForestGatewayBean);
+        ForestFireCameraBean mForestFireCameraBean = mDeviceCameraContentAdapter.getData().get(position);
+        mPresenter.onClickDeviceCamera(mForestFireCameraBean);
     }
 
     @Override
-    public void updateDeviceCameraAdapter(List<ForestGatewayBean> data) {
+    public void updateDeviceCameraAdapter(List<ForestFireCameraBean> data) {
         if (data != null && data.size() > 0) {
             mDeviceCameraContentAdapter.updateAdapter(data);
         }
