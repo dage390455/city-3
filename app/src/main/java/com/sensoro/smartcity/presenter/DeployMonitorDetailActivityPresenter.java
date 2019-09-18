@@ -66,14 +66,12 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
-import com.sensoro.smartcity.activity.SingleMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
+import com.sensoro.smartcity.activity.SingleMonitorConfigurationActivity;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
-import com.sensoro.common.callback.BleObserver;
-import com.sensoro.common.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
@@ -437,12 +435,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     } else {
                         handleDeviceSignalStatusAndBleSetting();
                     }
-                }
-                //TODO 加入白名单处理
-                if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
-                    doUploadImages();
-                } else {
-                    handleDeviceSignalStatusAndBleSetting();
                 }
                 break;
             default:
