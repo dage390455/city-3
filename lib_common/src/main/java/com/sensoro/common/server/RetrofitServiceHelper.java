@@ -2701,4 +2701,14 @@ public class RetrofitServiceHelper {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.getCameraList(requestBody);
     }
+
+    /**
+     * 关闭火警接口
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<ResponseResult<Object>> doCloseFireWarn(@Body String sn) {
+        return retrofitService.doCloseFireWarn(sn);
+    }
 }

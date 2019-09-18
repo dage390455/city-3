@@ -555,4 +555,24 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     }
                 });
     }
+
+    public void doCloseWarn(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        //TODO 调用关闭火警 然后刷新界面
+        getView().showProgressDialog();
+
+        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>() {
+            @Override
+            public void onCompleted(ResponseResult<Object> objectResponseResult) {
+
+                getView().showProgressDialog();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().showProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+
+    }
 }

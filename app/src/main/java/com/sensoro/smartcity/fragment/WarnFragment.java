@@ -623,6 +623,18 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
+    public void onCloseWarn(View view, int position) {
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.doCloseWarn(deviceAlarmLogInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
     public void onCancelClick() {
         historyClearDialog.dismiss();
     }

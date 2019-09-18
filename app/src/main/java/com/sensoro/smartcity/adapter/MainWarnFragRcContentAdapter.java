@@ -2,20 +2,21 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.ColorRes;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import androidx.annotation.ColorRes;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +59,14 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             String deviceType = alarmLogInfo.getDeviceType();
             String default_name = TextUtils.isEmpty(deviceSN) ? mContext.getResources().getString(R.string
                     .unname) : deviceSN;
-            String deviceTypeStr=WidgetUtil.getDeviceMainTypeName(deviceType);
+            String deviceTypeStr = WidgetUtil.getDeviceMainTypeName(deviceType);
             StringBuilder stringBuilder = new StringBuilder();
             if (TextUtils.isEmpty(deviceName)) {
                 holder.mainWarnRcContentTvContent.setText(stringBuilder.append(deviceTypeStr).append(" ").append(default_name).toString());
             } else {
                 holder.mainWarnRcContentTvContent.setText(stringBuilder.append(deviceTypeStr).append(" ").append(deviceName).toString());
             }
-            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext,alarmLogInfo.getCreatedTime(), 0));
+            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getCreatedTime(), 0));
             //
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
@@ -186,6 +187,14 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                 }
             }
         });
+        holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onCloseWarn(v, position);
+                }
+            }
+        });
     }
 
     private void changeStrokeColor(TextView view, @ColorRes int color) {
@@ -225,6 +234,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
         TextView mainWarnRcContentBtnContactLandlord;
         @BindView(R.id.main_warn_rc_content_tv_tag)
         TextView mainWarnRcContentTvTag;
+        @BindView(R.id.tv_main_warn_content_close_warn)
+        TextView tvMainWarnContentCloseWarn;
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -238,6 +249,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
         void onCallPhone(View v, int position);
 
         void onItemClick(View view, int position, boolean isReConfirm);
+
+        void onCloseWarn(View view, int position);
     }
 
 }
