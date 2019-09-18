@@ -1311,4 +1311,7 @@
     <string name="server_error_alert">服务器数据返回错误 设备类型</string>
     <string name="alarm_log_alarm_contact_close_warn">关闭火警</string>
 
+
+
+    <string name="camera_state">摄像机状态</string>
 </resources>

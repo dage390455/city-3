@@ -410,8 +410,11 @@ public interface Constants {
 
 
     //巡检url类型数值
-    public static final  String  RES_IMAGE="image";
-    public static final  String  RES_VIDEO="video";
+     String  RES_IMAGE="image";
+    String  RES_VIDEO="video";
+
+
+
 
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

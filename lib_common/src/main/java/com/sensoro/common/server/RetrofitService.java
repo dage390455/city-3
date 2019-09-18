@@ -409,8 +409,8 @@ public interface RetrofitService {
     @GET("cameras")
     Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
-    @POST("camera-center/forest/getForestGateway")
-    Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    @POST("camera-center/forest/getForestCamera")
+    Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Body RequestBody requestBody);
 
 
 

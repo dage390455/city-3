@@ -3,23 +3,21 @@
     android:id="@+id/item_pop_select_state_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/item_pop_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/c_f4f4f4"
-
+        android:orientation="vertical"
         >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pop_rc_camera_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             >
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -31,8 +29,6 @@
             android:layout_below="@+id/pop_rc_camera_list"
             android:background="@color/white"
             android:gravity="center"
-
-
             android:orientation="horizontal">
 
 
@@ -60,7 +56,7 @@
                 android:textColor="@color/white"
                 android:textSize="16dp" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <View

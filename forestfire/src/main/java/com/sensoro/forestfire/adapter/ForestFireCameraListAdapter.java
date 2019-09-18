@@ -83,9 +83,9 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
             }
         });
 
-        holder.itemDeviceCameraTvId.setText(mForestFireCameraBean.getCigId());
+        holder.itemDeviceCameraTvId.setText(mForestFireCameraBean.getSn());
 
-        if (equals(mForestFireCameraBean.getStatus())) {
+        if ("1".equals(mForestFireCameraBean.getState())) {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);

@@ -1325,4 +1325,5 @@
     <string name="server_error_alert">server data error deviceTypes</string>
     <string name="alarm_log_alarm_contact_close_warn">Close Warn</string>
 
+    <string name="camera_state">Camera State</string>
 </resources>
