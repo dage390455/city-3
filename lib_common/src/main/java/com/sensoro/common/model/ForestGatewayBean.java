@@ -1,5 +1,6 @@
-package com.sensoro.forestfire.model;
+package com.sensoro.common.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * 包  名: com.sensoro.forestfire.model
  * 简  述: <功能简述>
  */
-public class ForestGatewayBean {
+public class ForestGatewayBean implements Serializable {
 
     /**
      * cigId : 204117050002

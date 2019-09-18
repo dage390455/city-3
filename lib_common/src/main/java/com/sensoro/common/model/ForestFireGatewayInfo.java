@@ -1,4 +1,4 @@
-package com.sensoro.forestfire.model;
+package com.sensoro.common.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -46,7 +46,7 @@ public  class ForestFireGatewayInfo  implements Serializable {
         this.list = list;
     }
 
-    public static class TitleInfoBean {
+    public static class TitleInfoBean implements  Serializable{
         /**
          * all : 1
          * online : 1

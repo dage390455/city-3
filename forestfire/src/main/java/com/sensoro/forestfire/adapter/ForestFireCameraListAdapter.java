@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.ForestGatewayBean;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
@@ -31,7 +32,7 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
 
     private Context mContext;
     private OnDeviceCameraContentClickListener listener;
-    private final List<DeviceCameraInfo> mData = new ArrayList<>();
+    private final List<ForestGatewayBean> mData = new ArrayList<>();
 
     public ForestFireCameraListAdapter(Context context) {
         mContext = context;
@@ -41,13 +42,13 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
         listener = onDeviceCameraContentClickListener;
     }
 
-    public void updateAdapter(List<DeviceCameraInfo> data) {
+    public void updateAdapter(List<ForestGatewayBean> data) {
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
     }
 
-    public List<DeviceCameraInfo> getData() {
+    public List<ForestGatewayBean> getData() {
         return mData;
     }
 
@@ -64,10 +65,10 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
     @Override
     public void onBindViewHolder(final DeviceCameraContentHolder holder, final int position) {
 
-        DeviceCameraInfo deviceCameraInfo = mData.get(position);
-        if (deviceCameraInfo != null) {
+        ForestGatewayBean mForestGatewayBean = mData.get(position);
+        if (mForestGatewayBean != null) {
             //
-            String name = deviceCameraInfo.getName();
+            String name = mForestGatewayBean.getName();
             if (TextUtils.isEmpty(name)) {
                 name = mContext.getString(R.string.unknown);
             }
@@ -83,9 +84,9 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
             }
         });
 
-        holder.itemDeviceCameraTvId.setText(deviceCameraInfo.getSn());
+        holder.itemDeviceCameraTvId.setText(mForestGatewayBean.getCigId());
 
-        if ("1".equals(deviceCameraInfo.getDeviceStatus())) {
+        if (equals(mForestGatewayBean.getStatus())) {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
