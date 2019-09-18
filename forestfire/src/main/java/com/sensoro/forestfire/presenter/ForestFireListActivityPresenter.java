@@ -144,16 +144,12 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(mCityObserver);
-
-
-                CityObserver mCityObserver=       new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
                     @Override
-                    public void onCompleted(ResponseResult<ForestFireGatewayInfo> deviceCameraListRsp) {
-
-                        ForestFireGatewayInfo data = deviceCameraListRsp.getData();
+                    public void onCompleted(ResponseResult<ForestFireGatewayInfo> forestFireGatewayInfoResponseResult) {
+                        ForestFireGatewayInfo data = forestFireGatewayInfoResponseResult.getData();
                         deviceCameraInfos.clear();
-                        if (data != null && data.getList()!=null&&data.getList().size() > 0) {
+                        if (data != null && data.getList() != null && data.getList().size() > 0) {
                             deviceCameraInfos.addAll(data.getList());
                         }
                         getView().updateDeviceCameraAdapter(deviceCameraInfos);
@@ -168,7 +164,35 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                         getView().onPullRefreshComplete();
 
                     }
+
                 });
+
+
+                RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, search, selectedHashMap).subscribeOn
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
+                    @Override
+                    public void onCompleted(ResponseResult<ForestFireGatewayInfo> loginRsp) {
+                        String sessionID = loginRsp.getData().getSessionID();
+                        String token = loginRsp.getData().getToken();
+                        RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
+                        PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
+                        //
+                        UserInfo userInfo = loginRsp.getData();
+                        EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
+                        if (loginData.needAuth) {
+                            openNextActivity(loginData);
+                            return;
+                        }
+                        getMergeType(loginData);
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                    }
+                });
+
                 break;
             case Constants.DIRECTION_UP:
                 cur_page++;
@@ -181,7 +205,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                     public void onCompleted(ResponseResult<ForestFireGatewayInfo> deviceCameraListRsp) {
 
                         ForestFireGatewayInfo data = deviceCameraListRsp.getData();
-                        if (data != null && data.getList()!=null&&data.getList().size() > 0) {
+                        if (data != null && data.getList() != null && data.getList().size() > 0) {
                             deviceCameraInfos.addAll(data.getList());
                             getView().updateDeviceCameraAdapter(deviceCameraInfos);
                         } else {
@@ -198,7 +222,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                         getView().onPullRefreshComplete();
 
                     }
-                };
+                });
                 break;
             default:
                 break;
@@ -290,7 +314,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
 
                 ForestFireGatewayInfo data = deviceCameraListRsp.getData();
                 deviceCameraInfos.clear();
-                if (data != null && data.getList()!=null&&data.getList().size() > 0) {
+                if (data != null && data.getList() != null && data.getList().size() > 0) {
                     deviceCameraInfos.addAll(data.getList());
                 }
                 //只在重置成功了进行刷新
@@ -339,7 +363,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                 ForestFireGatewayInfo data = deviceCameraListRsp.getData();
 
                 deviceCameraInfos.clear();
-                if (data != null && data.getList()!=null&&data.getList().size() > 0) {
+                if (data != null && data.getList() != null && data.getList().size() > 0) {
                     deviceCameraInfos.addAll(data.getList());
                 }
                 getView().updateDeviceCameraAdapter(deviceCameraInfos);

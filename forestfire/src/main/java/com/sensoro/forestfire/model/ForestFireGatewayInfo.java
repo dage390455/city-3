@@ -9,7 +9,7 @@ import java.util.List;
  * 包  名: com.sensoro.forestfire.model
  * 简  述: <功能简述>
  */
-public class ForestFireGatewayInfo  implements Serializable {
+public  class ForestFireGatewayInfo  implements Serializable {
 
 
     /**
