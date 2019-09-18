@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <array name="sortcondition">
+        <item>默认排序</item>
+        <item>名称顺序</item>
+        <item>名称倒序</item>
+    </array>
     <array name="drawer_title_array">
         <item>主页</item>
         <item>预警记录</item>

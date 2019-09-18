@@ -1,10 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!--camera-->
-    <array name="sortcondition">
-        <item>默认排序</item>
-        <item>名称顺序</item>
-        <item>名称倒序</item>
-    </array>
+
     <string name="capture_time">抓拍时间</string>
     <string name="process_status">处理状态</string>
     <string name="customize_time">自定义时间</string>
@@ -544,9 +540,12 @@
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">开始巡检</string>
     <string name="inspection_task_detail_task_number">任务编号</string>
+    <string name="inspection_task_detail_go_on_inspection">继续巡检</string>
+    <string name="inspection_task_detail_title">详情</string>
     <string name="inspection_task_detail_inspection_established">既定巡检时间</string>
     <string name="inspection_task_detail_device_counts">设备数量</string>
     <string name="inspection_task_detail_status">状态</string>
+
     //巡检task list
     <string name="inspection_task_list_undone">未完成</string>
     <string name="inspection_task_list_complete">已完成</string>

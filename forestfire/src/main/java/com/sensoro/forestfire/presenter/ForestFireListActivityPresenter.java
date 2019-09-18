@@ -143,7 +143,8 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-
+                RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(mCityObserver);
 
 
                 CityObserver mCityObserver=       new CityObserver<ResponseResult<ForestFireGatewayInfo>>(this) {
@@ -168,8 +169,6 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
 
                     }
                 });
-                RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(Constants.DEFAULT_PAGE_SIZE, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(mCityObserver);
                 break;
             case Constants.DIRECTION_UP:
                 cur_page++;

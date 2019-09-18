@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <array name="sortcondition">
+        <item>Defalut Order</item>
+        <item>Name Order</item>
+        <item>Name Reverse</item>
+    </array>
     <array name="drawer_title_array">
         <item>Home</item>
         <item>Alarm Log</item>
