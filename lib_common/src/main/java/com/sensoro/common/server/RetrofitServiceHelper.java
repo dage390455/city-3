@@ -2741,7 +2741,16 @@ public class RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<ResponseResult<Object>> doCloseFireWarn(@Body String sn) {
-        return retrofitService.doCloseFireWarn(sn);
+    public Observable<ResponseResult<Object>> doCloseFireWarn( String sn) {
+        JSONObject jsonObject = new JSONObject();
+        if (!TextUtils.isEmpty(sn)){
+            try {
+                jsonObject.put("sn", sn);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doCloseFireWarn(requestBody);
     }
 }
