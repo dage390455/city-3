@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionTaskDetailActivity
+ * 简  述: <巡检任务页,要点：任务编号，既定巡检时间，设备数量，巡检内容，状态显示，巡检任务详情入口>
+ */
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;

@@ -35,6 +35,30 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
     private Long tempFinishTime;
     private Integer tempFinish = 0;
 
+    private long startTime = -1;
+    private long endTime = -1;
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public void updateEndTime(){
+        endTime += 1000 * 60 * 60 * 24;
+    }
+
+
     @Override
     public void initData(Context context) {
         mContext = context;
@@ -46,7 +70,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         getView().showProgressDialog();
         if (direction == Constants.DIRECTION_DOWN) {
             cur_page = 0;
-            RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, 0, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
+            RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, 0, Constants.DEFAULT_PAGE_SIZE, tempStartTime, tempFinishTime).subscribeOn(Schedulers
                     .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskModel>>(this) {
                 @Override
                 public void onCompleted(ResponseResult<InspectionTaskModel> inspectionTaskModel) {
@@ -71,7 +95,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
             });
         } else {
             cur_page++;
-            RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, cur_page * 20, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
+            RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, cur_page * Constants.DEFAULT_PAGE_SIZE, Constants.DEFAULT_PAGE_SIZE, tempStartTime, tempFinishTime).subscribeOn(Schedulers
                     .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskModel>>(this) {
                 @Override
                 public void onCompleted(ResponseResult<InspectionTaskModel> inspectionTaskModel) {

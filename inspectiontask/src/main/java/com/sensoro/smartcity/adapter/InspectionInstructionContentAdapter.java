@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
 import com.sensoro.common.widgets.TopSpaceItemDecoration;
+import com.sensoro.smartcity.constant.InspectionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +59,7 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         ArrayList<ScenesData> pics = new ArrayList<>();
         for (String image : images) {
             ScenesData scenesData = new ScenesData();
-            scenesData.type = "image";
+            scenesData.type = Constants.RES_IMAGE;
             scenesData.url = image;
             pics.add(scenesData);
         }

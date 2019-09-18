@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-06
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionActivity
+ * 简  述: <开始巡检页,要点：搜索附近的蓝牙设备，检出包含当前的巡检设备，如果找到了，上报设备正常，否则上报异常>
+ */
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

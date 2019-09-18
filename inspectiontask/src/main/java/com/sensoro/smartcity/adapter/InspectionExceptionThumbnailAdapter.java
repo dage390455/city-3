@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
+import com.sensoro.smartcity.constant.InspectionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +48,15 @@ public class InspectionExceptionThumbnailAdapter extends RecyclerView.Adapter<In
     @Override
     public void onBindViewHolder(InspectionExceptionThumbnailHolder holder, final int position) {
         String url;
-        if ("image".equals(datas.get(position).type)) {
+        if (Constants.RES_IMAGE.equals(datas.get(position).type)) {
             url = datas.get(position).url;
         } else {
             url = datas.get(position).thumbUrl;
         }
         if (hasVideo) {
             holder.ivRecordPlay.setVisibility(View.VISIBLE);
+        }else{
+            holder.ivRecordPlay.setVisibility(View.GONE);
         }
 
         Glide.with((Activity) mContext)

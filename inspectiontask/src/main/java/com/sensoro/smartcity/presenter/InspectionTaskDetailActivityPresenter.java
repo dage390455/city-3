@@ -71,19 +71,48 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
 
     private void freshTvState(int status) {
         switch (status) {
-            case 0:
-                getView().setTvbtnStartState(R.drawable.shape_bg_inspectiontask_corner_29c_shadow, R.color.white, "开始巡检");
+            case InspectionConstant.TASK_STATUS_PEDNING_EXC:
+                getView().setTvbtnStartState(R.drawable.shape_bg_inspectiontask_corner_29c_shadow, R.color.white, mContext.getString(R.string.inspection_task_detail_start_inspection));
                 break;
-            case 1:
-            case 2:
-                getView().setTvbtnStartState(R.drawable.shape_bg_inspectiontask_corner_29c_shadow, R.color.white, "继续巡检");
+            case InspectionConstant.TASK_STATUS_EXCING:
+            case InspectionConstant.TASK_STATUS_TIMEOUE_UNDONE:
+                getView().setTvbtnStartState(R.drawable.shape_bg_inspectiontask_corner_29c_shadow, R.color.white,  mContext.getString(R.string.inspection_task_detail_go_on_inspection));
                 break;
-            case 3:
-            case 4:
-                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525, "详情");
+            case InspectionConstant.TASK_STATUS_DONE:
+            case InspectionConstant.TASK_STATUS_TIMEOUE_DONE:
+                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525,  mContext.getString(R.string.inspection_task_detail_title));
                 break;
         }
-        getView().setTvState(InspectionConstant.INSPECTION_STATUS_COLORS[status], mContext.getString(InspectionConstant.INSPECTION_STATUS_TEXTS[status]));
+
+        setTvState(status);
+
+    }
+    private void setTvState(int status){
+        int color=R.color.c_8058a5;
+        String text=mContext.getString(R.string.inspection_status_text_pending_execution);
+        switch (status) {
+            case 0:
+                color=R.color.c_8058a5;
+                text=mContext.getString(R.string.inspection_status_text_pending_execution);
+                break;
+            case 1:
+                color=R.color.c_3aa7f0;
+                text=mContext.getString(R.string.inspection_status_text_executing);
+                break;
+            case 2:
+                color=R.color.c_ff8d34;
+                text=mContext.getString(R.string.inspection_status_text_timeout_not_completed);
+                break;
+            case 3:
+                color=R.color.c_1dbb99;
+                text=mContext.getString(R.string.inspection_status_text_completed);
+                break;
+            case 4:
+                color=R.color.c_a6a6a6;
+                text=mContext.getString(R.string.inspection_status_text_timeout_completed);
+                break;
+        }
+        getView().setTvState(color, text);
     }
 
     @Override
@@ -124,7 +153,6 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     //与ios逻辑一致
     public void doBtnStart() {
         if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceList) {
-//            if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
             if (mTaskInfo.getStatus() == 0 || mTaskInfo.getStatus() == 2) {
                 changeTaskState();
             } else {
@@ -132,11 +160,6 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                 intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
             }
-//            } else {
-//                Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-//                intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-//                getView().startAC(intent);
-//        }
         } else {
             getView().toastShort(mContext.getString(R.string.account_does_not_have_permission_to_view_the_inspection_device_list));
         }

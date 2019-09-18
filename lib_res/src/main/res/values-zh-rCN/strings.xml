@@ -1292,6 +1292,6 @@
     <string name="device_iccid">卡号（ICCID）</string>
 
 
-
+    <string name="server_error_alert">服务器数据返回错误 设备类型</string>
 
 </resources>
