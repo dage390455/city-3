@@ -4,8 +4,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.server.bean.BaseStationInfo;
-import com.sensoro.forestfire.model.ForestGatewayBean;
+import com.sensoro.common.model.ForestFireCameraBean;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * 简  述: <功能简述>
  */
 public interface IForestFireListActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void updateDeviceCameraAdapter(List<ForestGatewayBean> data);
+    void updateDeviceCameraAdapter(List<ForestFireCameraBean> data);
 
     void onPullRefreshComplete();
 

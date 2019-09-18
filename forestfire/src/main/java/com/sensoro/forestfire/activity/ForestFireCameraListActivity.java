@@ -35,8 +35,7 @@ import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.server.bean.BaseStationInfo;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.model.ForestFireCameraBean;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CameraListFilterPopupWindow;
 import com.sensoro.common.widgets.CustomDivider;
@@ -380,27 +379,18 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListAc
 
     @Override
     public void onItemClick(View v, int position) {
-        DeviceCameraInfo deviceCameraInfo = mDeviceCameraContentAdapter.getData().get(position);
-        mPresenter.onClickDeviceCamera(deviceCameraInfo);
+        ForestFireCameraBean mForestFireCameraBean = mDeviceCameraContentAdapter.getData().get(position);
+        mPresenter.onClickDeviceCamera(mForestFireCameraBean);
     }
 
     @Override
-    public void updateDeviceCameraAdapter(List<DeviceCameraInfo> data) {
+    public void updateDeviceCameraAdapter(List<ForestFireCameraBean> data) {
         if (data != null && data.size() > 0) {
             mDeviceCameraContentAdapter.updateAdapter(data);
         }
         setNoContentVisible(data == null || data.size() < 1);
     }
 
-    @Override
-    public void updateBaseStationAdapter(List<BaseStationInfo> data) {
-
-    }
-
-    @Override
-    public void setBaseStationType(List<CameraFilterModel.ListBean> data) {
-
-    }
 
 
     @SuppressLint("RestrictedApi")
@@ -455,12 +445,7 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListAc
 
     }
 
-    @Override
-    public void resetRefreshNoMoreData() {
-        if (refreshLayout != null) {
-            refreshLayout.setNoMoreData(false);
-        }
-    }
+
 
     @Override
     public void setTopTitleState() {
@@ -510,14 +495,6 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListAc
         refreshLayout.finishRefresh();
     }
 
-    @Override
-    public void setDateSelectVisible(boolean isVisible) {
-    }
-
-    @Override
-    public void setDateSelectText(String text) {
-//        tvAlarmLogDateEdit.setText(text);
-    }
 
     @Override
     public void onClick(View v) {

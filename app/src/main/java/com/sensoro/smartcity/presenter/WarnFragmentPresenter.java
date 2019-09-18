@@ -560,9 +560,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         //TODO 调用关闭火警 然后刷新界面
         getView().showProgressDialog();
 
-        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ResponseResult<Object>>(this) {
+        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(this) {
             @Override
             public void onCompleted(ResponseResult<Object> objectResponseResult) {
                 getView().toastShort("success");
