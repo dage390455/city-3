@@ -1338,5 +1338,6 @@
 
 
     <string name="binocular_alarm_tip">Binocular thermal imaging camera</string>
+    <string name="close_binocular_fire_alarm_tip">Manually close this warning. The warning is back to normal</string>
 
 </resources>

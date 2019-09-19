@@ -568,6 +568,23 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.llConfirm.setVisibility(View.GONE);
             holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
 
+        }else if ("close".equals(type)){
+            //关闭火警
+            holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(mContext.getString(R.string.contact));
+            String name = recordInfo.getName();
+            String source = recordInfo.getSource();
+            stringBuilder.append("【").append(name).append("】").append(" ").append(mContext.getString(R.string.by)).append(" ");
+            if ("app".equals(source)) {
+                stringBuilder.append("APP");
+            } else if ("platform".equals(source)) {
+                stringBuilder.append("Web");
+            }
+            stringBuilder.append(" ").append(mContext.getString(R.string.close_binocular_fire_alarm_tip));
+            holder.itemAlertContentTvContent.setText(stringBuilder.toString());
+            holder.llConfirm.setVisibility(View.GONE);
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
         }
 
     }
