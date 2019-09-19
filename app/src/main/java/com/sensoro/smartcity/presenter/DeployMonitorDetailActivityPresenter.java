@@ -100,17 +100,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private Activity mContext;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private Handler mHandler;
-    private final HashMap<String, BLEDevice> BLE_DEVICE_SET = new HashMap<>();
+    private final HashMap<String, BLEDevice> bleDevice = new HashMap<>();
     private DeployAnalyzerModel deployAnalyzerModel;
     private DeployRetryUtil deployRetryUtil;
     private final Runnable signalTask = new Runnable() {
         @Override
         public void run() {
-            try {
-                com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 准备 freshSignalInfo updatedTime = " + deployAnalyzerModel.updatedTime + "，signal = " + deployAnalyzerModel.signal);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
             freshSignalInfo();
             //加入部署接口轮询
             RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
@@ -126,11 +121,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             signal = "none";
                         }
                         deployAnalyzerModel.signal = String.copyValueOf(signal.toCharArray());
-                        try {
-                            com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 接口轮询刷新 freshSignalInfo updatedTime = " + deployAnalyzerModel.updatedTime + "，signal = " + deployAnalyzerModel.signal);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
                         mHandler.removeCallbacks(signalTask);
                         freshSignalInfo();
                         mHandler.postDelayed(signalTask, 2000);
@@ -139,11 +129,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
-                    try {
-                        com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 接口轮询刷新 errorMsg = " + errorMsg);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
                 }
             });
             mHandler.postDelayed(signalTask, 2000);
@@ -154,6 +139,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private Integer tempStatus;
     private String mScheduleNo;
 
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -162,22 +148,74 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         onCreate();
         Intent intent = mContext.getIntent();
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-        //TODO 暂时用烟感做测试
-//        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
-        //
-//        deployAnalyzerModel.deviceType ="acrel_single";
-        //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if (hasSignalConfig()) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
         mHandler.post(signalTask);
         //默认显示已定位
         deployAnalyzerModel.address = mContext.getString(R.string.positioned);
-        //
-        //获取一次临时的位置信息
+        initGeocodeSearch();
+
+    }
+
+    private void init() {
+        switch (deployAnalyzerModel.deployType) {
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
+                //基站部署
+                getView().setDeployContactRelativeLayoutVisible(false);
+                getView().setDeployDeviceRlSignalVisible(false);
+                getView().setDeployPhotoVisible(false);
+                getView().setDeviceSn(mContext.getString(R.string.device_number) + deployAnalyzerModel.sn);
+                getView().setDeployDeviceType(mContext.getString(R.string.station));
+                if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
+                    getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+                }
+                getView().updateTagsData(deployAnalyzerModel.tagList);
+                getView().setUploadBtnStatus(checkCanUpload());
+                break;
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+                getView().setDeployContactRelativeLayoutVisible(true);
+                getView().setDeployDeviceRlSignalVisible(true);
+                getView().setDeployPhotoVisible(true);
+                getView().setDeployDeviceType(WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType));
+                echoDeviceInfo();
+                break;
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //巡检设备更换
+                getView().setDeployContactRelativeLayoutVisible(true);
+                getView().setDeployDeviceRlSignalVisible(true);
+                getView().setDeployPhotoVisible(true);
+                getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
+                getView().setDeployDeviceType(WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType));
+                echoDeviceInfo();
+                getView().setDeployDetailArrowWeChatVisible(false);
+                break;
+            case Constants.TYPE_SCAN_INSPECTION:
+                //扫描巡检设备
+                break;
+            default:
+                break;
+        }
+        //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
+        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        getView().setDeployDetailDeploySettingVisible(isFire);
+        if (isFire) {
+            //TODO 再次部署时暂时不回显电器火灾字段字段
+            getView().setDeployDeviceDetailDeploySetting(null);
+        }
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版控制不显示小程序账号
+            deployAnalyzerModel.weChatAccount = null;
+        }
+    }
+
+
+    private void initGeocodeSearch() {
         GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
@@ -271,59 +309,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
     }
 
-    private void init() {
-        switch (deployAnalyzerModel.deployType) {
-            case Constants.TYPE_SCAN_DEPLOY_STATION:
-                //基站部署
-                getView().setDeployContactRelativeLayoutVisible(false);
-                getView().setDeployDeviceRlSignalVisible(false);
-                getView().setDeployPhotoVisible(false);
-                getView().setDeviceSn(mContext.getString(R.string.device_number) + deployAnalyzerModel.sn);
-                getView().setDeployDeviceType(mContext.getString(R.string.station));
-                if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
-                    getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
-                }
-                getView().updateTagsData(deployAnalyzerModel.tagList);
-                getView().setUploadBtnStatus(checkCanUpload());
-                break;
-            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
-                //设备部署
-                getView().setDeployContactRelativeLayoutVisible(true);
-                getView().setDeployDeviceRlSignalVisible(true);
-                getView().setDeployPhotoVisible(true);
-                getView().setDeployDeviceType(WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType));
-                echoDeviceInfo();
-                break;
-            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                //巡检设备更换
-                getView().setDeployContactRelativeLayoutVisible(true);
-                getView().setDeployDeviceRlSignalVisible(true);
-                getView().setDeployPhotoVisible(true);
-                getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
-                getView().setDeployDeviceType(WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType));
-                echoDeviceInfo();
-                getView().setDeployDetailArrowWeChatVisible(false);
-                break;
-            case Constants.TYPE_SCAN_INSPECTION:
-                //扫描巡检设备
-                break;
-            default:
-                break;
-        }
-        //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
-        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-        getView().setDeployDetailDeploySettingVisible(isFire);
-        if (isFire) {
-            //TODO 再次部署时暂时不回显电器火灾字段字段
-            getView().setDeployDeviceDetailDeploySetting(null);
-        }
-        if (!AppUtils.isChineseLanguage()) {
-            //TODO 英文版控制不显示小程序账号
-            deployAnalyzerModel.weChatAccount = null;
-        }
-    }
-
     //回显设备信息
     private void echoDeviceInfo() {
         getView().setDeviceSn(mContext.getString(R.string.device_number) + deployAnalyzerModel.sn);
@@ -342,11 +327,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         freshSignalInfo();
         getView().setUploadBtnStatus(checkCanUpload());
         getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
-        try {
-            LogUtils.loge("channelMask--->> " + deployAnalyzerModel.channelMask.size());
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
 
     }
 
@@ -491,7 +471,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
     };
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
         try {
             LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
@@ -511,7 +491,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 mHandler.removeCallbacks(DeviceTaskOvertime);
                                 if (isAttachedView()) {
                                     //TODO 下行命令成功后开始安装检测
-                                    CheckDeviceSignalStatus();
+                                    checkDeviceSignalStatus();
 //                                    final double lon = deployAnalyzerModel.latLng.get(0);
 //                                    final double lan = deployAnalyzerModel.latLng.get(1);
 //                                    getView().dismissBleConfigDialog();
@@ -539,7 +519,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             @Override
             public void onSuccess(String s) {
                 if (isAttachedView()) {
-                    CheckDeviceSignalStatus();
+                    checkDeviceSignalStatus();
                 }
             }
 
@@ -560,7 +540,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
             if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
                 //需要配置频点信息
-                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                if (bleDevice.containsKey(deployAnalyzerModel.sn)) {
                     if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (deployAnalyzerModel.settingData != null) {
                             //配置频点信息和初始配置
@@ -585,7 +565,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         } else {
             if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                 //单独配置初始配置
-                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                if (bleDevice.containsKey(deployAnalyzerModel.sn)) {
                     connectDevice(onConfigInfoObserver);
                 } else {
                     //不在附近
@@ -599,13 +579,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
         //统一进行信号和状态监测
         getView().showBleConfigDialog();
-        CheckDeviceSignalStatus();
+        checkDeviceSignalStatus();
     }
 
     /**
      * 信号和状态监测
      */
-    private void CheckDeviceSignalStatus() {
+    private void checkDeviceSignalStatus() {
         HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
             @Override
             public void onNext() {
@@ -943,7 +923,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         checkHandler.removeAllMessage();
         SensoroCityApplication.getInstance().bleDeviceManager.stopService();
         BleObserver.getInstance().unregisterBleObserver(this);
-        BLE_DEVICE_SET.clear();
+        bleDevice.clear();
 
     }
 
@@ -1017,11 +997,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     }
                 });
 //                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
-                try {
-                    LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1169,19 +1144,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //姓名地址校验
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_STATION:
-                if (checkHasPhoto()) return;
+                if (isNoPhoto()) return;
                 //经纬度校验
-                if (checkHasNoLatLng()) return;
+                if (isNoLatLng()) return;
                 requestUpload();
                 break;
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
             case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //联系人校验
-                if (checkHasContact()) return;
-                if (checkHasPhoto()) return;
+                if (isNoContact()) return;
+                if (isNoPhoto()) return;
                 //经纬度校验
-                if (checkHasNoLatLng()) return;
+                if (isNoLatLng()) return;
                 boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
@@ -1263,7 +1238,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      *
      * @return
      */
-    private boolean checkHasContact() {
+    private boolean isNoContact() {
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
             if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
@@ -1289,7 +1264,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      *
      * @return
      */
-    private boolean checkHasNoLatLng() {
+    private boolean isNoLatLng() {
         if (deployAnalyzerModel.latLng.size() != 2) {
             getView().toastShort(mContext.getString(R.string.please_specify_the_deployment_location));
             getView().setUploadBtnStatus(true);
@@ -1303,7 +1278,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      *
      * @return
      */
-    private boolean checkHasPhoto() {
+    private boolean isNoPhoto() {
         if (deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
 
             int realImageSize = getRealImageSize();
@@ -1323,11 +1298,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         return false;
 
 
-//        if (selImages[0] != null && selImages[1] != null) {
-//            getView().setSaveBtnStatus(true);
-//        } else {
-//            getView().setSaveBtnStatus(false);
-//        }
     }
 
 
@@ -1409,13 +1379,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onNewDevice(final BLEDevice bleDevice) {
-        BLE_DEVICE_SET.put(bleDevice.getSn(), bleDevice);
+        this.bleDevice.put(bleDevice.getSn(), bleDevice);
     }
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
         try {
-            BLE_DEVICE_SET.remove(bleDevice.getSn());
+            this.bleDevice.remove(bleDevice.getSn());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1425,7 +1395,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                BLE_DEVICE_SET.put(device.getSn(), device);
+                bleDevice.put(device.getSn(), device);
             }
         }
     }
@@ -1449,7 +1419,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             getView().showBleTips();
         }
         mHandler.postDelayed(this, 2000);
-        getView().setDeployDeviceDetailFixedPointNearVisible(BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn));
+        getView().setDeployDeviceDetailFixedPointNearVisible(bleDevice.containsKey(deployAnalyzerModel.sn));
 
     }
 
@@ -1514,7 +1484,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         };
         try {
             onConfigInfoObserver.onStart(null);
-            sensoroDeviceConnection = new SensoroDeviceConnection(mContext, BLE_DEVICE_SET.get(deployAnalyzerModel.sn).getMacAddress());
+            sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleDevice.get(deployAnalyzerModel.sn).getMacAddress());
             //蓝牙连接回调
             final SensoroConnectionCallback sensoroConnectionCallback = new SensoroConnectionCallback() {
                 @Override
@@ -1843,301 +1813,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     }
 
-    public void initData(Context context, Intent intent) {
-        mContext = (Activity) context;
-        mHandler = new Handler(Looper.getMainLooper());
-        onCreate();
-        deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-        //TODO 暂时用烟感做测试
-//        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
-        //
-//        deployAnalyzerModel.deviceType ="acrel_single";
-        //
-        getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
-        init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-            mHandler.post(this);
-        }
-        BleObserver.getInstance().registerBleObserver(this);
-        mHandler.post(signalTask);
-        //默认显示已定位
-        deployAnalyzerModel.address = mContext.getString(R.string.positioned);
-        //
-        //获取一次临时的位置信息
-        GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
-        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-            @Override
-            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                String address = "";
-
-                if (i == 1000) {
-
-                    RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
-
-                    StringBuilder stringBuilder = new StringBuilder();
-                    //
-                    String province = regeocodeAddress.getProvince();
-                    //
-                    String district = regeocodeAddress.getDistrict();// 区或县或县级市
-                    //
-                    //
-                    String township = regeocodeAddress.getTownship();// 乡镇
-                    //
-                    String streetName = null;// 道路
-                    List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-                    if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                        RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                        if (regeocodeRoad != null) {
-                            streetName = regeocodeRoad.getName();
-                        }
-                    }
-                    //
-                    String streetNumber = null;// 门牌号
-                    StreetNumber number = regeocodeAddress.getStreetNumber();
-                    if (number != null) {
-                        String street = number.getStreet();
-                        if (street != null) {
-                            streetNumber = street + number.getNumber();
-                        } else {
-                            streetNumber = number.getNumber();
-                        }
-                    }
-                    //
-                    String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-                    //区县
-                    if (!TextUtils.isEmpty(province)) {
-                        stringBuilder.append(province);
-                    }
-                    if (!TextUtils.isEmpty(district)) {
-                        stringBuilder.append(district);
-                    }
-                    //乡镇
-                    if (!TextUtils.isEmpty(township)) {
-                        stringBuilder.append(township);
-                    }
-                    //道路
-                    if (!TextUtils.isEmpty(streetName)) {
-                        stringBuilder.append(streetName);
-                    }
-                    //标志性建筑
-                    if (!TextUtils.isEmpty(building)) {
-                        stringBuilder.append(building);
-                    } else {
-                        //门牌号
-                        if (!TextUtils.isEmpty(streetNumber)) {
-                            stringBuilder.append(streetNumber);
-                        }
-                    }
-                    if (TextUtils.isEmpty(stringBuilder)) {
-                        address = township;
-                    } else {
-                        address = stringBuilder.append("附近").toString();
-                    }
-                } else {
-                    address = mContext.getString(R.string.not_positioned);
-
-                }
-                if (TextUtils.isEmpty(address)) {
-                    address = mContext.getString(R.string.unknown_street);
-                }
-                deployAnalyzerModel.address = address;
-            }
-
-            @Override
-            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-
-            }
-        });
-        //查询一次地址信息
-        if (deployAnalyzerModel.latLng.size() == 2) {
-            LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-            geocoderSearch.getFromLocationAsyn(query);
-        }
+    private boolean hasSignalConfig() {
+        return (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST)
+                || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    //    private void connectDevice() {
-//        getView().showBleConfigDialog();
-//        if (sensoroDeviceConnection != null) {
-//            sensoroDeviceConnection.disconnect();
-//        }
-//        try {
-//            sensoroDeviceConnection = new SensoroDeviceConnection(mContext, BLE_DEVICE_SET.get(deployAnalyzerModel.sn).getMacAddress());
-//            final SensoroConnectionCallback sensoroConnectionCallback = new SensoroConnectionCallback() {
-//                @Override
-//                public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
-//                    if (isAttachedView()) {
-//                        getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
-//                        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
-//                            try {
-//                                LogUtils.loge("onConnectedSuccess--->> hasSignalConfig");
-//                            } catch (Throwable throwable) {
-//                                throwable.printStackTrace();
-//                            }
-//                            final SensoroWriteCallback signalConfigWriteCallback = new SensoroWriteCallback() {
-//                                @Override
-//                                public void onWriteSuccess(Object o, int cmd) {
-//                                    if (isAttachedView()) {
-//                                        try {
-//                                            LogUtils.loge("onConnectedSuccess--->> hasSignalConfig writeData05ChannelMask suc");
-//                                        } catch (Throwable throwable) {
-//                                            throwable.printStackTrace();
-//                                        }
-//                                        if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                                            if (deployAnalyzerModel.settingData != null) {
-//                                                SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
-//                                                if (sensoroDevice != null) {
-//                                                    final SensoroWriteCallback ConfigWriteCallback = new SensoroWriteCallback() {
-//                                                        @Override
-//                                                        public void onWriteSuccess(Object o, int cmd) {
-//                                                            if (isAttachedView()) {
-//                                                                try {
-//                                                                    LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
-//                                                                } catch (Throwable throwable) {
-//                                                                    throwable.printStackTrace();
-//                                                                }
-//                                                                getView().dismissBleConfigDialog();
-//                                                                doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-//                                                            }
-//                                                        }
-//
-//                                                        @Override
-//                                                        public void onWriteFailure(int errorCode, int cmd) {
-//                                                            if (isAttachedView()) {
-//                                                                try {
-//                                                                    LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
-//                                                                } catch (Throwable throwable) {
-//                                                                    throwable.printStackTrace();
-//                                                                }
-//                                                                getView().dismissBleConfigDialog();
-//                                                                getView().updateUploadState(true);
-//                                                                getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
-//                                                                sensoroDeviceConnection.disconnect();
-//                                                            }
-//                                                        }
-//                                                    };
-//                                                    sensoroDeviceConnection.writeData05Configuration(sensoroDevice, ConfigWriteCallback);
-//                                                } else {
-//                                                    getView().dismissBleConfigDialog();
-//                                                    getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
-//                                                    sensoroDeviceConnection.disconnect();
-//                                                }
-//
-//                                            } else {
-//                                                getView().dismissBleConfigDialog();
-//                                                getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
-//                                                sensoroDeviceConnection.disconnect();
-//                                            }
-//                                        } else {
-//                                            getView().dismissBleConfigDialog();
-//                                            doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-//                                        }
-//                                    }
-//
-//                                }
-//
-//                                @Override
-//                                public void onWriteFailure(int errorCode, int cmd) {
-//                                    if (isAttachedView()) {
-//                                        try {
-//                                            LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05ChannelMask fal");
-//                                        } catch (Throwable throwable) {
-//                                            throwable.printStackTrace();
-//                                        }
-//                                        getView().dismissBleConfigDialog();
-//                                        getView().updateUploadState(true);
-//                                        getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
-//                                        sensoroDeviceConnection.disconnect();
-//                                    }
-//
-//                                }
-//
-//                            };
-//                            sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, signalConfigWriteCallback);
-//                        } else {
-//                            if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                                try {
-//                                    LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)");
-//                                } catch (Throwable throwable) {
-//                                    throwable.printStackTrace();
-//                                }
-//                                if (deployAnalyzerModel.settingData != null) {
-//                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
-//                                    if (sensoroDevice != null) {
-//                                        SensoroWriteCallback ConfigWriteCallback = new SensoroWriteCallback() {
-//                                            @Override
-//                                            public void onWriteSuccess(Object o, int cmd) {
-//                                                if (isAttachedView()) {
-//                                                    try {
-//                                                        LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration suc");
-//                                                    } catch (Throwable throwable) {
-//                                                        throwable.printStackTrace();
-//                                                    }
-//                                                    getView().dismissBleConfigDialog();
-//                                                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-//                                                }
-//                                            }
-//
-//                                            @Override
-//                                            public void onWriteFailure(int errorCode, int cmd) {
-//                                                if (isAttachedView()) {
-//                                                    try {
-//                                                        LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration fail");
-//                                                    } catch (Throwable throwable) {
-//                                                        throwable.printStackTrace();
-//                                                    }
-//                                                    getView().dismissBleConfigDialog();
-//                                                    getView().updateUploadState(true);
-//                                                    getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
-//                                                    sensoroDeviceConnection.disconnect();
-//                                                }
-//
-//                                            }
-//                                        };
-//                                        sensoroDeviceConnection.writeData05Configuration(sensoroDevice, ConfigWriteCallback);
-//                                    } else {
-//                                        getView().dismissBleConfigDialog();
-//                                        getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
-//                                        sensoroDeviceConnection.disconnect();
-//                                    }
-//                                } else {
-//                                    getView().dismissBleConfigDialog();
-//                                    getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
-//                                    sensoroDeviceConnection.disconnect();
-//                                }
-//                            } else {
-//                                getView().dismissBleConfigDialog();
-//                                doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-//                            }
-//
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onConnectedFailure(int errorCode) {
-//                    if (isAttachedView()) {
-//                        getView().dismissBleConfigDialog();
-//                        getView().updateUploadState(true);
-//                        getView().toastShort(mContext.getString(R.string.ble_connect_failed));
-//                    }
-//                }
-//
-//                @Override
-//                public void onDisconnected() {
-//
-//                }
-//            };
-//            sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, sensoroConnectionCallback);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            if (getView() != null) {
-//                getView().dismissBleConfigDialog();
-//                getView().updateUploadState(true);
-//                getView().toastShort(mContext.getString(R.string.ble_connect_failed));
-//            }
-//
-//        }
-//    }
 }
