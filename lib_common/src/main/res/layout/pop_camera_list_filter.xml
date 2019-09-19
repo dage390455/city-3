@@ -18,9 +18,15 @@
             android:id="@+id/pop_rc_camera_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             >
 
         </androidx.recyclerview.widget.RecyclerView>
+
+
+        <View  android:id="@+id/view_space"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"/>
 
         <LinearLayout
             android:id="@+id/item_pop_ll"

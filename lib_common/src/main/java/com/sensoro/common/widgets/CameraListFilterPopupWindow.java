@@ -7,6 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,7 @@ import java.util.List;
 public class CameraListFilterPopupWindow {
     private final Activity mActivity;
     private  PopupWindow mPopupWindow;
-    private  View mFl;
+    private  View mFl,view_space;
     private TranslateAnimation showTranslateAnimation;
     private TranslateAnimation dismissTranslateAnimation;
     private  RelativeLayout mLl;
@@ -44,10 +46,10 @@ public class CameraListFilterPopupWindow {
 
 
     public static  final  int FILL_MODE_RATE=0;
-    public static  final  int FILL_MODE_WRAPCONTENT=0;
-    public static  final  int FILL_MODE_MATHPARENT=0;
+    public static  final  int FILL_MODE_WRAPCONTENT=1;
+    public static  final  int FILL_MODE_MATHPARENT=2;
 
-    private int fillMode=FILL_MODE_RATE;//0按照0.75高度展示，1，包裹内容展示，2，铺满展示
+    private int fillMode;//0按照0.75高度展示，1，包裹内容展示，2，铺满展示
     private float  rate=0.75f;
 
 
@@ -61,6 +63,7 @@ public class CameraListFilterPopupWindow {
    private View  initView(){
        View view = LayoutInflater.from(mActivity).inflate(R.layout.pop_camera_list_filter, null);
        mFl = view.findViewById(R.id.item_pop_rl);
+       view_space=view.findViewById(R.id.view_space);
        final RecyclerView mRcStateSelect = view.findViewById(R.id.pop_rc_camera_list);
        mLl = view.findViewById(R.id.item_pop_select_state_ll);
        resetFilter = view.findViewById(R.id.camera_list_reset_filter);
@@ -78,13 +81,17 @@ public class CameraListFilterPopupWindow {
        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
        int height = wm.getDefaultDisplay().getHeight();
        if(fillMode==FILL_MODE_RATE){
+           view_space.setVisibility(View.GONE);
            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (height * rate));
            mRcStateSelect.setLayoutParams(layoutParams);
        }else if(fillMode==FILL_MODE_WRAPCONTENT){
+           view_space.setVisibility(View.VISIBLE);
            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
            mRcStateSelect.setLayoutParams(layoutParams);
        }else if(fillMode==FILL_MODE_MATHPARENT){
-           LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+           view_space.setVisibility(View.GONE);
+           mFl.getLayoutParams().height=RelativeLayout.LayoutParams.MATCH_PARENT;
+           LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
            layoutParams.weight=1;
            mRcStateSelect.setLayoutParams(layoutParams);
        }

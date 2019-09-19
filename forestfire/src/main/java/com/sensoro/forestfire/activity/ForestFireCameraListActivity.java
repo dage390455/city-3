@@ -186,7 +186,7 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireListAc
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity,CameraListFilterPopupWindow.FILL_MODE_RATE,0.3f);
+        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity,CameraListFilterPopupWindow.FILL_MODE_WRAPCONTENT,0);
         mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
         cameraListEtSearch.setOnEditorActionListener((v, actionId, event) -> {
