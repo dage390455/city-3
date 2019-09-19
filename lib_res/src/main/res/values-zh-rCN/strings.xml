@@ -1326,4 +1326,5 @@
 
 
     <string name="binocular_alarm_tip">双目热成像摄像</string>
+    <string name="close_binocular_fire_alarm_tip">手动关闭本次预警 预警恢复正常</string>
 </resources>
