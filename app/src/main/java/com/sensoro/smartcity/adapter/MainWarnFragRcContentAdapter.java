@@ -68,7 +68,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             }
             holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getCreatedTime(), 0));
             //
-            switch (alarmLogInfo.getDisplayStatus()) {
+            int displayStatus = alarmLogInfo.getDisplayStatus();
+            switch (displayStatus) {
                 case DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
                     holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.white));
@@ -150,11 +151,6 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_ff8d34);
                     break;
             }
-            if ("binocular".equals(deviceType)) {
-                holder.tvMainWarnContentCloseWarn.setVisibility(View.VISIBLE);
-            } else {
-                holder.tvMainWarnContentCloseWarn.setVisibility(View.GONE);
-            }
             AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
             boolean isAlarm = false;
             for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
@@ -183,6 +179,13 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     }
                 }
             });
+            boolean needShowClose = false;
+            //只在森林防火 并且是预警和安全隐患的时候显示关闭的弹窗
+            if ("binocular".equals(deviceType) && isAlarm) {
+                if (DISPLAY_STATUS_ALARM == displayStatus || DISPLAY_STATUS_RISKS == displayStatus) {
+                    needShowClose = true;
+                }
+            }
             holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -191,14 +194,18 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     }
                 }
             });
-            holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onCloseWarn(v, position);
+            if (needShowClose) {
+                holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            mListener.onCloseWarn(v, position);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                holder.tvMainWarnContentCloseWarn.setVisibility(View.GONE);
+            }
         }
 
     }

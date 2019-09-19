@@ -28,7 +28,7 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.widgets.CalendarPopUtils;
-import com.sensoro.common.widgets.FirewaringCloseDialogUtils;
+import com.sensoro.common.widgets.FireWaringCloseDialogUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
@@ -557,19 +557,19 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 });
     }
 
-    private FirewaringCloseDialogUtils firewaringCloseDialogUtils;
+    private FireWaringCloseDialogUtils firewaringCloseDialogUtils;
 
     public void doCloseWarn(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         //弹窗二次确认
         //TODO 调用关闭火警 然后刷新界面
         if (firewaringCloseDialogUtils == null) {
-            firewaringCloseDialogUtils = new FirewaringCloseDialogUtils(mContext);
+            firewaringCloseDialogUtils = new FireWaringCloseDialogUtils(mContext);
         }
         firewaringCloseDialogUtils.setTipTitleText(mContext.getString(R.string.confirm_to_turn_off_the_fire))
                 .setTipMessageText(mContext.getString(R.string.turn_off_the_fire_tips))
                 .setTipConfirmText(mContext.getString(R.string.confirm_close),mContext.getResources().getColor(R.color.c_f35a58))
                 .setTipCacnleText(mContext.getString(R.string.cancel),mContext.getResources().getColor(R.color.c_252525))
-                .setTipDialogUtilsClickListener(new FirewaringCloseDialogUtils.TipDialogUtilsClickListener() {
+                .setTipDialogUtilsClickListener(new FireWaringCloseDialogUtils.TipDialogUtilsClickListener() {
             @Override
             public void onCancelClick() {
                 firewaringCloseDialogUtils.dismiss();

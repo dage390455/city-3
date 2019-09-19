@@ -11,7 +11,7 @@ import com.sensoro.common.R;
 /**
  * 确认关闭火警对话框
  */
-public class FirewaringCloseDialogUtils {
+public class FireWaringCloseDialogUtils {
 
     private final TextView mTvMessage;
     private final TextView mTvCancel;
@@ -22,12 +22,12 @@ public class FirewaringCloseDialogUtils {
     private Activity mActivity;
     public static final int REQUEST_CODE_BLUETOOTH_ON = 0x222;
 
-    public FirewaringCloseDialogUtils(Activity activity, boolean cancelable) {
+    public FireWaringCloseDialogUtils(Activity activity, boolean cancelable) {
         this(activity);
         mDialog.setCancelable(cancelable);
     }
 
-    public FirewaringCloseDialogUtils(Activity activity) {
+    public FireWaringCloseDialogUtils(Activity activity) {
         mActivity = activity;
         View view = View.inflate(activity, R.layout.item_dialog_firewarning_close_tip, null);
         mTvTitle = view.findViewById(R.id.dialog_tip_ble_tv_title);
@@ -58,23 +58,23 @@ public class FirewaringCloseDialogUtils {
         return false;
     }
 
-    public FirewaringCloseDialogUtils setTipTitleText(String text) {
+    public FireWaringCloseDialogUtils setTipTitleText(String text) {
         mTvTitle.setText(text);
         return this;
     }
 
-    public FirewaringCloseDialogUtils setTipMessageText(String text) {
+    public FireWaringCloseDialogUtils setTipMessageText(String text) {
         mTvMessage.setText(text);
         return this;
     }
 
-    public FirewaringCloseDialogUtils setTipCacnleText(String text, @ColorInt int color) {
+    public FireWaringCloseDialogUtils setTipCacnleText(String text, @ColorInt int color) {
         mTvCancel.setText(text);
         mTvCancel.setTextColor(color);
         return this;
     }
 
-    public FirewaringCloseDialogUtils setTipConfirmText(String text, @ColorInt int color) {
+    public FireWaringCloseDialogUtils setTipConfirmText(String text, @ColorInt int color) {
         mTvConfirm.setText(text);
         mTvConfirm.setTextColor(color);
         return this;
@@ -106,12 +106,12 @@ public class FirewaringCloseDialogUtils {
         }
     }
 
-    public FirewaringCloseDialogUtils setTipDialogUtilsClickListener(TipDialogUtilsClickListener listener) {
+    public FireWaringCloseDialogUtils setTipDialogUtilsClickListener(TipDialogUtilsClickListener listener) {
         this.listener = listener;
         return this;
     }
 
-    public FirewaringCloseDialogUtils setTipConfirmVisible(boolean isVisible) {
+    public FireWaringCloseDialogUtils setTipConfirmVisible(boolean isVisible) {
         mTvConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         return this;
     }

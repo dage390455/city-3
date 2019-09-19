@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
@@ -96,8 +97,10 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         holder.itemAlertContentTvTime.setText(time);
         holder.itemAlertContentTvContent.setOnClickListener(null);
         //
-        if ("confirm".equals(recordInfo.getType())) {
-            //TODO 设置图标
+
+        String type = recordInfo.getType();
+        if ("confirm".equals(type)) {
+            //预警确认
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.contact_icon);
             String source = recordInfo.getSource();
             String confirm_text = null;
@@ -169,6 +172,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
             //
             holder.llConfirm.setVisibility(View.VISIBLE);
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
             //预警结果
             //TODO 状态问题
             StringBuilder stringBuilder = new StringBuilder();
@@ -234,7 +238,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             final List<ScenesData> scenes = recordInfo.getScenes();
             if (scenes != null && scenes.size() > 0) {
                 //TODO 防止数据错误清除
-                holder.rvAlarmPhoto.setVisibility(View.VISIBLE);
+                holder.rlItemAlarmDetailChildAlarmPhoto.setVisibility(View.VISIBLE);
                 if (holder.rvAlarmPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
                     holder.rvAlarmPhoto.removeAllViews();
                 }
@@ -264,12 +268,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 //TODO 防止数据错误打标签
                 holder.rvAlarmPhoto.setTag(adapter);
             } else {
-                holder.rvAlarmPhoto.setVisibility(View.GONE);
+                holder.rlItemAlarmDetailChildAlarmPhoto.setVisibility(View.GONE);
             }
 
 
-        } else if ("recovery".equals(recordInfo.getType())) {
-            //TODO 设置图标
+        } else if ("recovery".equals(type)) {
+            //预警恢复
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.no_smoke_icon);
             //
             String sensorType = recordInfo.getSensorType();
@@ -277,7 +281,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 StringBuilder stringBuilder = new StringBuilder();
                 SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
                 if (sensorTypeStyles != null) {
-//                    String trueMean = sensorTypeStyles.getTrueMean();
                     boolean bool = sensorTypeStyles.isBool();
                     if (bool) {
                         int thresholds = recordInfo.getThresholds();
@@ -312,8 +315,9 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                         .getThresholds(), 0));
             }
             holder.llConfirm.setVisibility(View.GONE);
-        } else if ("sendVoice".equals(recordInfo.getType())) {
-            //TODO 设置图标
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
+        } else if ("sendVoice".equals(type)) {
+            //拨打电话
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.phone_icon);
             StringBuilder stringBuffer = new StringBuilder();
 
@@ -335,14 +339,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     break;
                 default:
                     stringBuffer.append(mContext.getString(R.string.the_system_calls_to)).append(":");
-
                     break;
             }
 
-
             holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, position, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
-
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
             holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -353,8 +355,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     phoneMsgDialogUtil.show(0, hashMap.get(position));
                 }
             });
-        } else if ("sendSMS".equals(recordInfo.getType())) {
-            //TODO 设置图标
+        } else if ("sendSMS".equals(type)) {
+            //发送短信
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
             final StringBuilder stringBuffer = new StringBuilder();
             switch (recordInfo.getStatus()) {
@@ -380,36 +382,38 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
 
 
-//            holder.itemAlertContentTvContent.setText();
-
-
             holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, position, recordInfo.getPhoneList()));
 
-
             holder.llConfirm.setVisibility(View.GONE);
-
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
             holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ;
-//                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
 
                     WarnPhoneMsgDialogUtil phoneMsgDialogUtil = new WarnPhoneMsgDialogUtil((Activity) mContext);
                     phoneMsgDialogUtil.setTitleTv(mContext.getResources().getString(R.string.alarm_contact_tip_msg));
                     phoneMsgDialogUtil.show(1, hashMap.get(position));
                 }
             });
-        } else if ("alarm".equals(recordInfo.getType())) {
-            //TODO 设置图标
+        } else if ("alarm".equals(type)) {
+            //发生预警
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
             //
             String sensorType = recordInfo.getSensorType();
+            List<DeviceAlarmLogInfo.Metadata.MetadataPic> picUrl = new ArrayList<>();
+            StringBuilder stringBuilder = new StringBuilder();
             if ("binocularThermalImaging".equals(sensorType)) {
+                DeviceAlarmLogInfo.Metadata metadata = mDeviceAlarmLogInfo.getMetadata();
+                if (metadata != null) {
+                    if (metadata.getPicUrl() != null) {
+                        picUrl = metadata.getPicUrl();
+                    }
 
+                }
             } else {
 
             }
-            StringBuilder stringBuilder = new StringBuilder();
+
             try {
                 SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
                 if (sensorTypeStyles != null) {
@@ -454,8 +458,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             SpannableString spannableString = new SpannableString(alarmDetailInfo);
             holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
-        } else if ("operation".equals(recordInfo.getType())) {
-            //TODO
+        } else if ("operation".equals(type)) {
+            //下行命令操作
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(mContext.getString(R.string.operator));
@@ -524,10 +528,9 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
             holder.itemAlertContentTvContent.setText(stringBuilder.toString());
             holder.llConfirm.setVisibility(View.GONE);
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
 
         }
-        //
-
 
     }
 
@@ -658,34 +661,53 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         TextView itemAlertContentTvContent;
         @BindView(R.id.item_alert_content_tv_time)
         TextView itemAlertContentTvTime;
+        //预警结果
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_result)
+        LinearLayout llItemAlarmDetailChildAlarmResult;
         @BindView(R.id.item_alarm_detail_child_alarm_result)
         TextView itemAlarmDetailChildAlarmResult;
+        //预警类型
         @BindView(R.id.ll_item_alarm_detail_child_alarm_type)
         LinearLayout llItemAlarmDetailChildAlarmType;
         @BindView(R.id.item_alarm_detail_child_alarm_type)
         TextView itemAlarmDetailChildAlarmType;
+        //火情阶段
         @BindView(R.id.ll_item_alarm_detail_child_alarm_fire_phase)
         LinearLayout llItemAlarmDetailChildAlarmFirePhase;
         @BindView(R.id.item_alarm_detail_child_alarm_fire_phase)
         TextView itemAlarmDetailChildAlarmFirePhase;
+        //预警场所
         @BindView(R.id.ll_item_alarm_detail_child_alarm_place)
         LinearLayout llItemAlarmDetailChildAlarmPlace;
         @BindView(R.id.item_alarm_detail_child_alarm_place)
         TextView itemAlarmDetailChildAlarmPlace;
+        //火灾类型
         @BindView(R.id.ll_item_alarm_detail_child_alarm_fire_type)
         LinearLayout llItemAlarmDetailChildAlarmFireType;
         @BindView(R.id.item_alarm_detail_child_alarm_fire_type)
         TextView itemAlarmDetailChildAlarmFireType;
+        //安全隐患
         @BindView(R.id.ll_item_alarm_detail_child_alarm_risk)
         LinearLayout llItemAlarmDetailChildAlarmRisk;
         @BindView(R.id.item_alarm_detail_child_alarm_risk)
         TextView itemAlarmDetailChildAlarmRisk;
+        //备注
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_remark)
+        LinearLayout llItemAlarmDetailChildAlarmRemark;
         @BindView(R.id.item_alarm_detail_child_alarm_remarks)
         TextView itemAlarmDetailChildAlarmRemarks;
+        //照片
+        @BindView(R.id.rl_item_alarm_detail_child_alarm_photo)
+        RelativeLayout rlItemAlarmDetailChildAlarmPhoto;
         @BindView(R.id.rv_alarm_photo)
         RecyclerView rvAlarmPhoto;
+        //预警确认页面
         @BindView(R.id.ll_confirm)
         LinearLayout llConfirm;
+        @BindView(R.id.rl_item_alarm_detail_child_forest_photo)
+        RelativeLayout rlItemAlarmDetailChildForestPhoto;
+        @BindView(R.id.rv_alarm_forest_photo)
+        RecyclerView rvAlarmForestPhoto;
 
         AlertLogRcContentHolder(View itemView) {
             super(itemView);

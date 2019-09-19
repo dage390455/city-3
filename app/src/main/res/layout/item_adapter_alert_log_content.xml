@@ -47,12 +47,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/item_alert_content_tv_content"
         app:layout_constraintTop_toBottomOf="@id/item_alert_content_tv_time">
 
         <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_result"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
@@ -212,6 +213,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -239,9 +241,11 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_item_alarm_detail_child_alarm_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:visibility="gone"
             android:layout_marginRight="10dp">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -255,7 +259,27 @@
                 android:scrollbarStyle="outsideOverlay" />
         </RelativeLayout>
 
-
     </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rl_item_alarm_detail_child_forest_photo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/item_alert_content_tv_content"
+        app:layout_constraintTop_toBottomOf="@id/item_alert_content_tv_time"
+        android:layout_marginRight="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_alarm_forest_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            android:divider="@null"
+            android:fadingEdge="none"
+            android:listSelector="@android:color/transparent"
+            android:scrollbarStyle="outsideOverlay" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
