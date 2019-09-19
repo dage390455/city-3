@@ -1316,4 +1316,13 @@
 
 
     <string name="camera_state">摄像机状态</string>
+    <string name="forest_fire_camera_detail">监测点详情</string>
+    <string name="forest_fire_camera_detail_base_info">基本信息</string>
+    <string name="forest_fire_camera_detail_device_sn">设备编号</string>
+    <string name="forest_fire_camera_detail_device_gatway">所属网关</string>
+    <string name="forest_fire_camera_detail_device_location">经纬度</string>
+    <string name="forest_fire_camera_detail_device_location_modify">修改</string>
+
+
+
 </resources>

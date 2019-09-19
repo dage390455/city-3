@@ -46,7 +46,7 @@ import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
 import com.sensoro.forestfire.adapter.ForestFireCameraListAdapter;
-import com.sensoro.forestfire.imainviews.IForestFireListActivityView;
+import com.sensoro.forestfire.imainviews.IForestFireCameraListActivityView;
 import com.sensoro.forestfire.presenter.ForestFireListActivityPresenter;
 
 import java.util.List;
@@ -62,8 +62,8 @@ import butterknife.ButterKnife;
  */
 
 @Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIST)
-public class ForestFireCameraListActivity extends BaseActivity<IForestFireListActivityView, ForestFireListActivityPresenter>
-        implements IForestFireListActivityView, ForestFireCameraListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, CameraListFilterPopupWindow.OnCameraListFilterPopupWindowListener {
+public class ForestFireCameraListActivity extends BaseActivity<IForestFireCameraListActivityView, ForestFireListActivityPresenter>
+        implements IForestFireCameraListActivityView, ForestFireCameraListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, CameraListFilterPopupWindow.OnCameraListFilterPopupWindowListener {
 
 
     @BindView(R2.id.refreshLayout)

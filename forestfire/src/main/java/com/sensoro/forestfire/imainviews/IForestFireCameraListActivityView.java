@@ -14,7 +14,7 @@ import java.util.List;
  * 包  名: com.sensoro.forestfire.imainviews
  * 简  述: <功能简述>
  */
-public interface IForestFireListActivityView extends IToast, IProgressDialog, IActivityIntent {
+public interface IForestFireCameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateDeviceCameraAdapter(List<ForestFireCameraBean> data);
 
     void onPullRefreshComplete();
