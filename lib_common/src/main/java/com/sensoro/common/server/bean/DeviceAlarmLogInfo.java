@@ -63,9 +63,9 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 //        "updateTime": "2019-09-17T07:36:57.000Z",
 //                "sn": "72057600540409950"
 //    }
-    public class Metadata implements Serializable {
+    public static class Metadata implements Serializable {
         private List<String> cids;
-        private Map<String, String> picUrl;
+        private List<MetadataPic> picUrl;
         private String sn;
 
         public List<String> getCids() {
@@ -76,11 +76,11 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
             this.cids = cids;
         }
 
-        public Map<String, String> getPicUrl() {
+        public List<MetadataPic> getPicUrl() {
             return picUrl;
         }
 
-        public void setPicUrl(Map<String, String> picUrl) {
+        public void setPicUrl(List<MetadataPic> picUrl) {
             this.picUrl = picUrl;
         }
 
@@ -90,6 +90,27 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
         public void setSn(String sn) {
             this.sn = sn;
+        }
+
+        public static class MetadataPic implements Serializable{
+            private String cid;
+            private String pictureUrl;
+
+            public String getCid() {
+                return cid;
+            }
+
+            public void setCid(String cid) {
+                this.cid = cid;
+            }
+
+            public String getPictureUrl() {
+                return pictureUrl;
+            }
+
+            public void setPictureUrl(String pictureUrl) {
+                this.pictureUrl = pictureUrl;
+            }
         }
     }
 

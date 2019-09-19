@@ -172,13 +172,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
     }
 
-    public void refreshData(boolean isInit) {
+    private void refreshData(boolean isInit) {
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
-        if (isAttachedView()) {
-            getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        }
         String deviceSN = deviceAlarmLogInfo.getDeviceSN();
+        if (isAttachedView()) {
+            getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceSN : deviceName);
+        }
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mContext.getString(R.string.device_number) + mContext.getString(R.string.unknown);
         } else {
@@ -209,7 +209,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
         if (recordInfoArray != null) {
             //
-            switch (deviceAlarmLogInfo.getDisplayStatus()) {
+            int displayStatus = deviceAlarmLogInfo.getDisplayStatus();
+            switch (displayStatus) {
                 case Constants.DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
                     if (isAttachedView()) {
@@ -230,18 +231,28 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     }
                     break;
             }
+            boolean isAlarm = false;
             for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
                 if ("recovery".equals(recordInfo.getType())) {
-                    if (isAttachedView()) {
-                        getView().setCurrentAlarmState(0, alarmTime);
-                    }
-                    return;
+                    isAlarm = false;
+                } else {
+                    isAlarm = true;
                 }
             }
-            if (isAttachedView()) {
-                getView().setCurrentAlarmState(1, alarmTime);
+            boolean needShowCloseFire = false;
+            if ("binocular".equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
+                if (Constants.DISPLAY_STATUS_ALARM == displayStatus || Constants.DISPLAY_STATUS_RISKS == displayStatus) {
+                    needShowCloseFire = true;
+                }
             }
+            //TODO 是否显示关闭火警
+            if (isAttachedView()) {
+                getView().setCurrentAlarmState(alarmTime);
+                getView().setCloseWarnVisible(needShowCloseFire);
+            }
+
         }
+
 
     }
 
@@ -479,5 +490,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
         getView().startAC(intent);
+    }
+
+    public void doCloseWarn() {
+
     }
 }

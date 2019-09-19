@@ -65,6 +65,8 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     TextView acAlertTvQuickNavigation;
     @BindView(R.id.ac_alert_tv_alert_confirm)
     TextView acAlertTvAlertConfirm;
+    @BindView(R.id.ac_alert_tv_alert_close)
+    TextView acAlertTvAlertClose;
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
     @BindView(R.id.tv_live_camera_count_ac_alert)
@@ -160,7 +162,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation,
-            R.id.ac_alert_tv_alert_confirm, R.id.include_text_title_imv_arrows_left, R.id.ll_camera_live_ac_alert,
+            R.id.ac_alert_tv_alert_confirm, R.id.ac_alert_tv_alert_close, R.id.include_text_title_imv_arrows_left, R.id.ll_camera_live_ac_alert,
             R.id.ll_camera_video_ac_alert})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -176,6 +178,9 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
                 break;
             case R.id.ac_alert_tv_alert_confirm:
                 mPresenter.showAlarmPopupView();
+                break;
+            case R.id.ac_alert_tv_alert_close:
+                mPresenter.doCloseWarn();
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 mPresenter.doBack();
@@ -201,22 +206,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
-    public void setCurrentAlarmState(int state, String time) {
-//        switch (state) {
-//            case 0:
-//                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
-//                acAlertImvAlertIcon.setImageResource(R.drawable.alert_time_normal);
-//                acAlertTvAlertTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-//                acAlertTvAlertTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-//                break;
-//            case 1:
-//                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_f34_shadow);
-//                acAlertImvAlertIcon.setImageResource(R.drawable.alert_time_white);
-//                acAlertTvAlertTime.setTextColor(Color.WHITE);
-//                acAlertTvAlertTimeText.setTextColor(Color.WHITE);
-//                break;
-//        }
-//        acAlertLlAlertTime.setBackground();
+    public void setCurrentAlarmState(String time) {
         acAlertTvAlertTime.setText(time);
     }
 
@@ -295,6 +285,11 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     public void setHistoryLogVisible(boolean visible) {
         includeTextTitleTvSubtitle.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setCloseWarnVisible(boolean visible) {
+        acAlertTvAlertClose.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -1336,4 +1336,7 @@
     <string name="forest_fire_camera_detail_device_location_modify">Modify</string>
     <string name="forest_fire_camera_detail_device_type_name">Forest Fire Camera</string>
 
+
+    <string name="binocular_alarm_tip">Binocular thermal imaging camera</string>
+
 </resources>

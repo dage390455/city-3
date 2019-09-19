@@ -11,7 +11,7 @@ import java.util.List;
 public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IActivityIntent {
     void setDeviceNameTextView(String name);
 
-    void setCurrentAlarmState(int state, String time);
+    void setCurrentAlarmState(String time);
 
     void setAlarmCount(String count);
 
@@ -24,7 +24,9 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
     void setUpdateButtonClickable(boolean canClick);
 
     void setConfirmText(String text);
+
     void setConfirmBg(int resId);
+
     void setConfirmColor(int resId);
 
     void setDeviceSn(String deviceSN);
@@ -34,4 +36,6 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
     void setLlVideoSize(int size);
 
     void setHistoryLogVisible(boolean visible);
+
+    void setCloseWarnVisible(boolean visible);
 }
