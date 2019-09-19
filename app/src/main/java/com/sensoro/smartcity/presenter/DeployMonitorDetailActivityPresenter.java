@@ -61,7 +61,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
+import com.sensoro.smartcity.activity.SingleMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
@@ -70,6 +70,7 @@ import com.sensoro.common.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.common.callback.BleObserver;
 import com.sensoro.common.callback.OnConfigInfoObserver;
+import com.sensoro.smartcity.constant.CityConstants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
@@ -164,7 +165,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -307,7 +308,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
         }
         //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
-        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段
@@ -350,7 +351,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             if (Constants.TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
                 getView().setDeployLocalCheckTipText("");
             } else {
-                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
                     getView().setDeployLocalCheckTipText(mContext.getString(R.string.deploy_device_detail_check_tip_is_powered_on));
                 } else {
                     DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
@@ -410,12 +411,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
-                //TODO 加入白名单处理
+                //TODO 暂时注释掉2g电气火灾的部署
                 if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
                     //2g电气火灾的配置
                     handle2GDeviceConfig();
                 } else {
                     if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
+                        // 白名单设备
                         doUploadImages(lon, lan);
                     } else {
                         handleDeviceSignalStatusAndBleSetting();
@@ -449,7 +451,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 30 * 1000);
                     } else {
                         getView().dismissBleConfigDialog();
                         getView().toastShort(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -496,11 +498,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
                                 mHandler.removeCallbacks(DeviceTaskOvertime);
                                 if (isAttachedView()) {
-                                    //TODO 成功后执行上传
-                                    final double lon = deployAnalyzerModel.latLng.get(0);
-                                    final double lan = deployAnalyzerModel.latLng.get(1);
-                                    getView().dismissBleConfigDialog();
-                                    doUploadImages(lon, lan);
+                                    //TODO 下行命令成功后开始安装检测
+                                    CheckDeviceSignalStatus();
+//                                    final double lon = deployAnalyzerModel.latLng.get(0);
+//                                    final double lan = deployAnalyzerModel.latLng.get(1);
+//                                    getView().dismissBleConfigDialog();
+//                                    doUploadImages(lon, lan);
                                 }
                             }
                         }
@@ -546,7 +549,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
                 //需要配置频点信息
                 if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                    if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (deployAnalyzerModel.settingData != null) {
                             //配置频点信息和初始配置
                             connectDevice(onConfigInfoObserver);
@@ -568,7 +571,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
             return;
         } else {
-            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                 //单独配置初始配置
                 if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                     connectDevice(onConfigInfoObserver);
@@ -713,7 +716,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().showProgressDialog();
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
                 DeployControlSettingData settingData = null;
                 if (isFire) {
@@ -1059,7 +1062,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
                     Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
                     Integer transformer = deployAnalyzerModel.settingData.getTransformer();
-                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                    if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (transformer != null) {
                             if (initValue != null) {
                                 getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A" + "\n" + mContext.getString(R.string.device_detail_config_trans) + ":" + transformer + "A");
@@ -1133,7 +1136,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (checkHasPhoto()) return;
                 //经纬度校验
                 if (checkHasNoLatLng()) return;
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
                         getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
@@ -1196,7 +1199,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (deployAnalyzerModel.latLng.size() != 2) {
                     return false;
                 }
-                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
                         return false;
@@ -1418,14 +1421,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployBleSetting() {
         //TODO
-        if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if (CityConstants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
             bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
             bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
             startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
         } else {
-            Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+            Intent intent = new Intent(mContext, SingleMonitorConfigurationActivity.class);
             if (deployAnalyzerModel.settingData != null) {
                 intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
             }
@@ -1479,7 +1482,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 public void onWriteSuccess(Object o, int cmd) {
                                     if (isAttachedView()) {
                                         //需要写频点信息
-                                        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                                        if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                             if (deployAnalyzerModel.settingData != null) {
                                                 SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
                                                 if (sensoroDevice != null) {
@@ -1538,7 +1541,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             };
                             sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, SignalWriteCallback);
                         } else {
-                            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                            if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 //需要写入配置信息
                                 if (deployAnalyzerModel.settingData != null) {
                                     SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
@@ -1801,7 +1804,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);

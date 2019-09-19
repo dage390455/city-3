@@ -1,24 +1,24 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MalfunctionDetailRcContentAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
-import com.sensoro.smartcity.presenter.MalfunctionDetailActivityPresenter;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MalfunctionDetailRcContentAdapter;
+import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
+import com.sensoro.smartcity.presenter.MalfunctionDetailActivityPresenter;
 
 import java.util.List;
 
@@ -209,6 +209,11 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     @Override
     public void setDeviceSn(String deviceSN) {
         acMalfunctionDetailTvSn.setText(deviceSN);
+    }
+
+    @Override
+    public void setHistoryLogVisible(boolean visible) {
+        includeTextTitleTvSubtitle.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

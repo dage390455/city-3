@@ -57,8 +57,43 @@ public interface CityConstants {
     ArrayList<String> DEVICE_2G_CONFIG_DEVICE_TYPES = new ArrayList<String>(6) {
         {
             add("fh388n_smoke_nb");
+            //海曼烟感
+            add("heiman_smoke_nb");
+            //赋安烟感
+            add("forsafe_smoke_nb");
+            add("siterwell_smoke_nb");
+
+            //安科瑞三相电2G版本
+            add("acrel300T_fires_2G");
+            //安科瑞单相电2G版本
+            add("acrel300D_fires_2G");
+        }
+    };
+    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(3) {
+        {
+            add("fhsj_elec_fires");
+            add("acrel_fires");
+            add("acrel_single");
+//            add("mantun_fires");
+            add("acrel_alpha");
+            //2g设备
             add("acrel300T_fires_2G");
             add("acrel300D_fires_2G");
+        }
+    };
+    ArrayList<String> DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES = new ArrayList<String>(2) {
+        {
+            add("acrel_fires");
+            add("acrel_alpha");
+            //2g版三相电
+            add("acrel300T_fires_2G");
+        }
+    };
+    ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
+        {
+            add("t1");
+            add("chip_e");
+            add("bigbang_tracker");
         }
     };
 }

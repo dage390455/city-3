@@ -224,6 +224,13 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     }
 
     @Override
+    public void onItemClick(View v, int position) {
+        //点击历史日志
+        DeviceAlarmLogInfo deviceAlarmLogInfo = mAlarmHistoryLogRcContentAdapter.getData().get(position);
+        mPresenter.onClickHistoryItem(deviceAlarmLogInfo);
+    }
+
+    @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         mPresenter.onCalendarBack(calendarDateModel);
     }

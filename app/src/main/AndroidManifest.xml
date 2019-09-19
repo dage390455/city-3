@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:theme,android:label">
+        tools:replace="android:theme,android:label,android:icon,android:roundIcon">
         <!-- 适配华为（huawei）刘海屏 -->
         <activity android:name=".activity.UUIDAddMySettingActivity" />
 
@@ -117,7 +117,7 @@
 
         <activity android:name=".activity.DeployMonitorDeployPicActivity" />
 
-        <activity android:name=".activity.DeployMonitorConfigurationActivity" />
+        <activity android:name=".activity.SingleMonitorConfigurationActivity" />
 
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />

@@ -57,6 +57,7 @@ import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SecurityAlarmTimelineData;
+import com.sensoro.common.server.bean.SensoroBugData;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
@@ -102,6 +103,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
 
 import static com.sensoro.common.server.security.constants.SecurityConstants.SECURITY_ALARMLIST_PAGE_COUNT;
 
@@ -1729,6 +1731,70 @@ public class RetrofitServiceHelper {
     }
 
     /**
+     * 上传蓝牙记录
+     *
+     * @param snList
+     * @param type
+     * @param interval
+     * @param rules
+     * @param inputValue
+     * @param switchSpec
+     * @param wireMaterial
+     * @param diameter
+     * @param beepMuteTime
+     * @return
+     */
+    public Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter, Integer beepMuteTime) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONArray jsonSnList = new JSONArray();
+            for (String sn : snList) {
+                jsonSnList.put(sn);
+            }
+            jsonObject.put("snList", jsonSnList);
+            jsonObject.put("type", type);
+
+            if (interval != null) {
+                jsonObject.put("interval", type);
+            }
+            if (rules != null) {
+                JSONArray jsonRules = new JSONArray();
+                for (String rule : rules) {
+                    jsonRules.put(rule);
+                }
+                jsonObject.put("rules", jsonRules);
+            }
+            JSONObject jsonObjectConfig = new JSONObject();
+            if (inputValue != null) {
+                jsonObjectConfig.put("inputValue", inputValue);
+            }
+            if (switchSpec != null) {
+                jsonObjectConfig.put("switchSpec", switchSpec);
+            }
+            if (wireMaterial != null) {
+                jsonObjectConfig.put("wireMaterial", wireMaterial);
+            }
+            if (diameter != null) {
+                jsonObjectConfig.put("wireDiameter", diameter);
+            }
+            if (switchSpec != null || wireMaterial != null || diameter != null) {
+                jsonObject.put("config", jsonObjectConfig);
+            }
+            if (beepMuteTime != null) {
+                JSONObject jsonParameters = new JSONObject();
+                jsonParameters.put("beepMuteTime", beepMuteTime);
+                jsonObject.put("parameters", jsonParameters);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doMonitorPointBLEUpdate(body);
+    }
+
+    /**
      * 针对三相电的
      *
      * @param snList
@@ -2594,5 +2660,15 @@ public class RetrofitServiceHelper {
 
     public Observable<ResponseResult<UserInfo>> getPermissionChangeInfo() {
         return retrofitService.getPermissionChangeInfo();
+    }
+
+    /**
+     * 提交打点数据
+     *
+     * @param data
+     * @return
+     */
+    public Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data) {
+        return retrofitService.updateSensoroData(data);
     }
 }

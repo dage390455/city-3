@@ -8,7 +8,6 @@ public class InspectionTaskExceptionDeviceModel {
     private String sn;
     private String taskId;
     private String deviceType;
-    private String owners;
     private int __v;
     private String remark;
     private String finishTime;
@@ -52,13 +51,6 @@ public class InspectionTaskExceptionDeviceModel {
         this.deviceType = deviceType;
     }
 
-    public String getOwners() {
-        return owners;
-    }
-
-    public void setOwners(String owners) {
-        this.owners = owners;
-    }
 
     public int get__v() {
         return __v;

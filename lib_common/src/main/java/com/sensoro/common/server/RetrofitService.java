@@ -37,6 +37,7 @@ import com.sensoro.common.server.bean.InspectionTaskModel;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.SecurityAlarmTimelineData;
+import com.sensoro.common.server.bean.SensoroBugData;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
@@ -480,5 +481,12 @@ public interface RetrofitService {
 
     @GET("users/me")
     Observable<ResponseResult<UserInfo>> getPermissionChangeInfo();
+
+    @POST("applogapi/logService/saveLog")
+    Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data);
+
+
+    @POST("devices/blutoothMute")
+    Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(@Body RequestBody requestBody);
 }
 

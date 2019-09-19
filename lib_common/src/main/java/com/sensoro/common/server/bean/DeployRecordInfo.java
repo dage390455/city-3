@@ -20,7 +20,6 @@ public class DeployRecordInfo implements Serializable {
     private String signalQuality;
     private String deviceType;
     private String deviceOwners;
-    private String owners;
     private String appId;
     private String unionType;
     private String wxPhone;
@@ -149,14 +148,6 @@ public class DeployRecordInfo implements Serializable {
 
     public void setDeviceOwners(String deviceOwners) {
         this.deviceOwners = deviceOwners;
-    }
-
-    public String getOwners() {
-        return owners;
-    }
-
-    public void setOwners(String owners) {
-        this.owners = owners;
     }
 
     public String getAppId() {

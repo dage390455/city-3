@@ -1,5 +1,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!--camera-->
+    <array name="sortcondition">
+        <item>默认排序</item>
+        <item>名称顺序</item>
+        <item>名称倒序</item>
+    </array>
     <string name="capture_time">抓拍时间</string>
     <string name="process_status">处理状态</string>
     <string name="customize_time">自定义时间</string>
@@ -64,13 +69,13 @@
     <string name="camera_contact_no_exist">相机联系人不存在</string>
     <string name="owner_contact_no_exist">业主联系人不存在</string>
     <string name="security_warn_video_title_transcoding">预警录像（获取中…)</string>
-    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
 
 
     <!--city-->
+    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
     <string name="app_name">SensoroCity</string>
-    <string name="city_name">SENSORO CITY</string>
     //
+    <string name="city_name">SENSORO CITY</string>
     <string name="historical_log">历史日志</string>
     <string name="year">年</string>
     <string name="name">姓名</string>
@@ -98,7 +103,7 @@
     <string name="female">女</string>
     <string name="signal_excellent">信号 优</string>
     <string name="signal_good">信号 良</string>
-    <string name="signal_weak">信号 差</string>
+    <string name="signal_weak">信号 一般</string>
     <string name="no_signal">信号 无</string>
     <string name="alert_contact">预警联系人</string>
     <string name="get_the_middle_profile">获取配置文件中</string>
@@ -143,22 +148,22 @@
     <string name="confirm_that_the_alert_type_app_is">通过 App 确认本次预警类型为</string>
     <string name="confirm_that_the_alert_type_web_is">通过 Web 确认本次预警类型为</string>
     <string name="below_the_warning_value">低于预警值</string>
+
+
     <string name="achieve_warning_value">达到预警值</string>
-
-
     <string name="the_system_sends_msg_to">系统发送短信至</string>
     <string name="alarm_sms_sent_tip_new">系统发送预警短信至：</string>
     <string name="alarm_sms_reciver_sent_tip_new">系统发送恢复短信至：</string>
     <string name="alarm_sms_timeout_sent_tip_new">系统发送超时短信至：</string>
-    <string name="alarm_sms_real_sent_tip_new">系统发送真实火警短信至：</string>
 
+    <string name="alarm_sms_real_sent_tip_new">系统发送真实火警短信至：</string>
     <string name="the_system_calls_to">系统拨打电话至</string>
     <string name="alarm_phone_sent_tip_new">系统拨打预警电话至：</string>
     <string name="alarm_phone_reciver_sent_tip_new">系统拨打恢复电话至：</string>
     <string name="alarm_phone_timeout_sent_tip_new">系统拨打超时电话至：</string>
+
+
     <string name="alarm_phone_real_sent_tip_new">系统拨打真实火警电话至：</string>
-
-
     <string name="equipment_warning">设备预警</string>
     <string name="value_is">值为</string>
     <string name="telephone_call">拨打中</string>
@@ -178,23 +183,18 @@
     <string name="not_inspected">未巡检</string>
     <string name="has_inspected">已巡检</string>
     <string name="i_have_inspected">我已巡检</string>
-    <string name="unknown">未知</string>
     //
+    <string name="unknown">未知</string>
     <string name="detection_points">监测点数</string>
     <string name="warning_monitoring_point">预警监测点</string>
     <string name="normal_monitoring_point">正常监测点</string>
     <string name="lost_monitoring_point">失联监测点</string>
     <string name="inactive_monitoring_point">未激活监测点</string>
     <string name="malfunction_monitoring_point">故障监测点</string>
-    <string name="all_types">全部类型</string>
 
+    <string name="all_types">全部类型</string>
     <string name="sortcondition">排序方式</string>
     <string name="sortcondition_def">默认排序</string>
-    <array name="sortcondition">
-        <item>默认排序</item>
-        <item>名称顺序</item>
-        <item>名称倒序</item>
-    </array>
 
 
     <string name="main_page_home">首页</string>
@@ -519,7 +519,7 @@
     <string name="deploy_result_recent_upload_time">最近上传时间</string>
     <string name="deploy_result_is_upload">是否上传完成部署？</string>
     <string name="no_signal_can_not_uploaded">无信号不能上传</string>
-    <string name="deploy_result_upload_tip">当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署</string>
+    <string name="deploy_result_upload_tip">当前设备无信号或信号一般，请按设备自检按钮刷新信号再完成上传部署</string>
     <string name="deploy_result_force_upload">强制上传</string>
     <string name="deploy_result_ok">好的</string>
 
@@ -944,7 +944,7 @@
     <string name="firmware_update_in_preparation">固件更新，准备中</string>
     <string name="s_good">优</string>
     <string name="s_normal">良</string>
-    <string name="s_bad">差</string>
+    <string name="s_bad">一般</string>
     <string name="s_none">无</string>
     <string name="air_rated_current">空开额定电流：</string>
     <string name="monitor_material">线材</string>
@@ -987,7 +987,7 @@
     <string name="signal_strength">信号强度</string>
     <string name="device_status">设备状态</string>
     <string name="retest">重新测试</string>
-    <string name="deploy_check_signal_bad">信号差</string>
+    <string name="deploy_check_signal_bad">信号一般</string>
     <string name="deploy_check_signal_none">无信号</string>
     <string name="deploy_check_suggest_config_instruction">&#160;&#160;配置说明</string>
     <string name="deploy_check_suggest_particular_instruction">&#160;&#160;详细说明</string>
@@ -996,10 +996,10 @@
     <string name="deploy_check_button_tip_is_powered_on">请确保设备通电，在开始安装测试</string>
     <string name="deploy_check_button_tip_press_the_sensor">请按下传感器自检按钮，并开始安装测试</string>
     <string name="deploy_check_dialog_no_signal">无信号</string>
-    <string name="deploy_check_dialog_bad_signal">信号差</string>
+    <string name="deploy_check_dialog_bad_signal">信号一般</string>
     <string name="installation_test_not_nearby">请确保已激活设备蓝牙，且在设备附近</string>
     <string name="installation_config_failed">初始配置失败，原因：</string>
-    <string name="deploy_check_dialog_quality_bad_signal">信号质量差</string>
+    <string name="deploy_check_dialog_quality_bad_signal">信号质量一般</string>
     <string name="device_is_malfunction">设备故障中，</string>
     <string name="device_is_alarm">设备预警中，</string>
     <string name="deploy_check_suggest_repair_instruction">修复说明</string>
@@ -1260,6 +1260,12 @@
     <string name="monitor_point_detail_operat">操作中</string>
     <string name="duration">时长</string>
     <string name="no_permission">无此权限，请联系管理员并重新登录</string>
+    <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">请勿输入英文，数字等非法字符</string>
+    <string name="please_go_to_setting">请到设置-权限管理中开启</string>
+
+    <string name="permission_change_desc">权限已被修改，为确保功能完善请重新登录账号</string>
+    <string name="login_later">稍后登录</string>
+    <string name="re_login">重新登录</string>
 
     <string name="missing_required_photo">缺少必选照片</string>
 
@@ -1284,8 +1290,6 @@
     <string name="device_imei">IMEI</string>
     <string name="device_imsi">IMSI</string>
     <string name="device_iccid">卡号（ICCID）</string>
-
-
 
 
 

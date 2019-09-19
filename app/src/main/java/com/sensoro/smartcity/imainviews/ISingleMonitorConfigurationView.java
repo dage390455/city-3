@@ -8,7 +8,7 @@ import com.sensoro.common.iwidget.IToast;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent, IProgressDialog {
+public interface ISingleMonitorConfigurationView extends IToast, IActivityIntent, IProgressDialog {
     void showBleConfigurationDialog(String message);
 
     void dismissBleConfigurationDialog();

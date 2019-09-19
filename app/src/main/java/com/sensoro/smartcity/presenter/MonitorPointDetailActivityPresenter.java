@@ -68,7 +68,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
+import com.sensoro.smartcity.activity.SingleMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
@@ -125,7 +125,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             mScheduleNo = null;
             if (isAttachedView()) {
                 getView().dismissOperatingLoadingDialog();
-                getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
+                //若超时 去除显示超时对话框逻辑
+//                getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
             }
         }
     };
@@ -328,6 +329,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         }
         //TODO 特殊配置
         if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(deviceType)) {
+            //针对特殊设备需要下行30s
             //带有2g的 配置参数
             getView().set2GDeviceConfigVisible(true);
             OtherBean other = mDeviceInfo.getOther();
@@ -551,7 +553,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
-        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+        if (CityConstants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
             mDeviceInfo.setConfig(deployControlSettingData);
             final String[] values = {"-", "-"};
             if (deployControlSettingData != null) {
@@ -613,7 +615,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     private boolean hasNesConfigInfo(DeployControlSettingData deployControlSettingData) {
         //三相电中 并且有新数据
-        if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+        if (CityConstants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
             if (deployControlSettingData != null) {
                 List<DeployControlSettingData.wireData> inputList = deployControlSettingData.getInput();
                 List<DeployControlSettingData.wireData> outputList = deployControlSettingData.getOutput();
@@ -1552,8 +1554,24 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             @Override
             public void onSuccess(Object o) {
                 if (isAttachedView()) {
-                    getView().dismissOperatingLoadingDialog();
-                    getView().showOperationSuccessToast();
+                    //TODO 蓝牙成功后告诉服务器
+                    ArrayList<String> sns = new ArrayList<>();
+                    sns.add(mDeviceInfo.getSn());
+                    RetrofitServiceHelper.getInstance().doMonitorPointBLEUpdate(sns, mOperationType, null, null, null, null, null, null, finalBeepMuteTimeInt)
+                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(MonitorPointDetailActivityPresenter.this) {
+                        @Override
+                        public void onCompleted(ResponseResult<Object> response) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().showOperationSuccessToast();
+                        }
+
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+
                 }
             }
 
@@ -1695,6 +1713,13 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
+        //
+        long deviceTaskOvertimeMillis;
+        if (CityConstants.DEVICE_2G_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            deviceTaskOvertimeMillis = 30 * 1000;
+        } else {
+            deviceTaskOvertimeMillis = 15 * 1000;
+        }
         RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null, beepMuteTime)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
@@ -1708,7 +1733,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     String[] split = scheduleNo.split(",");
                     if (split.length > 0) {
                         mScheduleNo = split[0];
-                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, deviceTaskOvertimeMillis);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -1803,7 +1828,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                 deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
-                if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+                if (CityConstants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
                     Bundle bundle = new Bundle();
                     bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
@@ -1813,7 +1838,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     }
                     startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
                 } else {
-                    Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+                    Intent intent = new Intent(mContext, SingleMonitorConfigurationActivity.class);
                     intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                     getView().startAC(intent);
@@ -1933,7 +1958,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                 }
                             }
                         };
-                        if (Constants.DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
+                        if (CityConstants.DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
                             sensoroDeviceConnection.startChipEUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
                         } else {
                             sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);

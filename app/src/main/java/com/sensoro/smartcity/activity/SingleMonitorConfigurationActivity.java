@@ -24,9 +24,9 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
+import com.sensoro.smartcity.imainviews.ISingleMonitorConfigurationView;
 import com.sensoro.smartcity.model.MaterialValueModel;
-import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
+import com.sensoro.smartcity.presenter.SingleMonitorConfigurationPresenter;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.common.widgets.toast.SensoroSuccessToast;
@@ -40,9 +40,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
-
-public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMonitorConfigurationView, DeployMonitorConfigurationPresenter>
-        implements IDeployMonitorConfigurationView {
+/**
+ * 单相电和旧版本设备的下行
+ */
+public class SingleMonitorConfigurationActivity extends BaseActivity<ISingleMonitorConfigurationView, SingleMonitorConfigurationPresenter>
+        implements ISingleMonitorConfigurationView {
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -83,7 +85,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_deploy_configuration);
+        setContentView(R.layout.activity_single_configuration);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
@@ -237,8 +239,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
-    protected DeployMonitorConfigurationPresenter createPresenter() {
-        return new DeployMonitorConfigurationPresenter();
+    protected SingleMonitorConfigurationPresenter createPresenter() {
+        return new SingleMonitorConfigurationPresenter();
     }
 
     @Override
