@@ -335,6 +335,22 @@
             android:text="@string/alarm_log_alarm_warn_confirm"
             android:textColor="@color/white"
             android:textSize="12dp" />
+        <TextView
+            android:id="@+id/ac_alert_tv_alert_close"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_btn_corner_f35_bg_4dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="@string/alarm_log_alarm_contact_close_warn"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
     </LinearLayout>
 
 

@@ -92,7 +92,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
             this.sn = sn;
         }
 
-        public static class MetadataPic {
+        public static class MetadataPic implements Serializable{
             private String cid;
             private String pictureUrl;
 

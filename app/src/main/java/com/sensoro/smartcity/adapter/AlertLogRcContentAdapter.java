@@ -400,58 +400,96 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
             //
             String sensorType = recordInfo.getSensorType();
-            List<DeviceAlarmLogInfo.Metadata.MetadataPic> picUrl = new ArrayList<>();
             StringBuilder stringBuilder = new StringBuilder();
             if ("binocularThermalImaging".equals(sensorType)) {
+                List<ScenesData> scenes = new ArrayList<>();
                 DeviceAlarmLogInfo.Metadata metadata = mDeviceAlarmLogInfo.getMetadata();
                 if (metadata != null) {
                     if (metadata.getPicUrl() != null) {
-                        picUrl = metadata.getPicUrl();
+                        List<DeviceAlarmLogInfo.Metadata.MetadataPic> picUrl = metadata.getPicUrl();
+                        if (picUrl != null && picUrl.size() > 0) {
+                            for (DeviceAlarmLogInfo.Metadata.MetadataPic metadataPic : picUrl) {
+                                ScenesData scenesData = new ScenesData();
+                                scenesData.url = metadataPic.getPictureUrl();
+                                scenes.add(scenesData);
+                            }
+                        }
                     }
-
+                }
+                stringBuilder.append(mContext.getString(R.string.binocular_alarm_tip)).append("，").append(mContext.getString(R.string.equipment_warning));
+                if (scenes.size() > 0) {
+                    //TODO 防止数据错误清除
+                    holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.VISIBLE);
+                    if (holder.rvAlarmForestPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
+                        holder.rvAlarmForestPhoto.removeAllViews();
+                    }
+                    //
+                    final GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
+                        @Override
+                        public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+                            return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT);
+                        }
+                    };
+                    holder.rvAlarmForestPhoto.setLayoutManager(layoutManager);
+                    holder.rvAlarmForestPhoto.setHasFixedSize(true);
+                    AlarmDetailPhotoAdapter adapter = new AlarmDetailPhotoAdapter(mContext);
+                    adapter.setOnItemClickListener(new AlarmDetailPhotoAdapter.OnRecyclerViewItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            if (onPhotoClickListener != null) {
+                                onPhotoClickListener.onPhotoItemClick(position, scenes);
+                            }
+                        }
+                    });
+                    holder.rvAlarmForestPhoto.setAdapter(adapter);
+                    //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
+                    holder.rvAlarmForestPhoto.setNestedScrollingEnabled(false);
+                    adapter.setImages(scenes);
+                    //TODO 防止数据错误打标签
+                    holder.rvAlarmForestPhoto.setTag(adapter);
                 }
             } else {
-
-            }
-
-            try {
-                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
-                if (sensorTypeStyles != null) {
-                    boolean bool = sensorTypeStyles.isBool();
-                    if (bool) {
+                try {
+                    SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+                    if (sensorTypeStyles != null) {
+                        boolean bool = sensorTypeStyles.isBool();
+                        if (bool) {
 //                    info = "烟雾浓度高，设备预警";
-                        int thresholds = recordInfo.getThresholds();
-                        switch (thresholds) {
-                            case 1:
-                                //true
-                                String trueMean = sensorTypeStyles.getTrueMean();
-                                stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.equipment_warning));
-                                break;
-                            case 0:
-                                //false
-                                String falseMean = sensorTypeStyles.getFalseMean();
-                                stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
-                                break;
-                            default:
-                                String trueMean1 = sensorTypeStyles.getTrueMean();
-                                stringBuilder.append(trueMean1).append("，").append(mContext.getString(R.string.equipment_warning));
-                                break;
-                        }
+                            int thresholds = recordInfo.getThresholds();
+                            switch (thresholds) {
+                                case 1:
+                                    //true
+                                    String trueMean = sensorTypeStyles.getTrueMean();
+                                    stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                    break;
+                                case 0:
+                                    //false
+                                    String falseMean = sensorTypeStyles.getFalseMean();
+                                    stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                    break;
+                                default:
+                                    String trueMean1 = sensorTypeStyles.getTrueMean();
+                                    stringBuilder.append(trueMean1).append("，").append(mContext.getString(R.string.equipment_warning));
+                                    break;
+                            }
 
-                    } else {
-                        String name = sensorTypeStyles.getName();
-                        stringBuilder.append(name);
+                        } else {
+                            String name = sensorTypeStyles.getName();
+                            stringBuilder.append(name);
 ////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
-                        int thresholds = recordInfo.getThresholds();
-                        String unit = sensorTypeStyles.getUnit();
-                        stringBuilder.append(" ").append(mContext.getString(R.string.value_is)).append(" ").append(thresholds).append(unit).append(" ").append(mContext.getString(R.string.achieve_warning_value));
+                            int thresholds = recordInfo.getThresholds();
+                            String unit = sensorTypeStyles.getUnit();
+                            stringBuilder.append(" ").append(mContext.getString(R.string.value_is)).append(" ").append(thresholds).append(unit).append(" ").append(mContext.getString(R.string.achieve_warning_value));
+                        }
                     }
-                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                stringBuilder.append(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    stringBuilder.append(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1));
+                }
             }
+
             //
 
             String alarmDetailInfo = stringBuilder.toString();
