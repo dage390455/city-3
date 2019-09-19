@@ -67,4 +67,6 @@ public interface ARouterConstants {
 
     String ACTIVITY_ALARM_HISTORY_LOG = "/app/activity/AlarmHistoryLogActivity";
 
+    String ACTIVITY_DEPLOY_MAP="/app/activity/DeployMapActivity";
+
 }

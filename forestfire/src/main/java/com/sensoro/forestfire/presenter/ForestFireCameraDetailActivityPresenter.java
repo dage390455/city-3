@@ -2,17 +2,22 @@ package com.sensoro.forestfire.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IForestFireCameraDetailActivityView;
+
+import java.util.ArrayList;
 
 /**
  * @Author: jack
@@ -62,9 +67,31 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
 
     }
 
+
+    public void freshLocation(Intent data){
+        DeviceInfo deviceInfo= (DeviceInfo) data.getSerializableExtra("result");
+        getView().updateLocation(deviceInfo.getLonlat().get(0),deviceInfo.getLonlat().get(1));
+
+    }
    public void startHistoryActivity(){
         Bundle bundle=new Bundle();
         bundle.putString(Constants.EXTRA_SENSOR_SN,mForestFireCameraBean.getSn());
         startActivity(ARouterConstants.ACTIVITY_ALARM_HISTORY_LOG,bundle,mContext);
    }
+
+
+   public void startLocationActivity(){
+       DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+       deployAnalyzerModel.deviceType = "binocular";
+       deployAnalyzerModel.sn = mForestFireCameraBean.getSn();
+       deployAnalyzerModel.mapSourceType=Constants.FOREST_FIRE_DEVICE_DETAIL;
+
+       Bundle bundle=new Bundle();
+       bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.FOREST_FIRE_DEVICE_DETAIL);
+       bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+
+       startActivityForResult(ARouterConstants.ACTIVITY_DEPLOY_MAP,bundle,mContext,Constants.REQUEST_FOREST_DETAIL_LOCATION);
+   }
+
+
 }
