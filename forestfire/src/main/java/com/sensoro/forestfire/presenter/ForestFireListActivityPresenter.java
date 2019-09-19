@@ -3,7 +3,6 @@ package com.sensoro.forestfire.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
@@ -16,9 +15,9 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
-import com.sensoro.forestfire.imainviews.IForestFireListActivityView;
-import com.sensoro.common.model.ForestFireCameraListInfo;
-import com.sensoro.common.model.ForestFireCameraBean;
+import com.sensoro.forestfire.imainviews.IForestFireCameraListActivityView;
+import com.sensoro.forestfire.model.ForestFireCameraListInfo;
+import com.sensoro.forestfire.model.ForestFireCameraBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  * 包  名: com.sensoro.forestfire.presenter
  * 简  述: <功能简述>
  */
-public class ForestFireListActivityPresenter extends BasePresenter<IForestFireListActivityView> {
+public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCameraListActivityView> {
     private Activity mContext;
     private volatile int cur_page = 1;
     private final List<ForestFireCameraBean> deviceCameraInfos = new ArrayList<>();

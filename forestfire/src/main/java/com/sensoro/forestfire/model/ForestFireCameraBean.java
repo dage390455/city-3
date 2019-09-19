@@ -1,4 +1,4 @@
-package com.sensoro.common.model;
+package com.sensoro.forestfire.model;
 
 import com.google.gson.annotations.SerializedName;
 
