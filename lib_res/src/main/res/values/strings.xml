@@ -1334,5 +1334,6 @@
     <string name="forest_fire_camera_detail_device_gatway">Gate way</string>
     <string name="forest_fire_camera_detail_device_location">Location</string>
     <string name="forest_fire_camera_detail_device_location_modify">Modify</string>
+    <string name="forest_fire_camera_detail_device_type_name">Forest Fire Camera</string>
 
 </resources>

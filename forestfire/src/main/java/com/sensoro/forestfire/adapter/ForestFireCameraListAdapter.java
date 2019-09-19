@@ -11,7 +11,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.model.ForestFireCameraBean;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
+import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
 
@@ -85,7 +86,7 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
 
         holder.itemDeviceCameraTvId.setText(mForestFireCameraBean.getSn());
 
-        if ("1".equals(mForestFireCameraBean.getState())) {
+        if (mForestFireCameraBean.getInfo()!=null&&mForestFireCameraBean.getInfo().getDeviceStatus()== ForestFireConstans.FOREST_STATE_ONLINE) {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);

@@ -66,7 +66,11 @@ public class ScreenUtils {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         return dm.heightPixels;
     }
-
+    //获取屏幕高度 不包含虚拟按键=
+    public static int getScreenWidth(Context context) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        return dm.widthPixels;
+    }
 
     private static final String NAVIGATION = "navigationBarBackground";
 

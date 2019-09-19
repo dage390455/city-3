@@ -1,4 +1,4 @@
-package com.sensoro.common.model;
+package com.sensoro.common.server.bean;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -30,7 +30,7 @@ public class ForestFireCameraBean implements Serializable {
 
     private String sn;
     private String name;
-    private String createTime;
+    private long createTime;
     private String _id;
     private String userid;
     private int state;
@@ -57,11 +57,11 @@ public class ForestFireCameraBean implements Serializable {
         this.name = name;
     }
 
-    public String getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
@@ -137,7 +137,7 @@ public class ForestFireCameraBean implements Serializable {
         this.channelIds = channelIds;
     }
 
-    public static class InfoBean {
+    public static class InfoBean implements Serializable{
         /**
          * type : 3
          * deviceId : 5d6f3c7854996c0ee0e34365
@@ -151,8 +151,8 @@ public class ForestFireCameraBean implements Serializable {
         private String deviceId;
         private int deviceStatus;
         private String location;
-        private String longitude;
-        private String latitude;
+        private double longitude;
+        private double latitude;
 
         public String getType() {
             return type;
@@ -186,24 +186,24 @@ public class ForestFireCameraBean implements Serializable {
             this.location = location;
         }
 
-        public String getLongitude() {
+        public double getLongitude() {
             return longitude;
         }
 
-        public void setLongitude(String longitude) {
+        public void setLongitude(double longitude) {
             this.longitude = longitude;
         }
 
-        public String getLatitude() {
+        public double getLatitude() {
             return latitude;
         }
 
-        public void setLatitude(String latitude) {
+        public void setLatitude(double latitude) {
             this.latitude = latitude;
         }
     }
 
-    public static class PtzControlBean {
+    public static class PtzControlBean  implements Serializable{
         /**
          * 1 : false
          * 2 : false
@@ -231,7 +231,7 @@ public class ForestFireCameraBean implements Serializable {
         }
     }
 
-    public static class ForestCidBean {
+    public static class ForestCidBean  implements Serializable{
         /**
          * 1 : 540672046
          * 2 : 540672047
@@ -259,7 +259,7 @@ public class ForestFireCameraBean implements Serializable {
         }
     }
 
-    public static class ForestGatewayBean {
+    public static class ForestGatewayBean  implements Serializable{
         /**
          * cigId : 204117050002
          * name : 张家口云顶滑雪场A山网关1

@@ -35,7 +35,7 @@ import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.model.ForestFireCameraBean;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CameraListFilterPopupWindow;
 import com.sensoro.common.widgets.CustomDivider;

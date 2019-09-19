@@ -2,6 +2,7 @@ package com.sensoro.forestfire.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -12,12 +13,15 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
+import com.sensoro.forestfire.activity.ForestFireCameraDetailActivity;
 import com.sensoro.forestfire.imainviews.IForestFireCameraListActivityView;
-import com.sensoro.common.model.ForestFireCameraListInfo;
-import com.sensoro.common.model.ForestFireCameraBean;
+import com.sensoro.common.server.bean.ForestFireCameraListInfo;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -90,14 +94,14 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCa
         beanList.add(mListBean);
 
         mListBean=new CameraFilterModel.ListBean();
-        mListBean.setCode(ForestFireConstans.FOREST_STATE_OFFLINE);
+        mListBean.setCode(String.valueOf(ForestFireConstans.FOREST_STATE_OFFLINE));
         mListBean.setSelect(false);
         mListBean.setTitle(mContext.getString(R.string.offline));
         mListBean.setName(mContext.getString(R.string.offline));
         beanList.add(mListBean);
 
         mListBean=new CameraFilterModel.ListBean();
-        mListBean.setCode(ForestFireConstans.FOREST_STATE_ONLINE);
+        mListBean.setCode(String.valueOf(ForestFireConstans.FOREST_STATE_ONLINE));
         mListBean.setSelect(false);
         mListBean.setTitle(mContext.getString(R.string.online));
         mListBean.setName(mContext.getString(R.string.online));
@@ -131,46 +135,36 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCa
         selectedHashMap.clear();
     }
 
-    public void onClickDeviceCamera(final ForestFireCameraBean mForestFireCameraBean) {
-//        final String sn = deviceCameraInfo.getSn();
+    public void onClickDeviceCamera(final ForestFireCameraBean deviceCameraInfo) {
+        final String sn = deviceCameraInfo.getSn();
 //        final String cid = deviceCameraInfo.getCid();
-//        getView().showProgressDialog();
-//        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(this) {
-//            @Override
-//            public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
-//                DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
-//                if (data != null) {
-//                    String hls = data.getHls();
-//                    String flv = data.getFlv();
-//                    DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
-//                    String lastCover = data.getLastCover();
-//                    Intent intent = new Intent();
-//                    intent.setClass(mContext, ForestFireCameraListActivity.class);
-//                    intent.putExtra("cid", cid);
-//                    intent.putExtra("hls", hls);
-//                    intent.putExtra("flv", flv);
-//                    intent.putExtra("sn", sn);
-//                    if (camera != null) {
-//                        String name = camera.getName();
-//                        intent.putExtra("cameraName", name);
-//                    }
-//                    intent.putExtra("lastCover", lastCover);
-//                    intent.putExtra("deviceStatus", data.getDeviceStatus());
-//                    getView().startAC(intent);
-//                } else {
-//                    getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
-//
-//                }
-//                getView().dismissProgressDialog();
-//
-//            }
-//
-//            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
-//                getView().dismissProgressDialog();
-//                getView().toastShort(errorMsg);
-//            }
-//        });
+        getView().showProgressDialog();
+        RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
+            @Override
+            public void onCompleted(ResponseResult<ForestFireCameraDetailInfo> deviceCameraDetailRsp) {
+                ForestFireCameraDetailInfo data = deviceCameraDetailRsp.getData();
+                if (data != null) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, ForestFireCameraDetailActivity.class);
+
+                    intent.putExtra(ForestFireConstans.DEVICE_CAMERA_INFO,deviceCameraInfo);
+                    intent.putExtra(ForestFireConstans.DEVICE_CAMERA_DETAIL,data);
+                    getView().startAC(intent);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
+                }
+
+                getView().dismissProgressDialog();
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+
 
     }
 

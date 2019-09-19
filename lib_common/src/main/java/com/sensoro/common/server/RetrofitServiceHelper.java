@@ -20,7 +20,8 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.common.model.ForestFireCameraListInfo;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
+import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
@@ -2148,6 +2149,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCamera(sn);
     }
 
+
+
     /**
      * 获取用户下摄像头列表
      *
@@ -2333,7 +2336,6 @@ public class RetrofitServiceHelper {
             if(!mapFilter.isEmpty()&&mapFilter.containsKey("deviceStatus")){
                 jsonObject.put("deviceStatus", mapFilter.get("deviceStatus"));
             }
-            Log.d("jsonObject",jsonObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -2342,6 +2344,22 @@ public class RetrofitServiceHelper {
 
         return retrofitService.getForestFireDeviceCameraListByFilter(requestBody);
     }
+
+    public Observable<ResponseResult<ForestFireCameraDetailInfo>> getForestFireDeviceCameraDetail(String sn) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject.put("sn", sn);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getForestFireDeviceCameraDetail(requestBody);
+    }
+
+
 
     public Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getBaseStationListByFilter(pageSize, page, search, mapFilter);

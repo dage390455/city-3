@@ -2,7 +2,8 @@ package com.sensoro.common.server;
 
 
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.model.ForestFireCameraListInfo;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
+import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
@@ -411,6 +412,8 @@ public interface RetrofitService {
 
     @POST("camera-center/forest/getForestCamera")
     Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Body RequestBody requestBody);
+    @POST("camera-center/token/devices_state")
+    Observable<ResponseResult<ForestFireCameraDetailInfo>> getForestFireDeviceCameraDetail(@Body RequestBody requestBody);
 
 
 
