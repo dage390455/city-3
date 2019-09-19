@@ -1,4 +1,4 @@
-package com.sensoro.forestfire.model;
+package com.sensoro.common.model;
 
 import java.io.Serializable;
 import java.util.List;

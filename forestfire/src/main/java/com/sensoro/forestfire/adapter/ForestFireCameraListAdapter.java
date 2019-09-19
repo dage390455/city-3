@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
-import com.sensoro.forestfire.model.ForestFireCameraBean;
+import com.sensoro.common.model.ForestFireCameraBean;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
 

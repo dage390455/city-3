@@ -16,8 +16,8 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IForestFireCameraListActivityView;
-import com.sensoro.forestfire.model.ForestFireCameraListInfo;
-import com.sensoro.forestfire.model.ForestFireCameraBean;
+import com.sensoro.common.model.ForestFireCameraListInfo;
+import com.sensoro.common.model.ForestFireCameraBean;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -4,7 +4,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.forestfire.model.ForestFireCameraBean;
+import com.sensoro.common.model.ForestFireCameraBean;
 
 import java.util.List;
 
