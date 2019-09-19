@@ -150,51 +150,57 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_ff8d34);
                     break;
             }
-        }
-        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
-        boolean isAlarm = false;
-        for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-//                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
-            String type = recordInfo.getType();
-            if ("recovery".equals(type)) {
-                isAlarm = false;
-                break;
+            if ("binocular".equals(deviceType)) {
+                holder.tvMainWarnContentCloseWarn.setVisibility(View.VISIBLE);
             } else {
-                isAlarm = true;
+                holder.tvMainWarnContentCloseWarn.setVisibility(View.GONE);
             }
+            AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
+            boolean isAlarm = false;
+            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
+//                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
+                String type = recordInfo.getType();
+                if ("recovery".equals(type)) {
+                    isAlarm = false;
+                    break;
+                } else {
+                    isAlarm = true;
+                }
+            }
+            if (isAlarm) {
+                holder.mainWarnRcContentTvState.setText(R.string.alarming);
+                holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
+            } else {
+                holder.mainWarnRcContentTvState.setText(R.string.normal);
+                holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
+            }
+            final Boolean finalIsReConfirm = isReConfirm;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onItemClick(v, position, finalIsReConfirm);
+                    }
+                }
+            });
+            holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onCallPhone(v, position);
+                    }
+                }
+            });
+            holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onCloseWarn(v, position);
+                    }
+                }
+            });
         }
-        if (isAlarm) {
-            holder.mainWarnRcContentTvState.setText(R.string.alarming);
-            holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-        } else {
-            holder.mainWarnRcContentTvState.setText(R.string.normal);
-            holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
-        }
-        final Boolean finalIsReConfirm = isReConfirm;
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onItemClick(v, position, finalIsReConfirm);
-                }
-            }
-        });
-        holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onCallPhone(v, position);
-                }
-            }
-        });
-        holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onCloseWarn(v, position);
-                }
-            }
-        });
+
     }
 
     private void changeStrokeColor(TextView view, @ColorRes int color) {

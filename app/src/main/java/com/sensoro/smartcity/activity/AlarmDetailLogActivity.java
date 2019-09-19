@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.HandlePhotoIntentUtils;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -226,9 +226,8 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
-    public void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList) {
-        alertLogRcContentAdapter.setData(recordInfoList);
-        alertLogRcContentAdapter.notifyDataSetChanged();
+    public void updateAlertLogContentAdapter(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        alertLogRcContentAdapter.updateData(deviceAlarmLogInfo);
     }
 
     @Override
