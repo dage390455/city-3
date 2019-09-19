@@ -21,4 +21,8 @@
     <string name="flv_format">Real-time mode</string>
     <string name="hls_format">Smooth mode</string>
     <string name="video_format_des">It is recommended to use real-time mode when the network status is good, and the video playback delay is low.</string>
+
+
+    <string name="visible_light_format">Visible light monitoring</string>
+    <string name="imageing_format">Thermal imaging monitoring</string>
 </resources>

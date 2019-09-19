@@ -111,6 +111,22 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/sw_visible_image_format"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/bg_transparent_1px"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="2dp"
+                    android:text=""
+                    android:textColor="#ffffff"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+                <TextView
                     android:id="@+id/sw_video_format"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

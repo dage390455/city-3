@@ -70,6 +70,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
     public ImageView backMaskTv;
     public TextView swVideoFormatTv;
+    public TextView swVisibleImageFormatTv;
 
     public RelativeLayout getMaskLayoutTop() {
         return maskLayoutTop;
@@ -107,6 +108,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     private int currentVideoFormat = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
             .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
 
+    private int currentVisibleImageFormat = 0;
     /**
      * 切换视频格式，不提示移动数据
      */
@@ -505,6 +507,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
         lastVolume = currVolume;
         registerReceiver();
         swVideoFormatTv = findViewById(R.id.sw_video_format);
+        swVisibleImageFormatTv = findViewById(R.id.sw_visible_image_format);
         maskFaceIv = findViewById(R.id.face_iv);
         seekDialogTv = findViewById(R.id.city_seek_dialog_tv);
         layoutBottomControlLl = findViewById(R.id.layout_bottom_control_ll);
@@ -562,7 +565,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             int orientation = mContext.getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 changeVideoFormatDialog = new ChangeVideoFormatDialog();
-                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVideoFormat, position -> changeVideoFormat(position));
+                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVideoFormat, position -> changeVideoFormat(true, position));
             } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 
                 List<String> names = new ArrayList<>();
@@ -570,11 +573,20 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                 names.add(mContext.getString(R.string.hls_format));
                 selectDialog = new SelectDialog((Activity) mContext, currentVideoFormat, R.style
                         .transparentFrameWindowStyle,
-                        (parent, view, position, id) -> changeVideoFormat(position), names, mContext.getString(R.string.video_format_des));
+                        (parent, view, position, id) -> changeVideoFormat(true, position), names, mContext.getString(R.string.video_format_des));
                 selectDialog.setCanceledOnTouchOutside(true);
 
                 selectDialog.show();
 
+            }
+
+
+        });
+        swVisibleImageFormatTv.setOnClickListener(v -> {
+            int orientation = mContext.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                changeVideoFormatDialog = new ChangeVideoFormatDialog();
+                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVisibleImageFormat, position -> changeVideoFormat(false, position));
             }
 
 
@@ -871,6 +883,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
             backMaskTv.setVisibility(VISIBLE);
             gsyBaseVideoPlayer.currentVideoFormat = currentVideoFormat;
+            gsyBaseVideoPlayer.currentVisibleImageFormat = currentVisibleImageFormat;
             gsyBaseVideoPlayer.mThumbImageViewLayout = mThumbImageViewLayout;
             gsyBaseVideoPlayer.cityPlayState = cityPlayState;
             gsyBaseVideoPlayer.isAudioChecked = isAudioChecked;
@@ -891,6 +904,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
         if (gsyVideoPlayer != null) {
             MutilStandardGSYVideoPlayer sampleVideo = (MutilStandardGSYVideoPlayer) gsyVideoPlayer;
             currentVideoFormat = sampleVideo.currentVideoFormat;
+            currentVisibleImageFormat = sampleVideo.currentVisibleImageFormat;
             mThumbImageViewLayout = sampleVideo.mThumbImageViewLayout;
             setCityPlayState(cityPlayState);
             audioIv.setChecked(isAudioChecked);
@@ -1554,7 +1568,14 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     /**
      * 视频格式标签
      */
-    private void changeVideoFormat(int pos) {
+    private void changeVideoFormat(boolean right, int pos) {
+
+        if (right) {
+
+        } else {
+
+
+        }
         if (currentVideoFormat != pos) {
             if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
                     || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
@@ -1614,6 +1635,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                 .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
         if (isLive == View.INVISIBLE) {
             swVideoFormatTv.setVisibility(VISIBLE);
+            swVisibleImageFormatTv.setVisibility(VISIBLE);
 
             if (currentVideoFormat == 0) {
                 swVideoFormatTv.setText(mContext.getString(R.string.flv_format));
@@ -1623,6 +1645,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             }
         } else {
             swVideoFormatTv.setVisibility(GONE);
+            swVisibleImageFormatTv.setVisibility(GONE);
 
         }
     }

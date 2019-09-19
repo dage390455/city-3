@@ -54,9 +54,20 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
         inflater = LayoutInflater.from(context);
 
-        VideoModel model = new VideoModel("https://scpub-api.antelopecloud.cn/cloud/v2/live/540410181.m3u8?client_token=540410181_3356491776_1598926009_dba5190f984714bf4a38504f392e9edb");
 
-        VideoModel videoModel = new VideoModel("https://scpub-oss1.antelopecloud.cn/records/m3u8_info2/1567763820_1567763851.m3u8?access_token=540409951_3356491776_1598775818_24520bdc9e5d45495b8213de4faf5bea&head=1");
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409872.m3u8?client_token=540409872_3356491776_1600077530_5d3e93cd8ee6e7fd93dc3ca57976075d");
+        strings.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409857.m3u8?client_token=540409857_3356491776_1600077540_4968377bebd6a255c24cf7e0b0176b5c");
+
+        VideoModel model = new VideoModel();
+
+        model.cityURl = strings;
+
+        VideoModel videoModel = new VideoModel();
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409872.m3u8?client_token=540409872_3356491776_1600077530_5d3e93cd8ee6e7fd93dc3ca57976075d");
+        list.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409857.m3u8?client_token=540409857_3356491776_1600077540_4968377bebd6a255c24cf7e0b0176b5c");
 
         if (!available) {
             model.state = 1;
@@ -150,7 +161,9 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
         if (videoModel.state == -1) {
             holder.gsyVideoPlayer.setCityPlayState(-1);
+
             holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
+            holder.gsyVideoPlayer.setCityURl(list.get(position).url, false, null, null, "这是title");
             holder.gsyVideoPlayer.startPlayLogic();
             videoModel.state = -10;
         } else if (videoModel.state == 2) {

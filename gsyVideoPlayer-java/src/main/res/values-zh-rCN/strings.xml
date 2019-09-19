@@ -19,4 +19,7 @@
     <string name="flv_format">实时模式</string>
     <string name="hls_format">流畅模式</string>
     <string name="video_format_des">建议网络状态良好情况下使用实时模式，视频播放延时较低</string>
+
+    <string name="visible_light_format">可见光监控</string>
+    <string name="imageing_format">热成像监控</string>
 </resources>
