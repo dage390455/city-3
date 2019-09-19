@@ -61,4 +61,8 @@ public interface ARouterConstants {
     String ACTIVITY_LOGIN_TEST = "/logintest/activity/LoginTestActivity";
 
 
+    //    森林防火组件化
+    String ACTIVITY_FORESTFIRE_LIST = "/forestfire/activity/ForestFireListActivity";
+
+
 }
