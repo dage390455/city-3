@@ -7,6 +7,6 @@ package com.sensoro.forestfire.Constants;
  * 简  述: <功能简述>
  */
 public interface ForestFireConstans {
-    String FOREST_STATE_OFFLINE="1";
-    String FOREST_STATE_ONLINE="2";
+    String FOREST_STATE_OFFLINE="0";
+    String FOREST_STATE_ONLINE="1";
 }
