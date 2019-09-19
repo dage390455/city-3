@@ -521,6 +521,15 @@ public final class PreferencesHelper implements Constants {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST;
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_SECURITY_WARN;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_FOREST_FIRE_CAMERA_LIST;
+                break;
+
+
+
         }
         return spFileName;
     }

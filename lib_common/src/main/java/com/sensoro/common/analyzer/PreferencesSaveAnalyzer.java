@@ -150,6 +150,18 @@ public class PreferencesSaveAnalyzer {
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
                 break;
 
+
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SECURITY_WARN, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_FOREST_FIRE_CAMERA_LIST, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+
         }
     }
 
@@ -215,6 +227,16 @@ public class PreferencesSaveAnalyzer {
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST:
                 oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SECURITY_WARN, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_FOREST_FIRE_CAMERA_LIST, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
                 break;
 
@@ -294,6 +316,19 @@ public class PreferencesSaveAnalyzer {
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST, Activity.MODE_PRIVATE)
                         .edit().clear().apply();
                 break;
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SECURITY_WARN, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_FOREST_FIRE_CAMERA_LIST, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
+
+
+
 
         }
     }

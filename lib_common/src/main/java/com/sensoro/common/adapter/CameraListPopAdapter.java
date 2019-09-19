@@ -1,6 +1,7 @@
 package com.sensoro.common.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
             CameraFilterModel model = mStateCountList.get(position);
             holder.itemPopTvCamerListFilterTitle.setText(model.getTitle().trim());
             holder.itemPopRvCamerListFilter.setTag(cameraListFilterAdapter);
+
             cameraListFilterAdapter.updateDeviceTypList(model.getList(), model.isMulti());
         }
     }

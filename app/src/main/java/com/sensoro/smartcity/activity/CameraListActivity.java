@@ -177,7 +177,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity);
+        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity,CameraListFilterPopupWindow.FILL_MODE_RATE,0.75f);
         mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {

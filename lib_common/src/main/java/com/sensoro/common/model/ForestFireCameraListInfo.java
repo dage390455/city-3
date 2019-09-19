@@ -56,6 +56,7 @@ public  class ForestFireCameraListInfo implements Serializable {
         private int all;
         private int online;
         private int offline;
+        private int warning;
 
         public int getAll() {
             return all;
@@ -79,6 +80,14 @@ public  class ForestFireCameraListInfo implements Serializable {
 
         public void setOffline(int offline) {
             this.offline = offline;
+        }
+
+        public int getWarning() {
+            return warning;
+        }
+
+        public void setWarning(int warning) {
+            this.warning = warning;
         }
     }
 

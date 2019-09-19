@@ -3,6 +3,7 @@ package com.sensoro.forestfire.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
@@ -13,6 +14,7 @@ import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IForestFireListActivityView;
 import com.sensoro.common.model.ForestFireCameraListInfo;
@@ -43,9 +45,12 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
 
     private final HashMap<String, String> selectedHashMap = new HashMap<String, String>();
 
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+
+        initFilterList();
         Serializable serializableExtra = mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
         if (serializableExtra instanceof ArrayList) {
             getView().setSmartRefreshEnable(false);
@@ -59,18 +64,57 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
         } else {
             requestDataByFilter(Constants.DIRECTION_DOWN, null);
         }
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
         }
     }
 
+
+    private void initFilterList(){
+        CameraFilterModel mCameraFilterModel=   new CameraFilterModel();
+
+
+        List<CameraFilterModel.ListBean>  beanList=new ArrayList<>();
+        mCameraFilterModel.setKey("");
+        mCameraFilterModel.setMulti(false);
+        mCameraFilterModel.setTitle(mContext.getString(R.string.camera_state));
+
+
+        CameraFilterModel.ListBean mListBean=new CameraFilterModel.ListBean();
+
+        mListBean.setCode("");
+        mListBean.setSelect(true);
+        mListBean.setTitle(mContext.getString(R.string.word_all));
+        mListBean.setName(mContext.getString(R.string.word_all));
+        beanList.add(mListBean);
+
+        mListBean=new CameraFilterModel.ListBean();
+        mListBean.setCode(ForestFireConstans.FOREST_STATE_OFFLINE);
+        mListBean.setSelect(false);
+        mListBean.setTitle(mContext.getString(R.string.offline));
+        mListBean.setName(mContext.getString(R.string.offline));
+        beanList.add(mListBean);
+
+        mListBean=new CameraFilterModel.ListBean();
+        mListBean.setCode(ForestFireConstans.FOREST_STATE_ONLINE);
+        mListBean.setSelect(false);
+        mListBean.setTitle(mContext.getString(R.string.online));
+        mListBean.setName(mContext.getString(R.string.online));
+        beanList.add(mListBean);
+
+        mCameraFilterModel.setListX(beanList);
+        cameraFilterModelList.add(mCameraFilterModel);
+
+
+    }
+
     public void save(String text) {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -78,7 +122,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
     }
 
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
@@ -216,31 +260,32 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
         } else {
             //当前已经消失
             //第一次请求数据
-            if (cameraFilterModelList.size() == 0) {
-                getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
-                    @Override
-                    public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
-                        cameraFilterModelList.clear();
-                        List<CameraFilterModel> data = cameraFilterRsp.getData();
-                        if (data != null) {
-                            cameraFilterModelList.addAll(data);
-                        }
-                        getView().showCameraListFilterPopupWindow(cameraFilterModelList);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
-            } else {
-                //第二次直接展示
-                getView().showCameraListFilterPopupWindow(cameraFilterModelList);
-
-            }
+//            if (cameraFilterModelList.size() == 0) {
+//                getView().showProgressDialog();
+//                RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
+//                    @Override
+//                    public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
+//                        cameraFilterModelList.clear();
+//                        List<CameraFilterModel> data = cameraFilterRsp.getData();
+//                        if (data != null) {
+//                            cameraFilterModelList.addAll(data);
+//                        }
+//                        getView().showCameraListFilterPopupWindow(cameraFilterModelList);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
+//            } else {
+//                //第二次直接展示
+//                getView().showCameraListFilterPopupWindow(cameraFilterModelList);
+//
+//            }
+            getView().showCameraListFilterPopupWindow(cameraFilterModelList);
         }
     }
 
@@ -359,11 +404,34 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireLi
     }
 
     //处理集合数据
+//    private HashMap<String, String> handleCameraListFilter(List<CameraFilterModel> list) {
+//        HashMap<String, String> hashMap = new HashMap();
+//        if (null != list) {
+//            for (CameraFilterModel model : list) {
+//                String key = model.getKey();
+//                StringBuffer stringBuffer = new StringBuffer();
+//                for (CameraFilterModel.ListBean listBean : model.getList()) {
+//                    if (listBean.isSelect()) {
+//                        stringBuffer.append(listBean.getCode());
+//                        stringBuffer.append(",");
+//                    }
+//                }
+//                if (!TextUtils.isEmpty(stringBuffer.toString())) {
+//                    stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
+//                    hashMap.put(key, stringBuffer.toString());
+//                }
+//            }
+//        }
+//        return hashMap;
+//    }
+
+    //处理集合数据
     private HashMap<String, String> handleCameraListFilter(List<CameraFilterModel> list) {
         HashMap<String, String> hashMap = new HashMap();
         if (null != list) {
+            String key = "deviceStatus";
             for (CameraFilterModel model : list) {
-                String key = model.getKey();
+
                 StringBuffer stringBuffer = new StringBuffer();
                 for (CameraFilterModel.ListBean listBean : model.getList()) {
                     if (listBean.isSelect()) {

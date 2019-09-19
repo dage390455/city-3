@@ -2,6 +2,7 @@ package com.sensoro.common.server;
 
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -2311,7 +2312,35 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
-        return retrofitService.getForestFireDeviceCameraListByFilter(pageSize, page, search, mapFilter);
+
+        return getForestFireDeviceCameraListByFilter(pageSize, page, search, "",mapFilter);
+    }
+
+    public Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(Integer pageSize, Integer page, String search, String gatewayCigId,Map<String, String> mapFilter) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("pageSize",pageSize);
+            jsonObject.put("page",page);
+
+            if (!TextUtils.isEmpty(search)) {
+                jsonObject.put("search", search);
+            }
+            if (!TextUtils.isEmpty(gatewayCigId)) {
+                jsonObject.put("gatewayCigId", gatewayCigId);
+            }
+
+            if(!mapFilter.isEmpty()&&mapFilter.containsKey("deviceStatus")){
+                jsonObject.put("deviceStatus", mapFilter.get("deviceStatus"));
+            }
+            Log.d("jsonObject",jsonObject.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        return retrofitService.getForestFireDeviceCameraListByFilter(requestBody);
     }
 
     public Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
