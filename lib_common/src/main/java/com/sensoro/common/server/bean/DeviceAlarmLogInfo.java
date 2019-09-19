@@ -40,6 +40,59 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     //1正常
     private int alarmStatus;
 
+    public Metadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
+
+    private Metadata metadata;
+
+    //    "metadata": {
+//        "cids": [
+//        "540672047",
+//                "540672048"
+//            ],
+//        "picUrl": {
+//            "540672047": "https://city-video-cdn.sensoro.com/001C2711A8AE_1568619402_1568619432.jpeg?e=1568710853&token=5Bf2KpUYTwT76bN_L1wuOKmiCDQbEOU-Fe4NRb-I:-VTrJ5NohMsgnuVHStH8auKSVRs=",
+//                    "5406
+//            2019-09-18 20:56:27.474 18589-29318/com.sensoro.smartcity E/sensoro_log-->: 72048": "https://city-video-cdn.sensoro.com/001C2711A8AE_1568619402_1568619432.jpeg?e=1568710853&token=5Bf2KpUYTwT76bN_L1wuOKmiCDQbEOU-Fe4NRb-I:-VTrJ5NohMsgnuVHStH8auKSVRs="
+//        },
+//        "updateTime": "2019-09-17T07:36:57.000Z",
+//                "sn": "72057600540409950"
+//    }
+    public class Metadata implements Serializable {
+        private List<String> cids;
+        private Map<String, String> picUrl;
+        private String sn;
+
+        public List<String> getCids() {
+            return cids;
+        }
+
+        public void setCids(List<String> cids) {
+            this.cids = cids;
+        }
+
+        public Map<String, String> getPicUrl() {
+            return picUrl;
+        }
+
+        public void setPicUrl(Map<String, String> picUrl) {
+            this.picUrl = picUrl;
+        }
+
+        public String getSn() {
+            return sn;
+        }
+
+        public void setSn(String sn) {
+            this.sn = sn;
+        }
+    }
+
     public String getEvent() {
         return event;
     }

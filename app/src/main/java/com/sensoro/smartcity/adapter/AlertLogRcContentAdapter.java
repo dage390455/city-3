@@ -24,12 +24,13 @@ import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.HtmlImageSpan;
 import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 
@@ -46,10 +47,10 @@ import static com.sensoro.smartcity.constant.CityConstants.confirmStatusTextColo
 
 public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcContentAdapter.AlertLogRcContentHolder> implements Constants {
     private final Context mContext;
-    private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
-
 
     private LinkedHashMap<Integer, List[]> hashMap = new LinkedHashMap<>();
+    private DeviceAlarmLogInfo mDeviceAlarmLogInfo;
+    private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -58,9 +59,18 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
     private OnPhotoClickListener onPhotoClickListener;
 
-    public void setData(List<AlarmInfo.RecordInfo> recordInfoList) {
-        this.timeShaftParentBeans.clear();
-        this.timeShaftParentBeans.addAll(recordInfoList);
+    public void updateData(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        mDeviceAlarmLogInfo = deviceAlarmLogInfo;
+        timeShaftParentBeans.clear();
+        if (mDeviceAlarmLogInfo != null) {
+            AlarmInfo.RecordInfo[] records = mDeviceAlarmLogInfo.getRecords();
+            if (records != null) {
+                for (int i = records.length - 1; i >= 0; i--) {
+                    timeShaftParentBeans.add(records[i]);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public interface OnPhotoClickListener {
@@ -80,10 +90,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
     @Override
     public void onBindViewHolder(AlertLogRcContentHolder holder, int position) {
-
-        //
-
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
+        //
         String time = DateUtil.getStrTimeToday(mContext, recordInfo.getUpdatedTime(), 0);
         holder.itemAlertContentTvTime.setText(time);
         holder.itemAlertContentTvContent.setOnClickListener(null);
@@ -396,6 +404,11 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
             //
             String sensorType = recordInfo.getSensorType();
+            if ("binocularThermalImaging".equals(sensorType)) {
+
+            } else {
+
+            }
             StringBuilder stringBuilder = new StringBuilder();
             try {
                 SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
@@ -513,6 +526,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.llConfirm.setVisibility(View.GONE);
 
         }
+        //
+
 
     }
 

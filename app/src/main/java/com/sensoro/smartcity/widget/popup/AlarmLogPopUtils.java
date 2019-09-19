@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.imagepicker.ImagePicker;
+import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -27,6 +29,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.CityAppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -38,13 +41,12 @@ import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.common.utils.CityAppUtils;
-import com.sensoro.common.imagepicker.ImagePicker;
-import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -97,11 +99,9 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     @BindView(R.id.ll_camera_video_ac_alert)
     LinearLayout llCameraVideoAcAlert;
     private AlarmPopUtils mAlarmPopUtils;
-    private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
     private DeviceAlarmLogInfo mDeviceAlarmLogInfo;
     private LatLng destPosition;
-    private boolean isReConfirm = false;
     private ProgressUtils mProgressUtils;
     private AlarmCloudVideoBean mVideoBean;
     private AlarmPopupModel mAlarmPopupModel;
@@ -192,12 +192,10 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
         int displayStatus = mDeviceAlarmLogInfo.getDisplayStatus();
         if (displayStatus == DISPLAY_STATUS_CONFIRM) {
-            isReConfirm = true;
             acAlertTvAlertConfirm.setText(mActivity.getString(R.string.alarm_log_alarm_warn_confirm));
             acAlertTvAlertConfirm.setTextColor(mActivity.getResources().getColor(R.color.white));
             acAlertTvAlertConfirm.setBackgroundResource(R.drawable.shape_btn_corner_29c_bg_4dp);
         } else {
-            isReConfirm = false;
             acAlertTvAlertConfirm.setText(mActivity.getString(R.string.confirming_again));
             acAlertTvAlertConfirm.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
             acAlertTvAlertConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
@@ -209,23 +207,6 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
 
     private void initRcContentData() {
-        AlarmInfo.RecordInfo[] recordInfoArray = mDeviceAlarmLogInfo.getRecords();
-        if (recordInfoArray != null) {
-            mList.clear();
-            for (int i = recordInfoArray.length - 1; i >= 0; i--) {
-                mList.add(recordInfoArray[i]);
-            }
-            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-                if (recordInfo.getType().equals("recovery")) {
-//                    getView().setStatusInfo("于" + DateUtil.getFullParseDate(recordInfo.getUpdatedTime()) + "恢复正常", R
-//                            .color.sensoro_normal, R.drawable.shape_status_normal);
-//                    break;
-                } else {
-//                    getView().setStatusInfo(mContext.getResources().getString(R.string.alarming), R.color.sensoro_alarm,
-//                            R.drawable.shape_status_alarm);
-                }
-            }
-        }
         long current = System.currentTimeMillis();
 
         getCloudVideo();
@@ -247,7 +228,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                         SensoroToast.getInstance().makeText(errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
-        updateAlertLogContentAdapter(mList);
+        updateAlertLogContentAdapter(mDeviceAlarmLogInfo);
     }
 
     private void getCloudVideo() {
@@ -285,9 +266,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                 });
     }
 
-    private void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList) {
-        alertLogRcContentAdapter.setData(recordInfoList);
-        alertLogRcContentAdapter.notifyDataSetChanged();
+    private void updateAlertLogContentAdapter(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        alertLogRcContentAdapter.updateData(deviceAlarmLogInfo);
     }
 
     @OnClick({R.id.alarm_log_close, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation,
@@ -341,52 +321,58 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
     public void doContactOwner() {
         String tempNumber = null;
-        outer:
-        for (AlarmInfo.RecordInfo recordInfo : mList) {
-            String type = recordInfo.getType();
-            if ("sendVoice".equals(type)) {
-                AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
-                for (AlarmInfo.RecordInfo.Event event : phoneList) {
-                    String source = event.getSource();
-                    String number = event.getNumber();
-                    if (!TextUtils.isEmpty(number)) {
-                        if ("attach".equals(source)) {
-                            try {
-                                LogUtils.loge("单独联系人：" + number);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                            tempNumber = number;
-                            break outer;
+        AlarmInfo.RecordInfo[] recordInfoArray = mDeviceAlarmLogInfo.getRecords();
+        if (recordInfoArray != null) {
+            List<AlarmInfo.RecordInfo> recordInfos = Arrays.asList(recordInfoArray);
+            Collections.reverse(recordInfos);
+            outer:
+            for (AlarmInfo.RecordInfo recordInfo : recordInfos) {
+                String type = recordInfo.getType();
+                if ("sendVoice".equals(type)) {
+                    AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
+                    for (AlarmInfo.RecordInfo.Event event : phoneList) {
+                        String source = event.getSource();
+                        String number = event.getNumber();
+                        if (!TextUtils.isEmpty(number)) {
+                            if ("attach".equals(source)) {
+                                try {
+                                    LogUtils.loge("单独联系人：" + number);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                tempNumber = number;
+                                break outer;
 
-                        } else if ("group".equals(source)) {
-                            try {
-                                LogUtils.loge("分组联系人：" + number);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
+                            } else if ("group".equals(source)) {
+                                try {
+                                    LogUtils.loge("分组联系人：" + number);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                tempNumber = number;
+                                break;
+                            } else if ("notification".equals(source)) {
+                                try {
+                                    LogUtils.loge("账户联系人：" + number);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                tempNumber = number;
+                                break;
                             }
-                            tempNumber = number;
-                            break;
-                        } else if ("notification".equals(source)) {
-                            try {
-                                LogUtils.loge("账户联系人：" + number);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                            tempNumber = number;
-                            break;
+
                         }
 
                     }
-
                 }
             }
+            if (TextUtils.isEmpty(tempNumber)) {
+                SensoroToast.getInstance().makeText(mActivity.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
+            } else {
+                AppUtils.diallPhone(tempNumber, mActivity);
+            }
         }
-        if (TextUtils.isEmpty(tempNumber)) {
-            SensoroToast.getInstance().makeText(mActivity.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
-        } else {
-            AppUtils.diallPhone(tempNumber, mActivity);
-        }
+
     }
 
     private void doNavigation() {

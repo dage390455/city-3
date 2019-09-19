@@ -56,7 +56,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
-    private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;
     private Activity mContext;
@@ -202,17 +201,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 getView().showProgressDialog();
             }
         }
+        if (isAttachedView()) {
+            getView().updateAlertLogContentAdapter(deviceAlarmLogInfo);
+        }
 //        getView().setDisplayStatus(deviceAlarmLogInfo.getDisplayStatus());
 //        getView().setSensoroIv(deviceAlarmLogInfo.getSensorType());
         AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
         if (recordInfoArray != null) {
-            mList.clear();
-            for (int i = recordInfoArray.length - 1; i >= 0; i--) {
-                mList.add(recordInfoArray[i]);
-            }
-            if (isAttachedView()) {
-                getView().updateAlertLogContentAdapter(mList);
-            }
             //
             switch (deviceAlarmLogInfo.getDisplayStatus()) {
                 case Constants.DISPLAY_STATUS_CONFIRM:
@@ -236,7 +231,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     break;
             }
             for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-                if (recordInfo.getType().equals("recovery")) {
+                if ("recovery".equals(recordInfo.getType())) {
                     if (isAttachedView()) {
                         getView().setCurrentAlarmState(0, alarmTime);
                     }
@@ -247,7 +242,6 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 getView().setCurrentAlarmState(1, alarmTime);
             }
         }
-
 
     }
 
@@ -320,7 +314,6 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        mList.clear();
     }
 
     public void doContactOwner() {
