@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
@@ -30,6 +31,7 @@ import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IForestFireCameraDetailActivityView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -60,7 +62,9 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
         }
         getView().updateTitle(mContext.getString(R.string.forest_fire_camera_detail));
 
+        EventBus.getDefault().register(this);
     }
+
     public  void initMapSetting(TextureMapView mTextureMapView) {
         aMap=mTextureMapView.getMap();
         mTextureMapView.getLayoutParams().height = ScreenUtils.getScreenWidth(mContext);
@@ -105,11 +109,10 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
-    public void freshLocation(Intent data){
-        ForestFireCameraBean result= (ForestFireCameraBean) data.getSerializableExtra("result");
+    public void freshLocation(ForestFireCameraBean  result){
         if(result!=null&&result.getInfo()!=null){
             mForestFireCameraBean.getInfo().setLocation(result.getInfo().getLocation());
             mForestFireCameraBean.getInfo().setLatitude(result.getInfo().getLatitude());
@@ -154,5 +157,8 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
        startActivityForResult(ARouterConstants.ACTIVITY_DEPLOY_MAP,bundle,mContext,Constants.REQUEST_FOREST_DETAIL_LOCATION);
    }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ForestFireCameraBean  mForestFireCameraBean){
+        freshLocation(mForestFireCameraBean);
+    }
 }

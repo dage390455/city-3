@@ -17,6 +17,8 @@ import java.util.List;
 public interface IForestFireCameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateDeviceCameraAdapter(List<ForestFireCameraBean> data);
 
+    void updateDeviceCameraAdapterByItem(ForestFireCameraBean date);
+
     void onPullRefreshComplete();
 
     void setNoContentVisible(boolean isVisible);

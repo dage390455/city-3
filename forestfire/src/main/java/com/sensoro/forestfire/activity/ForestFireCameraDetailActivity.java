@@ -177,14 +177,14 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==Constants.REQUEST_FOREST_DETAIL_LOCATION){
-            if(resultCode== Activity.RESULT_OK){
-                mPresenter.freshLocation(data);
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode==Constants.REQUEST_FOREST_DETAIL_LOCATION){
+//            if(resultCode== Activity.RESULT_OK){
+//                mPresenter.freshLocation(data);
+//            }
+//        }
+//    }
 
 }
