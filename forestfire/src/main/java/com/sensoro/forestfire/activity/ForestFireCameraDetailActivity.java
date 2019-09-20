@@ -13,8 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -77,27 +81,25 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
         setContentView(R.layout.activity_forest_fire_camera_detail);
         ButterKnife.bind(this);
         textureMapView.onCreate(savedInstanceState);
-        initMapSetting();
 
         mPresenter.initData(mActivity);
+        mPresenter.initMapSetting(textureMapView);
+        mPresenter.initView();
+
     }
 
-    private void initMapSetting() {
-        textureMapView.getLayoutParams().height = ScreenUtils.getScreenWidth(mActivity);
-        UiSettings mUiSettings = textureMapView.getMap().getUiSettings();
-        mUiSettings.setZoomControlsEnabled(false);
-        mUiSettings.setZoomGesturesEnabled(true);
-        mUiSettings.setScrollGesturesEnabled(false);
-        mUiSettings.setRotateGesturesEnabled(false);
-        mUiSettings.setTiltGesturesEnabled(false);
-    }
+
 
     @Override
     protected ForestFireCameraDetailActivityPresenter createPresenter() {
         return new ForestFireCameraDetailActivityPresenter();
     }
 
-
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        textureMapView.onLowMemory();
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -155,15 +157,15 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
     }
 
     @Override
-    public void updateLocation(double lon, double lat) {
-        tvLocation.setText(lon + "；" + lat);
+    public void updateLocation(double lon,double lat) {
+        tvLocation.setText(lat + "；" + lon);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    public void updateMap(double lon,double lat){
+        //参数依次是：视角调整区域的中心点坐标、希望调整到的缩放级别、俯仰角0°~45°（垂直与地图时为0）、偏航角 0~360° (正北方为0)
+        CameraUpdate mCameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(lat,lon),12,30,0));
+        textureMapView.getMap().moveCamera(mCameraUpdate);
     }
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.include_text_title_tv_subtitle,R2.id.ll_forest_fire_camera_detail_device_location})
@@ -190,4 +192,5 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
             }
         }
     }
+
 }

@@ -21,6 +21,8 @@ public interface IForestFireCameraDetailActivityView {
 
     void updateGateway(String gateway);
 
-    void updateLocation(double lon, double lat);
+    void updateLocation(double lon,double lat);
+
+    void updateMap(double lon,double lat);
 
 }

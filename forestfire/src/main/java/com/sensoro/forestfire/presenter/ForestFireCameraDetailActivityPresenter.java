@@ -5,6 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -13,6 +21,7 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.ScreenUtils;
 import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IForestFireCameraDetailActivityView;
@@ -31,7 +40,8 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
 
     private ForestFireCameraBean mForestFireCameraBean;
     private ForestFireCameraDetailInfo mForestFireCameraDetailInfo;
-
+    private AMap aMap;
+    Marker deviceMarker;
 
     @Override
     public void initData(Context context) {
@@ -40,38 +50,62 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
         if(mBundle!=null){
             mForestFireCameraBean= (ForestFireCameraBean) mBundle.getSerializable(ForestFireConstans.DEVICE_CAMERA_INFO);
             mForestFireCameraDetailInfo= (ForestFireCameraDetailInfo) mBundle.getSerializable(ForestFireConstans.DEVICE_CAMERA_DETAIL);
-
-            if(mForestFireCameraBean!=null){
-                getView().updateCameraName(mForestFireCameraBean.getName());
-                getView().updateCameraType(mContext.getString(R.string.forest_fire_camera_detail_device_type_name));
-                getView().updateDeviceSN(mForestFireCameraBean.getSn());
-
-                if(mForestFireCameraBean.getForestGateway()!=null){
-                    getView().updateGateway(mForestFireCameraBean.getForestGateway().getName());
-                }
-
-                getView().updateTime(DateUtil.getStrTimeTodayByDevice(mContext, mForestFireCameraBean.getCreateTime()));
-                if(mForestFireCameraBean.getInfo()!=null){
-                    getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
-                }
-            }
-
         }
         getView().updateTitle(mContext.getString(R.string.forest_fire_camera_detail));
 
     }
+    public  void initMapSetting(TextureMapView mTextureMapView) {
+        aMap=mTextureMapView.getMap();
+        mTextureMapView.getLayoutParams().height = ScreenUtils.getScreenWidth(mContext);
+        UiSettings mUiSettings = aMap.getUiSettings();
+        mUiSettings.setZoomControlsEnabled(false);
+        mUiSettings.setZoomGesturesEnabled(true);
+        mUiSettings.setScrollGesturesEnabled(false);
+        mUiSettings.setRotateGesturesEnabled(false);
+        mUiSettings.setTiltGesturesEnabled(false);
 
+        mUiSettings.setTiltGesturesEnabled(false);
+        mUiSettings.setMyLocationButtonEnabled(false);
+    }
+
+    public void initView(){
+        if(mForestFireCameraBean!=null){
+            getView().updateCameraName(mForestFireCameraBean.getName());
+            getView().updateCameraType(mContext.getString(R.string.forest_fire_camera_detail_device_type_name));
+            getView().updateDeviceSN(mForestFireCameraBean.getSn());
+
+            if(mForestFireCameraBean.getForestGateway()!=null){
+                getView().updateGateway(mForestFireCameraBean.getForestGateway().getName());
+            }
+
+            getView().updateTime(DateUtil.getStrTimeTodayByDevice(mContext, mForestFireCameraBean.getCreateTime()));
+            if(mForestFireCameraBean.getInfo()!=null){
+                getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
+                getView().updateMap(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
+            }
+
+
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_cur);
+            MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
+                    .anchor(0.5f, 1)
+                    .draggable(true);
+            deviceMarker = aMap.addMarker(markerOption);
+
+            deviceMarker.setPosition(new LatLng(mForestFireCameraBean.getInfo().getLatitude(),mForestFireCameraBean.getInfo().getLongitude()));
+        }
+    }
 
     @Override
     public void onDestroy() {
 
     }
 
-
     public void freshLocation(Intent data){
-        DeviceInfo deviceInfo= (DeviceInfo) data.getSerializableExtra("result");
-        getView().updateLocation(deviceInfo.getLonlat().get(0),deviceInfo.getLonlat().get(1));
-
+        ForestFireCameraBean mForestFireCameraBean= (ForestFireCameraBean) data.getSerializableExtra("result");
+        if(mForestFireCameraBean!=null&&mForestFireCameraBean.getInfo()!=null){
+            getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
+            getView().updateMap(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
+        }
     }
    public void startHistoryActivity(){
         Bundle bundle=new Bundle();
