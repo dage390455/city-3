@@ -70,6 +70,7 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
 
         mUiSettings.setTiltGesturesEnabled(false);
         mUiSettings.setMyLocationButtonEnabled(false);
+
     }
 
     public void initView(){
