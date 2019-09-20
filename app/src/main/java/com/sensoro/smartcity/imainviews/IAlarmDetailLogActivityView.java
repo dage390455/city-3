@@ -33,7 +33,7 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
 
     void setCameraLiveCount(List<String> liveCount);
 
-    void setLlVideoSize(int size);
+    void setLlVideoSizeAndContent(int size,String content);
 
     void setHistoryLogVisible(boolean visible);
 

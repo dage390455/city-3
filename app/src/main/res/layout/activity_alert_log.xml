@@ -213,7 +213,7 @@
                 android:paddingTop="12dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="12dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/ac_alert_rc_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
