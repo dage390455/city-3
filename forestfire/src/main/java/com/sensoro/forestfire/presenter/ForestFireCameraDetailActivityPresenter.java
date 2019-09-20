@@ -141,7 +141,7 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
 
    public void startLocationActivity(){
        DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
-       deployAnalyzerModel.deviceType = "binocular";
+       deployAnalyzerModel.deviceType = Constants.FOREST_FIRE_DEVICE_TYPE;
        deployAnalyzerModel.sn = mForestFireCameraBean.getSn();
        deployAnalyzerModel.mapSourceType=Constants.FOREST_FIRE_DEVICE_DETAIL;
        if(mForestFireCameraBean!=null&&mForestFireCameraBean.getInfo()!=null){

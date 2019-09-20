@@ -27,6 +27,8 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
+import com.sensoro.forestfire.activity.AlarmForestFireCameraLiveDetailActivity;
+import com.sensoro.forestfire.activity.AlarmForestFireCameraVideoDetailActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
@@ -242,7 +244,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 }
             }
             boolean needShowCloseFire = false;
-            if ("binocular".equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
+            if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
                 if (Constants.DISPLAY_STATUS_ALARM == displayStatus || Constants.DISPLAY_STATUS_RISKS == displayStatus) {
                     needShowCloseFire = true;
                 }
@@ -477,9 +479,17 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
             return;
         }
-        Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
-        intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
-        getView().startAC(intent);
+
+        if(Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())){
+            Intent intent = new Intent(mContext, AlarmForestFireCameraVideoDetailActivity.class);
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
+            getView().startAC(intent);
+        }else{
+            Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
+            getView().startAC(intent);
+        }
+
     }
 
     public void doCameraLive() {
@@ -488,10 +498,18 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
             return;
         }
-        Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
-        ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
-        intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
-        getView().startAC(intent);
+        if(Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())){
+            Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
+            ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
+            getView().startAC(intent);
+        }else{
+            Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
+            ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
+            getView().startAC(intent);
+        }
+
     }
 
     public void doCloseWarn() {
