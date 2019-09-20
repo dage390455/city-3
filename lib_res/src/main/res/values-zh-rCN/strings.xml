@@ -646,6 +646,7 @@
     <string name="alarm_cause_type">预警成因类型</string>
     <string name="alarm_place">预警场所</string>
     <string name="alarm_descript">请对预警事件的实际情况进行描述</string>
+    <string name="alarm_descript_new">请输入</string>
     <string name="occur_alarm_event">发生新的预警事件</string>
     <string name="look">去查看</string>
     <string name="monitor_point_number">监测点数</string>

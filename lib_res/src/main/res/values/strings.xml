@@ -615,6 +615,9 @@
     <string name="alarm_cause_type">Reason Type</string>
     <string name="alarm_place">Alarm site</string>
     <string name="alarm_descript">Please describe the alarm event</string>
+    <string name="alarm_descript_new">Please input</string>
+
+
     <string name="occur_alarm_event">New alarm event</string>
     <string name="look">Check</string>
     <string name="monitor_point_number">Number of monitor point</string>

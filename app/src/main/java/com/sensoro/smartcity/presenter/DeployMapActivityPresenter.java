@@ -39,6 +39,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.BaseStationDetailModel;
 import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -271,11 +272,11 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
                 case Constants.FOREST_FIRE_DEVICE_DETAIL:
                     getView().showProgressDialog();
-                    RetrofitServiceHelper.getInstance().doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
+                    RetrofitServiceHelper.getInstance().doDevicePositionModify(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraBean>>(this) {
                         @Override
-                        public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
+                        public void onCompleted(ResponseResult<ForestFireCameraBean> deviceDeployRsp) {
                             getView().dismissProgressDialog();
-                            DeviceInfo data = deviceDeployRsp.getData();
+                            ForestFireCameraBean data = deviceDeployRsp.getData();
                              Intent intent=  mContext.getIntent();
                              intent.putExtra("result",data);
                              mContext.setResult(Activity.RESULT_OK,intent);
