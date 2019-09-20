@@ -220,7 +220,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                         getView().setSignalStatus(resId, mContext.getString(R.string.s_bad));
                         break;
                     default:
-                        resId = R.drawable.signal_good;
+                        resId = R.drawable.signal_none;
                         getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
                         break;
                 }
