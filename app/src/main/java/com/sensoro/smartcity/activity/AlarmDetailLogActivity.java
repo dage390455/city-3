@@ -269,12 +269,10 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
-    public void setLlVideoSize(int size) {
+    public void setLlVideoSizeAndContent(int size,String content) {
         if (size > 0) {
             llCameraVideoAcAlert.setVisibility(View.VISIBLE);
-
-            tvVideoCameraCountAcAlert.setText(String.format(Locale.ROOT, "%s%d%s", mActivity.getString(R.string.alarm_camera_video)
-                    , size, mActivity.getString(R.string.video_unit_duan)));
+            tvVideoCameraCountAcAlert.setText(content);
         } else {
             llCameraVideoAcAlert.setVisibility(View.GONE);
 

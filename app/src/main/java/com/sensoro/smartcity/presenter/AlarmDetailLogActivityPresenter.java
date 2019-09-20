@@ -50,6 +50,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -85,10 +86,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private void getCloudVideo() {
 
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            getView().setLlVideoSize(-1);
+            getView().setLlVideoSizeAndContent(-1,null);
             return;
         }
-
         String[] eventIds = {deviceAlarmLogInfo.get_id()};
         RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -100,18 +100,20 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                             mVideoBean = data.get(0);
                             List<AlarmCloudVideoBean.MediasBean> mMedias = mVideoBean.getMedias();
                             if (mMedias != null && mMedias.size() > 0) {
-                                getView().setLlVideoSize(mMedias.size());
+                                String text = String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.alarm_camera_video)
+                                        , mMedias.size(), mContext.getString(R.string.video_unit_duan));
+                                getView().setLlVideoSizeAndContent(mMedias.size(),text);
                             } else {
-                                getView().setLlVideoSize(-1);
+                                getView().setLlVideoSizeAndContent(-1,null);
                             }
                         } else {
-                            getView().setLlVideoSize(-1);
+                            getView().setLlVideoSizeAndContent(-1,null);
                         }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().setLlVideoSize(-1);
+                        getView().setLlVideoSizeAndContent(-1,null);
                     }
                 });
     }
