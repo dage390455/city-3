@@ -437,7 +437,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 String scheduleNo = response.getScheduleNo();
                 if (TextUtils.isEmpty(scheduleNo)) {
                     getView().dismissBleConfigDialog();
-                    getView().toastShort(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+                    getView().toastShort(mContext.getString(R.string.deploy_device_detail_check_failed));
                 } else {
                     String[] split = scheduleNo.split(",");
                     if (split.length > 0) {
@@ -446,7 +446,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         mHandler.postDelayed(DeviceTaskOvertime, 30 * 1000);
                     } else {
                         getView().dismissBleConfigDialog();
-                        getView().toastShort(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+                        getView().toastShort(mContext.getString(R.string.deploy_device_detail_check_failed));
 
                     }
                 }
@@ -466,7 +466,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             mHandler.removeCallbacks(DeviceTaskOvertime);
             mScheduleNo = null;
             getView().dismissBleConfigDialog();
-            getView().toastShort(mContext.getString(R.string.operation_request_time_out));
+            getView().toastShort(mContext.getString(R.string.deploy_device_detail_check_failed));
 
         }
     };
@@ -1323,7 +1323,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     break;
                 default:
                     signal_text = mContext.getString(R.string.s_none);
-                    drawable = resources.getDrawable(R.drawable.signal_bad);
+                    drawable = resources.getDrawable(R.drawable.signal_none);
                     break;
             }
         } else {

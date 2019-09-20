@@ -131,8 +131,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
                     drawable = resources.getDrawable(R.drawable.signal_bad);
                     break;
                 default:
-                    signal_text = mActivity.getString(R.string.s_bad);
-                    drawable = resources.getDrawable(R.drawable.signal_bad);
+                    signal_text = mActivity.getString(R.string.s_none);
+                    drawable = resources.getDrawable(R.drawable.signal_none);
                     break;
             }
         } else {
