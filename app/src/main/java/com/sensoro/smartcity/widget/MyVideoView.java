@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 
 import java.io.IOException;
 
@@ -23,13 +25,13 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 	private MediaPlayer mMediaPlayer = null;
 	private SurfaceTexture mSurfaceHolder = null;
 
-	private static final int STATE_ERROR = -1;
-	private static final int STATE_IDLE = 0;
-	private static final int STATE_PREPARING = 1;
-	private static final int STATE_PREPARED = 2;
-	private static final int STATE_PLAYING = 3;
-	private static final int STATE_PAUSED = 4;
-	private static final int STATE_STOP = 5;
+	public static final int STATE_ERROR = -1;
+	public static final int STATE_IDLE = 0;
+	public static final int STATE_PREPARING = 1;
+	public static final int STATE_PREPARED = 2;
+	public static final int STATE_PLAYING = 3;
+	public static final int STATE_PAUSED = 4;
+	public static final int STATE_STOP = 5;
 	/**
 	 * PlaybackCompleted状态：文件正常播放完毕，而又没有设置循环播放的话就进入该状态，
 	 * 并会触发OnCompletionListener的onCompletion
@@ -38,6 +40,8 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 	private static final int STATE_PLAYBACK_COMPLETED = 5;
 	/** Released/End状态：通过release()方法可以进入End状态 */
 	private static final int STATE_RELEASED = 5;
+
+
 
 	private int mCurrentState = STATE_IDLE;
 	private int mTargetState = STATE_IDLE;
@@ -88,8 +92,16 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 		//		requestFocus();
 		mCurrentState = STATE_IDLE;
 		mTargetState = STATE_IDLE;
+
+
+	}
+	public int getmCurrentState() {
+		return mCurrentState;
 	}
 
+	public void setmCurrentState(int mCurrentState) {
+		this.mCurrentState = mCurrentState;
+	}
 	public void setOnPreparedListener(MediaPlayer.OnPreparedListener l) {
 		mOnPreparedListener = l;
 	}
@@ -145,6 +157,19 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 		openVideo(mUri);
 	}
 
+
+	public StateChangedListener getmStateChangedListener() {
+		return mStateChangedListener;
+	}
+
+	public void setmStateChangedListener(StateChangedListener mStateChangedListener) {
+		this.mStateChangedListener = mStateChangedListener;
+	}
+
+	StateChangedListener mStateChangedListener;
+	public abstract static class   StateChangedListener{
+		public abstract  void onStateChanged(int state);
+	}
 	public void start() {
 		//可用状态{Prepared, Started, Paused, PlaybackCompleted}
 		if (mMediaPlayer != null && (mCurrentState == STATE_PREPARED || mCurrentState == STATE_PAUSED || mCurrentState == STATE_PLAYING || mCurrentState == STATE_PLAYBACK_COMPLETED)) {
@@ -161,9 +186,13 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 				tryAgain(e);
 			}
 		}
+		if(mStateChangedListener!=null){
+			mStateChangedListener.onStateChanged(STATE_PLAYING);
+		}
 	}
 
 	public void pause() {
+
 		mTargetState = STATE_PAUSED;
 		//可用状态{Started, Paused}
 		if (mMediaPlayer != null && (mCurrentState == STATE_PLAYING || mCurrentState == STATE_PAUSED)) {
@@ -177,6 +206,9 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 			} catch (Exception e) {
 				tryAgain(e);
 			}
+		}
+		if(mStateChangedListener!=null){
+			mStateChangedListener.onStateChanged(STATE_PAUSED);
 		}
 	}
 
@@ -193,6 +225,9 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 			} catch (Exception e) {
 				tryAgain(e);
 			}
+		}
+		if(mStateChangedListener!=null){
+			mStateChangedListener.onStateChanged(STATE_PAUSED);
 		}
 	}
 
@@ -493,4 +528,6 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 			mVideoHandler.removeMessages(HANDLER_MESSAGE_LOOP);
 		mVideoHandler.sendMessageDelayed(mVideoHandler.obtainMessage(HANDLER_MESSAGE_LOOP, getCurrentPosition(), delayMillis), delayMillis);
 	}
+
+
 }

@@ -2,10 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.sensoro.smartcity.widget.MyVideoView
-        android:id="@+id/vv_play"
+
+
+        <com.sensoro.smartcity.widget.MyVideoView
+            android:id="@+id/vv_play"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    <View android:id="@+id/view_cover"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/transparent"/>
+    <ImageView android:id="@+id/iv_play"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/item_icon_play"
+        android:visibility="gone"
+        />
+
     <include
         android:id="@+id/top_bar"
         layout="@layout/include_top_bar" />
