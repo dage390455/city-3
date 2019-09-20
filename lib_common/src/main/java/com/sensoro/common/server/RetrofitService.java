@@ -416,7 +416,8 @@ public interface RetrofitService {
     Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Body RequestBody requestBody);
     @POST("camera-center/token/devices_state")
     Observable<ResponseResult<ForestFireCameraDetailInfo>> getForestFireDeviceCameraDetail(@Body RequestBody requestBody);
-    @PUT("camera-center/forest/editForestCamera")
+
+    @POST("camera-center/forest/editForestCamera")
     Observable<ResponseResult<ForestFireCameraBean>> doDevicePositionModify(@Body RequestBody requestBody);
 
 

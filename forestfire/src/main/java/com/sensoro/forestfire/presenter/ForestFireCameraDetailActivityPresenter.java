@@ -17,6 +17,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
@@ -25,6 +26,9 @@ import com.sensoro.common.utils.ScreenUtils;
 import com.sensoro.forestfire.Constants.ForestFireConstans;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IForestFireCameraDetailActivityView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -101,8 +105,11 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
     }
 
     public void freshLocation(Intent data){
-        ForestFireCameraBean mForestFireCameraBean= (ForestFireCameraBean) data.getSerializableExtra("result");
-        if(mForestFireCameraBean!=null&&mForestFireCameraBean.getInfo()!=null){
+        ForestFireCameraBean result= (ForestFireCameraBean) data.getSerializableExtra("result");
+        if(result!=null&&result.getInfo()!=null){
+            mForestFireCameraBean.getInfo().setLocation(result.getInfo().getLocation());
+            mForestFireCameraBean.getInfo().setLatitude(result.getInfo().getLatitude());
+            mForestFireCameraBean.getInfo().setLongitude(result.getInfo().getLongitude());
             getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
             getView().updateMap(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
         }
@@ -119,6 +126,11 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
        deployAnalyzerModel.deviceType = "binocular";
        deployAnalyzerModel.sn = mForestFireCameraBean.getSn();
        deployAnalyzerModel.mapSourceType=Constants.FOREST_FIRE_DEVICE_DETAIL;
+       if(mForestFireCameraBean!=null&&mForestFireCameraBean.getInfo()!=null){
+           deployAnalyzerModel.latLng.add(mForestFireCameraBean.getInfo().getLongitude());
+           deployAnalyzerModel.latLng.add(mForestFireCameraBean.getInfo().getLatitude());
+       }
+
 
        Bundle bundle=new Bundle();
        bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.FOREST_FIRE_DEVICE_DETAIL);

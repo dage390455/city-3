@@ -182,16 +182,20 @@
                     android:layout_marginBottom="16dp"
                     android:text="@string/forest_fire_camera_detail_device_location"
                     android:textColor="@color/c_252525"
-                    android:textSize="16dp"
-                    android:layout_weight="1"/>
+                    android:textSize="16dp"/>
 
                 <TextView  android:id="@+id/tv_location"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="15dp"
+                    android:ellipsize="end"
                     android:textColor="@color/c_252525"
-                    android:textSize="16dp" />
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:textSize="16dp"
+                    android:layout_weight="1"/>
 
                 <TextView android:id="@+id/tv_modify"
                     android:layout_width="wrap_content"

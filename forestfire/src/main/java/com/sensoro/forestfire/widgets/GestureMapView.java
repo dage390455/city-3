@@ -2,6 +2,7 @@ package com.sensoro.forestfire.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 
@@ -35,26 +36,26 @@ public class GestureMapView extends TextureMapView {
         super(context, aMapOptions);
     }
 
-
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-        return super.dispatchTouchEvent(ev);
+    public boolean dispatchTouchEvent(MotionEvent event) {
+//        getParent().requestDisallowInterceptTouchEvent(true);
+
+       if(event.getPointerCount()>1){
+           getParent().requestDisallowInterceptTouchEvent(true);
+       }else{
+           getParent().requestDisallowInterceptTouchEvent(false);
+       }
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
-    private int downX;
-    private int downY;
 
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-
-//        if(ev.getAction()==MotionEvent.ACTION_DOWN){
-//        }
         return super.onInterceptTouchEvent(ev);
     }
 }
