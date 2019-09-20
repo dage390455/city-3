@@ -8,7 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.amap.api.maps.TextureMapView;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
@@ -20,6 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_MAP)
 public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, DeployMapActivityPresenter> implements IDeployMapActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;

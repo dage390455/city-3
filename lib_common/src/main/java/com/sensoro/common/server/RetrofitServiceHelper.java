@@ -20,6 +20,7 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
@@ -1914,6 +1915,24 @@ public class RetrofitServiceHelper {
 
         return retrofitService.doDevicePositionCalibration(sn, body);
     }
+
+
+    public Observable<ResponseResult<ForestFireCameraBean>> doDevicePositionModify(String sn, Double lon, Double lat) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("sn", sn);
+            JSONObject  infoJsonObject = new JSONObject();
+            infoJsonObject.put("longitude",lon);
+            infoJsonObject.put("latitude",lat);
+            jsonObject.put("info", infoJsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        return retrofitService.doDevicePositionModify(body);
+    }
+
 
     public Observable<ResponseResult> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
                                                      String enterpriseRegisterId,

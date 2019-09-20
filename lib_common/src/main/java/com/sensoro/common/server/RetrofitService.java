@@ -2,6 +2,7 @@ package com.sensoro.common.server;
 
 
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
@@ -311,6 +312,7 @@ public interface RetrofitService {
     @PUT("devices/gps/{sn}")
     Observable<ResponseResult<DeviceInfo>> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
 
+
     @GET("devices/valid")
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<ResponseResult> getDeviceNameValid(@Query("name") String name);
@@ -414,7 +416,8 @@ public interface RetrofitService {
     Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Body RequestBody requestBody);
     @POST("camera-center/token/devices_state")
     Observable<ResponseResult<ForestFireCameraDetailInfo>> getForestFireDeviceCameraDetail(@Body RequestBody requestBody);
-
+    @PUT("camera-center/forest/editForestCamera")
+    Observable<ResponseResult<ForestFireCameraBean>> doDevicePositionModify(@Body RequestBody requestBody);
 
 
     @GET("stations")

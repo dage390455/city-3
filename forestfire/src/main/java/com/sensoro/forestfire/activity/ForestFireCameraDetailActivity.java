@@ -1,5 +1,6 @@
 package com.sensoro.forestfire.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -164,7 +166,7 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
         ButterKnife.bind(this);
     }
 
-    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.include_text_title_tv_subtitle})
+    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.include_text_title_tv_subtitle,R2.id.ll_forest_fire_camera_detail_device_location})
     public void onViewClicked(View view) {
         int viewID=view.getId();
 
@@ -172,8 +174,20 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
             finish();
         }else if(viewID==R.id.include_text_title_tv_subtitle){
             mPresenter.startHistoryActivity();
-
+        }else if(viewID==R.id.ll_forest_fire_camera_detail_device_location){
+            mPresenter.startLocationActivity();
         }
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==Constants.REQUEST_FOREST_DETAIL_LOCATION){
+            if(resultCode== Activity.RESULT_OK){
+                mPresenter.freshLocation(data);
+            }
+        }
     }
 }

@@ -2,9 +2,11 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.BaseStationDetailModel;
 import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -90,6 +93,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 getView().setSaveVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.signal);
                 getView().setSubtitleVisible(false);
+                break;
+            case Constants.FOREST_FIRE_DEVICE_DETAIL:
+
                 break;
             default:
                 break;
@@ -259,8 +265,32 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void doSaveLocation() {
+
         if (deployAnalyzerModel.latLng.size() == 2) {
+
             switch (deployAnalyzerModel.mapSourceType) {
+
+                case Constants.FOREST_FIRE_DEVICE_DETAIL:
+                    getView().showProgressDialog();
+                    RetrofitServiceHelper.getInstance().doDevicePositionModify(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraBean>>(this) {
+                        @Override
+                        public void onCompleted(ResponseResult<ForestFireCameraBean> deviceDeployRsp) {
+                            getView().dismissProgressDialog();
+                            ForestFireCameraBean data = deviceDeployRsp.getData();
+                             Intent intent=  mContext.getIntent();
+                             intent.putExtra("result",data);
+                             mContext.setResult(Activity.RESULT_OK,intent);
+                            getView().finishAc();
+                        }
+
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+
+                    break;
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                     getView().showProgressDialog();
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
@@ -336,6 +366,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     });
 
                     break;
+
             }
         }
     }
@@ -388,6 +419,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 break;
             case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
             case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.FOREST_FIRE_DEVICE_DETAIL:
             case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                 if (cameraPosition != null) {
                     //解决不能回显的bug 不能直接赋值
@@ -415,6 +447,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 break;
             case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
             case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.FOREST_FIRE_DEVICE_DETAIL:
             case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                 if (cameraPosition != null) {
                     deployAnalyzerModel.latLng.clear();
@@ -563,6 +596,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     break;
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                case Constants.FOREST_FIRE_DEVICE_DETAIL:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                     AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
                     if (lastKnownLocation != null) {

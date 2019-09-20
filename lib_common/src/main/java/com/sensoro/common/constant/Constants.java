@@ -236,6 +236,7 @@ public interface Constants {
     //部署
     int REQUEST_CODE_INIT_CONFIG = 0x114;
 
+    int REQUEST_FOREST_DETAIL_LOCATION=0x115;
 
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
@@ -303,6 +304,8 @@ public interface Constants {
 
     int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE = 1;
     int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL = 2;
+    int FOREST_FIRE_DEVICE_DETAIL = 0X67;
+
 
     int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
     int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
@@ -336,6 +339,8 @@ public interface Constants {
     int EVENT_DATA_ADD_SENSOR_FROM_DEPLOY = 0x63;//铭牌部署扫码关联传感器
     int EVENT_DATA_SEARCH_NAMEPLATE = 0x64;
     int EVENT_DATA_PERMISSIONCHANGE = 0x65;
+
+
 
 
     //camera
@@ -412,6 +417,8 @@ public interface Constants {
     //巡检url类型数值
      String  RES_IMAGE="image";
     String  RES_VIDEO="video";
+
+
 
 
 
