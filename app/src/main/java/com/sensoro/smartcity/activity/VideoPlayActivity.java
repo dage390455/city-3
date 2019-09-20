@@ -44,6 +44,8 @@ import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 public class VideoPlayActivity extends AppCompatActivity implements View.OnClickListener, NavigationBarChangeListener.OnSoftInputStateChangeListener, MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener {
 
     private MyVideoView vv_play;
+    private View view_cover;
+    private ImageView iv_play;
     protected View topBar;
     protected TextView mTitleCount;
     private ImageItem mImageItem;
@@ -68,6 +70,28 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
         //
         vv_play = (MyVideoView) findViewById(R.id.vv_play);
+        view_cover=findViewById(R.id.view_cover);
+
+        iv_play=findViewById(R.id.iv_play);
+        vv_play.setmStateChangedListener(new MyVideoView.StateChangedListener() {
+            @Override
+            public void onStateChanged(int state) {
+                if(state==MyVideoView.STATE_PAUSED){
+                    iv_play.setVisibility(View.VISIBLE);
+                }else if(state==MyVideoView.STATE_PLAYING){
+                    iv_play.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        view_cover.setOnClickListener(v -> {
+            Log.d("mCurrentState",vv_play.getmCurrentState()+"");
+            if(vv_play.getmCurrentState()==MyVideoView.STATE_PLAYING){
+                vv_play.pause();
+            }else{
+                vv_play.start();
+            }
+        });
         //
         immersionBar = ImmersionBar.with(this);
         immersionBar.fitsSystemWindows(true).statusBarColor(R.color.white).statusBarDarkFont(true).init();
@@ -134,6 +158,9 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
                     //Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }
+                break;
+            case R.id.iv_play:
+                vv_play.start();
                 break;
             default:
                 break;
