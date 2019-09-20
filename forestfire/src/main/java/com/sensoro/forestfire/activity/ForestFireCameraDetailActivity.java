@@ -161,12 +161,6 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
         tvLocation.setText(lat + "；" + lon);
     }
 
-    @Override
-    public void updateMap(double lon,double lat){
-        //参数依次是：视角调整区域的中心点坐标、希望调整到的缩放级别、俯仰角0°~45°（垂直与地图时为0）、偏航角 0~360° (正北方为0)
-        CameraUpdate mCameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(lat,lon),16,30,0));
-        textureMapView.getMap().moveCamera(mCameraUpdate);
-    }
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.include_text_title_tv_subtitle,R2.id.ll_forest_fire_camera_detail_device_location})
     public void onViewClicked(View view) {

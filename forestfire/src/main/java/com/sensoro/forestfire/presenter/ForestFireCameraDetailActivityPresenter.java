@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -86,7 +89,7 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
             getView().updateTime(DateUtil.getStrTimeTodayByDevice(mContext, mForestFireCameraBean.getCreateTime()));
             if(mForestFireCameraBean.getInfo()!=null){
                 getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
-                getView().updateMap(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
+                updateMap();
             }
 
 
@@ -112,7 +115,18 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
             mForestFireCameraBean.getInfo().setLatitude(result.getInfo().getLatitude());
             mForestFireCameraBean.getInfo().setLongitude(result.getInfo().getLongitude());
             getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
-            getView().updateMap(mForestFireCameraBean.getInfo().getLongitude(),mForestFireCameraBean.getInfo().getLatitude());
+            updateMap();
+        }
+    }
+
+
+    public void updateMap(){
+        LatLng mLatLng=new LatLng(mForestFireCameraBean.getInfo().getLatitude(),mForestFireCameraBean.getInfo().getLongitude());
+        //参数依次是：视角调整区域的中心点坐标、希望调整到的缩放级别、俯仰角0°~45°（垂直与地图时为0）、偏航角 0~360° (正北方为0)
+        CameraUpdate mCameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(mLatLng,16,30,0));
+        aMap.moveCamera(mCameraUpdate);
+        if(deviceMarker!=null){
+            deviceMarker.setPosition(mLatLng);
         }
     }
    public void startHistoryActivity(){
