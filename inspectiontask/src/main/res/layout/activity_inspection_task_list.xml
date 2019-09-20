@@ -77,7 +77,7 @@
             android:layout_marginStart="20dp"
             android:textSize="14dp"
             android:layout_centerVertical="true"
-            android:textColor="@color/c_252525"/>
+            android:textColor="@color/c_252525" />
 
         <ImageView
             android:id="@+id/ac_inspection_task_list_imv_date_close"
@@ -94,23 +94,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ac_inspection_task_list_rc_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                />
+                android:background="@color/white" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     </RelativeLayout>

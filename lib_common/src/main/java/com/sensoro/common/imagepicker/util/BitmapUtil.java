@@ -12,9 +12,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- *
  * Bitmap工具类，主要是解决拍照旋转的适配
- *
+ * <p>
  * Author: nanchen
  * Email: liushilin520@foxmail.com
  * Date: 2017-03-20  13:27
@@ -77,17 +76,18 @@ public class BitmapUtil {
 
     /**
      * 获取我们需要的整理过旋转角度的Uri
-     * @param activity  上下文环境
-     * @param path      路径
-     * @return          正常的Uri
+     *
+     * @param activity 上下文环境
+     * @param path     路径
+     * @return 正常的Uri
      */
-    public static Uri getRotatedUri(Activity activity, String path){
+    public static Uri getRotatedUri(Activity activity, String path) {
         int degree = BitmapUtil.getBitmapDegree(path);
-        if (degree != 0){
+        if (degree != 0) {
             Bitmap bitmap = BitmapFactory.decodeFile(path);
-            Bitmap newBitmap = BitmapUtil.rotateBitmapByDegree(bitmap,degree);
-            return Uri.parse(MediaStore.Images.Media.insertImage(activity.getContentResolver(),newBitmap,null,null));
-        }else{
+            Bitmap newBitmap = BitmapUtil.rotateBitmapByDegree(bitmap, degree);
+            return Uri.parse(MediaStore.Images.Media.insertImage(activity.getContentResolver(), newBitmap, null, null));
+        } else {
             return Uri.fromFile(new File(path));
         }
     }
@@ -101,10 +101,8 @@ public class BitmapUtil {
      */
     public static Bitmap rotateBitmapByDegree(String path, int degree) {
         Bitmap bitmap = BitmapFactory.decodeFile(path);
-        return rotateBitmapByDegree(bitmap,degree);
+        return rotateBitmapByDegree(bitmap, degree);
     }
-
-
 
 
     /**
@@ -139,7 +137,7 @@ public class BitmapUtil {
      * @param ratio  比例
      * @return 新的bitmap
      */
-    public  static Bitmap scaleBitmap(Bitmap origin, float ratio) {
+    public static Bitmap scaleBitmap(Bitmap origin, float ratio) {
         if (origin == null) {
             return null;
         }
@@ -196,6 +194,7 @@ public class BitmapUtil {
 
     /**
      * 偏移效果
+     *
      * @param origin 原图
      * @return 偏移后的bitmap
      */

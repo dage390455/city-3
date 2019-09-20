@@ -1,7 +1,9 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,9 +58,9 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
 
         holder.contractItemShowNum.setText(String.valueOf(deviceCount));
 
-        if(position == 0){
+        if (position == 0) {
             holder.contractItemView.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.contractItemView.setVisibility(View.VISIBLE);
         }
     }

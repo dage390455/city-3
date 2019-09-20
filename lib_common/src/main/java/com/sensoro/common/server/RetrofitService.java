@@ -2,6 +2,9 @@ package com.sensoro.common.server;
 
 
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
+import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
@@ -309,6 +312,7 @@ public interface RetrofitService {
     @PUT("devices/gps/{sn}")
     Observable<ResponseResult<DeviceInfo>> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
 
+
     @GET("devices/valid")
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<ResponseResult> getDeviceNameValid(@Query("name") String name);
@@ -408,6 +412,15 @@ public interface RetrofitService {
     @GET("cameras")
     Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
+    @POST("camera-center/forest/getForestCamera")
+    Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(@Body RequestBody requestBody);
+    @POST("camera-center/token/devices_state")
+    Observable<ResponseResult<ForestFireCameraDetailInfo>> getForestFireDeviceCameraDetail(@Body RequestBody requestBody);
+
+    @POST("camera-center/forest/editForestCamera")
+    Observable<ResponseResult<ForestFireCameraBean>> doDevicePositionModify(@Body RequestBody requestBody);
+
+
     @GET("stations")
     Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
@@ -485,8 +498,14 @@ public interface RetrofitService {
     @POST("applogapi/logService/saveLog")
     Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data);
 
+    @POST("camera-center/camera/getCamera")
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(@Body RequestBody requestBody);
 
     @POST("devices/blutoothMute")
     Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(@Body RequestBody requestBody);
+
+    @POST("camera-center/fireForest/closeAlarm")
+    Observable<ResponseResult<Object>> doCloseFireWarn(@Body RequestBody requestBody);
+
 }
 

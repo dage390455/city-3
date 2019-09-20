@@ -103,11 +103,13 @@ public class SelectDeviceTypePopUtils {
         });
 
     }
-    public void resetDeviceTypeList(){
-            if(mTypeSelectAdapter!=null){
-                mTypeSelectAdapter.setSelectPosition(0);
-            }
+
+    public void resetDeviceTypeList() {
+        if (mTypeSelectAdapter != null) {
+            mTypeSelectAdapter.setSelectPosition(0);
+        }
     }
+
     public void updateSelectDeviceTypeList(List<String> list) {
         mTypeSelectAdapter.updateDeviceTypList(list);
     }
@@ -143,11 +145,11 @@ public class SelectDeviceTypePopUtils {
         } else {  // 适配 android 7.0
             int[] location = new int[2];
             view.getLocationOnScreen(location);
-            ScreenUtils.heightNavBarExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight()-ScreenUtils.getNavigationBarHeight(mActivity);
-            ScreenUtils.heightNavBarNotExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1]- view.getHeight() ;
-            if(ScreenUtils.isNavigationBarExist(mActivity)){
+            ScreenUtils.heightNavBarExisted = ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight() - ScreenUtils.getNavigationBarHeight(mActivity);
+            ScreenUtils.heightNavBarNotExisted = ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight();
+            if (ScreenUtils.isNavigationBarExist(mActivity)) {
                 mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
-            }else{
+            } else {
                 mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
             }
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
@@ -156,22 +158,22 @@ public class SelectDeviceTypePopUtils {
                 public void run() {
                     ScreenUtils.isNavigationBarExist(mActivity, new ScreenUtils.OnNavigationStateListener() {
                         @Override
-                        public void onNavigationState(boolean isShowing,  int height) {
+                        public void onNavigationState(boolean isShowing, int height) {
                             try {
-                                if(isShowing){
+                                if (isShowing) {
                                     mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
-                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarExisted);
-                                }else{
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT, ScreenUtils.heightNavBarExisted);
+                                } else {
                                     mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
-                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarNotExisted);
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT, ScreenUtils.heightNavBarNotExisted);
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                 }
-            },500);
+            }, 500);
         }
 
         showAnimation();

@@ -393,6 +393,32 @@ public class AlarmPopupConfigAnalyzer {
         return true;
     }
 
+    /**
+     * 检查必填项
+     * -------新添加的------
+     * @param alarmPopupModel
+     * @return
+     */
+    public static boolean checkAlarmCanGoOnNext(@NonNull AlarmPopupModel alarmPopupModel) {
+        ArrayList<Boolean> canDoNexts = new ArrayList<>();
+        if (alarmPopupModel.mainTags != null) {
+            boolean canDoNext = false;
+            for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
+                if (mainTag.isChose) {
+                    canDoNext = true;
+                    break;
+                }
+            }
+            canDoNexts.add(canDoNext);
+        }
+        for (Boolean doNext : canDoNexts) {
+            if (!doNext) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static Map<String, Integer> createAlarmPopupServerData(@NonNull final AlarmPopupModel alarmPopupModel) {
         Integer displayStatus = null;
         if (alarmPopupModel.mainTags != null) {

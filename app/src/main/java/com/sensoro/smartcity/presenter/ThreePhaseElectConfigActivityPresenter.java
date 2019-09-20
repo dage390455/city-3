@@ -384,19 +384,44 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 recommendedTransformerValueModel3.value = 400;
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else {
+                //TODO >400 按400算
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                recommendedTransformerValueModel3.isRecommend = true;
+                deployControlSettingData.setRecommTrans(400);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
             }
-//            else if (inputValue <= 400) {
-//                //400/40mA
-//                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
-//                recommendedTransformerValueModel3.value = 400;
-//                recommendedTransformerValueModel3.isRecommend = true;
-//                deployControlSettingData.setRecommTrans(400);
-//                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-//            } else {
-//                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
-//                return;
-//            }
-            else {
+        } else if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType)) {
+            //特殊互感器匹配
+            if (inputValue > 0 && inputValue <= 120) {
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel1.value = 120;
+                recommendedTransformerValueModel1.isRecommend = true;
+                deployControlSettingData.setRecommTrans(120);
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel2.value = 250;
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else if (inputValue <= 250) {
+                //200A/40mA
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel2.value = 250;
+                recommendedTransformerValueModel2.isRecommend = true;
+                deployControlSettingData.setRecommTrans(250);
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else {
                 //TODO >400 按400算
                 RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
                 recommendedTransformerValueModel3.value = 400;
@@ -405,6 +430,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
             }
         } else {
+            //其他么默认250-400
             if (inputValue > 0 && inputValue <= 250) {
                 //
                 RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
@@ -425,17 +451,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
 
             }
-//            else if (inputValue <= 400) {
-//                //400/40mA
-//                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
-//                recommendedTransformerValueModel3.value = 400;
-//                recommendedTransformerValueModel3.isRecommend = true;
-//                deployControlSettingData.setRecommTrans(400);
-//                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-//            } else {
-//                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
-//                return;
-//            }
         }
 
         deployControlSettingData.setSwitchSpec(actualRatedCurrent);

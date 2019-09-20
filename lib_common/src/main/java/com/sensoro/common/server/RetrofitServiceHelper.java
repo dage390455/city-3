@@ -2,6 +2,7 @@ package com.sensoro.common.server;
 
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +20,9 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.server.bean.ForestFireCameraBean;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
+import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
@@ -524,6 +528,13 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceBriefInfoList(order, sort, null, page, Constants.DEFAULT_PAGE_SIZE, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
+
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, int count, String sensorTypes, String mergeTypes, Integer status, String
+            search) {
+        return retrofitService.getDeviceBriefInfoList(null, null, sns, page, count, 1, 1,
+                sensorTypes, mergeTypes, status, search);
+    }
+
 
     /**
      * 主页top信息
@@ -1905,6 +1916,24 @@ public class RetrofitServiceHelper {
         return retrofitService.doDevicePositionCalibration(sn, body);
     }
 
+
+    public Observable<ResponseResult<ForestFireCameraBean>> doDevicePositionModify(String sn, Double lon, Double lat) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("sn", sn);
+            JSONObject  infoJsonObject = new JSONObject();
+            infoJsonObject.put("longitude",lon);
+            infoJsonObject.put("latitude",lat);
+            jsonObject.put("info", infoJsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        return retrofitService.doDevicePositionModify(body);
+    }
+
+
     public Observable<ResponseResult> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
                                                      String enterpriseRegisterId,
                                                      String customerName,
@@ -2139,6 +2168,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCamera(sn);
     }
 
+
+
     /**
      * 获取用户下摄像头列表
      *
@@ -2301,6 +2332,52 @@ public class RetrofitServiceHelper {
     public Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
+
+    public Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+
+        return getForestFireDeviceCameraListByFilter(pageSize, page, search, "",mapFilter);
+    }
+
+    public Observable<ResponseResult<ForestFireCameraListInfo>> getForestFireDeviceCameraListByFilter(Integer pageSize, Integer page, String search, String gatewayCigId,Map<String, String> mapFilter) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("pageSize",pageSize);
+            jsonObject.put("page",page);
+
+            if (!TextUtils.isEmpty(search)) {
+                jsonObject.put("search", search);
+            }
+            if (!TextUtils.isEmpty(gatewayCigId)) {
+                jsonObject.put("gatewayCigId", gatewayCigId);
+            }
+
+            if(!mapFilter.isEmpty()&&mapFilter.containsKey("deviceStatus")){
+                jsonObject.put("deviceStatus", mapFilter.get("deviceStatus"));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        return retrofitService.getForestFireDeviceCameraListByFilter(requestBody);
+    }
+
+    public Observable<ResponseResult<ForestFireCameraDetailInfo>> getForestFireDeviceCameraDetail(String sn) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject.put("sn", sn);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getForestFireDeviceCameraDetail(requestBody);
+    }
+
 
 
     public Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
@@ -2670,5 +2747,47 @@ public class RetrofitServiceHelper {
      */
     public Observable<ResponseResult<Object>> updateSensoroData(@Body SensoroBugData data) {
         return retrofitService.updateSensoroData(data);
+    }
+
+    /**
+     * 获取摄像头 数组sn
+     *
+     * @param sn 默认先给10000条
+     * @return
+     */
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getCameraList(List<String> sn) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            if (sn != null && sn.size() > 0) {
+                jsonArray.put(sn);
+            }
+            jsonObject.put("sn", jsonArray);
+            jsonObject.put("page", 1);
+            jsonObject.put("pageSize", 10000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getCameraList(requestBody);
+    }
+
+    /**
+     * 关闭火警接口
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<ResponseResult<Object>> doCloseFireWarn( String sn) {
+        JSONObject jsonObject = new JSONObject();
+        if (!TextUtils.isEmpty(sn)){
+            try {
+                jsonObject.put("sn", sn);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doCloseFireWarn(requestBody);
     }
 }

@@ -3,9 +3,11 @@ package com.sensoro.smartcity.adapter;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,24 +46,6 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
     }
 
     public void updateDevices(final List<InspectionTaskDeviceDetail> devices) {
-        //TODO 采用动态刷新 数据错位，暂时放弃
-//        ThreadPoolManager.getInstance().execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                InspectionTaskContentAdapterDiff inspectionTaskContentAdapterDiff = new InspectionTaskContentAdapterDiff(mDevices, devices);
-//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(inspectionTaskContentAdapterDiff, true);
-//                mContext.runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        diffResult.dispatchUpdatesTo(InspectionTaskRcContentAdapter.this);
-//                        mDevices.clear();
-//                        mDevices.addAll(devices);
-//                    }
-//                });
-//
-//
-//            }
-//        });
         mDevices.clear();
         mDevices.addAll(devices);
         notifyDataSetChanged();

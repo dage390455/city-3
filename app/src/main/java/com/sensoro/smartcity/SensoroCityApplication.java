@@ -69,7 +69,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
 
     public static String VIDEO_PATH;
 
-//    public BLEDeviceManager bleDeviceManager;
+    //    public BLEDeviceManager bleDeviceManager;
     private final Runnable iBeaconTask = new Runnable() {
         private boolean noStateOut = true;
         private boolean noStateIn = true;

@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,12 +18,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
@@ -40,6 +43,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@Route(path = ARouterConstants.ACTIVITY_ALARM_HISTORY_LOG)
 public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivityView, AlarmHistoryLogActivityPresenter>
         implements IAlarmHistoryLogActivityView, AlarmHistoryLogRcContentAdapter.OnAlarmHistoryLogConfirmListener, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {
     @BindView(R.id.include_imv_title_imv_arrows_left)
@@ -252,7 +256,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @Override
     public void setNoContentVisible(boolean isVisible) {
         RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
-        if (refreshHeader!=null){
+        if (refreshHeader != null) {
             refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
         }
         if (isVisible) {

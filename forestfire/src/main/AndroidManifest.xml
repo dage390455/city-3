@@ -4,7 +4,9 @@
 
     <application>
 
-        <activity android:name=".activity.ForestFireListActivity" />
+        <activity android:name=".activity.ForestFireCameraListActivity" />
+        <activity android:name=".activity.ForestFireCameraDetailActivity" />
+
     </application>
 
 </manifest>

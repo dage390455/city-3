@@ -47,7 +47,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
-import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindow;
+import com.sensoro.common.widgets.CameraListFilterPopupWindow;
 
 import java.util.List;
 
@@ -177,7 +177,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity);
+        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(mActivity,CameraListFilterPopupWindow.FILL_MODE_RATE,0.75f);
         mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {

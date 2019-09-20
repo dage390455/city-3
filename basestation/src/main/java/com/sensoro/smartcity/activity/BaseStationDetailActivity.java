@@ -640,14 +640,14 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     @OnClick({R2.id.navigation_cl, R2.id.include_text_title_imv_arrows_left, R2.id.ac_basestation_rl_channel, R2.id.ac_basestation_tv_today, R2.id.ac_basestation_tv_week, R2.id.rl_network_information, R2.id.rl_self_check_state})
 
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.navigation_cl){
+        int viewID = view.getId();
+        if (viewID == R.id.navigation_cl) {
             mPresenter.doNavigation();
-        }else    if(viewID==R.id.include_text_title_imv_arrows_left){
+        } else if (viewID == R.id.include_text_title_imv_arrows_left) {
             finish();
-        }else    if(viewID==R.id.ac_basestation_rl_channel){
+        } else if (viewID == R.id.ac_basestation_rl_channel) {
             mPresenter.startFrequencyPointActivity();
-        }else    if(viewID==R.id.ac_basestation_tv_today){
+        } else if (viewID == R.id.ac_basestation_tv_today) {
             currentClick = 0;
             if (twentyhourChart.getData() != null) {
                 twentyhourChart.setVisibility(View.VISIBLE);
@@ -663,7 +663,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
             acBasestationTvWeek.setTextColor(getResources().getColor(R.color.c_a6a6a6));
             acBasestationTvToday.setBackground(null);
-        }else    if(viewID==R.id.ac_basestation_tv_week){
+        } else if (viewID == R.id.ac_basestation_tv_week) {
             currentClick = 1;
             if (sevendaysChart.getData() != null) {
 
@@ -679,9 +679,9 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
             acBasestationTvToday.setTextColor(getResources().getColor(R.color.c_a6a6a6));
             acBasestationTvWeek.setBackground(null);
-        }else    if(viewID==R.id.rl_network_information){
+        } else if (viewID == R.id.rl_network_information) {
             mPresenter.startNetWorkInfoActivity();
-        }else    if(viewID==R.id.rl_self_check_state){
+        } else if (viewID == R.id.rl_self_check_state) {
             mPresenter.startSelfCheckActivity();
         }
 

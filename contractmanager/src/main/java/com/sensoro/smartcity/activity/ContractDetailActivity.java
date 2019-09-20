@@ -3,9 +3,11 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -181,19 +183,19 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.ac_contract_detail_tv_contract_preview, R2.id.ac_contract_detail_tv_create_qr_code
             , R2.id.include_text_title_tv_subtitle, R2.id.ac_contract_detail_tv_contract_more, R2.id.ac_contract_detail_ll_contract_look_qr_code})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
+        int viewID = view.getId();
 
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.include_text_title_tv_subtitle){
+        } else if (viewID == R.id.include_text_title_tv_subtitle) {
             mPresenter.doEditContract();
-        }else if(viewID==R.id.ac_contract_detail_tv_contract_preview){
+        } else if (viewID == R.id.ac_contract_detail_tv_contract_preview) {
             mPresenter.doPreviewActivity();
-        }else if(viewID==R.id.ac_contract_detail_tv_create_qr_code){
+        } else if (viewID == R.id.ac_contract_detail_tv_create_qr_code) {
             mPresenter.doViewContractQrCode();
-        }else if(viewID==R.id.ac_contract_detail_ll_contract_look_qr_code){
+        } else if (viewID == R.id.ac_contract_detail_ll_contract_look_qr_code) {
             mPresenter.doViewContractQrCode();
-        }else if(viewID==R.id.ac_contract_detail_tv_contract_more){
+        } else if (viewID == R.id.ac_contract_detail_tv_contract_more) {
             doMore();
         }
 

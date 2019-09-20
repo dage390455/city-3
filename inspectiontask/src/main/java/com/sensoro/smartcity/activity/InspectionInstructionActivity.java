@@ -1,10 +1,20 @@
 package com.sensoro.smartcity.activity;
 
+
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionInstructionActivity
+ * 简  述: <巡检内容页,要点：设备名称，巡检图片列表>
+ */
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -74,7 +84,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
         mContentAdapter.setOnInspectionInstructionContentPicClickListenter(new InspectionInstructionContentAdapter.OnInspectionInstructionContentPicClickListenter() {
             @Override
             public void onInspectionInstructionContentPicClick(List<ScenesData> dataList, int position) {
-                mPresenter.doPreviewPhoto(dataList,position);
+                mPresenter.doPreviewPhoto(dataList, position);
             }
         });
     }

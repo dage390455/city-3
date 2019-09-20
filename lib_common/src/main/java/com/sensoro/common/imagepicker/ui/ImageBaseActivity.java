@@ -53,14 +53,13 @@ public class ImageBaseActivity extends AppCompatActivity {
         ActivityTaskManager.getInstance().pushActivity(this);
 
 
-
         //取消bar
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.hide();
         }
 //        设置状态栏
-        ImmersionBar  immersionBar = ImmersionBar.with(this);
+        ImmersionBar immersionBar = ImmersionBar.with(this);
         immersionBar.fitsSystemWindows(true, com.sensoro.common.R.color.white)
                 .statusBarColor(com.sensoro.common.R.color.white)
                 .statusBarDarkFont(true)

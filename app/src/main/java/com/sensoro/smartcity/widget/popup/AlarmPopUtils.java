@@ -476,7 +476,7 @@ public class AlarmPopUtils implements Constants,
             mSlidePopUtils.showDialog(mActivity);
             return;
         }
-        setUpdateButtonClickable(false);
+//        setUpdateButtonClickable(false);
 
         String remark = etAlarmPopupRemark.getText().toString();
         if (!TextUtils.isEmpty(remark)) {
@@ -765,7 +765,11 @@ public class AlarmPopUtils implements Constants,
     public void setUpdateButtonClickable(boolean canClick) {
         if (btAlarmPopupCommit != null) {
             if (canClick) {
-                btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
+                if (mAlarmPopupModel != null) {
+                    btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
+                } else {
+                    btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
+                }
             } else {
                 btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button_normal));
             }

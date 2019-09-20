@@ -159,7 +159,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             String filePath = FileUtil.getSaveFile(mActivity.getApplicationContext()).getAbsolutePath();
 //            if (!TextUtils.isEmpty(contentType)) {
 //                if (CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(contentType)) {
-                    recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, filePath);
+            recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, filePath);
 //                } else if (CameraActivity.CONTENT_TYPE_ID_CARD_BACK.equals(contentType)) {
 //                    recIDCard(IDCardParams.ID_CARD_SIDE_BACK, filePath);
 //                }
@@ -177,7 +177,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
     public void onMessageEvent(String msg) {
         if ("ocr_ui__file_success".equals(msg)) {
             recPersonalLicense();
-        }else if("ocr_ui__file_failed".equals(msg)){
+        } else if ("ocr_ui__file_failed".equals(msg)) {
             if (isAttachedView()) {
                 getView().dismissProgressDialog();
                 getView().toastShort(mActivity.getString(R.string.identification_failed_try_again));

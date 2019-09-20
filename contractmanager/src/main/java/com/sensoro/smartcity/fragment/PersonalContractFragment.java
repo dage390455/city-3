@@ -234,30 +234,30 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
             R2.id.iv_contract_age_del, R2.id.iv_contract_age_add, R2.id.iv_contract_age_first_del, R2.id.iv_contract_age_first_add,
             R2.id.iv_contract_age_period_del, R2.id.iv_contract_age_period_add, R2.id.fg_personal_contract_tv_submit})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
+        int viewID = view.getId();
 
-        if(viewID==R.id.fg_personal_contract_imv_owner_name){
+        if (viewID == R.id.fg_personal_contract_imv_owner_name) {
             mPresenter.doTakePhoto();
-        }else if(viewID==R.id.fg_personal_contract_ll_site_nature){
+        } else if (viewID == R.id.fg_personal_contract_ll_site_nature) {
             AppUtils.showDialog(mRootFragment.getActivity(), new SelectDialog.SelectDialogListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     setSiteNature(sites.get(position));
                 }
             }, sites, getResources().getString(R.string.contract_info_site_nature));
-        }else if(viewID==R.id.iv_contract_age_del){
+        } else if (viewID == R.id.iv_contract_age_del) {
             contractAgeAddOrSubtract(etContractAge, false);
-        }else if(viewID==R.id.iv_contract_age_add){
+        } else if (viewID == R.id.iv_contract_age_add) {
             contractAgeAddOrSubtract(etContractAge, true);
-        }else if(viewID==R.id.iv_contract_age_first_del){
+        } else if (viewID == R.id.iv_contract_age_first_del) {
             contractAgeAddOrSubtract(etContractAgeFirst, false);
-        }else if(viewID==R.id.iv_contract_age_first_add){
+        } else if (viewID == R.id.iv_contract_age_first_add) {
             contractAgeAddOrSubtract(etContractAgeFirst, true);
-        }else if(viewID==R.id.iv_contract_age_period_del){
+        } else if (viewID == R.id.iv_contract_age_period_del) {
             contractAgeAddOrSubtract(etContractAgePeriod, false);
-        }else if(viewID==R.id.iv_contract_age_period_add){
+        } else if (viewID == R.id.iv_contract_age_period_add) {
             contractAgeAddOrSubtract(etContractAgePeriod, true);
-        }else if(viewID==R.id.fg_personal_contract_tv_submit){
+        } else if (viewID == R.id.fg_personal_contract_tv_submit) {
             String partA = fgPersonalContractEtPartA.getText().toString();
             String ownerName = fgPersonalContractEtOwnerName.getText().toString();
             String contactInfo = fgPersonalContractEtContactInfo.getText().toString();

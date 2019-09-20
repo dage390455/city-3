@@ -122,10 +122,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (supportActionBar != null) {
             supportActionBar.hide();
         }
-        onCreateInit(savedInstanceState);
         StatService.setDebugOn(BuildConfig.DEBUG);
         ARouter.getInstance().inject(this);
         ActivityTaskManager.getInstance().pushActivity(this);
+        onCreateInit(savedInstanceState);
     }
 
     /**

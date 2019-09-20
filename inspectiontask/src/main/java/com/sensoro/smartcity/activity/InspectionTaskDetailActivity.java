@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionTaskDetailActivity
+ * 简  述: <巡检任务页,要点：任务编号，既定巡检时间，设备数量，巡检内容，状态显示，巡检任务详情入口>
+ */
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
@@ -148,12 +154,12 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.ac_inspection_detail_btn_start, R2.id.ac_inspection_detail_task_rl_content})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else  if(viewID==R.id.ac_inspection_detail_btn_start){
+        } else if (viewID == R.id.ac_inspection_detail_btn_start) {
             mPresenter.doBtnStart();
-        }else if(viewID==R.id.ac_inspection_detail_task_rl_content){
+        } else if (viewID == R.id.ac_inspection_detail_task_rl_content) {
             mPresenter.doRlContent();
         }
 
@@ -168,14 +174,13 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
     public void setTvState(int colorId, String text) {
         Resources resources = getResources();
         GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
-        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        gd.setBounds(0, 0, gd.getMinimumWidth(), gd.getMinimumHeight());
         int color = resources.getColor(colorId);
         gd.setColor(color);
-        acInspectionDetailTaskTvState.setCompoundDrawables(gd,null,null,null);
+        acInspectionDetailTaskTvState.setCompoundDrawables(gd, null, null, null);
         acInspectionDetailTaskTvState.setTextColor(color);
         acInspectionDetailTaskTvState.setText(text);
     }
-
 
 
     @Override

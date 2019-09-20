@@ -525,39 +525,39 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void onClick(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.ac_contract_manger_add){
+        int viewID = view.getId();
+        if (viewID == R.id.ac_contract_manger_add) {
             mPresenter.startToAdd();
-        }else  if(viewID==R.id.contract_iv_menu_list){
+        } else if (viewID == R.id.contract_iv_menu_list) {
             finishAc();
-        }else if(viewID==R.id.contract_return_top){
+        } else if (viewID == R.id.contract_return_top) {
             contractPtrList.smoothScrollToPosition(0);
             closeRefreshHeaderOrFooter();
-        }else if(viewID==R.id.contract_tv_select_type){
+        } else if (viewID == R.id.contract_tv_select_type) {
             if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                 mSelectStatusPop.dismiss();
             }
             AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
             mPresenter.doSelectTypePop();
-        }else if(viewID==R.id.btn_search_clear){
+        } else if (viewID == R.id.btn_search_clear) {
             showHistoryClearDialog();
-        }else if(viewID==R.id.contract_tv_select_status){
+        } else if (viewID == R.id.contract_tv_select_status) {
             AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
             mPresenter.doSelectStatusPop();
-        }else if(viewID==R.id.ac_contract_record_imv_calendar){
+        } else if (viewID == R.id.ac_contract_record_imv_calendar) {
             mPresenter.doCalendar(fgMainWarnTitleRoot);
             AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
-        }else if(viewID==R.id.fg_main_warn_top_search_date_close){
+        } else if (viewID == R.id.fg_main_warn_top_search_date_close) {
             fgMainWarnRlDateEdit.setVisibility(View.GONE);
             String text = fgMainWarnEtSearch.getText().toString();
             setSearchHistoryVisible(false);
             AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
             mPresenter.requestSearchData(Constants.DIRECTION_DOWN, text);
-        }else if(viewID==R.id.tv_contract_search_cancel){
+        } else if (viewID == R.id.tv_contract_search_cancel) {
             doCancelSearch();
             setSearchHistoryVisible(false);
             AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
-        }else if(viewID==R.id.ac_contract_record_search_imv_clear){
+        } else if (viewID == R.id.ac_contract_record_search_imv_clear) {
             fgMainWarnEtSearch.getText().clear();
             fgMainWarnEtSearch.requestFocus();
             AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);

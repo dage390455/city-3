@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.common.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,9 +12,10 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.R;
+import com.sensoro.common.R2;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,12 +119,12 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
 
 
     class InspectionTaskStateSelectHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_pop_tv_select_state)
+        @BindView(R2.id.item_pop_tv_select_state)
         TextView itemPopTvSelectState;
-        @BindView(R.id.selected_tick_iv)
+        @BindView(R2.id.selected_tick_iv)
         ImageView selected_tick_iv;
 
-        @BindView(R.id.item_pop_select_ll_root)
+        @BindView(R2.id.item_pop_select_ll_root)
         RelativeLayout itemPopSelectLlRoot;
 
         InspectionTaskStateSelectHolder(View itemView) {

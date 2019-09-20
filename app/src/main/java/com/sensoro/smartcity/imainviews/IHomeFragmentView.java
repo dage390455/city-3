@@ -18,11 +18,11 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void setImvSearchVisible(boolean isVisible);
 
-    void refreshHeaderData(boolean isResetHeaderPosition,boolean isFirstInit, List<HomeTopModel> data);
+    void refreshHeaderData(boolean isResetHeaderPosition, boolean isFirstInit, List<HomeTopModel> data);
 
     void returnTop();
 
-    void refreshContentData(boolean isFirstInit, boolean isPageChanged, List<DeviceInfo>  deviceInfoList);
+    void refreshContentData(boolean isFirstInit, boolean isPageChanged, List<DeviceInfo> deviceInfoList);
 
 //    void recycleViewRefreshComplete();
 
@@ -54,18 +54,18 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     int getFirstVisibleItemPosition();
 
 
-
     /**
-     *  状态变化数据更新过度动画设置
+     * 状态变化数据更新过度动画设置
      */
-    void  startAnimation(View view,int animResID);
+    void startAnimation(View view, int animResID);
 
     /**
-     *  过滤条件查看窗口
+     * 过滤条件查看窗口
      */
     void updateSelectFilterConditionPopAndShow(List mSortConditionList, SortConditionModel selectedCondition);
 
     void updateSelectFilterCondition(List mSortConditionList, SortConditionModel selectedCondition);
+
     void resetTypeAndSortCondition();
 
 

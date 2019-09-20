@@ -44,6 +44,8 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void showBleConfigDialog();
 
+    void showRetryDialog();
+
     void updateBleConfigDialogMessage(String msg);
 
     void dismissBleConfigDialog();

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
@@ -114,6 +115,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
         //安防历史搜索记录
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN);
+        Log.d("TYPE_SEARCH_HISTORY_SECURITY_WARN",list+"");
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);

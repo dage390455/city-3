@@ -17,6 +17,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.inspectiontask.R;
+import com.sensoro.smartcity.constant.InspectionConstant;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.common.imagepicker.ImagePicker;
 import com.sensoro.common.imagepicker.ui.ImageAlarmPhotoDetailActivity;
@@ -70,10 +71,10 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
                 ArrayList<ScenesData> images = new ArrayList<>();
                 ArrayList<ScenesData> videoThumbs = new ArrayList<>();
                 for (ScenesData imgAndVedio : imgAndVedios) {
-                    if ("image".equals(imgAndVedio.type)) {
+                    if (Constants.RES_IMAGE.equals(imgAndVedio.type)) {
                         //图片资源的话后台没有thumb，所以是直接给url
                         images.add(imgAndVedio);
-                    } else if ("video".equals(imgAndVedio.type)) {
+                    } else if (Constants.RES_VIDEO.equals(imgAndVedio.type)) {
                         videoThumbs.add(imgAndVedio);
                     }
                 }
@@ -116,15 +117,6 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
     }
 
     public void doPreviewCamera(ScenesData item) {
-//        ImageItem imageItem = new ImageItem();
-//        imageItem.isRecord = true;
-//        imageItem.thumbPath = item.thumbUrl;
-//        imageItem.path = item.url;
-//        Intent intent = new Intent();
-//        intent.setClass(mContext, VideoPlayActivity.class);
-//        intent.putExtra("path_record", (Serializable) imageItem);
-//        intent.putExtra("video_del", true);
-//        getView().startAC(intent);
 
         ImageItem imageItem = new ImageItem();
         imageItem.isRecord = true;
@@ -132,9 +124,10 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
         imageItem.path = item.url;
 
 
-        Bundle bundle=new Bundle();
-        bundle.putSerializable(Constants.EXTRA_PATH_RECORD,imageItem);;
-        bundle.putBoolean(Constants.EXTRA_VIDEO_DEL,true);
-        startActivity(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.EXTRA_PATH_RECORD, imageItem);
+        ;
+        bundle.putBoolean(Constants.EXTRA_VIDEO_DEL, true);
+        startActivity(ARouterConstants.ACTIVITY_VIDEP_PLAY, bundle, mContext);
     }
 }

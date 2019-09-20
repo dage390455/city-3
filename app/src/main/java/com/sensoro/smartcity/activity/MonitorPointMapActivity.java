@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-
 @Route(path = ARouterConstants.ACTIVITY_MonitorPointMap_Activity)
 public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivityView, MonitorPointMapActivityPresenter> implements IMonitorPointMapActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)

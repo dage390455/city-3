@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionExceptionDetailActivity
+ * 简  述: <巡检异常详情页>
+ */
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -197,8 +203,8 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @OnClick({R2.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID== R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
         }
     }

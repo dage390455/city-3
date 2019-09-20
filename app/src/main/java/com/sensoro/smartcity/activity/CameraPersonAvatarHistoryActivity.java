@@ -273,8 +273,8 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
                         .placeholder(R.drawable.person_locus_placeholder)
                         .error(R.drawable.person_locus_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
-                        .skipMemoryCache(false)
-                        .dontAnimate()
+                .skipMemoryCache(false)
+                .dontAnimate()
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }
 }

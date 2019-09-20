@@ -37,32 +37,36 @@ public interface ARouterConstants {
     String ACTIVITY_TAKE_RECORD = "/app/activity/TakeRecordActivity";
 
 
-
-//    摄像头组件相关路由配置
+    //    摄像头组件相关路由配置
     String ACTIVITY_CITY_CAMERA_LAUNCHER = "/city_camera/activity/LauncherActivity";
-//    巡检任务组件化相关路由配置
+    //    巡检任务组件化相关路由配置
     String ACTIVITY_INSPECTIONTASK_List = "/inspectiontask/activity/InspectionTaskListActivity";
     String ACTIVITY_INSPECTION = "/inspectiontask/activity/InspectionActivity";
     String ACTIVITY_INSPECTION_EXCEPTION_DETAIL = "/inspectiontask/activity/InspectionExceptionDetailActivity";
 
 
-//合同管理组件化路由配置
+    //合同管理组件化路由配置
     String ACTIVITY_CONTRACT_MANAGER = "/contractmanager/activity/ContractManagerActivity";
-    String ACTIVITY_CONTRACT_EDITOR="/contractmanager/activity/ContractEditorActivity";
-    String ACTIVITY_BASESTATION_LIST= "/basestation/activity/BaseStationListActivity";
+    String ACTIVITY_CONTRACT_EDITOR = "/contractmanager/activity/ContractEditorActivity";
+    String ACTIVITY_BASESTATION_LIST = "/basestation/activity/BaseStationListActivity";
 
 
-    String ACTIVITY_MonitorPointMap_Activity="/smartcity/activity/MonitorPointMapActivity";
-    String ACTIVITY_MonitorPointMap_ENActivity="/smartcity/activity/MonitorPointMapENActivity";
-
+    String ACTIVITY_MonitorPointMap_Activity = "/smartcity/activity/MonitorPointMapActivity";
+    String ACTIVITY_MonitorPointMap_ENActivity = "/smartcity/activity/MonitorPointMapENActivity";
 
 
     //组件化模拟登录过程使用
     String ACTIVITY_LOGIN_TEST = "/logintest/activity/LoginTestActivity";
 
 
-    //    森林防火组件化
-    String ACTIVITY_FORESTFIRE_LIST = "/forestfire/activity/ForestFireListActivity";
 
+//    森林防火组件化
+    String ACTIVITY_FORESTFIRE_CAMERA_LIST = "/forestfire/activity/ForestFireCameraListActivity";
+    String ACTIVITY_FORESTFIRE_CAMERA_DETAIL = "/forestfire/activity/ForestFireCameraDetailActivity";
+
+
+    String ACTIVITY_ALARM_HISTORY_LOG = "/app/activity/AlarmHistoryLogActivity";
+
+    String ACTIVITY_DEPLOY_MAP="/app/activity/DeployMapActivity";
 
 }

@@ -50,4 +50,7 @@ public interface IDeployCameraDetailActivityView extends IToast, IProgressDialog
     void setDeployOrientation(String orientation);
 
     void setDeployCameraStatus(String status);
+
+    void showRetryDialog();
+
 }

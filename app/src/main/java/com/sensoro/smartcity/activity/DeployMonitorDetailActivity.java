@@ -24,7 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.CustomCornerDialog;
@@ -36,6 +38,7 @@ import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
+import com.sensoro.smartcity.widget.dialog.DeployRetryDialogUtils;
 
 import java.util.List;
 
@@ -126,7 +129,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView tvFirstContact;
     @BindView(R.id.tv_total_contact)
     TextView tvTotalContact;
-//    @Autowired()
+    private DeployRetryDialogUtils retryDialog;
+    //    @Autowired()
 //    Intent intent;
 
     @Override
@@ -149,6 +153,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
         initUploadDialog();
+        initRetryDialog();
         initRcAlarmContact();
         initRcDeployDeviceTag();
         if (!AppUtils.isChineseLanguage()) {
@@ -295,6 +300,34 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         }
         super.onDestroy();
     }
+
+    private void initRetryDialog() {
+        retryDialog = new DeployRetryDialogUtils(mActivity);
+        retryDialog.setonRetrylickListener(new DeployRetryDialogUtils.onRetrylickListener() {
+
+            @Override
+            public void onCancelClick() {
+                retryDialog.dismiss();
+//                EventData eventData = new EventData();
+//                eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_FINISH;
+//                EventBus.getDefault().post(eventData);
+//                finishAc();
+            }
+
+            @Override
+            public void onDismiss() {
+
+            }
+
+            @Override
+            public void onConfirmClick() {
+                mPresenter.doConfirm();
+                retryDialog.dismiss();
+
+            }
+        });
+    }
+
 
     private void initUploadDialog() {
         progressDialog = new ProgressDialog(mActivity);
@@ -519,6 +552,22 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void showBleConfigDialog() {
         mLoadBleConfigDialog.showProgress();
+    }
+
+    @Override
+    public void showRetryDialog() {
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            if (null != retryDialog) {
+                if (userData.hasDeployOfflineTask) {
+                    retryDialog.show(mActivity.getResources().getString(R.string.retries), mActivity.getResources().getString(R.string.upload_offline), mActivity.getResources().getString(R.string.retryimmediately));
+                } else {
+                    retryDialog.show(mActivity.getResources().getString(R.string.retries), mActivity.getResources().getString(R.string.cancel), mActivity.getResources().getString(R.string.retryimmediately));
+                }
+            }
+
+        }
+
     }
 
     @Override

@@ -69,7 +69,6 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         for (int resId : InspectionConstant.INSPECTION_EXCEPTION_TAGS) {
             exceptionTags.add(mContext.getString(resId));
         }
-//        Collections.addAll(exceptionTags, INSPECTION_EXCEPTION_TAGS);
         getView().updateExceptionTagAdapter(exceptionTags);
     }
 
@@ -95,11 +94,9 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 }
             }
             getView().updateImageList(selImageList);
-//            updateButton();
         } else if (Constants.IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
             names.add(mContext.getString(R.string.take_photo));
-//            names.add("相册");
             names.add(mContext.getString(R.string.shooting_video));
             getView().showDialog(this, names, mContext.getResources().getString(R.string.camera_photo));
         } else {
@@ -113,10 +110,10 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //                mContext.startActivityForResult(intent, Constants.REQUEST_CODE_PLAY_RECORD);
 
 
-                Bundle bundle=new Bundle();
-                bundle.putSerializable(Constants.EXTRA_PATH_RECORD,imageItem);
-                bundle.putBoolean(Constants.EXTRA_VIDEO_DEL,true);
-                startActivityForResult(ARouterConstants.ACTIVITY_VIDEP_PLAY,bundle,mContext,Constants.REQUEST_CODE_PLAY_RECORD);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constants.EXTRA_PATH_RECORD, imageItem);
+                bundle.putBoolean(Constants.EXTRA_VIDEO_DEL, true);
+                startActivityForResult(ARouterConstants.ACTIVITY_VIDEP_PLAY, bundle, mContext, Constants.REQUEST_CODE_PLAY_RECORD);
 
             } else {
                 Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
@@ -134,16 +131,16 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
      */
     @Override
     public void onClick(View v) {
-        int viewID=v.getId();
-        if(viewID==R.id.dialog_tv_exception){
+        int viewID = v.getId();
+        if (viewID == R.id.dialog_tv_exception) {
             needChangeDevice = false;
             getView().dismissExceptionDialog();
             doException();
-        }else   if(viewID==R.id.dialog_tv_upload_change_device){
+        } else if (viewID == R.id.dialog_tv_upload_change_device) {
             needChangeDevice = true;
             getView().dismissExceptionDialog();
             doException();
-        }else  if(viewID==R.id.dialog_tv_waite){
+        } else if (viewID == R.id.dialog_tv_waite) {
             getView().dismissExceptionDialog();
         }
     }
@@ -159,17 +156,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     private void doUploadAndChange() {
-        //TODO 更换设备 上传异常
-//        Intent intent = new Intent(mContext, ScanActivity.class);
-//        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
-//        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
-//        getView().startAC(intent);
 
-
-        Bundle bundle=new Bundle();
-        bundle.putSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO,mDeviceDetail);
-        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE,Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
-        startActivity(ARouterConstants.ACTIVITY_SCAN,bundle,mContext);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
+        bundle.putInt(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle, mContext);
 
     }
 
@@ -228,12 +219,10 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                     //添加图片返回
                     if (alarmPopModel.requestCode == Constants.REQUEST_CODE_SELECT) {
                         if (alarmPopModel.imageItems != null) {
-//                            adapter.setMaxImgCount(9);
                             if (!alarmPopModel.fromTakePhoto) {
                                 selImageList.clear();
                             }
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -241,10 +230,8 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                     //预览图片返回
                     if (alarmPopModel.requestCode == Constants.REQUEST_CODE_PREVIEW) {
                         if (alarmPopModel.imageItems != null) {
-//                            adapter.setMaxImgCount(9);
                             selImageList.clear();
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -252,15 +239,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                     //拍视频
                     if (alarmPopModel.requestCode == Constants.REQUEST_CODE_RECORD) {
                         if (alarmPopModel.imageItems != null) {
-//                            adapter.setMaxImgCount(9);
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     } else if (alarmPopModel.requestCode == Constants.REQUEST_CODE_PLAY_RECORD) {
-//                        adapter.setMaxImgCount(9);
-//                        selImageList.clear();
-//                        adapter.updateImages(selImageList);
+
                     }
 
                 }
@@ -289,25 +272,13 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
                 mContext.startActivityForResult(intent, Constants.REQUEST_CODE_SELECT);
                 break;
-//            case 1:
-//                //打开选择,本次允许选择的数量
-//                //修改选择逻辑
-////              ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-//                ImagePicker.getInstance().setSelectLimit(maxImgCount);
-//                Intent intent1 = new Intent(mContext, ImageGridActivity.class);
-//                /* 如果需要进入选择的时候显示已经选中的图片，
-//                 * 详情请查看ImagePickerActivity
-//                 * */
-//                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
-//                mContext.startActivityForResult(intent1, REQUEST_CODE_SELECT);
-//                break;
             case 1:
 //                Intent intent2 = new Intent(mContext, TakeRecordActivity.class);
 ////                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
 //                mContext.startActivityForResult(intent2, Constants.REQUEST_CODE_RECORD);
 
 
-                startActivityForResult(ARouterConstants.ACTIVITY_TAKE_RECORD,null,mContext,Constants.REQUEST_CODE_RECORD);
+                startActivityForResult(ARouterConstants.ACTIVITY_TAKE_RECORD, null, mContext, Constants.REQUEST_CODE_RECORD);
                 break;
             default:
                 break;
@@ -336,17 +307,14 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         }
         if (isAttachedView()) {
             getView().dismissUploadProgressDialog();
-//        toastShort("上传成功---");
             // 上传结果
             doUploadInspectionException(scenesDataList);
-//        mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
         }
 
     }
 
     @Override
     public void onError(String errMsg) {
-//        setUpdateButtonClickable(true);
         if (isAttachedView()) {
             getView().dismissUploadProgressDialog();
             getView().toastShort(errMsg);

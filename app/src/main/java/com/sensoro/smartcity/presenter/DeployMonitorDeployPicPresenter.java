@@ -204,6 +204,9 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     }
 
     public void doSave() {
+        if(!isAttachedView())
+            return;
+
 //        if (selImages[0] == null) {
 //            getView().toastShort(mActivity.getString(R.string.please_select_device_pic));
 //            return;

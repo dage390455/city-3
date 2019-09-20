@@ -24,11 +24,11 @@ public class ForestFireTestActivity extends Activity {
 
 
     private final String[] requestPermissions = {Permission.READ_PHONE_STATE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION, Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.WRITE_CONTACTS, Permission.READ_CONTACTS, Permission.CAMERA, Permission.RECORD_AUDIO, Permission.CALL_PHONE};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forestfire_test);
+
 
 
         findViewById(R.id.btn_picker).setOnClickListener(new View.OnClickListener() {
@@ -36,7 +36,7 @@ public class ForestFireTestActivity extends Activity {
             public void onClick(View view) {
 
                 ARouter.getInstance().build(ARouterConstants.ACTIVITY_LOGIN_TEST)
-                        .withString(Constants.ROUTEPATH, ARouterConstants.ACTIVITY_FORESTFIRE_LIST)
+                        .withString(Constants.ROUTEPATH,ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIST)
                         .withTransition(R.anim.slide_left, R.anim.slide_out)
                         .navigation(ForestFireTestActivity.this);
             }
@@ -56,7 +56,6 @@ public class ForestFireTestActivity extends Activity {
 
 
     private PermissionDialogUtils permissionDialogUtils;
-
     private void requestPermissions(final String[] permissions) {
         AndPermission.with(this).runtime()
                 .permission(permissions)
@@ -73,7 +72,7 @@ public class ForestFireTestActivity extends Activity {
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        permissionDialogUtils.setTipMessageText(getString(R.string.permission_descript)).setTipConfirmText(getString(R.string.reauthorization), getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                        permissionDialogUtils.setTipMessageText(getString(R.string.permission_descript)).setTipConfirmText(getString(R.string.reauthorization),getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
                             @Override
                             public void onCancelClick() {
                                 executor.cancel();

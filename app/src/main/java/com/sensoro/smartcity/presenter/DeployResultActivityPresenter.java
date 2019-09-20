@@ -37,7 +37,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         deployResultModel = (DeployResultModel) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL);
         //
         try {
-            LogUtils.loge("deployResultModel signal : "+deployResultModel.signal);
+            LogUtils.loge("deployResultModel signal : " + deployResultModel.signal);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -570,6 +570,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     }
 
     public void doRightButton() {
+        if(!isAttachedView())
+            return;
+
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE;
         switch (deployResultModel.resultCode) {

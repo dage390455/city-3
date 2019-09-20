@@ -63,10 +63,10 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     @OnClick({R2.id.bt_share, R2.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
 
-        int viewID=view.getId();
-        if(viewID==R.id.bt_share){
+        int viewID = view.getId();
+        if (viewID == R.id.bt_share) {
             mPresenter.sharePic();
-        }else if(viewID==R.id.include_text_title_imv_arrows_left){
+        } else if (viewID == R.id.include_text_title_imv_arrows_left) {
             mPresenter.finish();
         }
     }

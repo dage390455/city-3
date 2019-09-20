@@ -70,6 +70,7 @@ public class UserPermissionFactory {
         eventLoginData.hasIBeaconSearchDemo = getHasIBeaconSearchDemo(grants);
         eventLoginData.hasMonitorTaskList = getHasMonitorTaskList(grants);
         eventLoginData.hasMonitorTaskConfirm = getHasMonitorTaskConfirm(grants);
+        eventLoginData.hasDeployOfflineTask = getHasDeployOfflineTask(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
 //        if("admin".equalsIgnoreCase(eventLoginData.roles)){
@@ -722,6 +723,17 @@ public class UserPermissionFactory {
                 return grantsMonitorTask.contains("confirm");
             }
         }
+        return false;
+    }
+
+    /**
+     * 是否有离线上传权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeployOfflineTask(GrantsInfo grants) {
+        //TODO 这版暂时不进行离线上传
         return false;
     }
 

@@ -134,14 +134,14 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.include_text_title_tv_subtitle, R2.id.ac_contract_editor_personal_contract, R2.id.ac_contract_editor_business_contract})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.include_text_title_tv_subtitle){
+        } else if (viewID == R.id.include_text_title_tv_subtitle) {
             finishAc();
-        }else if(viewID==R.id.ac_contract_editor_personal_contract){
+        } else if (viewID == R.id.ac_contract_editor_personal_contract) {
             showPersonalFragment();
-        }else if(viewID==R.id.ac_contract_editor_business_contract){
+        } else if (viewID == R.id.ac_contract_editor_business_contract) {
             showBusinessFragment();
         }
 

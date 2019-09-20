@@ -1,14 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.sensoro.basestation" >
+    package="com.sensoro.basestation">
 
 
-<application>
+    <application>
 
-    <activity android:name="com.sensoro.smartcity.activity.BaseStationListActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.BaseStationDetailActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.SelfCheckActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.FrequencyPointActivity" />
-    <activity android:name="com.sensoro.smartcity.activity.NetWorkInfoActivity" />
-</application>
+        <activity android:name="com.sensoro.smartcity.activity.BaseStationListActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.BaseStationDetailActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.SelfCheckActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.FrequencyPointActivity" />
+        <activity android:name="com.sensoro.smartcity.activity.NetWorkInfoActivity" />
+    </application>
 
 </manifest>

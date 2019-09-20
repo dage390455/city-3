@@ -50,13 +50,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
-    private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;
     private Activity mContext;
@@ -86,10 +86,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private void getCloudVideo() {
 
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            getView().setLlVideoSize(-1);
+            getView().setLlVideoSizeAndContent(-1,null);
             return;
         }
-
         String[] eventIds = {deviceAlarmLogInfo.get_id()};
         RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -101,18 +100,20 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                             mVideoBean = data.get(0);
                             List<AlarmCloudVideoBean.MediasBean> mMedias = mVideoBean.getMedias();
                             if (mMedias != null && mMedias.size() > 0) {
-                                getView().setLlVideoSize(mMedias.size());
+                                String text = String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.alarm_camera_video)
+                                        , mMedias.size(), mContext.getString(R.string.video_unit_duan));
+                                getView().setLlVideoSizeAndContent(mMedias.size(),text);
                             } else {
-                                getView().setLlVideoSize(-1);
+                                getView().setLlVideoSizeAndContent(-1,null);
                             }
                         } else {
-                            getView().setLlVideoSize(-1);
+                            getView().setLlVideoSizeAndContent(-1,null);
                         }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().setLlVideoSize(-1);
+                        getView().setLlVideoSizeAndContent(-1,null);
                     }
                 });
     }
@@ -173,13 +174,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
     }
 
-    public void refreshData(boolean isInit) {
+    private void refreshData(boolean isInit) {
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
-        if (isAttachedView()) {
-            getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        }
         String deviceSN = deviceAlarmLogInfo.getDeviceSN();
+        if (isAttachedView()) {
+            getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceSN : deviceName);
+        }
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mContext.getString(R.string.device_number) + mContext.getString(R.string.unknown);
         } else {
@@ -202,19 +203,16 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 getView().showProgressDialog();
             }
         }
+        if (isAttachedView()) {
+            getView().updateAlertLogContentAdapter(deviceAlarmLogInfo);
+        }
 //        getView().setDisplayStatus(deviceAlarmLogInfo.getDisplayStatus());
 //        getView().setSensoroIv(deviceAlarmLogInfo.getSensorType());
         AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
         if (recordInfoArray != null) {
-            mList.clear();
-            for (int i = recordInfoArray.length - 1; i >= 0; i--) {
-                mList.add(recordInfoArray[i]);
-            }
-            if (isAttachedView()) {
-                getView().updateAlertLogContentAdapter(mList);
-            }
             //
-            switch (deviceAlarmLogInfo.getDisplayStatus()) {
+            int displayStatus = deviceAlarmLogInfo.getDisplayStatus();
+            switch (displayStatus) {
                 case Constants.DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
                     if (isAttachedView()) {
@@ -235,17 +233,26 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     }
                     break;
             }
+            boolean isAlarm = false;
             for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-                if (recordInfo.getType().equals("recovery")) {
-                    if (isAttachedView()) {
-                        getView().setCurrentAlarmState(0, alarmTime);
-                    }
-                    return;
+                if ("recovery".equals(recordInfo.getType())) {
+                    isAlarm = false;
+                } else {
+                    isAlarm = true;
                 }
             }
-            if (isAttachedView()) {
-                getView().setCurrentAlarmState(1, alarmTime);
+            boolean needShowCloseFire = false;
+            if ("binocular".equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
+                if (Constants.DISPLAY_STATUS_ALARM == displayStatus || Constants.DISPLAY_STATUS_RISKS == displayStatus) {
+                    needShowCloseFire = true;
+                }
             }
+            //TODO 是否显示关闭火警
+            if (isAttachedView()) {
+                getView().setCurrentAlarmState(alarmTime);
+                getView().setCloseWarnVisible(needShowCloseFire);
+            }
+
         }
 
 
@@ -320,7 +327,6 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        mList.clear();
     }
 
     public void doContactOwner() {
@@ -486,5 +492,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
         getView().startAC(intent);
+    }
+
+    public void doCloseWarn() {
+
     }
 }

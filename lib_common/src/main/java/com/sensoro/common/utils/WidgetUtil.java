@@ -326,7 +326,7 @@ public class WidgetUtil {
     }
 
 
-    public static boolean compare(String  param1,String param2){
+    public static boolean compare(String param1, String param2) {
         return param1.equalsIgnoreCase(param2);
     }
 
@@ -335,12 +335,12 @@ public class WidgetUtil {
         if (value instanceof String) {
             if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 monitoringPointRcContentAdapterModel.content = (String) value;
-            } else if (compare(sensorType,"co")||
-                    compare(sensorType,"temperature") ||
-                    compare(sensorType,"humidity") ||
-                    compare(sensorType,"waterPressure") ||
-                    compare(sensorType,"no2") ||
-                    compare(sensorType,"temp1")) {
+            } else if (compare(sensorType, "co") ||
+                    compare(sensorType, "temperature") ||
+                    compare(sensorType, "humidity") ||
+                    compare(sensorType, "waterPressure") ||
+                    compare(sensorType, "no2") ||
+                    compare(sensorType, "temp1")) {
 
                 monitoringPointRcContentAdapterModel.content = (String) value;
             } else {
@@ -384,11 +384,11 @@ public class WidgetUtil {
             sensorType, Object value, String unit) {
         StringBuilder builder = new StringBuilder();
         if (value instanceof String) {
-            if (compare(sensorType,"longitude") || compare(sensorType,"latitude")) {
+            if (compare(sensorType, "longitude") || compare(sensorType, "latitude")) {
                 builder.append((String) value);
-            } else if (compare(sensorType,"co") || compare(sensorType,"temperature") ||
-                    compare(sensorType,"humidity") || compare(sensorType,"waterPressure") ||
-                    compare(sensorType,"no2") || compare(sensorType,"temp1")) {
+            } else if (compare(sensorType, "co") || compare(sensorType, "temperature") ||
+                    compare(sensorType, "humidity") || compare(sensorType, "waterPressure") ||
+                    compare(sensorType, "no2") || compare(sensorType, "temp1")) {
                 builder.append((String) value);
             } else {
                 builder.append((String) value);
@@ -413,12 +413,12 @@ public class WidgetUtil {
                 }
             }
             //TODO 当没有precision字段时
-            if (compare(sensorType,"longitude") || compare(sensorType,"latitude")) {
+            if (compare(sensorType, "longitude") || compare(sensorType, "latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 builder.append(df.format(value));
-            } else if (compare(sensorType,"co") || compare(sensorType,"temperature") ||
-                    compare(sensorType,"humidity") || compare(sensorType,"waterPressure") ||
-                    compare(sensorType,"no2") || compare(sensorType,"temp1")) {
+            } else if (compare(sensorType, "co") || compare(sensorType, "temperature") ||
+                    compare(sensorType, "humidity") || compare(sensorType, "waterPressure") ||
+                    compare(sensorType, "no2") || compare(sensorType, "temp1")) {
                 DecimalFormat df = new DecimalFormat("###.#");
                 builder.append(df.format(value));
             } else {
@@ -576,12 +576,12 @@ public class WidgetUtil {
             unitTextView.setText("");
         }
         if (!isBool) {
-            if (compare(sensorType,"longitude") || compare(sensorType,"latitude")) {
+            if (compare(sensorType, "longitude") || compare(sensorType, "latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 setIndexTextStyle(df.format(value), valueTextView);
-            } else if (compare(sensorType,"co") || compare(sensorType,"temperature") ||
-                    compare(sensorType,"humidity") || compare(sensorType,"waterPressure") ||
-                    compare(sensorType,"no2") || compare(sensorType,"temp1")) {
+            } else if (compare(sensorType, "co") || compare(sensorType, "temperature") ||
+                    compare(sensorType, "humidity") || compare(sensorType, "waterPressure") ||
+                    compare(sensorType, "no2") || compare(sensorType, "temp1")) {
                 DecimalFormat df = new DecimalFormat("###.#");
                 setIndexTextStyle(df.format(value), valueTextView);
             } else {

@@ -1,9 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <array name="sortcondition">
-        <item>Defalut Order</item>
-        <item>Name Order</item>
-        <item>Name Reverse</item>
-    </array>
+
     <!--camera-->
     <string name="capture_time">Capture time</string>
     <string name="process_status">Processing status</string>
@@ -524,6 +520,8 @@
     <string name="inspection_task_search_hint">Name/SN</string>
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">Start inspection</string>
+    <string name="inspection_task_detail_go_on_inspection">Go on inspection</string>
+    <string name="inspection_task_detail_title">Detail</string>
     <string name="inspection_task_detail_task_number">Task ID</string>
     <string name="inspection_task_detail_inspection_established">inspection scheduled time</string>
     <string name="inspection_task_detail_device_counts">Number of devices</string>
@@ -617,6 +615,9 @@
     <string name="alarm_cause_type">Reason Type</string>
     <string name="alarm_place">Alarm site</string>
     <string name="alarm_descript">Please describe the alarm event</string>
+    <string name="alarm_descript_new">Please input</string>
+
+
     <string name="occur_alarm_event">New alarm event</string>
     <string name="look">Check</string>
     <string name="monitor_point_number">Number of monitor point</string>
@@ -1108,6 +1109,7 @@
 
     <string name="mobile_network">You are now using mobile network,  please mind your data usage.</string>
     <string name="camera_manager">Camera Manager</string>
+    <string name="forest_fire_manager">Forest Fire Manager</string>
     <string name="basestation_manager">Basestation Manager</string>
     <string name="camera_living">Living</string>
     <string name="click_select_date">Click to select date</string>
@@ -1303,5 +1305,42 @@
     <string name="device_imei">IMEI</string>
     <string name="device_imsi">IMSI</string>
     <string name="device_iccid">Card（ICCID）</string>
+
+    <!--离线上传-->
+    <string name="offline_deploy_task_detail_title">Offline Detail</string>
+    <string name="offline_dialog_content">You have an unsubmitted offline deployment record, click to submit</string>
+
+    <string name="delete_task">Verify that this cache is deleted</string>
+    <string name="upload_offline">Upload offline</string>
+    <string name="upload_all">upload all</string>
+    <string name="deployed">Deployed</string>
+    <string name="base_station_deployment">Base station deployment</string>
+    <string name="deployment_device">Device deployment</string>
+    <string name="deployment_replacement">Device replacement</string>
+    <string name="successful_deployment">Successful deployment</string>
+    <string name="nosignal">no_signal</string>
+    <string name="forceload">forceload</string>
+    <string name="retries">Whether the network exception retries</string>
+    <string name="retryimmediately">Retry immediately</string>
+
+
+
+    <string name="server_error_alert">server data error deviceTypes</string>
+    <string name="alarm_log_alarm_contact_close_warn">Close Warn</string>
+    <string name="confirm_to_turn_off_the_fire">Confirm close fire</string>
+    <string name="turn_off_the_fire_tips">Confirm that the fire has been dealt with. After the fire incident is closed, if the forest fire is detected again, the platform will restart a new warning event</string>
+
+    <string name="camera_state">Camera State</string>
+    <string name="forest_fire_camera_detail">Details Of Monitoring Points</string>
+    <string name="forest_fire_camera_detail_base_info">Base Information</string>
+    <string name="forest_fire_camera_detail_device_sn">Device sn</string>
+    <string name="forest_fire_camera_detail_device_gatway">Gate way</string>
+    <string name="forest_fire_camera_detail_device_location">Location</string>
+    <string name="forest_fire_camera_detail_device_location_modify">Modify</string>
+    <string name="forest_fire_camera_detail_device_type_name">Forest Fire Camera</string>
+
+
+    <string name="binocular_alarm_tip">Binocular thermal imaging camera</string>
+    <string name="close_binocular_fire_alarm_tip">Manually close this warning. The warning is back to normal</string>
 
 </resources>

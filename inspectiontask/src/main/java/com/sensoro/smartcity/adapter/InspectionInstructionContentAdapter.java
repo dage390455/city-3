@@ -1,21 +1,25 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
 import com.sensoro.common.widgets.TopSpaceItemDecoration;
+import com.sensoro.smartcity.constant.InspectionConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +37,9 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         mContext = context;
         WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         if (windowManager != null) {
-            mScreenWidth = windowManager.getDefaultDisplay().getWidth()-AppUtils.dp2px(mContext,40);//距离两边各20dp
-        }else {
-            mScreenWidth = AppUtils.dp2px(mContext,295);
+            mScreenWidth = windowManager.getDefaultDisplay().getWidth() - AppUtils.dp2px(mContext, 40);//距离两边各20dp
+        } else {
+            mScreenWidth = AppUtils.dp2px(mContext, 295);
         }
 
     }
@@ -57,7 +61,7 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         ArrayList<ScenesData> pics = new ArrayList<>();
         for (String image : images) {
             ScenesData scenesData = new ScenesData();
-            scenesData.type = "image";
+            scenesData.type = Constants.RES_IMAGE;
             scenesData.url = image;
             pics.add(scenesData);
         }
@@ -78,7 +82,7 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         holder.itemAdapterInspectionInstructionContentRcPic.setLayoutManager(manager);
         holder.itemAdapterInspectionInstructionContentRcPic.setHasFixedSize(true);
         holder.itemAdapterInspectionInstructionContentRcPic.setNestedScrollingEnabled(false);
-        holder.itemAdapterInspectionInstructionContentRcPic.addItemDecoration(new TopSpaceItemDecoration(AppUtils.dp2px(mContext,12)));
+        holder.itemAdapterInspectionInstructionContentRcPic.addItemDecoration(new TopSpaceItemDecoration(AppUtils.dp2px(mContext, 12)));
         holder.itemAdapterInspectionInstructionContentRcPic.setAdapter(mPhotoAdapter);
         mPhotoAdapter.updateDataList(pics);
     }
@@ -95,7 +99,7 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         notifyDataSetChanged();
     }
 
-    public void setOnInspectionInstructionContentPicClickListenter(OnInspectionInstructionContentPicClickListenter listenter){
+    public void setOnInspectionInstructionContentPicClickListenter(OnInspectionInstructionContentPicClickListenter listenter) {
         mListener = listenter;
     }
 
@@ -107,14 +111,14 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         @BindView(R2.id.item_adapter_inspection_instruction_content_rc_pic)
         RecyclerView itemAdapterInspectionInstructionContentRcPic;
 
-         InspectionInstructionContentHolder(View itemView) {
+        InspectionInstructionContentHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
 
         }
     }
 
-    public interface OnInspectionInstructionContentPicClickListenter{
+    public interface OnInspectionInstructionContentPicClickListenter {
         void onInspectionInstructionContentPicClick(List<ScenesData> dataList, int position);
     }
 }

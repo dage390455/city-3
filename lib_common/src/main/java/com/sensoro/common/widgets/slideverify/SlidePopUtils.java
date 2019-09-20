@@ -12,36 +12,34 @@ import java.lang.ref.WeakReference;
 public class SlidePopUtils {
     private SliderVertifyDialog mSliderVertifyDialog;
     private WeakReference<Activity> activity;
-    private String title,desc;
+    private String title, desc;
 
     private boolean cancelable = false;
     Button btn_cancel;
     SlideVerifity mSlideVerifity;
-    TextView tv_title,tv_desc;
+    TextView tv_title, tv_desc;
 
 
-    public SlidePopUtils(){
+    public SlidePopUtils() {
 
     }
 
 
-
-
-    public  void showDialog(Activity mActivity) {
-        if(mSliderVertifyDialog==null){
-            activity=new WeakReference<>(mActivity);
+    public void showDialog(Activity mActivity) {
+        if (mSliderVertifyDialog == null) {
+            activity = new WeakReference<>(mActivity);
             View view = View.inflate(activity.get(), R.layout.sliderverification_dialog, null);
-            tv_title=view.findViewById(R.id.tv_title);
-            tv_desc=view.findViewById(R.id.tv_desc);
-            mSliderVertifyDialog = new SliderVertifyDialog(activity.get(), view,R.style.SliderVertifyDialogStyle);
+            tv_title = view.findViewById(R.id.tv_title);
+            tv_desc = view.findViewById(R.id.tv_desc);
+            mSliderVertifyDialog = new SliderVertifyDialog(activity.get(), view, R.style.SliderVertifyDialogStyle);
             mSliderVertifyDialog.setCancelable(cancelable);
             mSliderVertifyDialog.setCanceledOnTouchOutside(cancelable);
-            mSlideVerifity=view.findViewById(R.id.svf);
-            btn_cancel=view.findViewById(R.id.btn_cancel);
+            mSlideVerifity = view.findViewById(R.id.svf);
+            btn_cancel = view.findViewById(R.id.btn_cancel);
             btn_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        dismissDialog();
+                    dismissDialog();
                 }
             });
 
@@ -73,7 +71,8 @@ public class SlidePopUtils {
                 }
 
             });
-        };
+        }
+        ;
 
         mSliderVertifyDialog.show();
         tv_title.setText(title);
@@ -83,7 +82,8 @@ public class SlidePopUtils {
 
     }
 
-    VerifityResultListener  listener;
+    VerifityResultListener listener;
+
     public VerifityResultListener getListener() {
         return listener;
     }
@@ -95,16 +95,13 @@ public class SlidePopUtils {
     }
 
 
-
-
-
     public void dismissDialog() {
         if (mSliderVertifyDialog != null) {
             mSliderVertifyDialog.dismiss();
         }
     }
 
-    public SlidePopUtils setTitle(String title){
+    public SlidePopUtils setTitle(String title) {
         this.title = title;
         if (mSliderVertifyDialog != null) {
             tv_title.setText(title);
@@ -135,7 +132,7 @@ public class SlidePopUtils {
         return null;
     }
 
-    public  void destroySlideVerifyDialog() {
+    public void destroySlideVerifyDialog() {
         if (mSliderVertifyDialog != null) {
             mSliderVertifyDialog.cancel();
             mSliderVertifyDialog = null;

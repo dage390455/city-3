@@ -21,6 +21,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.ListMultiVideoActivity;
 import com.sensoro.smartcity.activity.NearByDeviceActivity;
+import com.sensoro.smartcity.activity.OfflineDeployActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
@@ -96,8 +97,21 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line10;
     @BindView(R.id.fg_main_manage_ll_nearby)
     LinearLayout fgMainManageLlNearby;
+    @BindView(R.id.fg_main_manage_ll_deploy_retry)
+    LinearLayout fgMainManageLlDeployRetry;
     @BindView(R.id.line11)
     FrameLayout line11;
+
+    @BindView(R.id.line12)
+    FrameLayout line12;
+    @BindView(R.id.fg_main_manage_ll_forestfire_manage)
+    LinearLayout fgMainManageLlForestfireCamera;
+    @BindView(R.id.line13)
+    FrameLayout line13;
+
+
+
+
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
@@ -235,7 +249,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
             R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
             R.id.fg_main_manage_ll_nameplate, R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check,
-            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera, R.id.fg_main_manage_ll_basestation, R.id.fg_main_manage_ll_nearby})
+            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera,
+            R.id.fg_main_manage_ll_basestation, R.id.fg_main_manage_ll_nearby,R.id.fg_main_manage_ll_deploy_retry,R.id.fg_main_manage_ll_forestfire_manage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -280,18 +295,22 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             case R.id.fg_main_manage_ll_camera:
                 startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
                 break;
+            case R.id.fg_main_manage_ll_forestfire_manage:
+                mPresenter.doManageForestFire();
+                break;
             case R.id.fg_main_manage_ll_nameplate:
                 mPresenter.doManageNameplate();
-//                ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_LIST).navigation(mRootFragment.getActivity());
-//                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:
-
-//                startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
                 mPresenter.doBaseStationList();
                 break;
             case R.id.fg_main_manage_ll_nearby:
                 startAC(new Intent(mRootFragment.getActivity(), NearByDeviceActivity.class));
+                break;
+            case R.id.fg_main_manage_ll_deploy_retry:
+
+
+                startAC(new Intent(mRootFragment.getActivity(), OfflineDeployActivity.class));
                 break;
         }
     }
@@ -315,6 +334,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setContractVisible(boolean isVisible) {
         fgMainManageLlContractManagement.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         line2.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployOfflineTaskVisible(boolean hasDeployOfflineTask) {
+        fgMainManageLlDeployRetry.setVisibility(hasDeployOfflineTask ? View.VISIBLE : View.GONE);
+        line12.setVisibility(hasDeployOfflineTask ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -371,6 +396,13 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         line11.setVisibility(hasIBeacon ? View.VISIBLE : View.GONE);
         fgMainManageLlNearby.setVisibility(hasIBeacon ? View.VISIBLE : View.GONE);
     }
+
+    @Override
+    public void setForestfireManagerVisible(boolean isVisible) {
+        line13.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        fgMainManageLlForestfireCamera.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 
     @Override
     public void onCancelClick() {

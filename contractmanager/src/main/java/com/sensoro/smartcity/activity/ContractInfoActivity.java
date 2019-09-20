@@ -2,8 +2,10 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -173,15 +175,15 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
         super.onDestroy();
     }
 
-    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.bt_confirm,R2.id.include_text_title_tv_subtitle})
+    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.bt_confirm, R2.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.bt_confirm){
+        } else if (viewID == R.id.bt_confirm) {
             String text = btConfirm.getText().toString();
             mPresenter.startToConfirm(text);
-        }else if(viewID==R.id.include_text_title_tv_subtitle){
+        } else if (viewID == R.id.include_text_title_tv_subtitle) {
             mPresenter.startToEdit();
         }
     }
@@ -228,7 +230,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 if ("无".equals(line3)) {
                     ivLine3.setVisibility(View.GONE);
                     llContractInfoLine3.setVisibility(View.GONE);
-                }else{
+                } else {
                     ivLine3.setVisibility(View.VISIBLE);
                     llContractInfoLine3.setVisibility(View.VISIBLE);
                     etContractInfoLine3.setText(line3);
@@ -237,7 +239,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 if ("无".equals(line4)) {
                     ivLine4.setVisibility(View.GONE);
                     llContractInfoLine4.setVisibility(View.GONE);
-                }else{
+                } else {
                     ivLine4.setVisibility(View.VISIBLE);
                     llContractInfoLine4.setVisibility(View.VISIBLE);
                     etContractInfoLine4.setText(line4);

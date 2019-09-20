@@ -99,6 +99,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO = "extra_grants_has_ibeacon_search_demo";
     String EXTRA_GRANTS_HAS_MONITOR_TASK_LIST = "extra_grants_has_monitor_task_list";
     String EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM = "extra_grants_has_monitor_task_confirm";
+    String EXTRA_GRANTS_HAS_DEPLOY_OFFLINE_TASK = "extra_grants_has_deploy_offline_task";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
@@ -235,6 +236,7 @@ public interface Constants {
     //部署
     int REQUEST_CODE_INIT_CONFIG = 0x114;
 
+    int REQUEST_FOREST_DETAIL_LOCATION=0x115;
 
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
@@ -302,6 +304,8 @@ public interface Constants {
 
     int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE = 1;
     int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL = 2;
+    int FOREST_FIRE_DEVICE_DETAIL = 0X67;
+
 
     int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
     int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
@@ -337,6 +341,8 @@ public interface Constants {
     int EVENT_DATA_PERMISSIONCHANGE = 0x65;
 
 
+
+
     //camera
     String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
     String EXTRA_PERSON_AVATAR_HISTORY_FACE_ID = "extra_person_avatar_history_face_id";
@@ -364,6 +370,10 @@ public interface Constants {
     String EXTRA_ASSOCIATION_SENSOR_BIND_LIST = "extra_association_sensor_bind_list";
     String EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST = "extra_association_sensor_add_bind_list";
     String EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID = "extra_association_sensor_nameplate_id";
+
+
+    String OFFLINE_DEPLOYANALYZERMODEL_SP = "offline_DeployAnalyzerModel_sp";
+    String OFFLINE_DEPLOYANALYZERMODEL_KEY = "offline_DeployAnalyzerModel_key";
     //
 
     String PREFERENCE_VIDEO_FORMAT_SETTING_SP = "preference_video_format_setting_sp";
@@ -400,6 +410,17 @@ public interface Constants {
 
     String EXTRA_PATH_RECORD = "path_record";
     String EXTRA_VIDEO_DEL = "video_del";
+
+
+
+
+    //巡检url类型数值
+     String  RES_IMAGE="image";
+    String  RES_VIDEO="video";
+
+
+
+
 
 
     //

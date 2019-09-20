@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionUploadExceptionActivity
+ * 简  述: <巡检异常上报页面,要点：巡检备注说明，图片>
+ */
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -122,20 +128,16 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         acInspectionUploadExceptionEtRemark.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-//                if(initEtRemarkWidth!=-1){
                 int diff = acInspectionUploadExceptionEtRemark.getHeight() - initEtRemarkWidth;
                 initEtRemarkWidth = acInspectionUploadExceptionEtRemark.getHeight();
                 if (diff > 0 && !TextUtils.isEmpty(acInspectionUploadExceptionEtRemark.getText().toString())) {
-//                        acInspectionUploadExceptionScrollView.setScrollY(diff);
                     acInspectionUploadExceptionScrollView.smoothScrollBy(0, diff);
                 }
-//                }
             }
         });
     }
 
     private void initExceptionUploadDialog() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         View view = View.inflate(mActivity, R.layout.item_dialog_inspection_exception_upload, null);
         dialogTvException = view.findViewById(R.id.dialog_tv_exception);
         dialogTvUpload = view.findViewById(R.id.dialog_tv_upload_change_device);
@@ -144,14 +146,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         dialogTvException.setOnClickListener(mPresenter);
         dialogTvUpload.setOnClickListener(mPresenter);
         dialogTvWaite.setOnClickListener(mPresenter);
-//        builder.setView(view);
-
-//        mExceptionDialog = new ;
         mExceptionDialog = new CustomCornerDialog(mActivity, R.style.CustomCornerDialogStyle, view);
-//        Window window = mExceptionDialog.getWindow();
-//        if (window != null) {
-//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        }
 
     }
 
@@ -248,10 +243,10 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.ac_inspection_upload_exception_tv_upload, R2.id.ac_inspection_upload_exception_sf})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.include_text_title_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else   if(viewID==R.id.ac_inspection_upload_exception_tv_upload){
+        } else if (viewID == R.id.ac_inspection_upload_exception_tv_upload) {
             List<Integer> selectTags = getSelectTags();
             if (selectTags.size() == 0) {
                 toastShort(mActivity.getString(R.string.must_select_a_tag_type));
@@ -262,7 +257,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
             } else {
                 toastShort(mActivity.getString(R.string.upload_at_least_one_photo_or_a_video));
             }
-        }else  if(viewID==R.id.ac_inspection_upload_exception_sf){
+        } else if (viewID == R.id.ac_inspection_upload_exception_sf) {
             acInspectionUploadExceptionEtRemark.setFocusable(true);
             acInspectionUploadExceptionEtRemark.setFocusableInTouchMode(true);
             acInspectionUploadExceptionEtRemark.requestFocus();

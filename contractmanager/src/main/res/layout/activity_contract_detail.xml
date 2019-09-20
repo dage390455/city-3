@@ -26,16 +26,14 @@
                 android:textSize="12dp" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:background="@color/white"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:clipChildren="true"
-                >
+                android:clipChildren="true">
 
                 <TextView
                     android:id="@+id/ac_contract_detail_tv_contract_status"
@@ -44,8 +42,7 @@
                     android:textSize="16dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/ac_contract_detail_imv_pay"
@@ -53,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_contract_pay"
-                    android:layout_marginStart = "8dp"
+                    android:layout_marginStart="8dp"
                     android:visibility="gone"
                     app:layout_constraintStart_toEndOf="@id/ac_contract_detail_tv_contract_status"
                     app:layout_constraintTop_toTopOf="@id/ac_contract_detail_tv_contract_status"
@@ -71,8 +68,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_goneMarginBottom="16dp"
                     app:layout_constraintTop_toBottomOf="@id/ac_contract_detail_tv_contract_status"
-                    app:layout_constraintBottom_toTopOf="@+id/ac_contract_detail_ll_expand"
-                    />
+                    app:layout_constraintBottom_toTopOf="@+id/ac_contract_detail_ll_expand" />
 
 
                 <TextView
@@ -86,8 +82,8 @@
                     android:text="@string/contract_more_record"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/ac_contract_detail_tv_contract_time"
-                    app:layout_constraintBottom_toBottomOf="@id/ac_contract_detail_tv_contract_time"
-                    />
+                    app:layout_constraintBottom_toBottomOf="@id/ac_contract_detail_tv_contract_time" />
+
                 <LinearLayout
                     android:id="@+id/ac_contract_detail_ll_contract_look_qr_code"
                     android:layout_width="0dp"
@@ -99,21 +95,22 @@
                     app:layout_constraintStart_toEndOf="@id/ac_contract_detail_tv_contract_time"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/look_qr_code"
                         android:contentDescription="@null"
-                        android:layout_marginEnd= "12dp"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_marginEnd="12dp"
+                        android:layout_gravity="center_vertical" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/arrows_right"
                         android:contentDescription="@null"
-                        android:layout_gravity="center_vertical"/>
+                        android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
 
@@ -131,27 +128,28 @@
                     app:layout_constraintStart_toStartOf="parent"
 
                     >
+
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_contract_create_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12dp"
-                        android:textColor="@color/c_252525"/>
+                        android:textColor="@color/c_252525" />
+
                     <View
                         android:id="@+id/ac_contract_detail_view_contract_pay_time"
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_marginTop="12dp"
-                        android:background="@color/c_dfdfdf"
-                        />
+                        android:background="@color/c_dfdfdf" />
+
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_contract_pay_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="12dp"
                         android:textColor="@color/c_a6a6a6"
-                        android:layout_marginTop="12dp"
-                        />
+                        android:layout_marginTop="12dp" />
 
                 </LinearLayout>
 
@@ -165,8 +163,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/monitor_point_information"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12dp"
-               />
+                android:textSize="12dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -182,8 +179,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    >
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_part_a_enterprise"
@@ -389,32 +385,32 @@
                 android:orientation="vertical">
 
                 <!--<RelativeLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:paddingBottom="16dp">-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingTop="16dp"-->
+                <!--android:paddingBottom="16dp">-->
 
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:layout_marginStart="20dp"-->
-                        <!--android:text="@string/contract_info_contract_status"-->
-                        <!--android:textColor="@color/c_a6a6a6"-->
-                        <!--android:textSize="14dp" />-->
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginStart="20dp"-->
+                <!--android:text="@string/contract_info_contract_status"-->
+                <!--android:textColor="@color/c_a6a6a6"-->
+                <!--android:textSize="14dp" />-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/ac_contract_detail_sign_status"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignParentEnd="true"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:layout_marginEnd="20dp"-->
-                        <!--android:paddingStart="10dp"-->
-                        <!--android:paddingTop="4dp"-->
-                        <!--android:paddingEnd="10dp"-->
-                        <!--android:paddingBottom="4dp"-->
-                        <!--android:textSize="10dp" />-->
+                <!--<TextView-->
+                <!--android:id="@+id/ac_contract_detail_sign_status"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginEnd="20dp"-->
+                <!--android:paddingStart="10dp"-->
+                <!--android:paddingTop="4dp"-->
+                <!--android:paddingEnd="10dp"-->
+                <!--android:paddingBottom="4dp"-->
+                <!--android:textSize="10dp" />-->
 
                 <!--</RelativeLayout>-->
 

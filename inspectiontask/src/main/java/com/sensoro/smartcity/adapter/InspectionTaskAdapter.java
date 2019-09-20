@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.inspectiontask.R;
 import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
 import com.sensoro.smartcity.constant.InspectionConstant;
 
@@ -25,7 +25,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+import static com.sensoro.smartcity.constant.InspectionConstant.TASK_STATUS_EXCING;
+import static com.sensoro.smartcity.constant.InspectionConstant.TASK_STATUS_PEDNING_EXC;
 
 public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAdapter.InspectionTaskHolder> {
     private final Context mContext;
@@ -49,17 +50,13 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         holder.itemInspectionAdapterTvTitle.setText(tasksBean.getName());
         holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormatPoint(tasksBean.getBeginTime())+" - "+DateUtil.getDateByOtherFormatPoint(tasksBean.getEndTime()));
 
-        //防止status 后台瞎给 造成崩溃，如status 给个6，索引越界
-        try {
-            setTvState(holder, InspectionConstant.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],mContext.getString(InspectionConstant.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setTvState(holder, tasksBean.getStatus());
+
         holder.itemInspectionAdapterClRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onItemClick(v,position);
+                    listener.onItemClick(v, position);
                 }
             }
         });
@@ -70,12 +67,32 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         this.listener = listener;
     }
 
-    private void setTvState(InspectionTaskHolder holder, @ColorRes int color, String text) {
-//        GradientDrawable compoundDrawables = (GradientDrawable) holder.itemInspectionAdapterImvState.getBackground();
-//        compoundDrawables.setColor(mContext.getResources().getColor(color));
-//
-//        holder.itemInspectionAdapterTvState.setText(text);
-//        holder.itemInspectionAdapterTvState.setTextColor(mContext.getResources().getColor(color));
+    private void setTvState(InspectionTaskHolder holder, int status) {
+        int color=R.color.c_8058a5;
+        String text=mContext.getString(R.string.inspection_status_text_pending_execution);
+        switch (status) {
+            case InspectionConstant.TASK_STATUS_PEDNING_EXC:
+                color=R.color.c_8058a5;
+                text=mContext.getString(R.string.inspection_status_text_pending_execution);
+                break;
+            case InspectionConstant.TASK_STATUS_EXCING:
+                color=R.color.c_3aa7f0;
+                text=mContext.getString(R.string.inspection_status_text_executing);
+                break;
+            case InspectionConstant.TASK_STATUS_TIMEOUE_UNDONE:
+                color=R.color.c_ff8d34;
+                text=mContext.getString(R.string.inspection_status_text_timeout_not_completed);
+                break;
+            case InspectionConstant.TASK_STATUS_DONE:
+                color=R.color.c_1dbb99;
+                text=mContext.getString(R.string.inspection_status_text_completed);
+                break;
+            case InspectionConstant.TASK_STATUS_TIMEOUE_DONE:
+                color=R.color.c_a6a6a6;
+                text=mContext.getString(R.string.inspection_status_text_timeout_completed);
+                break;
+        }
+
         WidgetUtil.changeTvState(mContext,holder.itemInspectionAdapterTvState,color,text);
 
     }

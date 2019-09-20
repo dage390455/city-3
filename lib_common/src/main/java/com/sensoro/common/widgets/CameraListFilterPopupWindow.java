@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.popup;
+package com.sensoro.common.widgets;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +16,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.R;
+import com.sensoro.common.adapter.CameraListPopAdapter;
 import com.sensoro.common.utils.ScreenUtils;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.CameraListPopAdapter;
+
 import com.sensoro.common.model.CameraFilterModel;
 
 import java.util.ArrayList;
@@ -28,11 +32,11 @@ import java.util.List;
 
 public class CameraListFilterPopupWindow {
     private final Activity mActivity;
-    private final PopupWindow mPopupWindow;
-    private final View mFl;
+    private  PopupWindow mPopupWindow;
+    private  View mFl,view_space;
     private TranslateAnimation showTranslateAnimation;
     private TranslateAnimation dismissTranslateAnimation;
-    private final RelativeLayout mLl;
+    private  RelativeLayout mLl;
     private TextView resetFilter, saveFilter;
     CameraListPopAdapter cameraListPopAdapter;
 
@@ -41,33 +45,60 @@ public class CameraListFilterPopupWindow {
     private final List<CameraFilterModel> mList = new ArrayList<>();
 
 
-    public CameraListFilterPopupWindow(final Activity activity) {
+    public static  final  int FILL_MODE_RATE=0;
+    public static  final  int FILL_MODE_WRAPCONTENT=1;
+    public static  final  int FILL_MODE_MATHPARENT=2;
+
+    private int fillMode;//0按照0.75高度展示，1，包裹内容展示，2，铺满展示
+    private float  rate=0.75f;
+
+
+    public CameraListFilterPopupWindow(final Activity activity,int fillMode,float rate) {
         mActivity = activity;
-        View view = LayoutInflater.from(activity).inflate(R.layout.pop_camera_list_filter, null);
-        mFl = view.findViewById(R.id.item_pop_rl);
-        final RecyclerView mRcStateSelect = view.findViewById(R.id.pop_rc_camera_list);
-        mLl = view.findViewById(R.id.item_pop_select_state_ll);
-        resetFilter = view.findViewById(R.id.camera_list_reset_filter);
-        saveFilter = view.findViewById(R.id.camera_list_save_filter);
-        view.findViewById(R.id.pop_type_view_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        mRcStateSelect.setLayoutManager(linearLayoutManager);
-        cameraListPopAdapter = new CameraListPopAdapter(activity);
-        mRcStateSelect.setAdapter(cameraListPopAdapter);
-        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+        this.fillMode=fillMode;
+        this.rate=rate;
+        initPopWindows(activity,initView());
+    }
 
-        int height = wm.getDefaultDisplay().getHeight();
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (height * 0.75));
+   private View  initView(){
+       View view = LayoutInflater.from(mActivity).inflate(R.layout.pop_camera_list_filter, null);
+       mFl = view.findViewById(R.id.item_pop_rl);
+       view_space=view.findViewById(R.id.view_space);
+       final RecyclerView mRcStateSelect = view.findViewById(R.id.pop_rc_camera_list);
+       mLl = view.findViewById(R.id.item_pop_select_state_ll);
+       resetFilter = view.findViewById(R.id.camera_list_reset_filter);
+       saveFilter = view.findViewById(R.id.camera_list_save_filter);
+       view.findViewById(R.id.pop_type_view_cancel).setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               dismiss();
+           }
+       });
+       final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+       mRcStateSelect.setLayoutManager(linearLayoutManager);
+       cameraListPopAdapter = new CameraListPopAdapter(mActivity);
+       mRcStateSelect.setAdapter(cameraListPopAdapter);
+       WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+       int height = wm.getDefaultDisplay().getHeight();
+       if(fillMode==FILL_MODE_RATE){
+           view_space.setVisibility(View.GONE);
+           LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (height * rate));
+           mRcStateSelect.setLayoutParams(layoutParams);
+       }else if(fillMode==FILL_MODE_WRAPCONTENT){
+           view_space.setVisibility(View.VISIBLE);
+           LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+           mRcStateSelect.setLayoutParams(layoutParams);
+       }else if(fillMode==FILL_MODE_MATHPARENT){
+           view_space.setVisibility(View.GONE);
+           mFl.getLayoutParams().height=RelativeLayout.LayoutParams.MATCH_PARENT;
+           LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
+           layoutParams.weight=1;
+           mRcStateSelect.setLayoutParams(layoutParams);
+       }
+       return view;
+    }
 
-
-        mRcStateSelect.setLayoutParams(layoutParams);
-
-
+    private void initPopWindows(final Activity activity,View view){
         mPopupWindow = new PopupWindow(activity);
         mPopupWindow.setContentView(view);
 //        mPopupWindow.setOutsideTouchable(true);
@@ -105,7 +136,6 @@ public class CameraListFilterPopupWindow {
                 }
             }
         });
-
     }
 
     private void initAnimation() {
@@ -151,11 +181,11 @@ public class CameraListFilterPopupWindow {
         } else {  // 适配 android 7.0
             int[] location = new int[2];
             view.getLocationOnScreen(location);
-            ScreenUtils.heightNavBarExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight()-ScreenUtils.getNavigationBarHeight(mActivity);
-            ScreenUtils.heightNavBarNotExisted=ScreenUtils.getRealScreenHeight(mActivity) - location[1]- view.getHeight() ;
-            if(ScreenUtils.isNavigationBarExist(mActivity)){
+            ScreenUtils.heightNavBarExisted = ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight() - ScreenUtils.getNavigationBarHeight(mActivity);
+            ScreenUtils.heightNavBarNotExisted = ScreenUtils.getRealScreenHeight(mActivity) - location[1] - view.getHeight();
+            if (ScreenUtils.isNavigationBarExist(mActivity)) {
                 mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
-            }else{
+            } else {
                 mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
             }
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
@@ -164,33 +194,31 @@ public class CameraListFilterPopupWindow {
                 public void run() {
                     ScreenUtils.isNavigationBarExist(mActivity, new ScreenUtils.OnNavigationStateListener() {
                         @Override
-                        public void onNavigationState(boolean isShowing,  int height) {
+                        public void onNavigationState(boolean isShowing, int height) {
                             try {
-                                if(isShowing){
+                                if (isShowing) {
                                     mPopupWindow.setHeight(ScreenUtils.heightNavBarExisted);
-                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarExisted);
-                                }else{
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT, ScreenUtils.heightNavBarExisted);
+                                } else {
                                     mPopupWindow.setHeight(ScreenUtils.heightNavBarNotExisted);
-                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT,ScreenUtils.heightNavBarNotExisted);
+                                    mPopupWindow.update(WindowManager.LayoutParams.MATCH_PARENT, ScreenUtils.heightNavBarNotExisted);
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                 }
-            },500);
+            }, 500);
         }
         int i = cameraListPopAdapter.getItemCount() / 3;
         i *= 100;
-        if(i<300){
+        if (i < 300) {
             i = 300;
         }
         showTranslateAnimation.setDuration(i);
         dismissTranslateAnimation.setDuration(i);
         mFl.startAnimation(showTranslateAnimation);
-
-
 
 
     }

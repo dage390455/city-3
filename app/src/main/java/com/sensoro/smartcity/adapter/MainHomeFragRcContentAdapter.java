@@ -185,7 +185,6 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         }
 
 
-
         int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
@@ -221,9 +220,9 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
         }
         final int colorResId = mContext.getResources().getColor(color);
-        try{
-            LogUtils.logd("imageUrl1",colorResId+"");
-        }catch (Throwable e){
+        try {
+            LogUtils.logd("imageUrl1", colorResId + "");
+        } catch (Throwable e) {
 
         }
         if ("smoke".equalsIgnoreCase(mergeType) && status == SENSOR_STATUS_ALARM) {
@@ -250,7 +249,6 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 
                     }).into(holder.mainRcContentImvIcon);
         }
-
 
 
     }
@@ -315,7 +313,6 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 
         }
     }
-
 
 
     @Override

@@ -53,7 +53,7 @@ public class CameraFilterModel {
         return list;
     }
 
-    public void setListX(List<ListBean> listX) {
+    public void setListX(List<ListBean> list) {
         this.list = list;
     }
 

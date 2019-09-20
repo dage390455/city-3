@@ -26,7 +26,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class BaseStationListActivityPresenter extends BasePresenter<ICameraListActivityViewTest>  {
+public class BaseStationListActivityPresenter extends BasePresenter<ICameraListActivityViewTest> {
     private Activity mContext;
     private volatile int curPage = 1;
     private final List<BaseStationInfo> deviceCameraInfos = new ArrayList<>();

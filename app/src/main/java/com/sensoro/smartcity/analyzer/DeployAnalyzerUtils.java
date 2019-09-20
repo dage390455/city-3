@@ -535,7 +535,7 @@ public class DeployAnalyzerUtils {
                         case 0:
                             if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
 //                                intent.setClass(activity, InspectionActivity.class);
-                                intent.putExtra(ARouterConstants.AROUTER_PATH,ARouterConstants.ACTIVITY_INSPECTION);
+                                intent.putExtra(ARouterConstants.AROUTER_PATH, ARouterConstants.ACTIVITY_INSPECTION);
                             } else {
                                 listener.onError(0, null, activity.getString(R.string.account_no_patrol_device_permissions));
                                 return;
@@ -546,7 +546,7 @@ public class DeployAnalyzerUtils {
                             return;
                         case 2:
 //                            intent.setClass(activity, InspectionExceptionDetailActivity.class);
-                            intent.putExtra(ARouterConstants.AROUTER_PATH,ARouterConstants.ACTIVITY_INSPECTION_EXCEPTION_DETAIL);
+                            intent.putExtra(ARouterConstants.AROUTER_PATH, ARouterConstants.ACTIVITY_INSPECTION_EXCEPTION_DETAIL);
                             break;
                     }
                     intent.putExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);

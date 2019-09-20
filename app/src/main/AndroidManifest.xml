@@ -208,6 +208,8 @@
         <activity android:name=".activity.ThreePhaseElectConfigActivity" />
         <activity android:name=".activity.DeployRecordConfigThreePhaseElectActivity" />
         <activity android:name=".activity.DeployRecordConfigCommonElectActivity" />
+        <activity android:name=".activity.OfflineDeployActivity" />
+        <activity android:name=".activity.OfflineDeployTaskDetailActivity" />
 
         <activity
             android:name=".activity.ListMultiVideoActivity"

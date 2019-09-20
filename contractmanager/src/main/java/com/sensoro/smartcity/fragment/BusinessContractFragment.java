@@ -2,8 +2,10 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -82,7 +84,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     @Override
     protected void initData(Context activity) {
         initView();
-        mPresenter.initData(activity,getArguments());
+        mPresenter.initData(activity, getArguments());
     }
 
     private void initView() {
@@ -133,6 +135,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
             }
         });
     }
+
     private void handleAgeText(String text, EditText editText) {
         if (!TextUtils.isEmpty(text)) {
             try {
@@ -170,7 +173,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        Objects.requireNonNull(mRootFragment.getActivity()).startActivityForResult(intent,requestCode);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -227,34 +230,33 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     }
 
 
-
     @OnClick({R2.id.fg_business_contract_imv_business_merchant_name, R2.id.fg_business_contract_ll_site_nature,
             R2.id.iv_contract_age_del, R2.id.iv_contract_age_add, R2.id.iv_contract_age_first_del, R2.id.iv_contract_age_first_add,
-            R2.id.iv_contract_age_period_del, R2.id.iv_contract_age_period_add,R2.id.fg_business_contract_tv_submit})
+            R2.id.iv_contract_age_period_del, R2.id.iv_contract_age_period_add, R2.id.fg_business_contract_tv_submit})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.fg_business_contract_imv_business_merchant_name){
+        int viewID = view.getId();
+        if (viewID == R.id.fg_business_contract_imv_business_merchant_name) {
             mPresenter.doTakePhoto();
-        }else if(viewID==R.id.fg_business_contract_ll_site_nature){
-            AppUtils.showDialog(mRootFragment.getActivity(),new SelectDialog.SelectDialogListener() {
+        } else if (viewID == R.id.fg_business_contract_ll_site_nature) {
+            AppUtils.showDialog(mRootFragment.getActivity(), new SelectDialog.SelectDialogListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     setSiteNature(sites.get(position));
                 }
             }, sites, getResources().getString(R.string.contract_info_site_nature));
-        }else if(viewID==R.id.iv_contract_age_del){
-            contractAgeAddOrSubtract(etContractAge,false);
-        }else if(viewID==R.id.iv_contract_age_add){
-            contractAgeAddOrSubtract(etContractAge,true);
-        }else if(viewID==R.id.iv_contract_age_first_del){
-            contractAgeAddOrSubtract(etContractAgeFirst,false);
-        }else if(viewID==R.id.iv_contract_age_first_add){
-            contractAgeAddOrSubtract(etContractAgeFirst,true);
-        }else if(viewID==R.id.iv_contract_age_period_del){
-            contractAgeAddOrSubtract(etContractAgePeriod,false);
-        }else if(viewID==R.id.iv_contract_age_period_add){
-            contractAgeAddOrSubtract(etContractAgePeriod,true);
-        }else if(viewID==R.id.fg_business_contract_tv_submit){
+        } else if (viewID == R.id.iv_contract_age_del) {
+            contractAgeAddOrSubtract(etContractAge, false);
+        } else if (viewID == R.id.iv_contract_age_add) {
+            contractAgeAddOrSubtract(etContractAge, true);
+        } else if (viewID == R.id.iv_contract_age_first_del) {
+            contractAgeAddOrSubtract(etContractAgeFirst, false);
+        } else if (viewID == R.id.iv_contract_age_first_add) {
+            contractAgeAddOrSubtract(etContractAgeFirst, true);
+        } else if (viewID == R.id.iv_contract_age_period_del) {
+            contractAgeAddOrSubtract(etContractAgePeriod, false);
+        } else if (viewID == R.id.iv_contract_age_period_add) {
+            contractAgeAddOrSubtract(etContractAgePeriod, true);
+        } else if (viewID == R.id.fg_business_contract_tv_submit) {
             String enterpriseName = fgBusinessContractEtBusinessMerchantName.getText().toString();
             String customerName = fgBusinessContractEtOwnerName.getText().toString();
             String customerPhone = fgBusinessContractEtContactInfo.getText().toString();
@@ -266,21 +268,21 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
             String contractAgeFirstStr = etContractAgeFirst.getText().toString();
             String contractAgePeriodStr = etContractAgePeriod.getText().toString();
             ArrayList<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
-            mPresenter.doSubmit(enterpriseName,customerName,customerPhone,enterpriseCardId,customerAddress,placeType,
+            mPresenter.doSubmit(enterpriseName, customerName, customerPhone, enterpriseCardId, customerAddress, placeType,
                     contractAgeStr, contractAgeFirstStr, contractAgePeriodStr, data);
         }
 
     }
 
-    private void contractAgeAddOrSubtract(EditText editText,boolean isAdd) {
+    private void contractAgeAddOrSubtract(EditText editText, boolean isAdd) {
         String contractAgeAdd = editText.getText().toString();
         if (!TextUtils.isEmpty(contractAgeAdd)) {
             int i = Integer.parseInt(contractAgeAdd);
-            if(isAdd){
+            if (isAdd) {
                 if (i >= 1) {
                     i++;
                 }
-            }else{
+            } else {
                 if (i > 1) {
                     i--;
                 }
@@ -359,7 +361,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
 
     @Override
     public void showSaveSuccessToast() {
-        SensoroSuccessToast.getInstance().showToast(mRootFragment.getActivity(),Toast.LENGTH_SHORT,mRootFragment.getString(R.string.save_success));
+        SensoroSuccessToast.getInstance().showToast(mRootFragment.getActivity(), Toast.LENGTH_SHORT, mRootFragment.getString(R.string.save_success));
     }
 
     @Override

@@ -178,6 +178,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
                             }
                         });
                     }
+
                     @Override
                     public void onAutoComplete(String url, Object... objects) {
                         super.onAutoComplete(url, objects);

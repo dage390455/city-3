@@ -54,11 +54,11 @@ GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
 GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
 GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
 //TODO 测试版/正式版 使用其中一个
-APP_ICON        : "@mipmap/ic_launcher_beta",
-APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+//APP_ICON        : "@mipmap/ic_launcher_beta",
+//APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
 //
-//                APP_ICON        : "@mipmap/ic_launcher",
-//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+                APP_ICON        : "@mipmap/ic_launcher",
+                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
 
         ]
 
@@ -261,6 +261,13 @@ dependencies {
     //
     implementation project(':indicatorseekbar')
 
+    //
+    api project(':bottomnavigation')
+
+    //
+    api('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+        transitive = true
+    }
 
 
     //播放器
@@ -287,7 +294,9 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(path: ':basestation')
     }
-
+    if (!isModule.toBoolean()) {
+        implementation project(path: ':forestfire')
+    }
 
 
 

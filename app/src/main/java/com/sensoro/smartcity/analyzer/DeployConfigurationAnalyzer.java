@@ -41,8 +41,9 @@ public class DeployConfigurationAnalyzer {
                 result[1] = 400;
                 break;
             case "acrel_single":
+            case "acrel300D_fires_2G":
                 //安科瑞单相电
-                result[0] = 12;
+                result[0] = 1;
                 result[1] = 84;
                 break;
             case "mantun_fires":

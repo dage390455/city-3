@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
@@ -24,12 +25,13 @@ import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.HtmlImageSpan;
 import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 
@@ -46,10 +48,10 @@ import static com.sensoro.smartcity.constant.CityConstants.confirmStatusTextColo
 
 public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcContentAdapter.AlertLogRcContentHolder> implements Constants {
     private final Context mContext;
-    private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
-
 
     private LinkedHashMap<Integer, List[]> hashMap = new LinkedHashMap<>();
+    private DeviceAlarmLogInfo mDeviceAlarmLogInfo;
+    private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -58,9 +60,18 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
     private OnPhotoClickListener onPhotoClickListener;
 
-    public void setData(List<AlarmInfo.RecordInfo> recordInfoList) {
-        this.timeShaftParentBeans.clear();
-        this.timeShaftParentBeans.addAll(recordInfoList);
+    public void updateData(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        mDeviceAlarmLogInfo = deviceAlarmLogInfo;
+        timeShaftParentBeans.clear();
+        if (mDeviceAlarmLogInfo != null) {
+            AlarmInfo.RecordInfo[] records = mDeviceAlarmLogInfo.getRecords();
+            if (records != null) {
+                for (int i = records.length - 1; i >= 0; i--) {
+                    timeShaftParentBeans.add(records[i]);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public interface OnPhotoClickListener {
@@ -80,16 +91,16 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
     @Override
     public void onBindViewHolder(AlertLogRcContentHolder holder, int position) {
-
-        //
-
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
+        //
         String time = DateUtil.getStrTimeToday(mContext, recordInfo.getUpdatedTime(), 0);
         holder.itemAlertContentTvTime.setText(time);
         holder.itemAlertContentTvContent.setOnClickListener(null);
         //
-        if ("confirm".equals(recordInfo.getType())) {
-            //TODO 设置图标
+
+        String type = recordInfo.getType();
+        if ("confirm".equals(type)) {
+            //预警确认
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.contact_icon);
             String source = recordInfo.getSource();
             String confirm_text = null;
@@ -161,6 +172,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
             //
             holder.llConfirm.setVisibility(View.VISIBLE);
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
             //预警结果
             //TODO 状态问题
             StringBuilder stringBuilder = new StringBuilder();
@@ -226,7 +238,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             final List<ScenesData> scenes = recordInfo.getScenes();
             if (scenes != null && scenes.size() > 0) {
                 //TODO 防止数据错误清除
-                holder.rvAlarmPhoto.setVisibility(View.VISIBLE);
+                holder.rlItemAlarmDetailChildAlarmPhoto.setVisibility(View.VISIBLE);
                 if (holder.rvAlarmPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
                     holder.rvAlarmPhoto.removeAllViews();
                 }
@@ -256,12 +268,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 //TODO 防止数据错误打标签
                 holder.rvAlarmPhoto.setTag(adapter);
             } else {
-                holder.rvAlarmPhoto.setVisibility(View.GONE);
+                holder.rlItemAlarmDetailChildAlarmPhoto.setVisibility(View.GONE);
             }
 
 
-        } else if ("recovery".equals(recordInfo.getType())) {
-            //TODO 设置图标
+        } else if ("recovery".equals(type)) {
+            //预警恢复
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.no_smoke_icon);
             //
             String sensorType = recordInfo.getSensorType();
@@ -269,7 +281,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 StringBuilder stringBuilder = new StringBuilder();
                 SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
                 if (sensorTypeStyles != null) {
-//                    String trueMean = sensorTypeStyles.getTrueMean();
                     boolean bool = sensorTypeStyles.isBool();
                     if (bool) {
                         int thresholds = recordInfo.getThresholds();
@@ -304,8 +315,9 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                         .getThresholds(), 0));
             }
             holder.llConfirm.setVisibility(View.GONE);
-        } else if ("sendVoice".equals(recordInfo.getType())) {
-            //TODO 设置图标
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
+        } else if ("sendVoice".equals(type)) {
+            //拨打电话
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.phone_icon);
             StringBuilder stringBuffer = new StringBuilder();
 
@@ -327,14 +339,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     break;
                 default:
                     stringBuffer.append(mContext.getString(R.string.the_system_calls_to)).append(":");
-
                     break;
             }
 
-
             holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, position, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
-
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
             holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -345,8 +355,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     phoneMsgDialogUtil.show(0, hashMap.get(position));
                 }
             });
-        } else if ("sendSMS".equals(recordInfo.getType())) {
-            //TODO 设置图标
+        } else if ("sendSMS".equals(type)) {
+            //发送短信
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
             final StringBuilder stringBuffer = new StringBuilder();
             switch (recordInfo.getStatus()) {
@@ -372,77 +382,122 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
 
 
-//            holder.itemAlertContentTvContent.setText();
-
-
             holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, position, recordInfo.getPhoneList()));
 
-
             holder.llConfirm.setVisibility(View.GONE);
-
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
             holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ;
-//                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
 
                     WarnPhoneMsgDialogUtil phoneMsgDialogUtil = new WarnPhoneMsgDialogUtil((Activity) mContext);
                     phoneMsgDialogUtil.setTitleTv(mContext.getResources().getString(R.string.alarm_contact_tip_msg));
                     phoneMsgDialogUtil.show(1, hashMap.get(position));
                 }
             });
-        } else if ("alarm".equals(recordInfo.getType())) {
-            //TODO 设置图标
+        } else if ("alarm".equals(type)) {
+            //发生预警
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
             //
             String sensorType = recordInfo.getSensorType();
             StringBuilder stringBuilder = new StringBuilder();
-            try {
-                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
-                if (sensorTypeStyles != null) {
-                    boolean bool = sensorTypeStyles.isBool();
-                    if (bool) {
-//                    info = "烟雾浓度高，设备预警";
-                        int thresholds = recordInfo.getThresholds();
-                        switch (thresholds) {
-                            case 1:
-                                //true
-                                String trueMean = sensorTypeStyles.getTrueMean();
-                                stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.equipment_warning));
-                                break;
-                            case 0:
-                                //false
-                                String falseMean = sensorTypeStyles.getFalseMean();
-                                stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
-                                break;
-                            default:
-                                String trueMean1 = sensorTypeStyles.getTrueMean();
-                                stringBuilder.append(trueMean1).append("，").append(mContext.getString(R.string.equipment_warning));
-                                break;
+            if ("binocularThermalImaging".equals(sensorType)) {
+                List<ScenesData> scenes = new ArrayList<>();
+                DeviceAlarmLogInfo.Metadata metadata = mDeviceAlarmLogInfo.getMetadata();
+                if (metadata != null) {
+                    if (metadata.getPicUrl() != null) {
+                        List<DeviceAlarmLogInfo.Metadata.MetadataPic> picUrl = metadata.getPicUrl();
+                        if (picUrl != null && picUrl.size() > 0) {
+                            for (DeviceAlarmLogInfo.Metadata.MetadataPic metadataPic : picUrl) {
+                                ScenesData scenesData = new ScenesData();
+                                scenesData.url = metadataPic.getPictureUrl();
+                                scenes.add(scenesData);
+                            }
                         }
-
-                    } else {
-                        String name = sensorTypeStyles.getName();
-                        stringBuilder.append(name);
-////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
-                        int thresholds = recordInfo.getThresholds();
-                        String unit = sensorTypeStyles.getUnit();
-                        stringBuilder.append(" ").append(mContext.getString(R.string.value_is)).append(" ").append(thresholds).append(unit).append(" ").append(mContext.getString(R.string.achieve_warning_value));
                     }
                 }
+                stringBuilder.append(mContext.getString(R.string.binocular_alarm_tip)).append("，").append(mContext.getString(R.string.equipment_warning));
+                if (scenes.size() > 0) {
+                    //TODO 防止数据错误清除
+                    holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.VISIBLE);
+                    if (holder.rvAlarmForestPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
+                        holder.rvAlarmForestPhoto.removeAllViews();
+                    }
+                    //
+                    final GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
+                        @Override
+                        public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+                            return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT);
+                        }
+                    };
+                    holder.rvAlarmForestPhoto.setLayoutManager(layoutManager);
+                    holder.rvAlarmForestPhoto.setHasFixedSize(true);
+                    AlarmDetailPhotoAdapter adapter = new AlarmDetailPhotoAdapter(mContext);
+                    adapter.setOnItemClickListener(new AlarmDetailPhotoAdapter.OnRecyclerViewItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            if (onPhotoClickListener != null) {
+                                onPhotoClickListener.onPhotoItemClick(position, scenes);
+                            }
+                        }
+                    });
+                    holder.rvAlarmForestPhoto.setAdapter(adapter);
+                    //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
+                    holder.rvAlarmForestPhoto.setNestedScrollingEnabled(false);
+                    adapter.setImages(scenes);
+                    //TODO 防止数据错误打标签
+                    holder.rvAlarmForestPhoto.setTag(adapter);
+                }
+            } else {
+                try {
+                    SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+                    if (sensorTypeStyles != null) {
+                        boolean bool = sensorTypeStyles.isBool();
+                        if (bool) {
+//                    info = "烟雾浓度高，设备预警";
+                            int thresholds = recordInfo.getThresholds();
+                            switch (thresholds) {
+                                case 1:
+                                    //true
+                                    String trueMean = sensorTypeStyles.getTrueMean();
+                                    stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                    break;
+                                case 0:
+                                    //false
+                                    String falseMean = sensorTypeStyles.getFalseMean();
+                                    stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                    break;
+                                default:
+                                    String trueMean1 = sensorTypeStyles.getTrueMean();
+                                    stringBuilder.append(trueMean1).append("，").append(mContext.getString(R.string.equipment_warning));
+                                    break;
+                            }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                stringBuilder.append(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1));
+                        } else {
+                            String name = sensorTypeStyles.getName();
+                            stringBuilder.append(name);
+////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
+                            int thresholds = recordInfo.getThresholds();
+                            String unit = sensorTypeStyles.getUnit();
+                            stringBuilder.append(" ").append(mContext.getString(R.string.value_is)).append(" ").append(thresholds).append(unit).append(" ").append(mContext.getString(R.string.achieve_warning_value));
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    stringBuilder.append(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1));
+                }
             }
+
             //
 
             String alarmDetailInfo = stringBuilder.toString();
             SpannableString spannableString = new SpannableString(alarmDetailInfo);
             holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
-        } else if ("operation".equals(recordInfo.getType())) {
-            //TODO
+        } else if ("operation".equals(type)) {
+            //下行命令操作
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(mContext.getString(R.string.operator));
@@ -511,7 +566,25 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
             holder.itemAlertContentTvContent.setText(stringBuilder.toString());
             holder.llConfirm.setVisibility(View.GONE);
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
 
+        }else if ("close".equals(type)){
+            //关闭火警
+            holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(mContext.getString(R.string.contact));
+            String name = recordInfo.getName();
+            String source = recordInfo.getSource();
+            stringBuilder.append("【").append(name).append("】").append(" ").append(mContext.getString(R.string.by)).append(" ");
+            if ("app".equals(source)) {
+                stringBuilder.append("APP");
+            } else if ("platform".equals(source)) {
+                stringBuilder.append("Web");
+            }
+            stringBuilder.append(" ").append(mContext.getString(R.string.close_binocular_fire_alarm_tip));
+            holder.itemAlertContentTvContent.setText(stringBuilder.toString());
+            holder.llConfirm.setVisibility(View.GONE);
+            holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
         }
 
     }
@@ -643,34 +716,53 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         TextView itemAlertContentTvContent;
         @BindView(R.id.item_alert_content_tv_time)
         TextView itemAlertContentTvTime;
+        //预警结果
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_result)
+        LinearLayout llItemAlarmDetailChildAlarmResult;
         @BindView(R.id.item_alarm_detail_child_alarm_result)
         TextView itemAlarmDetailChildAlarmResult;
+        //预警类型
         @BindView(R.id.ll_item_alarm_detail_child_alarm_type)
         LinearLayout llItemAlarmDetailChildAlarmType;
         @BindView(R.id.item_alarm_detail_child_alarm_type)
         TextView itemAlarmDetailChildAlarmType;
+        //火情阶段
         @BindView(R.id.ll_item_alarm_detail_child_alarm_fire_phase)
         LinearLayout llItemAlarmDetailChildAlarmFirePhase;
         @BindView(R.id.item_alarm_detail_child_alarm_fire_phase)
         TextView itemAlarmDetailChildAlarmFirePhase;
+        //预警场所
         @BindView(R.id.ll_item_alarm_detail_child_alarm_place)
         LinearLayout llItemAlarmDetailChildAlarmPlace;
         @BindView(R.id.item_alarm_detail_child_alarm_place)
         TextView itemAlarmDetailChildAlarmPlace;
+        //火灾类型
         @BindView(R.id.ll_item_alarm_detail_child_alarm_fire_type)
         LinearLayout llItemAlarmDetailChildAlarmFireType;
         @BindView(R.id.item_alarm_detail_child_alarm_fire_type)
         TextView itemAlarmDetailChildAlarmFireType;
+        //安全隐患
         @BindView(R.id.ll_item_alarm_detail_child_alarm_risk)
         LinearLayout llItemAlarmDetailChildAlarmRisk;
         @BindView(R.id.item_alarm_detail_child_alarm_risk)
         TextView itemAlarmDetailChildAlarmRisk;
+        //备注
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_remark)
+        LinearLayout llItemAlarmDetailChildAlarmRemark;
         @BindView(R.id.item_alarm_detail_child_alarm_remarks)
         TextView itemAlarmDetailChildAlarmRemarks;
+        //照片
+        @BindView(R.id.rl_item_alarm_detail_child_alarm_photo)
+        RelativeLayout rlItemAlarmDetailChildAlarmPhoto;
         @BindView(R.id.rv_alarm_photo)
         RecyclerView rvAlarmPhoto;
+        //预警确认页面
         @BindView(R.id.ll_confirm)
         LinearLayout llConfirm;
+        @BindView(R.id.rl_item_alarm_detail_child_forest_photo)
+        RelativeLayout rlItemAlarmDetailChildForestPhoto;
+        @BindView(R.id.rv_alarm_forest_photo)
+        RecyclerView rvAlarmForestPhoto;
 
         AlertLogRcContentHolder(View itemView) {
             super(itemView);

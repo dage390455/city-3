@@ -14,40 +14,40 @@
 
         android:orientation="vertical">
 
-        <TextView  android:id="@+id/tv_title"
+        <TextView
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@color/c_f34a4a"
-            android:textSize="20dp"
-            />
+            android:textSize="20dp" />
 
-        <TextView  android:id="@+id/tv_desc"
+        <TextView
+            android:id="@+id/tv_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:lineSpacingExtra="4dp"
             android:text=""
             android:textColor="@color/c_252525"
-            android:textSize="14dp"
-            />
+            android:textSize="14dp" />
 
-    <com.sensoro.common.widgets.slideverify.SlideVerifity
-        android:id="@+id/svf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:mode="mode_bar"
-        app:src="@mipmap/bg_slide_verfication"
-        app:blockSize="50dp"
-        app:max_fail_count="10000"
-        />
+        <com.sensoro.common.widgets.slideverify.SlideVerifity
+            android:id="@+id/svf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:mode="mode_bar"
+            app:src="@mipmap/bg_slide_verfication"
+            app:blockSize="50dp"
+            app:max_fail_count="10000" />
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#dedede"/>
+        android:background="#dedede" />
 
     <Button
         android:id="@+id/btn_cancel"
@@ -56,6 +56,5 @@
         android:textSize="16dp"
         android:textColor="@color/c_252525"
         android:text="@string/cancel"
-        android:background="@null"
-        />
+        android:background="@null" />
 </LinearLayout>

@@ -1,5 +1,11 @@
 package com.sensoro.smartcity.activity;
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-09
+ * 包  名: com.sensoro.smartcity.activity
+ * 类  名: InspectionTaskActivity
+ * 简  述: <巡检任务详情页,要点：设备列表，全部状态，全部类型 条件过滤，搜索设备，扫码识别设备，设备详情入口，导航等>
+ */
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -289,7 +295,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private void initSelectDeviceTypePop() {
         mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mActivity);
         mSelectDeviceTypePop.setTitleVisible(false);
-//        mSelectDeviceTypePop.setUpAnimation();
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel deviceTypeModel) {
@@ -307,7 +312,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                     acInspectionTaskTvType.setTextColor(resources.getColor(R.color.c_252525));
                     acInspectionTaskTvType.setCompoundDrawables(null, null, blackTriangle, null);
                 }
-//                mPresenter.requestDataByDirection(DIRECTION_DOWN);
 
             }
         });
@@ -343,7 +347,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         acInspectionTaskRcContent.setLayoutManager(manager);
-//        acInspectionTaskRcContent.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
         acInspectionTaskRcContent.setAdapter(mContentAdapter);
 
         mContentAdapter.setOnRecycleViewItemClickListener(new InspectionTaskRcContentAdapter.InspectionTaskRcItemClickListener() {
@@ -357,35 +360,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 mPresenter.doNavigation(position);
             }
 
-        });
-
-        acInspectionTaskRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
-//                        toolbarDirection == DIRECTION_DOWN) {
-////                    mListRecyclerView.setre
-//                }
-                if (manager.findFirstVisibleItemPosition() > 4) {
-                    if (newState == 0) {
-//                        mReturnTopImageView.setVisibility(VISIBLE);
-//                        if (returnTopAnimation.hasEnded()) {
-//                            mReturnTopImageView.startAnimation(returnTopAnimation);
-//                        }
-                    } else {
-//                        mReturnTopImageView.setVisibility(View.GONE);
-                    }
-                } else {
-//                    mReturnTopImageView.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-            }
         });
 
         refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
@@ -495,10 +469,10 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     @OnClick({R2.id.ac_inspection_task_imv_arrows_left, R2.id.ac_inspection_task_tv_state, R2.id.ac_inspection_task_tv_type, R2.id.ac_inspection_task_imv_scan, R2.id.tv_inspection_task_search_cancel
             , R2.id.ac_inspection_task_imv_map, R2.id.fg_main_top_search_imv_clear, R2.id.btn_search_clear})
     public void onViewClicked(View view) {
-        int viewID=view.getId();
-        if(viewID==R.id.ac_inspection_task_imv_arrows_left){
+        int viewID = view.getId();
+        if (viewID == R.id.ac_inspection_task_imv_arrows_left) {
             finishAc();
-        }else if(viewID==R.id.ac_inspection_task_tv_state){
+        } else if (viewID == R.id.ac_inspection_task_tv_state) {
             if (mSelectDeviceTypePop != null) {
                 if (mSelectStatusPop.isData()) {
                     showSelectDeviceStatusPop();
@@ -506,22 +480,22 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                     mPresenter.doInspectionStatus(true);
                 }
             }
-        }else if(viewID==R.id.ac_inspection_task_tv_type){
+        } else if (viewID == R.id.ac_inspection_task_tv_type) {
             if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                 mSelectStatusPop.dismiss();
             }
             mPresenter.doInspectionType(true);
-        }else if(viewID==R.id.ac_inspection_task_imv_scan){
+        } else if (viewID == R.id.ac_inspection_task_imv_scan) {
             mPresenter.doInspectionScan();
-        }else if(viewID==R.id.tv_inspection_task_search_cancel){
+        } else if (viewID == R.id.tv_inspection_task_search_cancel) {
             doCancelSearch();
             dismissInputMethodManager(acInspectionTaskEtSearch);
             setSearchHistoryVisible(false);
-        }else if(viewID==R.id.ac_inspection_task_imv_map){
+        } else if (viewID == R.id.ac_inspection_task_imv_map) {
 
-        }else if(viewID==R.id.btn_search_clear){
+        } else if (viewID == R.id.btn_search_clear) {
             showHistoryClearDialog();
-        }else if(viewID==R.id.fg_main_top_search_imv_clear){
+        } else if (viewID == R.id.fg_main_top_search_imv_clear) {
             acInspectionTaskEtSearch.getText().clear();
             acInspectionTaskEtSearch.requestFocus();
             AppUtils.openInputMethodManager(mActivity, acInspectionTaskEtSearch);
@@ -541,7 +515,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void setSearchButtonTextVisible(boolean isVisible) {
         if (isVisible) {
             tvInspectionTaskSearchCancel.setVisibility(View.VISIBLE);
-//            dismissInputMethodManager(acInspectionTaskEtSearch);
         } else {
             tvInspectionTaskSearchCancel.setVisibility(View.GONE);
         }

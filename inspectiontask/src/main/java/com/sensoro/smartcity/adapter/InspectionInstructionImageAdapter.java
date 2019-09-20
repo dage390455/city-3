@@ -17,9 +17,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.inspectiontask.R;
 import com.sensoro.inspectiontask.R2;
+import com.sensoro.smartcity.constant.InspectionConstant;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<Insp
     @Override
     public void onBindViewHolder(final InspectionInstructionImageHolder holder, final int position) {
         String url;
-        if ("image".equals(datas.get(position).type)) {
+        if (Constants.RES_IMAGE.equals(datas.get(position).type)) {
             url = datas.get(position).url;
         } else {
             url = datas.get(position).thumbUrl;
@@ -87,7 +89,6 @@ public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<Insp
                         }
                     }
                 });
-//                .into(holder.itemAdapterInspectionInstructionImv);
     }
 
     @Override

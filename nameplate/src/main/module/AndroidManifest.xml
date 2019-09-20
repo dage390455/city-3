@@ -23,7 +23,7 @@
 
         <activity
             android:name=".activity.NameplateListActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.NameplateDetailActivity" />
         <activity android:name=".activity.EditNameplateDetailActivity" />
         <activity android:name=".activity.DeployNameplateAddSensorFromListActivity" />

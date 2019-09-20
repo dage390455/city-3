@@ -1,7 +1,9 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -107,9 +109,9 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
                         if (i >= 0) {
                             mList.get(position).setQuantity(i);
                         }
-                        if (i>0){
+                        if (i > 0) {
                             holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
-                        }else {
+                        } else {
                             holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                         }
                     } catch (Exception e) {

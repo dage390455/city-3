@@ -15,6 +15,7 @@ import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
@@ -25,17 +26,17 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.common.widgets.CalendarPopUtils;
+import com.sensoro.common.widgets.FireWaringCloseDialogUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.common.widgets.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -554,5 +555,46 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                         getView().dismissAlarmPopupView();
                     }
                 });
+    }
+
+    private FireWaringCloseDialogUtils firewaringCloseDialogUtils;
+
+    public void doCloseWarn(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        //弹窗二次确认
+        //TODO 调用关闭火警 然后刷新界面
+        if (firewaringCloseDialogUtils == null) {
+            firewaringCloseDialogUtils = new FireWaringCloseDialogUtils(mContext);
+        }
+        firewaringCloseDialogUtils.setTipTitleText(mContext.getString(R.string.confirm_to_turn_off_the_fire))
+                .setTipMessageText(mContext.getString(R.string.turn_off_the_fire_tips))
+                .setTipConfirmText(mContext.getString(R.string.confirm_close),mContext.getResources().getColor(R.color.c_f35a58))
+                .setTipCacnleText(mContext.getString(R.string.cancel),mContext.getResources().getColor(R.color.c_252525))
+                .setTipDialogUtilsClickListener(new FireWaringCloseDialogUtils.TipDialogUtilsClickListener() {
+            @Override
+            public void onCancelClick() {
+                firewaringCloseDialogUtils.dismiss();
+            }
+
+            @Override
+            public void onConfirmClick() {
+                getView().showProgressDialog();
+                RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(WarnFragmentPresenter.this) {
+                    @Override
+                    public void onCompleted(ResponseResult<Object> objectResponseResult) {
+                        getView().toastShort("success");
+                        getView().dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().toastShort(errorMsg);
+                        getView().dismissProgressDialog();
+                    }
+                });
+            }
+        });
+        firewaringCloseDialogUtils.show();
+
+
     }
 }

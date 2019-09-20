@@ -7,7 +7,7 @@ import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 
 import java.util.List;
 
-public interface IInspectionTaskListActivityView extends IToast,IProgressDialog,IActivityIntent{
+public interface IInspectionTaskListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void setRlDateEditVisible(boolean isVisible);
 
     boolean getRlDateEditIsVisible();

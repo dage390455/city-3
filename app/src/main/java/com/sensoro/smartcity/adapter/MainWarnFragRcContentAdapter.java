@@ -2,20 +2,21 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.ColorRes;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import androidx.annotation.ColorRes;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.WidgetUtil;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,16 +59,17 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             String deviceType = alarmLogInfo.getDeviceType();
             String default_name = TextUtils.isEmpty(deviceSN) ? mContext.getResources().getString(R.string
                     .unname) : deviceSN;
-            String deviceTypeStr=WidgetUtil.getDeviceMainTypeName(deviceType);
+            String deviceTypeStr = WidgetUtil.getDeviceMainTypeName(deviceType);
             StringBuilder stringBuilder = new StringBuilder();
             if (TextUtils.isEmpty(deviceName)) {
                 holder.mainWarnRcContentTvContent.setText(stringBuilder.append(deviceTypeStr).append(" ").append(default_name).toString());
             } else {
                 holder.mainWarnRcContentTvContent.setText(stringBuilder.append(deviceTypeStr).append(" ").append(deviceName).toString());
             }
-            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext,alarmLogInfo.getCreatedTime(), 0));
+            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getCreatedTime(), 0));
             //
-            switch (alarmLogInfo.getDisplayStatus()) {
+            int displayStatus = alarmLogInfo.getDisplayStatus();
+            switch (displayStatus) {
                 case DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
                     holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.white));
@@ -149,43 +151,63 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_ff8d34);
                     break;
             }
-        }
-        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
-        boolean isAlarm = false;
-        for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
+            AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
+            boolean isAlarm = false;
+            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
 //                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
-            String type = recordInfo.getType();
-            if ("recovery".equals(type)) {
-                isAlarm = false;
-                break;
+                String type = recordInfo.getType();
+                if ("recovery".equals(type)) {
+                    isAlarm = false;
+                    break;
+                } else {
+                    isAlarm = true;
+                }
+            }
+            if (isAlarm) {
+                holder.mainWarnRcContentTvState.setText(R.string.alarming);
+                holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
             } else {
-                isAlarm = true;
+                holder.mainWarnRcContentTvState.setText(R.string.normal);
+                holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
             }
-        }
-        if (isAlarm) {
-            holder.mainWarnRcContentTvState.setText(R.string.alarming);
-            holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-        } else {
-            holder.mainWarnRcContentTvState.setText(R.string.normal);
-            holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
-        }
-        final Boolean finalIsReConfirm = isReConfirm;
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onItemClick(v, position, finalIsReConfirm);
+            final Boolean finalIsReConfirm = isReConfirm;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onItemClick(v, position, finalIsReConfirm);
+                    }
+                }
+            });
+            boolean needShowClose = false;
+            //只在森林防火 并且是预警和安全隐患的时候显示关闭的弹窗
+            if ("binocular".equals(deviceType) && isAlarm) {
+                if (DISPLAY_STATUS_ALARM == displayStatus || DISPLAY_STATUS_RISKS == displayStatus) {
+                    needShowClose = true;
                 }
             }
-        });
-        holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onCallPhone(v, position);
+            holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onCallPhone(v, position);
+                    }
                 }
+            });
+            if (needShowClose) {
+                holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            mListener.onCloseWarn(v, position);
+                        }
+                    }
+                });
+            } else {
+                holder.tvMainWarnContentCloseWarn.setVisibility(View.GONE);
             }
-        });
+        }
+
     }
 
     private void changeStrokeColor(TextView view, @ColorRes int color) {
@@ -225,6 +247,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
         TextView mainWarnRcContentBtnContactLandlord;
         @BindView(R.id.main_warn_rc_content_tv_tag)
         TextView mainWarnRcContentTvTag;
+        @BindView(R.id.tv_main_warn_content_close_warn)
+        TextView tvMainWarnContentCloseWarn;
 
         MyViewHolder(View itemView) {
             super(itemView);
@@ -238,6 +262,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
         void onCallPhone(View v, int position);
 
         void onItemClick(View view, int position, boolean isReConfirm);
+
+        void onCloseWarn(View view, int position);
     }
 
 }
