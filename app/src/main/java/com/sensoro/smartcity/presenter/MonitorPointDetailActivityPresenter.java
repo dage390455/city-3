@@ -332,6 +332,12 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             //针对特殊设备需要下行30s
             //带有2g的 配置参数
             getView().set2GDeviceConfigVisible(true);
+            //TODO 动态设置叫iccid还是ccid
+            if ("acrel300T_fires_2G".equals(deviceType) || "acrel300D_fires_2G".equals(deviceType)) {
+                getView().setMonitorDetailTitleIccid(mContext.getString(R.string.device_iccid) + "（CCID）");
+            } else {
+                getView().setMonitorDetailTitleIccid(mContext.getString(R.string.device_iccid) + "（ICCID）");
+            }
             OtherBean other = mDeviceInfo.getOther();
             if (other != null) {
                 String imei = other.getImei();
