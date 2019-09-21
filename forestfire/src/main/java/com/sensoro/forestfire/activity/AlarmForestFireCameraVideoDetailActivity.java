@@ -18,12 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -51,6 +53,8 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+
+@Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_VIDEO_DETAIL)
 public class AlarmForestFireCameraVideoDetailActivity extends BaseActivity<IAlarmForestFireCameraVideoDetailActivityView,
         AlarmForestFireCameraVideoDetailActivityPresenter> implements IAlarmForestFireCameraVideoDetailActivityView, VideoDownloadDialogUtils.TipDialogUtilsClickListener {
     @BindView(R2.id.view_top_ac_alarm_camera_video_detail)

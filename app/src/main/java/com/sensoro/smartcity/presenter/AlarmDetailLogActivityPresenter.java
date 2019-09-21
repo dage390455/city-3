@@ -3,11 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -20,6 +22,7 @@ import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
@@ -61,6 +64,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
+    private final List<String>  mForestFireLiveList=new ArrayList<>();
     private boolean isReConfirm = false;
     private Activity mContext;
     private LatLng destPosition = null;
@@ -82,6 +86,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         getAlarmCount();
 
         getCloudVideo();
+
+        getForestFireCameraLive();
+
 
         refreshData(true);
 
@@ -120,6 +127,41 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                         getView().setLlVideoSizeAndContent(-1, null);
                     }
                 });
+    }
+
+
+    private void getForestFireCameraLive() {
+
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList||!Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+            getView().setLlVideoSizeAndContent(-1, null);
+            return;
+        }
+        RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
+            @Override
+            public void onCompleted(ResponseResult<ForestFireCameraDetailInfo> deviceCameraDetailRsp) {
+
+                ForestFireCameraDetailInfo  mForestFireCameraDetailInfo= deviceCameraDetailRsp.getData();
+                if(mForestFireCameraDetailInfo!=null&&mForestFireCameraDetailInfo.getList()!=null&&mForestFireCameraDetailInfo.getList().size()>0){
+                    ForestFireCameraDetailInfo.ListBean mListBean= mForestFireCameraDetailInfo.getList().get(0);
+                    mForestFireLiveList.clear();
+                    if(mListBean.getCamera()!=null){//说明是单目的
+                        mForestFireLiveList.add(mListBean.getHls());
+                    }else if(mListBean.getMultiVideoInfo()!=null&&mListBean.getMultiVideoInfo().size()>0){//说明是多目的
+                        for(ForestFireCameraDetailInfo.MultiVideoInfoBean item:mListBean.getMultiVideoInfo()){
+                            mForestFireLiveList.add(item.getHls());
+                        }
+                    }
+                }
+
+                getView().setCameraLiveCount(mForestFireLiveList);
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setCameraLiveCount(null);
+            }
+        });
     }
 
     public void doBack() {
@@ -194,11 +236,23 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             getView().setDeviceSn(deviceSN);
         }
 
+        //TODO 如果是森林火灾，直播入口显示逻辑需要根据直播实时详情接口返回的结果判断
         if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+            if(Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())){
+                getView().setCameraLiveCount(mForestFireLiveList);
+            }else{
+                getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+            }
         } else {
             getView().setCameraLiveCount(null);
         }
+
+//        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+//            getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+//        } else {
+//            getView().setCameraLiveCount(null);
+//        }
+
 
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
@@ -502,7 +556,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
         if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
             Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
-            ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
+            ArrayList<String> cameras = new ArrayList<>(mForestFireLiveList);
             intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
             getView().startAC(intent);
         } else {
