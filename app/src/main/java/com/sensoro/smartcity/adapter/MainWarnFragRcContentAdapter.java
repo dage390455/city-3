@@ -195,6 +195,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                 }
             });
             if (needShowClose) {
+                holder.tvMainWarnContentCloseWarn.setVisibility(View.VISIBLE);
                 holder.tvMainWarnContentCloseWarn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
