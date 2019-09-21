@@ -28,6 +28,8 @@ public class DeployAnalyzerModel implements Serializable {
     public String flv;
     public String installationMode;
     public String orientation;
+    public String location;
+    public String installationLocation;
     public DeployControlSettingData settingData;
 
     //

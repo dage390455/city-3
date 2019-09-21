@@ -13,7 +13,7 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.factory.UserPermissionFactory;
+import com.sensoro.common.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IPermissionChangeActivityView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;

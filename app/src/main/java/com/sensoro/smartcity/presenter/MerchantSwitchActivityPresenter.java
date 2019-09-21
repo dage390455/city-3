@@ -20,7 +20,7 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.factory.MerchantSubFactory;
-import com.sensoro.smartcity.factory.UserPermissionFactory;
+import com.sensoro.common.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 
 import org.greenrobot.eventbus.EventBus;

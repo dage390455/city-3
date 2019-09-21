@@ -123,6 +123,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, eventLoginData.hasDeviceCameraList);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, eventLoginData.hasDeviceCameraDeploy);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_FOREST_CAMERA_DEPLOY, eventLoginData.hasDeviceForestCameraDeploy);
         editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, eventLoginData.hasNameplateList);
         editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, eventLoginData.hasNameplateDeploy);
         editor.putBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, eventLoginData.hasIBeaconSearchDemo);
@@ -190,6 +191,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
             eventLoginData.hasDeviceCameraList = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, false);
             eventLoginData.hasDeviceCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, false);
+            eventLoginData.hasDeviceForestCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FOREST_CAMERA_DEPLOY, false);
             eventLoginData.hasNameplateList = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, false);
             eventLoginData.hasNameplateDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, false);
             eventLoginData.hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
