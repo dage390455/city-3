@@ -42,6 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmForestFireCameraLiveDetailActivityView> {
     private Activity mActivity;
     private ArrayList<AlarmCameraLiveBean> mList = new ArrayList<>();
+
     private List<String> cameras;
     private int mItemClickPosition = 0;
 
