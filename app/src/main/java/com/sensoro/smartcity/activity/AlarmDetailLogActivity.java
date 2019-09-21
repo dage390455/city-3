@@ -287,8 +287,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
 
     @Override
     public void setCloseWarnVisible(boolean visible) {
-//        ivAlarmLogCloseFire.setVisibility(visible ? View.VISIBLE : View.GONE);
-        ivAlarmLogCloseFire.setVisibility( View.VISIBLE );
+        ivAlarmLogCloseFire.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
