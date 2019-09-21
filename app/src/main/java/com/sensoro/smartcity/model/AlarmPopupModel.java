@@ -10,14 +10,14 @@ public class AlarmPopupModel {
     public boolean isSecurityRiskRequire;
     public boolean securityRiskVisible;
     public String title;
-    public List<AlarmPopupSubModel> subAlarmPopupModels;
-    public List<AlarmPopupTagModel> mainTags;
+    public List<AlarmPopupSubModel> subAlarmPopupModels = new ArrayList<>();
+    public List<AlarmPopupTagModel> mainTags = new ArrayList<>();
     public String desc;
     public String mRemark;
     public int resButtonBg = R.drawable.shape_button;
     public String mergeType;
     public String sensorType;
-    public ArrayList<SecurityRisksAdapterModel> securityRisksList;
+    public ArrayList<SecurityRisksAdapterModel> securityRisksList = new ArrayList<>();
     public int alarmStatus;
     public Long updateTime;
 
