@@ -210,6 +210,7 @@
         <activity android:name=".activity.DeployRecordConfigCommonElectActivity" />
         <activity android:name=".activity.OfflineDeployActivity" />
         <activity android:name=".activity.OfflineDeployTaskDetailActivity" />
+        <activity android:name=".activity.DeployForestCameraDetailActivity" />
 
         <meta-data
             android:name="android.notch_support"

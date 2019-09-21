@@ -19,6 +19,7 @@ import com.sensoro.common.server.bean.DeployStationInfo;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.ForestGatewayDeployInfo;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
@@ -29,6 +30,7 @@ import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployCameraDetailActivity;
+import com.sensoro.smartcity.activity.DeployForestCameraDetailActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
@@ -586,8 +588,12 @@ public class DeployAnalyzerUtils {
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             listener.onError(errorCode, null, errorMsg);
                         } else {
-                            if (AppUtils.isChineseLanguage() && PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
-                                doCamera();
+                            if (AppUtils.isChineseLanguage()) {
+                                if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
+                                    doCamera();
+                                } else if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraDeploy) {
+                                    doForestCamera();
+                                }
                             } else {
                                 //不在账户下
                                 Intent intent = new Intent();
@@ -608,8 +614,12 @@ public class DeployAnalyzerUtils {
                         try {
                             //todo 包装类
                             if (deployStationInfo == null || TextUtils.isEmpty(deployStationInfo.getSn())) {
-                                if (AppUtils.isChineseLanguage() && PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
-                                    doCamera();
+                                if (AppUtils.isChineseLanguage()) {
+                                    if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
+                                        doCamera();
+                                    } else if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraDeploy) {
+                                        doForestCamera();
+                                    }
                                 } else {
                                     //不在账户下
                                     Intent intent = new Intent();
@@ -652,6 +662,104 @@ public class DeployAnalyzerUtils {
                         }
                     }
 
+                    /**
+                     * 查找森林防火摄像机
+                     */
+                    private void doForestCamera() {
+                        RetrofitServiceHelper.getInstance().getForestGateway(scanSerialNumber.toUpperCase()).subscribeOn
+                                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestGatewayDeployInfo>>(presenter) {
+                            @Override
+                            public void onCompleted(ResponseResult<ForestGatewayDeployInfo> responseResult) {
+                                ForestGatewayDeployInfo data = responseResult.getData();
+                                if (data != null) {
+                                    List<ForestGatewayDeployInfo.ForestGatewayDeployInfoListData> list = data.getList();
+                                    if (list != null && list.size() > 0) {
+                                        ForestGatewayDeployInfo.ForestGatewayDeployInfoListData forestGatewayDeployInfoListData = list.get(0);
+                                        if (forestGatewayDeployInfoListData != null) {
+                                            //TODO 结果
+                                            //
+                                            DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+                                            //部署类型
+                                            deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_FOREST_CAMERA;
+                                            //sn
+                                            deployAnalyzerModel.sn = scanSerialNumber;
+                                            //名称和地址
+                                            deployAnalyzerModel.nameAndAddress = forestGatewayDeployInfoListData.getName();
+                                            //标签
+                                            List<String> label = forestGatewayDeployInfoListData.getLabel();
+                                            deployAnalyzerModel.tagList.clear();
+                                            if (label != null && label.size() > 0) {
+                                                deployAnalyzerModel.tagList.addAll(label);
+                                            }
+                                            //经纬度
+                                            deployAnalyzerModel.latLng.clear();
+                                            double latitude = forestGatewayDeployInfoListData.getLatitude();
+                                            double longitude = forestGatewayDeployInfoListData.getLongitude();
+                                            if (0 != latitude && 0 != longitude) {
+//                                                        final double lon = deployAnalyzerModel.latLng.get(0);
+//                                                        final double lan = deployAnalyzerModel.latLng.get(1);
+                                                deployAnalyzerModel.latLng.add(longitude);
+                                                deployAnalyzerModel.latLng.add(latitude);
+                                            }
+                                            //联系人
+                                            deployAnalyzerModel.deployContactModelList.clear();
+                                            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(forestGatewayDeployInfoListData.getNotifications());
+                                            if (notifications != null && notifications.size() > 0) {
+                                                for (DeviceNotificationBean notification : notifications) {
+                                                    if (!TextUtils.isEmpty(notification.getContent())) {
+                                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                                        deployContactModel.phone = notification.getContent();
+                                                        if (!TextUtils.isEmpty(notification.getContact())) {
+                                                            deployContactModel.name = notification.getContact();
+                                                        }
+                                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                                    }
+                                                }
+                                            }
+                                            deployAnalyzerModel.installationLocation = forestGatewayDeployInfoListData.getInstallationLocation();
+                                            deployAnalyzerModel.location = forestGatewayDeployInfoListData.getLocation();
+                                            Intent intent = new Intent();
+                                            //TODO
+                                            intent.setClass(activity, DeployForestCameraDetailActivity.class);
+                                            intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                                            listener.onSuccess(intent);
+                                            return;
+                                        }
+                                    }
+                                }
+                                //不在账户下
+                                Intent intent = new Intent();
+                                intent.setClass(activity, DeployResultActivity.class);
+                                DeployResultModel deployResultModel = new DeployResultModel();
+                                deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                deployResultModel.sn = scanSerialNumber;
+                                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                listener.onError(0, intent, null);
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    listener.onError(errorCode, null, errorMsg);
+                                } else {
+                                    //不在账户下
+                                    Intent intent = new Intent();
+                                    intent.setClass(activity, DeployResultActivity.class);
+                                    DeployResultModel deployResultModel = new DeployResultModel();
+                                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                    deployResultModel.sn = scanSerialNumber;
+                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                    listener.onError(errorCode, intent, errorMsg);
+                                }
+                            }
+                        });
+                    }
+
+                    /**
+                     * 查找普通摄像机
+                     */
                     private void doCamera() {
                         RetrofitServiceHelper.getInstance().getDeployCameraInfo(scanSerialNumber.toUpperCase()).subscribeOn
                                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(presenter) {
@@ -662,15 +770,21 @@ public class DeployAnalyzerUtils {
                                     //todo 包装类
                                     DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                                     if (data == null) {
-                                        //不在账户下
-                                        Intent intent = new Intent();
-                                        intent.setClass(activity, DeployResultActivity.class);
-                                        DeployResultModel deployResultModel = new DeployResultModel();
-                                        deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-                                        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-                                        deployResultModel.sn = scanSerialNumber;
-                                        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                        listener.onError(0, intent, null);
+                                        //TODO 查找森林防火摄像头
+                                        if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraDeploy) {
+                                            doForestCamera();
+                                        } else {
+                                            //不在账户下
+                                            Intent intent = new Intent();
+                                            intent.setClass(activity, DeployResultActivity.class);
+                                            DeployResultModel deployResultModel = new DeployResultModel();
+                                            deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                            deployResultModel.sn = scanSerialNumber;
+                                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                            listener.onError(0, intent, null);
+                                        }
+
                                     } else {
 
                                         deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_CAMERA;
@@ -722,20 +836,26 @@ public class DeployAnalyzerUtils {
                                 }
                             }
 
+
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     listener.onError(errorCode, null, errorMsg);
                                 } else {
-                                    //不在账户下
-                                    Intent intent = new Intent();
-                                    intent.setClass(activity, DeployResultActivity.class);
-                                    DeployResultModel deployResultModel = new DeployResultModel();
-                                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-                                    deployResultModel.sn = scanSerialNumber;
-                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                    listener.onError(errorCode, intent, errorMsg);
+                                    if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraDeploy) {
+                                        doForestCamera();
+                                    } else {
+                                        //不在账户下
+                                        Intent intent = new Intent();
+                                        intent.setClass(activity, DeployResultActivity.class);
+                                        DeployResultModel deployResultModel = new DeployResultModel();
+                                        deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                        deployResultModel.sn = scanSerialNumber;
+                                        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                        listener.onError(errorCode, intent, errorMsg);
+                                    }
+
                                 }
 
                             }

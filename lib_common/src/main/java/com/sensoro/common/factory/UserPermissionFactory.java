@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.factory;
+package com.sensoro.common.factory;
 
 import android.text.TextUtils;
 
@@ -67,6 +67,7 @@ public class UserPermissionFactory {
         eventLoginData.hasNameplateList = getHasNameplateList(grants);
         eventLoginData.hasNameplateDeploy = getHasNameplateDeploy(grants);
         eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
+        eventLoginData.hasDeviceForestCameraDeploy = getHasDeviceForestCameraDeploy(grants);
         eventLoginData.hasIBeaconSearchDemo = getHasIBeaconSearchDemo(grants);
         eventLoginData.hasMonitorTaskList = getHasMonitorTaskList(grants);
         eventLoginData.hasMonitorTaskConfirm = getHasMonitorTaskConfirm(grants);
@@ -735,6 +736,17 @@ public class UserPermissionFactory {
     private static boolean getHasDeployOfflineTask(GrantsInfo grants) {
         //TODO 这版暂时不进行离线上传
         return false;
+    }
+
+    /**
+     * 森林摄像头部署权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceForestCameraDeploy(GrantsInfo grants) {
+        //TODO 添加森林部署摄像头部署权限判断字段
+        return true;
     }
 
 

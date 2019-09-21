@@ -94,6 +94,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE = "extra_grants_has_device_demo_mode";
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST = "extra_grants_has_device_camera_list";
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY = "extra_grants_has_device_camera_deploy";
+    String EXTRA_GRANTS_HAS_DEVICE_FOREST_CAMERA_DEPLOY = "extra_grants_has_device_forest_camera_deploy";
     String EXTRA_GRANTS_HAS_NAMEPLATE_LIST = "extra_grants_has_nameplate_list";
     String EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY = "extra_grants_has_nameplate_deploy";
     String EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO = "extra_grants_has_ibeacon_search_demo";
@@ -401,6 +402,7 @@ public interface Constants {
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
     int TYPE_SCAN_DEPLOY_CAMERA = 0x65;
+    int TYPE_SCAN_DEPLOY_FOREST_CAMERA = 0x68;
     int EVENT_DATA_ADD_NEW_UUID_CONTENT = 0x66;
 
     /**

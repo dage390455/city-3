@@ -21,7 +21,7 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.factory.UserPermissionFactory;
+import com.sensoro.common.factory.UserPermissionFactory;
 
 import org.greenrobot.eventbus.EventBus;
 

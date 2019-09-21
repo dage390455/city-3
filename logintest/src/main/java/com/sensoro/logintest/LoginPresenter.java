@@ -5,16 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-//import com.igexin.sdk.PushManager;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.factory.UserPermissionFactory;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
@@ -25,6 +23,20 @@ import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
+import com.tencent.bugly.beta.Beta;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+//import com.igexin.sdk.PushManager;
 //import com.sensoro.inspectiontask.BuildConfig;
 //import com.sensoro.inspectiontask.R;
 //import com.sensoro.smartcity.BuildConfig;
@@ -34,19 +46,6 @@ import com.sensoro.common.utils.LogUtils;
 //import com.sensoro.smartcity.activity.MainActivity;
 //import com.sensoro.smartcity.factory.UserPermissionFactory;
 //import com.sensoro.smartcity.activity.InspectionTaskListActivity;
-import com.tencent.bugly.beta.Beta;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Map;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCreate {
@@ -149,7 +148,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
-                    EventLoginData loginData = UserPermissionTestFactory.createLoginData(userInfo, phoneId);
+                    EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                     if (loginData.needAuth) {
                         openNextActivity(loginData);
                         return;
