@@ -35,7 +35,8 @@ public class DeployRetryDialogUtils {
         dialogTipTvCancel = view.findViewById(R.id.dialog_tip_tv_cancel);
         dialogTipTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
         contentTv = view.findViewById(R.id.tv_permission_message);
-
+        contentTv.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+        dialogTipTvCancel.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
         mDialog.setCancelable(false);
         mDialog.setCanceledOnTouchOutside(false);

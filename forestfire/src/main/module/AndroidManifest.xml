@@ -97,7 +97,8 @@
 
         <activity android:name=".activity.ForestFireCameraListActivity" />
         <activity android:name=".activity.ForestFireCameraDetailActivity" />
-
+        <activity android:name=".activity.AlarmForestFireCameraVideoDetailActivity" />
+        <activity android:name=".activity.AlarmForestFireCameraLiveDetailActivity" />
     </application>
 
 </manifest>

@@ -3,11 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -20,13 +22,17 @@ import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.FireWaringCloseDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
+import com.sensoro.forestfire.activity.AlarmForestFireCameraLiveDetailActivity;
+import com.sensoro.forestfire.activity.AlarmForestFireCameraVideoDetailActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
@@ -58,10 +64,12 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
+    private final List<String>  mForestFireLiveList=new ArrayList<>();
     private boolean isReConfirm = false;
     private Activity mContext;
     private LatLng destPosition = null;
     private AlarmCloudVideoBean mVideoBean;
+    private FireWaringCloseDialogUtils firewaringCloseDialogUtils;
 
     @Override
     public void initData(Context context) {
@@ -79,6 +87,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
         getCloudVideo();
 
+        getForestFireCameraLive();
+
+
         refreshData(true);
 
     }
@@ -86,7 +97,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private void getCloudVideo() {
 
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            getView().setLlVideoSizeAndContent(-1,null);
+            getView().setLlVideoSizeAndContent(-1, null);
             return;
         }
         String[] eventIds = {deviceAlarmLogInfo.get_id()};
@@ -102,20 +113,55 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                             if (mMedias != null && mMedias.size() > 0) {
                                 String text = String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.alarm_camera_video)
                                         , mMedias.size(), mContext.getString(R.string.video_unit_duan));
-                                getView().setLlVideoSizeAndContent(mMedias.size(),text);
+                                getView().setLlVideoSizeAndContent(mMedias.size(), text);
                             } else {
-                                getView().setLlVideoSizeAndContent(-1,null);
+                                getView().setLlVideoSizeAndContent(-1, null);
                             }
                         } else {
-                            getView().setLlVideoSizeAndContent(-1,null);
+                            getView().setLlVideoSizeAndContent(-1, null);
                         }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().setLlVideoSizeAndContent(-1,null);
+                        getView().setLlVideoSizeAndContent(-1, null);
                     }
                 });
+    }
+
+
+    private void getForestFireCameraLive() {
+
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList||!Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+            getView().setLlVideoSizeAndContent(-1, null);
+            return;
+        }
+        RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
+            @Override
+            public void onCompleted(ResponseResult<ForestFireCameraDetailInfo> deviceCameraDetailRsp) {
+
+                ForestFireCameraDetailInfo  mForestFireCameraDetailInfo= deviceCameraDetailRsp.getData();
+                if(mForestFireCameraDetailInfo!=null&&mForestFireCameraDetailInfo.getList()!=null&&mForestFireCameraDetailInfo.getList().size()>0){
+                    ForestFireCameraDetailInfo.ListBean mListBean= mForestFireCameraDetailInfo.getList().get(0);
+                    mForestFireLiveList.clear();
+                    if(mListBean.getCamera()!=null){//说明是单目的
+                        mForestFireLiveList.add(mListBean.getHls());
+                    }else if(mListBean.getMultiVideoInfo()!=null&&mListBean.getMultiVideoInfo().size()>0){//说明是多目的
+                        for(ForestFireCameraDetailInfo.MultiVideoInfoBean item:mListBean.getMultiVideoInfo()){
+                            mForestFireLiveList.add(item.getHls());
+                        }
+                    }
+                }
+
+                getView().setCameraLiveCount(mForestFireLiveList);
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setCameraLiveCount(null);
+            }
+        });
     }
 
     public void doBack() {
@@ -190,11 +236,23 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             getView().setDeviceSn(deviceSN);
         }
 
+        //TODO 如果是森林火灾，直播入口显示逻辑需要根据直播实时详情接口返回的结果判断
         if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+            if(Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())){
+                getView().setCameraLiveCount(mForestFireLiveList);
+            }else{
+                getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+            }
         } else {
             getView().setCameraLiveCount(null);
         }
+
+//        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+//            getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+//        } else {
+//            getView().setCameraLiveCount(null);
+//        }
+
 
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
@@ -242,7 +300,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 }
             }
             boolean needShowCloseFire = false;
-            if ("binocular".equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
+            if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
                 if (Constants.DISPLAY_STATUS_ALARM == displayStatus || Constants.DISPLAY_STATUS_RISKS == displayStatus) {
                     needShowCloseFire = true;
                 }
@@ -477,9 +535,17 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
             return;
         }
-        Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
-        intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
-        getView().startAC(intent);
+
+        if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+            Intent intent = new Intent(mContext, AlarmForestFireCameraVideoDetailActivity.class);
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
+            getView().startAC(intent);
+        } else {
+            Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
+            getView().startAC(intent);
+        }
+
     }
 
     public void doCameraLive() {
@@ -488,13 +554,54 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
             return;
         }
-        Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
-        ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
-        intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
-        getView().startAC(intent);
+        if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+            Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
+            ArrayList<String> cameras = new ArrayList<>(mForestFireLiveList);
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
+            getView().startAC(intent);
+        } else {
+            Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
+            ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
+            intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
+            getView().startAC(intent);
+        }
+
     }
 
     public void doCloseWarn() {
+        //弹窗二次确认
+        //TODO 调用关闭火警 然后刷新界面
+        if (firewaringCloseDialogUtils == null) {
+            firewaringCloseDialogUtils = new FireWaringCloseDialogUtils(mContext);
+        }
+        firewaringCloseDialogUtils.setTipTitleText(mContext.getString(R.string.confirm_to_turn_off_the_fire))
+                .setTipMessageText(mContext.getString(R.string.turn_off_the_fire_tips))
+                .setTipConfirmText(mContext.getString(R.string.confirm_close), mContext.getResources().getColor(R.color.c_f35a58))
+                .setTipCacnleText(mContext.getString(R.string.cancel), mContext.getResources().getColor(R.color.c_252525))
+                .setTipDialogUtilsClickListener(new FireWaringCloseDialogUtils.TipDialogUtilsClickListener() {
+                    @Override
+                    public void onCancelClick() {
+                        firewaringCloseDialogUtils.dismiss();
+                    }
 
+                    @Override
+                    public void onConfirmClick() {
+                        getView().showProgressDialog();
+                        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(AlarmDetailLogActivityPresenter.this) {
+                            @Override
+                            public void onCompleted(ResponseResult<Object> objectResponseResult) {
+                                getView().toastShort("success");
+                                getView().dismissProgressDialog();
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().toastShort(errorMsg);
+                                getView().dismissProgressDialog();
+                            }
+                        });
+                    }
+                });
+        firewaringCloseDialogUtils.show();
     }
 }

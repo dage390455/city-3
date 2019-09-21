@@ -206,8 +206,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     TextView tvMonitorDetailImsi;
     @BindView(R.id.tv_monitor_detail_iccid)
     TextView tvMonitorDetailIccid;
+    @BindView(R.id.tv_monitor_detail_title_iccid)
+    TextView tvMonitorDetailTitleIccid;
     @BindView(R.id.ll_2g_device_config)
     LinearLayout ll2gDeviceConfig;
+
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -743,6 +746,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         if (!TextUtils.isEmpty(iccid)) {
             tvMonitorDetailIccid.setText(iccid);
         }
+    }
+
+    @Override
+    public void setMonitorDetailTitleIccid(String title) {
+        tvMonitorDetailTitleIccid.setText(title);
     }
 
     @Override

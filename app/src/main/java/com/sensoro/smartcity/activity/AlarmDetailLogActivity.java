@@ -65,8 +65,8 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     TextView acAlertTvQuickNavigation;
     @BindView(R.id.ac_alert_tv_alert_confirm)
     TextView acAlertTvAlertConfirm;
-    @BindView(R.id.ac_alert_tv_alert_close)
-    TextView acAlertTvAlertClose;
+    @BindView(R.id.iv_alarm_log_close_fire)
+    ImageView ivAlarmLogCloseFire;
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
     @BindView(R.id.tv_live_camera_count_ac_alert)
@@ -162,7 +162,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation,
-            R.id.ac_alert_tv_alert_confirm, R.id.ac_alert_tv_alert_close, R.id.include_text_title_imv_arrows_left, R.id.ll_camera_live_ac_alert,
+            R.id.ac_alert_tv_alert_confirm, R.id.iv_alarm_log_close_fire, R.id.include_text_title_imv_arrows_left, R.id.ll_camera_live_ac_alert,
             R.id.ll_camera_video_ac_alert})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -179,7 +179,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
             case R.id.ac_alert_tv_alert_confirm:
                 mPresenter.showAlarmPopupView();
                 break;
-            case R.id.ac_alert_tv_alert_close:
+            case R.id.iv_alarm_log_close_fire:
                 mPresenter.doCloseWarn();
                 break;
             case R.id.include_text_title_imv_arrows_left:
@@ -269,7 +269,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
-    public void setLlVideoSizeAndContent(int size,String content) {
+    public void setLlVideoSizeAndContent(int size, String content) {
         if (size > 0) {
             llCameraVideoAcAlert.setVisibility(View.VISIBLE);
             tvVideoCameraCountAcAlert.setText(content);
@@ -287,7 +287,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
 
     @Override
     public void setCloseWarnVisible(boolean visible) {
-        acAlertTvAlertClose.setVisibility(visible ? View.VISIBLE : View.GONE);
+        ivAlarmLogCloseFire.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

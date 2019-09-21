@@ -1304,7 +1304,7 @@
 
     <string name="device_imei">IMEI</string>
     <string name="device_imsi">IMSI</string>
-    <string name="device_iccid">Card（ICCID）</string>
+    <string name="device_iccid">Card（CCID）</string>
 
     <!--离线上传-->
     <string name="offline_deploy_task_detail_title">Offline Detail</string>
@@ -1342,5 +1342,12 @@
 
     <string name="binocular_alarm_tip">Binocular thermal imaging camera</string>
     <string name="close_binocular_fire_alarm_tip">Manually close this warning. The warning is back to normal</string>
+
+
+    <string name="binocular_fire_pop_alarm_desc">After confirming the real fire alarm, all emergency contacts and the leaders of the jurisdiction will receive a telephone notice and rush to the scene for disposal.
+\nWhen confirming the real fire alarm, the fire alarm needs to be manually turned off after the fire is eliminated</string>
+
+    <string name="binocular_fire_pop_alarm_risk">When confirming a safety hazard, you need to manually close the warning event after the hidden danger is eliminated</string>
+
 
 </resources>

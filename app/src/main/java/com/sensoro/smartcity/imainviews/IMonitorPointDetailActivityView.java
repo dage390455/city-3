@@ -142,4 +142,6 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void set2GDeviceConfigInfo(String imei, String imsi, String iccid);
 
+    void setMonitorDetailTitleIccid(String title);
+
 }
