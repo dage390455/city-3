@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.temp.entity.VideoModel;
 import com.sensoro.smartcity.widget.MultiSampleVideo;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
@@ -26,7 +26,6 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
     public static final String TAG = "ListMultiNormalAdapter";
 
-    private List<VideoModel> list = new ArrayList<>();
     private LayoutInflater inflater = null;
     private Context context;
 
@@ -35,51 +34,37 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
     private final boolean available;
     private final boolean wifiConnected;
+    private ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> list = new ArrayList<>();
 
     public void setState(int state) {
-        for (VideoModel videoModel : list) {
+        for (ForestFireCameraDetailInfo.MultiVideoInfoBean videoModel : list) {
             videoModel.state = state;
         }
         notifyDataSetChanged();
 
     }
 
+    public void updataAdapter(List<ForestFireCameraDetailInfo.MultiVideoInfoBean> multiVideoInfo) {
+        this.list.clear();
+        this.list.addAll(multiVideoInfo);
+        for (ForestFireCameraDetailInfo.MultiVideoInfoBean videoModel : list) {
+            if (!available) {
+                videoModel.state = 1;
+            }
+            if (!wifiConnected) {
+                videoModel.state = 2;
+            }
+
+        }
+        notifyDataSetChanged();
+    }
+
     public ListMultiNormalAdapter(Context context) {
         super();
         this.context = context;
-
         available = NetworkUtils.isAvailable(context);
         wifiConnected = NetworkUtils.isWifiConnected(context);
-
-
         inflater = LayoutInflater.from(context);
-
-
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409872.m3u8?client_token=540409872_3356491776_1600077530_5d3e93cd8ee6e7fd93dc3ca57976075d");
-        strings.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409857.m3u8?client_token=540409857_3356491776_1600077540_4968377bebd6a255c24cf7e0b0176b5c");
-
-        VideoModel model = new VideoModel();
-
-        model.cityURl = strings;
-
-        VideoModel videoModel = new VideoModel();
-
-        ArrayList<String> list = new ArrayList<>();
-        list.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409872.m3u8?client_token=540409872_3356491776_1600077530_5d3e93cd8ee6e7fd93dc3ca57976075d");
-        list.add("https://scpub-api.antelopecloud.cn/cloud/v2/live/540409857.m3u8?client_token=540409857_3356491776_1600077540_4968377bebd6a255c24cf7e0b0176b5c");
-
-        if (!available) {
-            model.state = 1;
-            videoModel.state = 1;
-        }
-        if (!wifiConnected) {
-            model.state = 2;
-            videoModel.state = 2;
-        }
-
-        list.add(model);
-        list.add(videoModel);
     }
 
     @Override
@@ -118,9 +103,10 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
 
         holder.gsyVideoPlayer.setIsLive(View.INVISIBLE);
-        VideoModel videoModel = list.get(position);
+        ForestFireCameraDetailInfo.MultiVideoInfoBean videoModel = list.get(position);
         if (!isPlaying) {
-            holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
+
+            holder.gsyVideoPlayer.setCityURl(list, "");
             holder.gsyVideoPlayer.startPlayLogic();
         }
 
@@ -140,6 +126,7 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         String gsyVideoPlayerKey = holder.gsyVideoPlayer.getKey();
 
 
+
         holder.gsyVideoPlayer.setRotateViewAuto(false);
         holder.gsyVideoPlayer.setLockLand(true);
         holder.gsyVideoPlayer.setReleaseWhenLossAudio(false);
@@ -148,22 +135,20 @@ public class ListMultiNormalAdapter extends BaseAdapter {
 
         holder.gsyVideoPlayer.setNeedLockFull(true);
 
-//        if (position % 2 == 0) {
-//            holder.gsyVideoPlayer.loadCoverImage(list.get(position).url, R.drawable.camera_detail_mask);
-//        } else {
-//            holder.gsyVideoPlayer.loadCoverImage(list.get(position).url, R.drawable.camera_detail_mask);
-//        }
-
 
         holder.gsyVideoPlayer.setIsShowMaskTopBack(false);
         holder.gsyVideoPlayer.setCityPlayState(-1);
+        holder.gsyVideoPlayer.mCoverImage.setVisibility(View.VISIBLE);
+
+
+        holder.gsyVideoPlayer.loadCoverImage(videoModel.getLastCover(), R.drawable.camera_detail_mask);
+
 
 
         if (videoModel.state == -1) {
             holder.gsyVideoPlayer.setCityPlayState(-1);
 
-            holder.gsyVideoPlayer.setUp(list.get(position).url, false, null, null, "这是title");
-            holder.gsyVideoPlayer.setCityURl(list.get(position).url, false, null, null, "这是title");
+            holder.gsyVideoPlayer.setCityURl(list, "");
             holder.gsyVideoPlayer.startPlayLogic();
             videoModel.state = -10;
         } else if (videoModel.state == 2) {
@@ -174,7 +159,7 @@ public class ListMultiNormalAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     holder.gsyVideoPlayer.getMaskLayoutTop().setVisibility(View.GONE);
                     holder.gsyVideoPlayer.getrMobileData().setVisibility(View.GONE);
-                    holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
+                    holder.gsyVideoPlayer.setCityURl(list, "");
                     holder.gsyVideoPlayer.startPlayLogic();
                     videoModel.state = -10;
 
@@ -200,11 +185,16 @@ public class ListMultiNormalAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         holder.gsyVideoPlayer.setCityPlayState(-1);
-                        holder.gsyVideoPlayer.setUp(videoModel.url, false, null, null, "这是title");
+                        holder.gsyVideoPlayer.setCityURl(list, "");
                         holder.gsyVideoPlayer.startPlayLogic();
                         videoModel.state = -10;
                     }
                 });
+            }
+
+            @Override
+            public void onPrepared(String url, Object... objects) {
+                super.onPrepared(url, objects);
             }
 
             @Override

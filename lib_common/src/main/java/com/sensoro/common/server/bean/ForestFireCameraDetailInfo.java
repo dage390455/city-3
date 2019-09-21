@@ -413,6 +413,8 @@ public class ForestFireCameraDetailInfo implements Serializable {
         private String hls;
         private String flv;
         private String lastCover;
+        public int state = -10;
+
 
         public String getCid() {
             return cid;

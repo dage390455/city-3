@@ -29,11 +29,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.common.widgets.SelectDialog;
@@ -56,6 +56,8 @@ import java.util.List;
 import moe.codeest.enviews.CityENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 /**
  * 多任务播放
@@ -101,14 +103,13 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     /**
      * 切换视频流
      */
-    private static ArrayList<String> urlList = new ArrayList<>();
+    private static ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> urlList = new ArrayList<>();
     /**
      * 当前视频格式
      */
     private int currentVideoFormat = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
             .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
-
-    private int currentVisibleImageFormat = 0;
+    private int currentVisiImgFormat = 0;
     /**
      * 切换视频格式，不提示移动数据
      */
@@ -222,12 +223,19 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
      *
      * @param cityURl
      */
-    public void setCityURl(ArrayList<String> cityURl, String title) {
+    public void setCityURl(ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> cityURl, String title) {
         urlList = cityURl;
-        if (null != cityURl && cityURl.size() >= currentVideoFormat) {
+        if (null != cityURl) {
             isLive = View.INVISIBLE;
-            setUp(cityURl.get(currentVideoFormat), false, title);
-            mTitleTextView.setText(title);
+
+            if (currentVideoFormat == 0) {
+                setUp(cityURl.get(getPlayPosition()).getHls(), false, "");
+
+            } else {
+                setUp(cityURl.get(getPlayPosition()).getFlv(), false, "");
+
+            }
+
 
         }
 
@@ -263,7 +271,16 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     public void setCityPlayState(int cityState) {
         dismissProgressDialog();
         cityPlayState = cityState;
-        isShowMaskTopBack = true;
+
+        Configuration mConfiguration = mContext.getResources().getConfiguration();
+        int ori = mConfiguration.orientation;
+        if (ori == ORIENTATION_LANDSCAPE) {
+            isShowMaskTopBack = true;
+        } else {
+            isShowMaskTopBack = false;
+
+        }
+
         setIsShowMaskTopBack(isShowMaskTopBack);
 
         switch (cityPlayState) {
@@ -563,9 +580,13 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
         swVideoFormatTv.setOnClickListener(v -> {
             int orientation = mContext.getResources().getConfiguration().orientation;
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (orientation == ORIENTATION_LANDSCAPE) {
+
+
                 changeVideoFormatDialog = new ChangeVideoFormatDialog();
-                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVideoFormat, position -> changeVideoFormat(true, position));
+
+                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVideoFormat, position -> changeVideoFormat(position));
+                changeVideoFormatDialog.setText(getResources().getString(R.string.flv_format), getResources().getString(R.string.hls_format), getResources().getString(R.string.video_format_des));
             } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 
                 List<String> names = new ArrayList<>();
@@ -573,7 +594,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                 names.add(mContext.getString(R.string.hls_format));
                 selectDialog = new SelectDialog((Activity) mContext, currentVideoFormat, R.style
                         .transparentFrameWindowStyle,
-                        (parent, view, position, id) -> changeVideoFormat(true, position), names, mContext.getString(R.string.video_format_des));
+                        (parent, view, position, id) -> changeVideoFormat(position), names, mContext.getString(R.string.video_format_des));
                 selectDialog.setCanceledOnTouchOutside(true);
 
                 selectDialog.show();
@@ -584,9 +605,20 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
         });
         swVisibleImageFormatTv.setOnClickListener(v -> {
             int orientation = mContext.getResources().getConfiguration().orientation;
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (orientation == ORIENTATION_LANDSCAPE) {
                 changeVideoFormatDialog = new ChangeVideoFormatDialog();
-                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVisibleImageFormat, position -> changeVideoFormat(false, position));
+
+                if (swVisibleImageFormatTv.getText().equals(mContext.getString(R.string.visible_light_format))) {
+                    changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, 0, position -> changeVisiableImgFormat(position));
+
+                } else {
+
+                    changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, 1, position -> changeVisiableImgFormat(position));
+
+                }
+
+
+                changeVideoFormatDialog.setText(getResources().getString(R.string.visible_light_format), getResources().getString(R.string.imageing_format), "");
             }
 
 
@@ -883,7 +915,6 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
             backMaskTv.setVisibility(VISIBLE);
             gsyBaseVideoPlayer.currentVideoFormat = currentVideoFormat;
-            gsyBaseVideoPlayer.currentVisibleImageFormat = currentVisibleImageFormat;
             gsyBaseVideoPlayer.mThumbImageViewLayout = mThumbImageViewLayout;
             gsyBaseVideoPlayer.cityPlayState = cityPlayState;
             gsyBaseVideoPlayer.isAudioChecked = isAudioChecked;
@@ -904,7 +935,6 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
         if (gsyVideoPlayer != null) {
             MutilStandardGSYVideoPlayer sampleVideo = (MutilStandardGSYVideoPlayer) gsyVideoPlayer;
             currentVideoFormat = sampleVideo.currentVideoFormat;
-            currentVisibleImageFormat = sampleVideo.currentVisibleImageFormat;
             mThumbImageViewLayout = sampleVideo.mThumbImageViewLayout;
             setCityPlayState(cityPlayState);
             audioIv.setChecked(isAudioChecked);
@@ -1468,7 +1498,20 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            swVisibleImageFormatTv.setVisibility(GONE);
+            currentVisiImgFormat = 0;
+//            setCityURl(urlList, "");
+        } else {
+            swVisibleImageFormatTv.setVisibility(VISIBLE);
+            if (getPlayPosition() == 0) {
+                swVisibleImageFormatTv.setText(mContext.getString(R.string.visible_light_format));
+            } else {
+                swVisibleImageFormatTv.setText(mContext.getString(R.string.imageing_format));
 
+            }
+
+        }
 
         updateVideTypeTag();
 
@@ -1498,7 +1541,6 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
 
         setCityPlayState(cityPlayState);
-        Toast.makeText(mContext, isAudioChecked + "", Toast.LENGTH_SHORT).show();
 
 
         //横竖屏切换，icon大小和间距动态调整
@@ -1568,57 +1610,129 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
     /**
      * 视频格式标签
      */
-    private void changeVideoFormat(boolean right, int pos) {
+    private void changeVideoFormat(int pos) {
+        if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
+                || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
 
-        if (right) {
+            if (null != iCityChangeUiVideoPlayerListener) {
+                iCityChangeUiVideoPlayerListener.OnchangeVideoFormat();
+            }
+            isChangeVideoFormat = true;
+            String url = "";
 
-        } else {
 
+            if (pos == 0) {
+                url = urlList.get(currentVisiImgFormat).getHls();
 
-        }
-        if (currentVideoFormat != pos) {
-            if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
-                    || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
+            } else {
+                url = urlList.get(currentVisiImgFormat).getFlv();
 
-                if (null != iCityChangeUiVideoPlayerListener) {
-                    iCityChangeUiVideoPlayerListener.OnchangeVideoFormat();
+            }
+
+            if (!TextUtils.isEmpty(url)) {
+                /**
+                 * 获取最后视频截图loading显示占位图
+                 */
+                taskShotPic(bitmap -> {
+                    if (null != bitmap) {
+                        mCoverImage.setImageBitmap(bitmap);
+                        mCoverImage.setVisibility(VISIBLE);
+                    }
+
+                });
+                onVideoPause();
+                getGSYVideoManager().releaseMediaPlayer();
+                cancelProgressTimer();
+                hideAllWidget();
+                changeVideoFormatDialog.disMiss();
+                if (null != selectDialog) {
+                    selectDialog.dismiss();
                 }
-                isChangeVideoFormat = true;
-                String url = urlList.get(pos);
-                if (!TextUtils.isEmpty(url)) {
-                    /**
-                     * 获取最后视频截图loading显示占位图
-                     */
-                    taskShotPic(bitmap -> {
-                        if (null != bitmap) {
-                            mCoverImage.setImageBitmap(bitmap);
-                            mCoverImage.setVisibility(VISIBLE);
-                        }
-
-                    });
-                    onVideoPause();
-                    getGSYVideoManager().releaseMediaPlayer();
+                String finalUrl = url;
+                new Handler().postDelayed(() -> {
+                    setUp(finalUrl, mCache, mCachePath, mTitle);
+                    setSeekOnStart(0);
+                    startPlayLogic();
                     cancelProgressTimer();
                     hideAllWidget();
-                    changeVideoFormatDialog.disMiss();
-                    if (null != selectDialog) {
-                        selectDialog.dismiss();
-                    }
-                    new Handler().postDelayed(() -> {
-                        setUp(url, mCache, mCachePath, mTitle);
-                        setSeekOnStart(0);
-                        startPlayLogic();
-                        cancelProgressTimer();
-                        hideAllWidget();
 
-                    }, 300);
-                    /**
-                     * 存储本地记录
-                     */
-                    ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
-                            .edit().putInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, pos).apply();
-                    updateVideTypeTag();
-                    currentVideoFormat = pos;
+                }, 300);
+                /**
+                 * 存储本地记录
+                 */
+
+                currentVideoFormat = pos;
+
+                ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
+                        .edit().putInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, pos).apply();
+                updateVideTypeTag();
+            }
+        }
+
+
+    }
+
+
+    /**
+     * 视频格式标签
+     */
+    private void changeVisiableImgFormat(int pos) {
+        if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
+                || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
+
+            if (null != iCityChangeUiVideoPlayerListener) {
+                iCityChangeUiVideoPlayerListener.OnchangeVideoFormat();
+            }
+            isChangeVideoFormat = true;
+            String url = "";
+
+
+            if (currentVideoFormat == 0) {
+                url = urlList.get(pos).getHls();
+            } else {
+                url = urlList.get(pos).getFlv();
+
+            }
+
+            if (!TextUtils.isEmpty(url)) {
+                /**
+                 * 获取最后视频截图loading显示占位图
+                 */
+                taskShotPic(bitmap -> {
+                    if (null != bitmap) {
+                        mCoverImage.setImageBitmap(bitmap);
+                        mCoverImage.setVisibility(VISIBLE);
+                    }
+
+                });
+                onVideoPause();
+                getGSYVideoManager().releaseMediaPlayer();
+                cancelProgressTimer();
+                hideAllWidget();
+                changeVideoFormatDialog.disMiss();
+                if (null != selectDialog) {
+                    selectDialog.dismiss();
+                }
+                String finalUrl = url;
+                new Handler().postDelayed(() -> {
+                    setUp(finalUrl, mCache, mCachePath, mTitle);
+                    setSeekOnStart(0);
+                    startPlayLogic();
+                    cancelProgressTimer();
+                    hideAllWidget();
+
+                }, 300);
+                /**
+                 * 存储本地记录
+                 */
+
+                currentVisiImgFormat = pos;
+
+                if (pos == 0) {
+                    swVisibleImageFormatTv.setText(mContext.getString(R.string.visible_light_format));
+                } else {
+                    swVisibleImageFormatTv.setText(mContext.getString(R.string.imageing_format));
+
                 }
             }
         }
@@ -1635,7 +1749,6 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                 .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
         if (isLive == View.INVISIBLE) {
             swVideoFormatTv.setVisibility(VISIBLE);
-            swVisibleImageFormatTv.setVisibility(VISIBLE);
 
             if (currentVideoFormat == 0) {
                 swVideoFormatTv.setText(mContext.getString(R.string.flv_format));
@@ -1643,9 +1756,10 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                 swVideoFormatTv.setText(mContext.getString(R.string.hls_format));
 
             }
+
+
         } else {
             swVideoFormatTv.setVisibility(GONE);
-            swVisibleImageFormatTv.setVisibility(GONE);
 
         }
     }

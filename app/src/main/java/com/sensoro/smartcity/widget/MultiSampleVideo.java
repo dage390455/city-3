@@ -27,7 +27,7 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
     private final static String TAG = "MultiSampleVideo";
 
 
-    ImageView mCoverImage;
+    public ImageView mCoverImage;
 
     String mCoverOriginUrl;
 

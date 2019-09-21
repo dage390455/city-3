@@ -20,11 +20,13 @@ public class ChangeVideoFormatDialog {
     private View inflate;
     private TextView flvformatTv;
     private TextView hlsformatTv;
+    private TextView videoformat_des_tv;
 
     public void showChangeVideoFormatDialog(Context context, int selectedPos, OnChangeVideoFormatDialogListener listener) {
         //自定义dialog显示布局
         inflate = LayoutInflater.from(context).inflate(R.layout.layout_changevideoformatdialog, null);
         flvformatTv = inflate.findViewById(R.id.flvformat_tv);
+        videoformat_des_tv = inflate.findViewById(R.id.videoformat_des_tv);
         hlsformatTv = inflate.findViewById(R.id.hlsformat_tv);
         //自定义dialog显示风格
         dialog = new Dialog(context, R.style.change_video_formate_dialog_style);
@@ -101,6 +103,13 @@ public class ChangeVideoFormatDialog {
             dialog.dismiss();
             dialog = null;
         }
+    }
+
+    public void setText(String top, String bottom, String des) {
+
+        flvformatTv.setText(top);
+        hlsformatTv.setText(bottom);
+        videoformat_des_tv.setText(des);
     }
 
 
