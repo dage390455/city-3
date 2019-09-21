@@ -1,5 +1,7 @@
 package com.sensoro.common.server.bean;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class ForestFireCameraDetailInfo implements Serializable {
         this.list = list;
     }
 
-    public static class ListBean  implements Serializable{
+    public static class ListBean  implements Serializable  , Cloneable {
         /**
          * sn : 001C271240DF
          * id : 72057600540409953
@@ -37,9 +39,18 @@ public class ForestFireCameraDetailInfo implements Serializable {
         private String id;
         private String hls;
         private String flv;
+        private String cid;
         private String lastCover;
         private CameraBean camera;
         private List<MultiVideoInfoBean> multiVideoInfo;
+
+        public String getCid() {
+            return cid;
+        }
+
+        public void setCid(String cid) {
+            this.cid = cid;
+        }
 
         public String getSn() {
             return sn;
@@ -95,6 +106,11 @@ public class ForestFireCameraDetailInfo implements Serializable {
 
         public void setMultiVideoInfo(List<MultiVideoInfoBean> multiVideoInfo) {
             this.multiVideoInfo = multiVideoInfo;
+        }
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            return super.clone();
         }
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IAlarmForestFireCameraLiveDetailActivityView;
@@ -41,13 +43,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmForestFireCameraLiveDetailActivityView> {
     private Activity mActivity;
-    private ArrayList<AlarmCameraLiveBean> mList = new ArrayList<>();
+    private ArrayList<ForestFireCameraDetailInfo.ListBean> mList = new ArrayList<>();
+
+
     private List<String> cameras;
     private int mItemClickPosition = 0;
 
-    private String currentReTryClickSn;
+    private String currentReTryClickCid;
     private ArrayList<String> urlList = new ArrayList<>();
-
+    String   device_sn;
     /**
      * 网络改变状态
      *
@@ -132,43 +136,50 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
 
         EventBus.getDefault().register(this);
         Intent intent = mActivity.getIntent();
-        if (intent != null) {
-            Serializable serializable = intent.getSerializableExtra(Constants.EXTRA_ALARM_CAMERAS);
-            if (serializable instanceof ArrayList) {
-                cameras = (List<String>) serializable;
-                requestData(cameras, true);
-            }
+        if (intent != null&& intent.getExtras()!=null&&intent.getExtras().containsKey(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS)) {
+            device_sn= intent.getStringExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS);
+            requestData();
         }
-
-
     }
 
-    private void requestData(List<String> cameras, boolean isShowProgress) {
-        if (isShowProgress) {
-            getView().showProgressDialog();
 
-        }
-        RetrofitServiceHelper.getInstance().getAlarmCamerasDetail(cameras).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<AlarmCameraLiveBean>>>(this) {
-
+    private void requestData(){
+        RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(device_sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
             @Override
-            public void onCompleted(ResponseResult<List<AlarmCameraLiveBean>> alarmCameraLiveRsp) {
-                List<AlarmCameraLiveBean> data = alarmCameraLiveRsp.getData();
+            public void onCompleted(ResponseResult<ForestFireCameraDetailInfo> deviceCameraDetailRsp) {
                 mList.clear();
-                if (data != null && data.size() > 0) {
-                    mList.addAll(data);
-                    mItemClickPosition = 0;
+                ForestFireCameraDetailInfo  mForestFireCameraDetailInfo= deviceCameraDetailRsp.getData();
+                if(mForestFireCameraDetailInfo!=null&&mForestFireCameraDetailInfo.getList()!=null&&mForestFireCameraDetailInfo.getList().size()>0){
+                    ForestFireCameraDetailInfo.ListBean   mListBean= mForestFireCameraDetailInfo.getList().get(0);
 
-                    if (!TextUtils.isEmpty(currentReTryClickSn)) {
+                   if(mListBean.getMultiVideoInfo()!=null&&mListBean.getMultiVideoInfo().size()>0){//说明是多目的
+                        for(ForestFireCameraDetailInfo.MultiVideoInfoBean item:mListBean.getMultiVideoInfo()){
+
+                            try {
+                                ForestFireCameraDetailInfo.ListBean  newListBean= (ForestFireCameraDetailInfo.ListBean) mListBean.clone();
+                                newListBean.setCid(item.getCid());
+                                newListBean.setHls(item.getHls());
+                                newListBean.setFlv(item.getFlv());
+                                newListBean.setLastCover(item.getLastCover());
+                                mList.add(newListBean);
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else  if(mListBean.getCamera()!=null){//说明是单目的
+                       mList.add(mListBean);
+                   }
+
+
+                    mItemClickPosition = 0;
+                    if (!TextUtils.isEmpty(currentReTryClickCid)) {
                         for (int i = 0; i < mList.size(); i++) {
-                            if (mList.get(i).getSn().equals(currentReTryClickSn)) {
+                            if (mList.get(i).getCid().equals(currentReTryClickCid)) {
                                 mItemClickPosition = i;
                                 break;
                             }
                         }
                     }
-
-
                     doLive();
                 }
 
@@ -182,7 +193,6 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-
                 if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort(errorMsg);
@@ -193,25 +203,30 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
         });
     }
 
+
+
+
     public void doLive() {
         if (mList.size() > mItemClickPosition) {
-            AlarmCameraLiveBean dataBean = mList.get(mItemClickPosition);
+            ForestFireCameraDetailInfo.ListBean dataBean = mList.get(mItemClickPosition);
             if (dataBean == null) {
                 getView().toastShort(mActivity.getString(R.string.unknown_error));
                 return;
             }
 
             getLastCoverImage(dataBean.getLastCover());
-            if (!TextUtils.isEmpty(dataBean.getDeviceStatus()) && "0".equals(dataBean.getDeviceStatus())) {
-                getView().offlineType(dataBean.getHls(), dataBean.getSn());
-            } else {
+//            if (!TextUtils.isEmpty(dataBean.getDeviceStatus()) && "0".equals(dataBean.getDeviceStatus())) {
+//                getView().offlineType(dataBean.getHls(), dataBean.getSn());
+//            } else {
+//
+//
+//
+//            }
 
-                urlList.clear();
-                urlList.add(dataBean.getFlv());
-                urlList.add(dataBean.getHls());
-                getView().doPlayLive(urlList);
-
-            }
+            urlList.clear();
+            urlList.add(dataBean.getFlv());
+            urlList.add(dataBean.getHls());
+            getView().doPlayLive(urlList);
         } else {
             getView().toastShort(mActivity.getString(R.string.unknown_error));
         }
@@ -226,18 +241,18 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     }
 
     public void doRefresh() {
-        currentReTryClickSn = "";
+        currentReTryClickCid = "";
         if (cameras == null) {
             getView().onPullRefreshComplete();
             return;
         }
 
-        requestData(cameras, false);
+        requestData();
     }
 
     public void doItemClick(int position) {
         mItemClickPosition = position;
-        currentReTryClickSn = "";
+        currentReTryClickCid = "";
         doLive();
     }
 
@@ -251,19 +266,15 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
                 if (data != null) {
                     String hls = data.getHls();
                     String lastCover = data.getLastCover();
-
                     getLastCoverImage(lastCover);
                     String deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-                        getView().offlineType(hls, sn);
+                        getView().offlineType(hls, device_sn);
                     } else {
-                        doLive();
+//                        doLive();
                         //更新列表信息
-
-                        currentReTryClickSn = sn;
-                        requestData(cameras, true);
-
-
+//                        currentReTryClickCid = 0;
+                        requestData();
                     }
 
                 } else {
@@ -271,7 +282,6 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
 
                 }
                 getView().dismissProgressDialog();
-
             }
 
             @Override

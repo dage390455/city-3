@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
@@ -33,7 +34,7 @@ import butterknife.ButterKnife;
 public class AlarmForestFireCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmForestFireCameraLiveDetailAdapter.CameraLiveDetailViewHolder> {
     private final Context mContext;
 
-    List<AlarmCameraLiveBean> mList = new ArrayList();
+    List<ForestFireCameraDetailInfo.ListBean> mList = new ArrayList();
     private AlarmCameraLiveItemClickListener mListener;
     private Integer mClickPosition = 0;
     private final Drawable onLineDrawable;
@@ -99,7 +100,7 @@ public class AlarmForestFireCameraLiveDetailAdapter extends RecyclerView.Adapter
             holder.tvWatchStateItemAdapterAlarmCameraLiveDetail.setVisibility(View.GONE);
         }
 
-        AlarmCameraLiveBean dataBean = mList.get(position);
+        ForestFireCameraDetailInfo.ListBean dataBean = mList.get(position);
         if (dataBean != null) {
             Glide.with(mContext)
                     .load(dataBean.getLastCover())
@@ -107,7 +108,7 @@ public class AlarmForestFireCameraLiveDetailAdapter extends RecyclerView.Adapter
 //                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
                             .placeholder(R.drawable.camera_placeholder))
                     .into(holder.ivPicItemAdapterAlarmCameraLiveDetail);
-            AlarmCameraLiveBean.CameraBean camera = dataBean.getCamera();
+            ForestFireCameraDetailInfo.CameraBean camera = dataBean.getCamera();
             if (camera != null) {
                 String name = camera.getName();
                 if (TextUtils.isEmpty(name)) {
@@ -115,7 +116,7 @@ public class AlarmForestFireCameraLiveDetailAdapter extends RecyclerView.Adapter
                 }
                 holder.tvNameItemAdapterAlarmCameraLiveDetail.setText(name);
 
-                AlarmCameraLiveBean.CameraBean.InfoBean info = camera.getInfo();
+                ForestFireCameraDetailInfo.InfoBean info = camera.getInfo();
                 if (info != null) {
                     String deviceStatus = info.getDeviceStatus();
                     setDeviceCameraStatus(holder, !TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus));
@@ -145,7 +146,7 @@ public class AlarmForestFireCameraLiveDetailAdapter extends RecyclerView.Adapter
         }
     }
 
-    public void updateData(List<AlarmCameraLiveBean> data) {
+    public void updateData(List<ForestFireCameraDetailInfo.ListBean> data) {
         mList.clear();
         mList.addAll(data);
         mClickPosition = 0;

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public interface IAlarmForestFireCameraLiveDetailActivityView extends IToast, IP
 
     void offlineType(String url, String sn);
 
-    void updateData(ArrayList<AlarmCameraLiveBean> mList);
+    void updateData(ArrayList<ForestFireCameraDetailInfo.ListBean> mList);
 
     void onPullRefreshComplete();
 
