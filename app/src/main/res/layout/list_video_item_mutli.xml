@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.sensoro.smartcity.widget.MultiSampleVideo
+    <com.shuyu.gsyvideoplayer.video.MultiSampleVideo
         android:id="@+id/video_item_player"
         android:layout_width="match_parent"
         android:layout_height="200dp" />

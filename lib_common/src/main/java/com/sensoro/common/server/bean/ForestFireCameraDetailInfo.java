@@ -1,8 +1,7 @@
 package com.sensoro.common.server.bean;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public class ForestFireCameraDetailInfo implements Serializable {
         private String cid;
         private String lastCover;
         private CameraBean camera;
-        private List<MultiVideoInfoBean> multiVideoInfo;
+        private ArrayList<MultiVideoInfoBean> multiVideoInfo;
 
         public String getCid() {
             return cid;
@@ -100,11 +99,11 @@ public class ForestFireCameraDetailInfo implements Serializable {
             this.camera = camera;
         }
 
-        public List<MultiVideoInfoBean> getMultiVideoInfo() {
+        public ArrayList<MultiVideoInfoBean> getMultiVideoInfo() {
             return multiVideoInfo;
         }
 
-        public void setMultiVideoInfo(List<MultiVideoInfoBean> multiVideoInfo) {
+        public void setMultiVideoInfo(ArrayList<MultiVideoInfoBean> multiVideoInfo) {
             this.multiVideoInfo = multiVideoInfo;
         }
 

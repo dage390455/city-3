@@ -313,18 +313,18 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 //                maskTitleTv.setText(mTitle);
                 tiptv.setText(getResources().getString(R.string.mobile_network));
                 maskLayoutTop.setVisibility(VISIBLE);
-//                playAndRetryBtn.setOnClickListener(v -> {
-//                    maskLayoutTop.setVisibility(GONE);
-//                    rMobileData.setVisibility(GONE);
-//                    cityPlayState = -1;
-//                    if (mVideoAllCallBack != null) {
-//                        Debuger.printfLog("onClickStartThumb");
-//                        mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, MutilStandardGSYVideoPlayer.this);
-//                    }
-//                    prepareVideo();
-//                    startDismissControlViewTimer();
-//
-//                });
+                playAndRetryBtn.setOnClickListener(v -> {
+                    maskLayoutTop.setVisibility(GONE);
+                    rMobileData.setVisibility(GONE);
+                    cityPlayState = -1;
+                    if (mVideoAllCallBack != null) {
+                        Debuger.printfLog("onClickStartThumb");
+                        mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, MutilStandardGSYVideoPlayer.this);
+                    }
+                    prepareVideo();
+                    startDismissControlViewTimer();
+
+                });
 
                 break;
             case 3:
@@ -653,7 +653,6 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
         maskFaceIv.setVisibility(GONE);
 
-        if (cityPlayState != 1 && cityPlayState != 2) {
             if ((!NetworkUtils.isAvailable(getContext()) || !NetworkUtils.isWifiConnected(getContext()))) {
                 if (!NetworkUtils.isAvailable(getContext())) {
                     setCityPlayState(1);
@@ -666,7 +665,6 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                     setCityPlayState(2);
                     return;
                 }
-            }
         }
         if (mVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartThumb");
@@ -1621,13 +1619,27 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
             String url = "";
 
 
-            if (pos == 0) {
-                url = urlList.get(currentVisiImgFormat).getHls();
+            Configuration mConfiguration = mContext.getResources().getConfiguration();
+            int ori = mConfiguration.orientation;
+            if (ori == ORIENTATION_LANDSCAPE) {
 
+                if (pos == 0) {
+                    url = urlList.get(currentVisiImgFormat).getHls();
+
+                } else {
+                    url = urlList.get(currentVisiImgFormat).getFlv();
+
+                }
             } else {
-                url = urlList.get(currentVisiImgFormat).getFlv();
+                if (pos == 0) {
+                    url = urlList.get(getPlayPosition()).getHls();
 
+                } else {
+                    url = urlList.get(getPlayPosition()).getFlv();
+
+                }
             }
+
 
             if (!TextUtils.isEmpty(url)) {
                 /**

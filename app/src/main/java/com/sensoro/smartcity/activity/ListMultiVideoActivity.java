@@ -13,7 +13,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.ListMultiNormalAdapter;
+import com.sensoro.forestfire.adapter.ListMultiNormalAdapter;
 import com.sensoro.smartcity.imainviews.IMutilCameraView;
 import com.sensoro.smartcity.presenter.MutilCamerPresenter;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;

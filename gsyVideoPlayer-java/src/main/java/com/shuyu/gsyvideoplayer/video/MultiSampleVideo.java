@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget;
+package com.shuyu.gsyvideoplayer.video;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -9,10 +9,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.sensoro.smartcity.R;
+import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.video.MutilStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
 

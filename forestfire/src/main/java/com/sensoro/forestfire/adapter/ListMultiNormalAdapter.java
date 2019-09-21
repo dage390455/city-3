@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.forestfire.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.MultiSampleVideo;
+import com.sensoro.forestfire.R;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
+import com.shuyu.gsyvideoplayer.video.MultiSampleVideo;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.List;
 
 /**
  * 多个播放的listview adapter
- * Created by shuyu on 2016/11/12.
  */
 
 public class ListMultiNormalAdapter extends BaseAdapter {
@@ -43,6 +42,12 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         notifyDataSetChanged();
 
     }
+
+    public ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> getData() {
+
+        return list;
+    }
+
 
     public void updataAdapter(List<ForestFireCameraDetailInfo.MultiVideoInfoBean> multiVideoInfo) {
         this.list.clear();
@@ -126,7 +131,6 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         String gsyVideoPlayerKey = holder.gsyVideoPlayer.getKey();
 
 
-
         holder.gsyVideoPlayer.setRotateViewAuto(false);
         holder.gsyVideoPlayer.setLockLand(true);
         holder.gsyVideoPlayer.setReleaseWhenLossAudio(false);
@@ -141,8 +145,7 @@ public class ListMultiNormalAdapter extends BaseAdapter {
         holder.gsyVideoPlayer.mCoverImage.setVisibility(View.VISIBLE);
 
 
-        holder.gsyVideoPlayer.loadCoverImage(videoModel.getLastCover(), R.drawable.camera_detail_mask);
-
+//        holder.gsyVideoPlayer.loadCoverImage(videoModel.getLastCover(), R.drawable.camera_detail_mask);
 
 
         if (videoModel.state == -1) {
@@ -195,6 +198,8 @@ public class ListMultiNormalAdapter extends BaseAdapter {
             @Override
             public void onPrepared(String url, Object... objects) {
                 super.onPrepared(url, objects);
+
+                holder.gsyVideoPlayer.mCoverImage.setVisibility(View.GONE);
             }
 
             @Override

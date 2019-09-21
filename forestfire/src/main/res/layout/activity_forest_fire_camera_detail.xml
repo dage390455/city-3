@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/view_top_ac_alarm_camera_video_detail"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ic_title_ac_alarm_camera_video_detail" />
     <include
         android:id="@+id/in_forest_fire_camera_detail_header"
         layout="@layout/item_include_text_title" />
 
-
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/in_forest_fire_camera_detail_header"
+        android:layout_height="wrap_content">
 
-        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:layout_below="@id/in_forest_fire_camera_detail_header"
+
             android:orientation="vertical">
             <View
                 android:layout_width="match_parent"
@@ -62,28 +73,34 @@
             </LinearLayout>
 
 
-
-
-<!--            此处嵌入直播组件，由林鹏负责加入-->
-            <LinearLayout
+            <com.shuyu.gsyvideoplayer.video.MultiSampleVideo
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="20dp"
 
-<!--                直播1-->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="217dp"
-                    android:background="#000000"/>
+                android:id="@+id/video_player1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="16:9"
+                android:layout_height="200dp"></com.shuyu.gsyvideoplayer.video.MultiSampleVideo>
 
-<!--                直播2-->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="217dp"
-                    android:background="#ff8585"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="4dp"></View>
+
+            <com.shuyu.gsyvideoplayer.video.MultiSampleVideo
+                android:layout_width="match_parent"
+
+                android:id="@+id/video_img_player2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="16:9"
+                android:layout_height="200dp"></com.shuyu.gsyvideoplayer.video.MultiSampleVideo>
+
 
             <View
                 android:layout_width="match_parent"
@@ -225,7 +242,6 @@
                 android:layout_height="217dp"/>
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
-
-</RelativeLayout>
+</LinearLayout>
