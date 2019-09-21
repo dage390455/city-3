@@ -17,12 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -46,10 +48,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.PATCH;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+
+@Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIVE_DETAIL)
 public class AlarmForestFireCameraLiveDetailActivity extends BaseActivity<IAlarmForestFireCameraLiveDetailActivityView, AlarmForestFireCameraLiveDetailActivityPresenter>
         implements IAlarmForestFireCameraLiveDetailActivityView {
     @BindView(R2.id.include_imv_title_imv_arrows_left)
