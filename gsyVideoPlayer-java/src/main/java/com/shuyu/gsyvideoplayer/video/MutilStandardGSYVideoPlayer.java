@@ -317,6 +317,9 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                     maskLayoutTop.setVisibility(GONE);
                     rMobileData.setVisibility(GONE);
                     cityPlayState = -1;
+//                    if (null != mThumbImageView) {
+//                        mThumbImageView.setVisibility(VISIBLE);
+//                    }
                     if (mVideoAllCallBack != null) {
                         Debuger.printfLog("onClickStartThumb");
                         mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, MutilStandardGSYVideoPlayer.this);
@@ -653,6 +656,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
 
         maskFaceIv.setVisibility(GONE);
 
+        if (cityPlayState != 1 && cityPlayState != 2) {
             if ((!NetworkUtils.isAvailable(getContext()) || !NetworkUtils.isWifiConnected(getContext()))) {
                 if (!NetworkUtils.isAvailable(getContext())) {
                     setCityPlayState(1);
@@ -665,6 +669,7 @@ public class MutilStandardGSYVideoPlayer extends StandardGSYVideoPlayer implemen
                     setCityPlayState(2);
                     return;
                 }
+            }
         }
         if (mVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartThumb");

@@ -357,23 +357,34 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
             case ConnectivityManager.TYPE_WIFI:
 
+//                if (gsyVideoPlayer.getCurrentPlayer().getCurrentState()!= GSYVideoView.CURRENT_STATE_PLAYING) {
+
+
                 gsyVideoPlayer.setCityPlayState(-1);
 
                 playFirst(list);
+//                }
 
+
+//                if (gsyVideoPlayerImg.getCurrentPlayer().getCurrentState()!= GSYVideoView.CURRENT_STATE_PLAYING) {
 
                 gsyVideoPlayerImg.setCityPlayState(-1);
 
                 playSecond(list);
+//                }
 
                 break;
 
             case ConnectivityManager.TYPE_MOBILE:
                 gsyVideoPlayer.setCityPlayState(2);
+                CustomManager.onPauseAll();
                 CustomManager.backFromWindowFull(mActivity, gsyVideoPlayer.getKey());
                 gsyVideoPlayer.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+//                        gsyVideoPlayer.mCoverImage.setVisibility(View.VISIBLE);
+
+//                        gsyVideoPlayer.loadCoverImage(list.get(0).getLastCover(), R.drawable.camera_detail_mask);
                         gsyVideoPlayer.getMaskLayoutTop().setVisibility(View.GONE);
                         gsyVideoPlayer.getrMobileData().setVisibility(View.GONE);
                         gsyVideoPlayer.setCityURl(list, "");
@@ -389,6 +400,8 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
                 gsyVideoPlayerImg.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+//                        gsyVideoPlayerImg.loadCoverImage(list.get(1).getLastCover(), R.drawable.camera_detail_mask);
+//                        gsyVideoPlayerImg.mCoverImage.setVisibility(View.VISIBLE);
                         gsyVideoPlayerImg.getMaskLayoutTop().setVisibility(View.GONE);
                         gsyVideoPlayerImg.getrMobileData().setVisibility(View.GONE);
                         gsyVideoPlayerImg.setCityURl(list, "");
@@ -397,7 +410,7 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
                     }
                 });
-                CustomManager.onPauseAll();
+
 
                 break;
 
