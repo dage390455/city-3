@@ -1290,7 +1290,7 @@
 
     <string name="device_imei">IMEI</string>
     <string name="device_imsi">IMSI</string>
-    <string name="device_iccid">卡号（ICCID）</string>
+    <string name="device_iccid">卡号</string>
 
 
     <!--离线详情-->
@@ -1306,7 +1306,7 @@
     <string name="successful_deployment">部署成功</string>
     <string name="nosignal">无信号</string>
     <string name="forceload">强制上传</string>
-    <string name="retries">网络异常是否重试</string>
+    <string name="retries">网络异常，是否重试</string>
     <string name="retryimmediately">立即重试</string>
 
     <string name="server_error_alert">服务器数据返回错误 设备类型</string>

@@ -1304,7 +1304,7 @@
 
     <string name="device_imei">IMEI</string>
     <string name="device_imsi">IMSI</string>
-    <string name="device_iccid">Card（ICCID）</string>
+    <string name="device_iccid">Card（CCID）</string>
 
     <!--离线上传-->
     <string name="offline_deploy_task_detail_title">Offline Detail</string>

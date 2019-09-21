@@ -103,9 +103,28 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private final HashMap<String, BLEDevice> bleDevice = new HashMap<>();
     private DeployAnalyzerModel deployAnalyzerModel;
     private DeployRetryUtil deployRetryUtil;
+
+    private final HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
+    private String tempForceReason;
+    private Integer tempStatus;
+    private String mScheduleNo;
+    //默认信号检测为2分钟
+    private int signalTimeRule = 2 * 60 * 1000;
+    private int signalCheckCount = 15;
+    //不需要检查信号时间
     private final Runnable signalTask = new Runnable() {
         @Override
         public void run() {
+            try {
+                com.sensoro.common.utils.LogUtils.loge("信号更新--->>> 准备 freshSignalInfo updatedTime = " + deployAnalyzerModel.updatedTime + "，signal = " + deployAnalyzerModel.signal);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            if ("acrel300T_fires_2G".equals(deployAnalyzerModel.deviceType) || "acrel300D_fires_2G".equals(deployAnalyzerModel.deviceType)) {
+                //针对此2g电气火灾设备特定修改信号时间
+                signalTimeRule = 5 * 60 * 1000;
+                signalCheckCount = 30;
+            }
             freshSignalInfo();
             //加入部署接口轮询
             RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
@@ -134,10 +153,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             mHandler.postDelayed(signalTask, 2000);
         }
     };
-    private final HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
-    private String tempForceReason;
-    private Integer tempStatus;
-    private String mScheduleNo;
 
 
     @Override
@@ -450,12 +465,21 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                     }
                 }
+                try {
+                    LogUtils.loge(this, "socket-->>> DeviceTaskResultListener handle2GDeviceConfig  scheduleNo = " + scheduleNo);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissBleConfigDialog();
                 getView().toastShort(errorMsg);
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    deployRetryUtil.addTask(deployAnalyzerModel);
+                    getView().showRetryDialog();
+                }
             }
         });
     }
@@ -466,19 +490,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             mHandler.removeCallbacks(DeviceTaskOvertime);
             mScheduleNo = null;
             getView().dismissBleConfigDialog();
-            getView().toastShort(mContext.getString(R.string.deploy_device_detail_check_failed));
+            getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
 
         }
     };
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
         try {
-            LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
+            LogUtils.loge(this, "socket-->>> DeviceTaskResultListener onMessageEvent  scheduleNo = " + scheduleNo);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
         if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
             String[] split = scheduleNo.split(",");
             if (split.length > 0) {
@@ -627,7 +651,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
-        checkHandler.init(1000, 10);
+        checkHandler.init(1000, signalCheckCount);
         checkHandler.dealMessage(3, signalMsgDeal);
     }
 
@@ -1307,7 +1331,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
         //
         Drawable drawable = resources.getDrawable(R.drawable.signal_none);
-        if (deployAnalyzerModel.signal != null && (time_diff < 3 * 60 * 1000)) {
+        if (deployAnalyzerModel.signal != null && (time_diff < signalTimeRule)) {
             switch (deployAnalyzerModel.signal) {
                 case "good":
                     signal_text = mContext.getString(R.string.s_good);
@@ -1364,7 +1388,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      */
     private int checkNeedSignal() {
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (deployAnalyzerModel.signal != null && (time_diff < 3 * 60 * 1000)) {
+        if (deployAnalyzerModel.signal != null && (time_diff < signalTimeRule)) {
             switch (deployAnalyzerModel.signal) {
                 case "good":
                     return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
