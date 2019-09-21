@@ -72,6 +72,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private AlarmCloudVideoBean mVideoBean;
     private FireWaringCloseDialogUtils firewaringCloseDialogUtils;
 
+    String devicesn="72057600540672047";
 
 
     @Override
@@ -85,7 +86,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             getView().setHistoryLogVisible(true);
         }
         deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_ALARM_INFO);
-
+        devicesn=  deviceAlarmLogInfo.getDeviceSN();
         getAlarmCount();
 
         getCloudVideo();
@@ -140,9 +141,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             return;
         }
 
-        String testsn="72057600540672047";
-//        deviceAlarmLogInfo.getDeviceSN()
-        RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(testsn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
+
+
+        RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(devicesn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
             @Override
             public void onCompleted(ResponseResult<ForestFireCameraDetailInfo> deviceCameraDetailRsp) {
 
@@ -562,7 +563,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
         if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
             Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
-            intent.putExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS, mListBean);
+            intent.putExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS, devicesn);
             getView().startAC(intent);
         } else {
             Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
