@@ -25,6 +25,7 @@ import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.FireWaringCloseDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.forestfire.activity.AlarmForestFireCameraLiveDetailActivity;
@@ -64,6 +65,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private Activity mContext;
     private LatLng destPosition = null;
     private AlarmCloudVideoBean mVideoBean;
+    private FireWaringCloseDialogUtils firewaringCloseDialogUtils;
 
     @Override
     public void initData(Context context) {
@@ -88,7 +90,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private void getCloudVideo() {
 
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            getView().setLlVideoSizeAndContent(-1,null);
+            getView().setLlVideoSizeAndContent(-1, null);
             return;
         }
         String[] eventIds = {deviceAlarmLogInfo.get_id()};
@@ -104,18 +106,18 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                             if (mMedias != null && mMedias.size() > 0) {
                                 String text = String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.alarm_camera_video)
                                         , mMedias.size(), mContext.getString(R.string.video_unit_duan));
-                                getView().setLlVideoSizeAndContent(mMedias.size(),text);
+                                getView().setLlVideoSizeAndContent(mMedias.size(), text);
                             } else {
-                                getView().setLlVideoSizeAndContent(-1,null);
+                                getView().setLlVideoSizeAndContent(-1, null);
                             }
                         } else {
-                            getView().setLlVideoSizeAndContent(-1,null);
+                            getView().setLlVideoSizeAndContent(-1, null);
                         }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().setLlVideoSizeAndContent(-1,null);
+                        getView().setLlVideoSizeAndContent(-1, null);
                     }
                 });
     }
@@ -480,11 +482,11 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             return;
         }
 
-        if(Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())){
+        if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
             Intent intent = new Intent(mContext, AlarmForestFireCameraVideoDetailActivity.class);
             intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
             getView().startAC(intent);
-        }else{
+        } else {
             Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
             intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
             getView().startAC(intent);
@@ -498,12 +500,12 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
             return;
         }
-        if(Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())){
+        if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
             Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
             ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
             intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
             getView().startAC(intent);
-        }else{
+        } else {
             Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
             ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
             intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
@@ -513,6 +515,39 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doCloseWarn() {
+        //弹窗二次确认
+        //TODO 调用关闭火警 然后刷新界面
+        if (firewaringCloseDialogUtils == null) {
+            firewaringCloseDialogUtils = new FireWaringCloseDialogUtils(mContext);
+        }
+        firewaringCloseDialogUtils.setTipTitleText(mContext.getString(R.string.confirm_to_turn_off_the_fire))
+                .setTipMessageText(mContext.getString(R.string.turn_off_the_fire_tips))
+                .setTipConfirmText(mContext.getString(R.string.confirm_close), mContext.getResources().getColor(R.color.c_f35a58))
+                .setTipCacnleText(mContext.getString(R.string.cancel), mContext.getResources().getColor(R.color.c_252525))
+                .setTipDialogUtilsClickListener(new FireWaringCloseDialogUtils.TipDialogUtilsClickListener() {
+                    @Override
+                    public void onCancelClick() {
+                        firewaringCloseDialogUtils.dismiss();
+                    }
 
+                    @Override
+                    public void onConfirmClick() {
+                        getView().showProgressDialog();
+                        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(AlarmDetailLogActivityPresenter.this) {
+                            @Override
+                            public void onCompleted(ResponseResult<Object> objectResponseResult) {
+                                getView().toastShort("success");
+                                getView().dismissProgressDialog();
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().toastShort(errorMsg);
+                                getView().dismissProgressDialog();
+                            }
+                        });
+                    }
+                });
+        firewaringCloseDialogUtils.show();
     }
 }

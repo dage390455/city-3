@@ -280,6 +280,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ns_content"
         app:layout_constraintVertical_bias="1">
+        <ImageView
+            android:id="@+id/iv_alarm_log_close_fire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/ic_close_fire"/>
         <View
             android:id="@+id/view3"
             android:layout_width="match_parent"
@@ -333,22 +341,6 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:text="@string/alarm_log_alarm_warn_confirm"
-                android:textColor="@color/white"
-                android:textSize="12dp" />
-            <TextView
-                android:id="@+id/ac_alert_tv_alert_close"
-                android:layout_width="0dp"
-                android:visibility="gone"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_corner_f35_bg_4dp"
-                android:gravity="center_horizontal"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:text="@string/alarm_log_alarm_contact_close_warn"
                 android:textColor="@color/white"
                 android:textSize="12dp" />
         </LinearLayout>
