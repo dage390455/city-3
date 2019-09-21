@@ -277,9 +277,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         public void onCompleted(ResponseResult<ForestFireCameraBean> deviceDeployRsp) {
                             getView().dismissProgressDialog();
                             ForestFireCameraBean data = deviceDeployRsp.getData();
-                             Intent intent=  mContext.getIntent();
-                             intent.putExtra("result",data);
-                             mContext.setResult(Activity.RESULT_OK,intent);
+                            EventBus.getDefault().post(data);
                             getView().finishAc();
                         }
 

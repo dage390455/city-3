@@ -3,6 +3,7 @@ package com.sensoro.forestfire.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
     private Context mContext;
     private OnDeviceCameraContentClickListener listener;
     private final List<ForestFireCameraBean> mData = new ArrayList<>();
+    private int  clickedItemPosition=-1;
 
     public ForestFireCameraListAdapter(Context context) {
         mContext = context;
@@ -46,6 +48,15 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
+        clickedItemPosition=-1;
+    }
+
+    public void updateAdapterItem(ForestFireCameraBean  item){
+        if(clickedItemPosition>0&&mData.size()>clickedItemPosition){
+            mData.set(clickedItemPosition,item);
+            notifyItemChanged(clickedItemPosition);
+            clickedItemPosition=-1;
+        }
     }
 
     public List<ForestFireCameraBean> getData() {
@@ -78,6 +89,7 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickedItemPosition=position;
                 if (listener != null) {
                     listener.onItemClick(v, position);
                 }

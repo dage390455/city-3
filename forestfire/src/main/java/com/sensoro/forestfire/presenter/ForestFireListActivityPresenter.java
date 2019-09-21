@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
@@ -22,6 +23,10 @@ import com.sensoro.forestfire.activity.ForestFireCameraDetailActivity;
 import com.sensoro.forestfire.imainviews.IForestFireCameraListActivityView;
 import com.sensoro.common.server.bean.ForestFireCameraListInfo;
 import com.sensoro.common.server.bean.ForestFireCameraBean;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -67,11 +72,16 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCa
         } else {
             requestDataByFilter(Constants.DIRECTION_DOWN, null);
         }
+
+
+        requestDataByFilter(Constants.DIRECTION_DOWN, null);
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
         }
+
+        EventBus.getDefault().register(this);
     }
 
 
@@ -133,6 +143,7 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCa
     @Override
     public void onDestroy() {
         selectedHashMap.clear();
+        EventBus.getDefault().unregister(this);
     }
 
     public void onClickDeviceCamera(final ForestFireCameraBean deviceCameraInfo) {
@@ -439,5 +450,11 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCa
             }
         }
         return hashMap;
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ForestFireCameraBean  mForestFireCameraBean){
+        getView().updateDeviceCameraAdapterByItem(mForestFireCameraBean);
     }
 }

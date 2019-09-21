@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -312,6 +313,7 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireCamera
 
     @Override
     protected void onDestroy() {
+        Log.d("onDestroy_ist","nDestroy  list");
         super.onDestroy();
         if (returnTopAnimation != null) {
             returnTopAnimation.cancel();
@@ -390,6 +392,13 @@ public class ForestFireCameraListActivity extends BaseActivity<IForestFireCamera
         }
         setNoContentVisible(data == null || data.size() < 1);
     }
+    @Override
+    public void updateDeviceCameraAdapterByItem(ForestFireCameraBean data) {
+        if(data!=null){
+            mDeviceCameraContentAdapter.updateAdapterItem(data);
+        }
+    }
+
 
 
 

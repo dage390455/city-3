@@ -181,7 +181,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             });
             boolean needShowClose = false;
             //只在森林防火 并且是预警和安全隐患的时候显示关闭的弹窗
-            if ("binocular".equals(deviceType) && isAlarm) {
+            if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceType) && isAlarm) {
                 if (DISPLAY_STATUS_ALARM == displayStatus || DISPLAY_STATUS_RISKS == displayStatus) {
                     needShowClose = true;
                 }

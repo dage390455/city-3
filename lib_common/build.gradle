@@ -106,6 +106,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     api project(path: ':calendarview')
 
+
+
     api files('libs/ocr-sdk.jar')
 
     //mp表格组件
