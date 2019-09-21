@@ -418,8 +418,6 @@ public class AlarmPopFillInfoUtils implements Constants,
 
     private void doCommit() {
         if (mListener != null) {
-
-
             dismissProgressDialog();
             mListener.onPopupCallback(mAlarmPopupModel, null);
         }
@@ -503,7 +501,7 @@ public class AlarmPopFillInfoUtils implements Constants,
         }
     }
 
-    @OnClick({R.id.iv_alarm_popup_close,  R.id.bt_alarm_popup_commit})
+    @OnClick({R.id.iv_alarm_popup_close, R.id.bt_alarm_popup_commit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_alarm_popup_close:
@@ -555,7 +553,12 @@ public class AlarmPopFillInfoUtils implements Constants,
     public void setUpdateButtonClickable(boolean canClick) {
         if (btAlarmPopupCommit != null) {
             if (canClick) {
-                btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
+                if (mAlarmPopupModel != null) {
+                    btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
+                } else {
+                    btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
+                }
+
             } else {
                 btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button_normal));
             }

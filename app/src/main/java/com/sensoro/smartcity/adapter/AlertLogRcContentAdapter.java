@@ -180,6 +180,16 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             try {
                 if (displayStatus != null) {
                     desc = mContext.getString(confirmAlarmResultInfoArray[displayStatus]);
+                    if ("binocular".equals(mDeviceAlarmLogInfo.getDeviceType())) {
+                        //针对森林防火特殊适配
+                        if (1 == displayStatus) {
+                            desc = mContext.getString(R.string.binocular_fire_pop_alarm_desc);
+                        } else if (4 == displayStatus) {
+                            desc = mContext.getString(R.string.binocular_fire_pop_alarm_risk);
+                        }
+
+                    }
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -568,7 +578,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.llConfirm.setVisibility(View.GONE);
             holder.rlItemAlarmDetailChildForestPhoto.setVisibility(View.GONE);
 
-        }else if ("close".equals(type)){
+        } else if ("close".equals(type)) {
             //关闭火警
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
             StringBuilder stringBuilder = new StringBuilder();

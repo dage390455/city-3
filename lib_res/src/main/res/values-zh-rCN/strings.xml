@@ -1328,4 +1328,7 @@
 
     <string name="binocular_alarm_tip">双目热成像摄像</string>
     <string name="close_binocular_fire_alarm_tip">手动关闭本次预警 预警恢复正常</string>
+
+    <string name="binocular_fire_pop_alarm_desc">确认真实火警后，所有应急联系人及辖区领导都会接到电话通知，赶往现场处置\n确认真实火警时，火灾消除后，需要手动关闭此次预警事件</string>
+    <string name="binocular_fire_pop_alarm_risk">确认安全隐患时，在隐患排除之后，需要手动关闭此次预警事件</string>
 </resources>
