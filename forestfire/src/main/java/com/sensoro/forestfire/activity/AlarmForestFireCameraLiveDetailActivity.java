@@ -26,6 +26,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.AlarmCameraLiveBean;
+import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.forestfire.R;
@@ -473,7 +474,7 @@ public class AlarmForestFireCameraLiveDetailActivity extends BaseActivity<IAlarm
     }
 
     @Override
-    public void updateData(ArrayList<AlarmCameraLiveBean> mList) {
+    public void updateData(ArrayList<ForestFireCameraDetailInfo.ListBean> mList) {
         mListAdapter.updateData(mList);
         setNoContentVisible(mList == null || mList.size() < 1);
     }

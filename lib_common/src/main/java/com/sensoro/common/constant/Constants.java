@@ -398,6 +398,7 @@ public interface Constants {
 
     String EXTRA_ALARM_CAMERAS = "extra_alarm_cameras";
     String EXTRA_ALARM_CAMERA_VIDEO = "extra_alarm_camera_video";
+    String EXTRA_ALARM_FOREST_FIRE_CAMERAS = "extra_alarm_forest_fire_cameras";
     //
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
