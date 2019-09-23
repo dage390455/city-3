@@ -134,15 +134,15 @@ public class ForestFireCameraDetailInfo implements Serializable {
         private long createTime;
         private String _id;
         private String sn;
-        private Object installationMode;
-        private Object orientation;
+        //        private Object installationMode;
+//        private Object orientation;
         private String mobilePhone;
         private InfoBean info;
         private String userid;
         private String name;
         private String cid;
         private String id;
-        private List<?> label;
+//        private List<?> label;
 
         public AlarmBean getAlarm() {
             return alarm;
@@ -176,21 +176,21 @@ public class ForestFireCameraDetailInfo implements Serializable {
             this.sn = sn;
         }
 
-        public Object getInstallationMode() {
-            return installationMode;
-        }
-
-        public void setInstallationMode(Object installationMode) {
-            this.installationMode = installationMode;
-        }
-
-        public Object getOrientation() {
-            return orientation;
-        }
-
-        public void setOrientation(Object orientation) {
-            this.orientation = orientation;
-        }
+//        public Object getInstallationMode() {
+//            return installationMode;
+//        }
+//
+//        public void setInstallationMode(Object installationMode) {
+//            this.installationMode = installationMode;
+//        }
+//
+//        public Object getOrientation() {
+//            return orientation;
+//        }
+//
+//        public void setOrientation(Object orientation) {
+//            this.orientation = orientation;
+//        }
 
         public String getMobilePhone() {
             return mobilePhone;
@@ -240,13 +240,13 @@ public class ForestFireCameraDetailInfo implements Serializable {
             this.id = id;
         }
 
-        public List<?> getLabel() {
-            return label;
-        }
-
-        public void setLabel(List<?> label) {
-            this.label = label;
-        }
+//        public List<?> getLabel() {
+//            return label;
+//        }
+//
+//        public void setLabel(List<?> label) {
+//            this.label = label;
+//        }
 
 
 
@@ -265,7 +265,7 @@ public class ForestFireCameraDetailInfo implements Serializable {
         private int status;
         private String updateTime;
         private String picturePrintTime;
-        private List<?> picArr;
+//        private List<?> picArr;
 
         public int getStatus() {
             return status;
@@ -291,13 +291,13 @@ public class ForestFireCameraDetailInfo implements Serializable {
             this.picturePrintTime = picturePrintTime;
         }
 
-        public List<?> getPicArr() {
-            return picArr;
-        }
-
-        public void setPicArr(List<?> picArr) {
-            this.picArr = picArr;
-        }
+//        public List<?> getPicArr() {
+//            return picArr;
+//        }
+//
+//        public void setPicArr(List<?> picArr) {
+//            this.picArr = picArr;
+//        }
     }
 
     public static class InfoBean implements Serializable{
