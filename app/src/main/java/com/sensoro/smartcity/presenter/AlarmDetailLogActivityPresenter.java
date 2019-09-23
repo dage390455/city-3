@@ -162,14 +162,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                         }
                     }
                 }
-                //特别区分森林防火
-                if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
-
-                } else {
-                    getView().setCameraLiveCountAndContent(mForestFireLiveList, String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.relation_camera), mForestFireLiveList.size(), mContext.getString(R.string.upload_photo_dialog_append_title3)));
-                }
-
-
+                getView().setCameraLiveCountAndContent(mForestFireLiveList, "");
             }
 
             @Override
