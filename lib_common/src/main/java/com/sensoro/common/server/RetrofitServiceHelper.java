@@ -33,6 +33,7 @@ import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.bean.DeployCameraUploadInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployForestGatewayAddInfo;
 import com.sensoro.common.server.bean.DeployNameplateInfo;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.DeployStationInfo;
@@ -2810,6 +2811,77 @@ public class RetrofitServiceHelper {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
 
         return retrofitService.getForestGateway(requestBody);
+    }
+
+    /**
+     * 网关部署接口
+     * @param cigId
+     * @param name
+     * @param location
+     * @param label
+     * @param latitude
+     * @param longitude
+     * @param notifications
+     * @param installationLocation
+     * @param installationImage
+     * @return
+     */
+    public Observable<ResponseResult<DeployForestGatewayAddInfo>> addForestGateway(String cigId, String name, String location, List<String> label,
+                                                                                   double latitude, double longitude, List<DeployContactModel> notifications,
+                                                                                   String installationLocation, List<String> installationImage) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            if (!TextUtils.isEmpty(cigId)) {
+                jsonObject.put("cigId", cigId);
+            }
+            if (name != null) {
+                jsonObject.put("name", name);
+            }
+            if (!TextUtils.isEmpty(location)) {
+                jsonObject.put("location", location);
+            }
+            JSONArray jsonArray = new JSONArray();
+            if (label != null && label.size() > 0) {
+                for (String temp : label) {
+                    jsonArray.put(temp);
+                }
+            }
+            jsonObject.put("label", jsonArray);
+            jsonObject.put("latitude", latitude);
+            jsonObject.put("longitude", longitude);
+
+            if (!TextUtils.isEmpty(installationLocation)) {
+                jsonObject.put("installationLocation", installationLocation);
+            }
+            if (notifications != null && notifications.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : notifications) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
+            }
+            if (installationImage != null && installationImage.size() > 0) {
+                JSONArray jsonArrayImg = new JSONArray();
+                for (String url : installationImage) {
+                    jsonArrayImg.put(url);
+                }
+                jsonObject.put("installationImage", jsonArrayImg);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.addForestGateway(requestBody);
     }
 
 
