@@ -445,7 +445,9 @@ public class ForestFireListActivityPresenter extends BasePresenter<IForestFireCa
                 }
                 if (!TextUtils.isEmpty(stringBuffer.toString())) {
                     stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
-                    hashMap.put(key, stringBuffer.toString());
+                    if(stringBuffer.length()>0) {
+                        hashMap.put(key, stringBuffer.toString());
+                    }
                 }
             }
         }
