@@ -210,6 +210,7 @@
                     android:ellipsize="end"
                     android:textColor="@color/c_252525"
                     android:maxLines="1"
+                    android:gravity="right|center_vertical"
                     android:lines="1"
                     android:textSize="16dp"
                     android:layout_weight="1"/>
