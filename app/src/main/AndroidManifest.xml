@@ -217,6 +217,7 @@
 
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.DeployForestCameraInstallPositionActivity" />
 
         <meta-data
             android:name="android.notch_support"

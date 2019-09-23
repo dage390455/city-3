@@ -332,6 +332,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 checkMergeTypeConfigInfo();
                 break;
             case Constants.TYPE_SCAN_DEPLOY_CAMERA:
+            case Constants.TYPE_SCAN_DEPLOY_FOREST_CAMERA:
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
                 getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
@@ -570,7 +571,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     }
 
     public void doRightButton() {
-        if(!isAttachedView())
+        if (!isAttachedView())
             return;
 
         EventData eventData = new EventData();

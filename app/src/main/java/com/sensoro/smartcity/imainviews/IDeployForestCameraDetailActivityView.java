@@ -47,4 +47,8 @@ public interface IDeployForestCameraDetailActivityView extends IToast, IProgress
 
     void showRetryDialog();
 
+    void setTotalContact(int total);
+
+    void setFirstContact(String contact);
+
 }

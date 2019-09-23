@@ -86,7 +86,16 @@ public class DeployForestCameraDetailActivity extends BaseActivity<IDeployForest
     View lastView;
     @BindView(R.id.fl_not_own)
     FrameLayout flNotOwn;
-
+    @BindView(R.id.ll_contacts)
+    LinearLayout llContacts;
+    @BindView(R.id.tv_first_contact)
+    TextView tvFirstContact;
+    @BindView(R.id.tv_total_contact)
+    TextView tvTotalContact;
+    @BindView(R.id.tv_deploy_device_forest_camera_contact_required)
+    TextView tvDeployDeviceForestCameraContactRequired;
+    @BindView(R.id.ll_deploy_device_forest_camera_contact)
+    LinearLayout llDeployDeviceForestCameraContact;
     private TagAdapter mTagAdapter;
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
@@ -399,7 +408,7 @@ public class DeployForestCameraDetailActivity extends BaseActivity<IDeployForest
 
     }
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.tv_ac_deploy_device_camera_upload, R.id.ll_ac_deploy_device_camera_name_location, R.id.rl_ac_deploy_device_camera_tag, R.id.ll_ac_deploy_device_camera_deploy_pic, R.id.ll_ac_deploy_device_camera_fixed_point, R.id.ll_ac_deploy_device_camera_deploy_method})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ll_deploy_device_forest_camera_contact,R.id.tv_ac_deploy_device_camera_upload, R.id.ll_ac_deploy_device_camera_name_location, R.id.rl_ac_deploy_device_camera_tag, R.id.ll_ac_deploy_device_camera_deploy_pic, R.id.ll_ac_deploy_device_camera_fixed_point, R.id.ll_ac_deploy_device_camera_deploy_method})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -423,6 +432,31 @@ public class DeployForestCameraDetailActivity extends BaseActivity<IDeployForest
             case R.id.ll_ac_deploy_device_camera_deploy_method:
                 mPresenter.doDeployInstallPosition();
                 break;
+            case R.id.ll_deploy_device_forest_camera_contact:
+                mPresenter.doAlarmContact();
+                break;
+        }
+    }
+    @Override
+    public void setTotalContact(int total) {
+        if (total > 0) {
+            tvDeployDeviceForestCameraContactRequired.setVisibility(View.GONE);
+            llContacts.setVisibility(View.VISIBLE);
+        } else {
+            tvDeployDeviceForestCameraContactRequired.setVisibility(View.VISIBLE);
+            llContacts.setVisibility(View.GONE);
+        }
+        if (total > 1) {
+            tvTotalContact.setText(getString(R.string.total) + total + getString(R.string.person));
+            tvTotalContact.setVisibility(View.VISIBLE);
+        } else {
+            tvTotalContact.setVisibility(View.GONE);
+        }
+    }
+    @Override
+    public void setFirstContact(String contact) {
+        if (!TextUtils.isEmpty(contact)) {
+            tvFirstContact.setText(contact);
         }
     }
 }
