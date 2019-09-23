@@ -209,6 +209,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                                 setCreateTime(createTime);
 
                                 getView().doPlayLive(mediasBean.getMediaUrl());
+                                getLastCoverImage(mediasBean.getCoverUrl());
                             }
 
                         }

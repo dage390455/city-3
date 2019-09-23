@@ -48,7 +48,6 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     private ArrayList<ForestFireCameraDetailInfo.ListBean> mList = new ArrayList<>();
 
 
-    private List<String> cameras;
     private int mItemClickPosition = 0;
 
     private String currentReTryClickCid;
@@ -243,18 +242,13 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     }
 
     public void doRefresh() {
-        currentReTryClickCid = "";
-        if (cameras == null) {
-            getView().onPullRefreshComplete();
-            return;
-        }
-
+        currentReTryClickCid="";
         requestData();
     }
 
     public void doItemClick(int position) {
         mItemClickPosition = position;
-        currentReTryClickCid = "";
+        currentReTryClickCid = mList.get(position).getCid();
         doLive();
     }
 
