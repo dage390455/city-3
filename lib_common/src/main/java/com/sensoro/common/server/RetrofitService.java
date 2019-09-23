@@ -14,6 +14,7 @@ import com.sensoro.common.server.bean.ContractAddInfo;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.bean.DeployCameraUploadInfo;
+import com.sensoro.common.server.bean.DeployForestGatewayAddInfo;
 import com.sensoro.common.server.bean.DeployNameplateInfo;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.DeployStationInfo;
@@ -513,5 +514,7 @@ public interface RetrofitService {
     @POST("camera-center/forest/getForestGateway")
     Observable<ResponseResult<ForestGatewayDeployInfo>> getForestGateway(@Body RequestBody requestBody);
 
+    @POST("camera-center/forest/addForestGateway")
+    Observable<ResponseResult<DeployForestGatewayAddInfo>> addForestGateway(@Body RequestBody requestBody);
 }
 

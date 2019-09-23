@@ -521,6 +521,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 }
                 break;
             case Constants.TYPE_SCAN_DEPLOY_CAMERA:
+            case Constants.TYPE_SCAN_DEPLOY_FOREST_CAMERA:
                 getView().setResultImageView(R.drawable.deploy_fail);
                 getView().setTipsTextView("很遗憾! 摄像头部署失败", R.color.c_a6a6a6);
                 getView().setStateTextView(mContext.getString(R.string.failed));
@@ -586,7 +587,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 if ((deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE || deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE)) {
                     eventData.code = Constants.EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE;
-                } else if (deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_DEVICE) {
+                } else if (deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_DEVICE || deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_STATION || deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_CAMERA || deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_FOREST_CAMERA) {
                     //直接返回上一个界面
                     getView().finishAc();
                     return;

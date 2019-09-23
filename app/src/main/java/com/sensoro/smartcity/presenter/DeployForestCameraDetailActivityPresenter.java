@@ -26,7 +26,9 @@ import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.common.server.bean.DeployCameraUploadInfo;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeployForestGatewayAddInfo;
 import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
@@ -51,6 +53,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDeployForestCameraDetailActivityView> implements IOnCreate, IOnStart, Constants {
     private Activity mContext;
@@ -276,129 +281,37 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
         getView().showProgressDialog();
 
         //
-//        RetrofitServiceHelper.getInstance().doUploadDeployCamera(deployAnalyzerModel.sn, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.tagList,
-//                PreferencesHelper.getInstance().getUserData().phone, String.valueOf(lan), String.valueOf(lon), imgUrls, deployAnalyzerModel.address,
-//                mMethodConfig.code, mOrientationConfig.code, deployAnalyzerModel.cameraStatus)
-//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                .safeSubscribe(new CityObserver<ResponseResult<DeployCameraUploadInfo>>(this) {
-//                    @Override
-//                    public void onCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
-//                        freshSuccess(deployCameraUploadRsp);
-//                        getView().dismissProgressDialog();
-//                    }
-//
-//                    @Override
-//                    public void onErrorMsg(int errorCode, String errorMsg) {
-//                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                            getView().toastShort(errorMsg);
-//                            deployRetryUtil.addTask(deployAnalyzerModel);
-//                            getView().showRetryDialog();
-//
-//
-//                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-//                            freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
-//                        } else {
-//                            freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
-//                        }
-//                        getView().dismissProgressDialog();
-//                    }
-//                });
+        RetrofitServiceHelper.getInstance().addForestGateway(deployAnalyzerModel.sn, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.location, deployAnalyzerModel.tagList,
+                lan, lon, deployAnalyzerModel.deployContactModelList, deployAnalyzerModel.installationLocation, imgUrls)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .safeSubscribe(new CityObserver<ResponseResult<DeployForestGatewayAddInfo>>(this) {
+                    @Override
+                    public void onCompleted(ResponseResult<DeployForestGatewayAddInfo> responseResult) {
+                        if (responseResult.getCode() == ResponseResult.CODE_SUCCESS) {
+                            freshSuccess(responseResult);
+                        } else {
+                            freshError(responseResult.getMessage(), DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                        }
+                        getView().dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            getView().toastShort(errorMsg);
+                            deployRetryUtil.addTask(deployAnalyzerModel);
+                            getView().showRetryDialog();
+
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                        } else {
+                            freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                        }
+                        getView().dismissProgressDialog();
+                    }
+                });
     }
 
-    // TODO: 2019-09-12 重试
-
-//    public void doRetry() {
-//        getView().showProgressDialog();
-//        deployRetryUtil.retryTry(mContext, deployAnalyzerModel, new DeployRetryUtil.OnRetryListener() {
-//            @Override
-//            public void onStart() {
-//                if (isAttachedView()) {
-//                    getView().showStartUploadProgressDialog();
-//                }
-//            }
-//
-//            @Override
-//            public void onComplete(List<ScenesData> scenesDataList) {
-//
-//            }
-//
-//            @Override
-//            public void onError(String errMsg) {
-//                if (isAttachedView()) {
-//                    getView().setUploadBtnStatus(true);
-//                    getView().dismissUploadProgressDialog();
-//                    getView().toastShort(errMsg);
-//                    //失败，本地照片存储,重试
-//                    getView().showRetryDialog();
-//                    getView().dismissProgressDialog();
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onProgress(String content, double percent) {
-//                if (isAttachedView()) {
-//                    getView().showUploadProgressDialog(content, percent);
-//                }
-//            }
-//
-//
-//            @Override
-//            public void onDeployCompleted(DeployResultModel deployResultModel) {
-//
-//            }
-//
-//            @Override
-//            public void onDeployCameraCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
-//
-//                freshSuccess(deployCameraUploadRsp);
-//                getView().dismissProgressDialog();
-//
-//
-//            }
-//            @Override
-//            public void onDeployErrorMsg(int errorCode, String errorMsg) {
-//                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-//                    getView().toastShort(errorMsg);
-//                    deployRetryUtil.addTask(deployAnalyzerModel);
-//                    getView().showRetryDialog();
-//
-//
-//                } else if (errorCode == 4013101 || errorCode == 4000013) {
-//                    freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
-//                } else {
-//                    freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
-//                }
-//                getView().dismissProgressDialog();
-//
-//            }
-//
-//
-//            @Override
-//            public void setDeployCameraStatus(String status) {
-//                deployAnalyzerModel.cameraStatus = status;
-//                getView().setDeployCameraStatus(deployAnalyzerModel.cameraStatus);
-//                // TODO: 2019-09-12 摄像机部署 是否在线
-//
-////                deployRetryUtil.doUploadImages();
-//
-//
-//
-//            }
-//            @Override
-//            public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
-//            }
-//
-//            @Override
-//            public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
-//            }
-//
-//
-//        });
-//
-//
-//    }
 
     private void freshError(String errorInfo, int resultCode) {
         //
@@ -417,23 +330,20 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
         getView().startAC(intent);
     }
 
-    private void freshSuccess(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
+    private void freshSuccess(ResponseResult<DeployForestGatewayAddInfo> deployCameraUploadRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
         Intent intent = new Intent(mContext, DeployResultActivity.class);
         //
-        DeployCameraUploadInfo data = deployCameraUploadRsp.getData();
+        DeployForestGatewayAddInfo data = deployCameraUploadRsp.getData();
         deployResultModel.sn = deployAnalyzerModel.sn;
         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.address = deployAnalyzerModel.address;
-        String createTime = data.getCreateTime();
-        deployResultModel.updateTime = System.currentTimeMillis();
-        if (!TextUtils.isEmpty(createTime)) {
-            try {
-                deployResultModel.updateTime = Long.parseLong(createTime);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        long createTime = data.getCreateTime();
+        if (createTime == 0) {
+            deployResultModel.updateTime = System.currentTimeMillis();
+        } else {
+            deployResultModel.updateTime = createTime;
         }
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
