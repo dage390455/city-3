@@ -46,6 +46,7 @@ public final class EventLoginData implements Serializable {
     public boolean needAuth = false;
     public boolean hasControllerAid = false;
     public boolean hasDeviceCameraList = false;
+    public boolean hasDeviceForestCameraList = false;
     public boolean hasDeviceCameraDeploy = false;
     public boolean hasDeviceForestCameraDeploy = false;
     //TODO
@@ -97,6 +98,7 @@ public final class EventLoginData implements Serializable {
                     needAuth == that.needAuth &&
 //                    hasControllerAid == that.hasControllerAid &&
                     hasDeviceCameraList == that.hasDeviceCameraList &&
+                    hasDeviceForestCameraList == that.hasDeviceForestCameraList &&
                     hasDeviceCameraDeploy == that.hasDeviceCameraDeploy &&
                     hasDeviceForestCameraDeploy == that.hasDeviceForestCameraDeploy &&
                     hasStationList == that.hasStationList &&
@@ -164,6 +166,7 @@ public final class EventLoginData implements Serializable {
                 ", needAuth=" + needAuth +
                 ", hasControllerAid=" + hasControllerAid +
                 ", hasDeviceCameraList=" + hasDeviceCameraList +
+                ", hasDeviceForestCameraList=" + hasDeviceForestCameraList +
                 ", hasDeviceCameraDeploy=" + hasDeviceCameraDeploy +
                 ", hasDeviceForestCameraDeploy=" + hasDeviceForestCameraDeploy +
                 ", hasStationList=" + hasStationList +

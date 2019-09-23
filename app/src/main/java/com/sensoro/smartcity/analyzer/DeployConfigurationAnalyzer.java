@@ -29,14 +29,10 @@ public class DeployConfigurationAnalyzer {
                 result[1] = 50;
                 break;
             case "acrel_fires":
+            case "acrel300T_fires_2G":
                 //安科瑞三相电，跟默认值一样
-                result[0] = 1;
-                result[1] = 400;
-                break;
             case "acrel_alpha":
                 //安科瑞alpha
-//                result[0] = 1;
-//                result[1] = 600;
                 result[0] = 1;
                 result[1] = 400;
                 break;

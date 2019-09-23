@@ -64,6 +64,7 @@ public class UserPermissionFactory {
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
+        eventLoginData.hasDeviceForestCameraList = getHasDeviceForestCameraList(grants);
         eventLoginData.hasNameplateList = getHasNameplateList(grants);
         eventLoginData.hasNameplateDeploy = getHasNameplateDeploy(grants);
         eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
@@ -749,5 +750,14 @@ public class UserPermissionFactory {
         return true;
     }
 
+    /**
+     * 森林摄像头列表权限
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceForestCameraList(GrantsInfo grants) {
+        //TODO 添加森林部署摄像头列表权限
+        return true;
+    }
 
 }
