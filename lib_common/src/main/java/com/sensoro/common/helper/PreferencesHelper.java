@@ -330,12 +330,24 @@ public final class PreferencesHelper implements Constants {
         return true;
     }
 
+    public boolean saveDeployForestCameraInstallPositionHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
+        ContextUtils.getContext().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION, history).apply();
+        return true;
+    }
+
     public String getDeployNameAddressHistory() {
         return ContextUtils.getContext().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, null);
     }
 
     public String getDeployWeChatRelationHistory() {
         return ContextUtils.getContext().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, null);
+    }
+
+    public String getDeployForestCameraInstallPositionHistory() {
+        return ContextUtils.getContext().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION, null);
     }
 
     public boolean saveDeployTagsHistory(String history) {
@@ -529,7 +541,6 @@ public final class PreferencesHelper implements Constants {
             case SearchHistoryTypeConstants.TYPE_SEARCH_FOREST_FIRE_CAMERA_LIST:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_FOREST_FIRE_CAMERA_LIST;
                 break;
-
 
 
         }

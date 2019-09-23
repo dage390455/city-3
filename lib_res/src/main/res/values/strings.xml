@@ -1350,4 +1350,8 @@
     <string name="binocular_fire_pop_alarm_risk">When confirming a safety hazard, you need to manually close the warning event after the hidden danger is eliminated</string>
 
 
+
+    <string name="deploy_forest_camera_no_install_position">安装位置中不能包含中括号</string>
+    <string name="deploy_forest_camera_install_position_length">安装位置最长不能超过16个汉字或48个字符</string>
+    <string name="must_enter_deploy_forest_camera_no_install_position">必须输入安装位置</string>
 </resources>

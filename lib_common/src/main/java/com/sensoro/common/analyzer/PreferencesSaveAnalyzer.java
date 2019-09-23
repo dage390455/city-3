@@ -135,6 +135,9 @@ public class PreferencesSaveAnalyzer {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM:
                 PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(content);
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION:
+                PreferencesHelper.getInstance().saveDeployForestCameraInstallPositionHistory(content);
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME:
                 PreferencesHelper.getInstance().saveDeployAlarmContactNameHistory(content);
                 break;
@@ -149,7 +152,6 @@ public class PreferencesSaveAnalyzer {
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
                 break;
-
 
 
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN:
@@ -214,6 +216,9 @@ public class PreferencesSaveAnalyzer {
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM:
                 oldText = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION:
+                oldText = PreferencesHelper.getInstance().getDeployForestCameraInstallPositionHistory();
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME:
                 oldText = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
@@ -300,6 +305,10 @@ public class PreferencesSaveAnalyzer {
                 ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
                         .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, "").apply();
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION:
+                ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
+                        .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION, "").apply();
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_TAG:
                 ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
                         .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_TAG, "").apply();
@@ -326,8 +335,6 @@ public class PreferencesSaveAnalyzer {
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_FOREST_FIRE_CAMERA_LIST, Activity.MODE_PRIVATE)
                         .edit().clear().apply();
                 break;
-
-
 
 
         }

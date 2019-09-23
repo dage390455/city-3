@@ -19,27 +19,26 @@ import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployCameraConfigModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.common.server.CityObserver;
-import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployCameraUploadInfo;
 import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployForestCameraInstallPositionActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
+import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.imainviews.IDeployForestCameraDetailActivityView;
@@ -53,19 +52,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-
 public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDeployForestCameraDetailActivityView> implements IOnCreate, IOnStart, Constants {
     private Activity mContext;
     private Handler mHandler;
     private DeployAnalyzerModel deployAnalyzerModel;
     private DeployRetryUtil deployRetryUtil;
-
-    private final List<DeployCameraConfigModel> deployMethods = new ArrayList<>();
-    private final List<DeployCameraConfigModel> deployOrientations = new ArrayList<>();
-    private DeployCameraConfigModel mOrientationConfig;
-    private DeployCameraConfigModel mMethodConfig;
 
     @Override
     public void initData(Context context) {
@@ -77,7 +68,6 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        requestData();
     }
 
     private void init() {
@@ -88,9 +78,24 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
         getView().setDeployPhotoVisible(true);
         getView().setDeployDeviceType("视频网关");
         getView().updateTagsData(deployAnalyzerModel.tagList);
+        //联系人相关
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            String contact = deployContactModel.name;
+            String content = deployContactModel.phone;
+            getView().setFirstContact(contact + "(" + content + ")");
+        }
+        getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
         //默认显示已定位
-        deployAnalyzerModel.address = mContext.getString(R.string.positioned);
-        if (checkHasDeployPosition()) {
+        if (TextUtils.isEmpty(deployAnalyzerModel.location)) {
+            deployAnalyzerModel.address = mContext.getString(R.string.positioned);
+        }
+        //TODO 刷线摄像头状态
+        getView().setUploadBtnStatus(checkCanUpload());
+        //TODO 信息回查
+        getView().setDeployInstallationLocation(deployAnalyzerModel.installationLocation);
+//        getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
+        if (checkHasNoDeployPosition()) {
             GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
             geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
                 @Override
@@ -185,71 +190,9 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
         }
     }
 
-    private void requestData() {
-        getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
-            @Override
-            public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
-                List<CameraFilterModel> data = cameraFilterRsp.getData();
-                if (data != null) {
-                    for (CameraFilterModel cameraFilterModel : data) {
-                        String key = cameraFilterModel.getKey();
-                        if ("orientation".equalsIgnoreCase(key)) {
-                            List<CameraFilterModel.ListBean> list = cameraFilterModel.getList();
-                            if (list != null) {
-                                for (CameraFilterModel.ListBean listBean : list) {
-                                    DeployCameraConfigModel deployCameraConfigModel = new DeployCameraConfigModel();
-                                    deployCameraConfigModel.code = listBean.getCode();
-                                    deployCameraConfigModel.name = listBean.getName();
-                                    deployOrientations.add(deployCameraConfigModel);
-                                    if (deployAnalyzerModel.orientation != null && deployAnalyzerModel.orientation.equals(deployCameraConfigModel.code)) {
-                                        mOrientationConfig = deployCameraConfigModel;
-                                        deployAnalyzerModel.mOrientationConfig = mOrientationConfig;
-                                    }
-                                }
-                            }
-                            //安装朝向
-                        } else if ("installationMode".equalsIgnoreCase(key)) {
-                            //安装方式
-                            List<CameraFilterModel.ListBean> list = cameraFilterModel.getList();
-                            if (list != null) {
-                                for (CameraFilterModel.ListBean listBean : list) {
-                                    DeployCameraConfigModel deployCameraConfigModel = new DeployCameraConfigModel();
-                                    deployCameraConfigModel.name = listBean.getName();
-                                    deployCameraConfigModel.code = listBean.getCode();
-                                    deployMethods.add(deployCameraConfigModel);
-                                    if (deployAnalyzerModel.installationMode != null && deployAnalyzerModel.installationMode.equals(deployCameraConfigModel.code)) {
-                                        mMethodConfig = deployCameraConfigModel;
-                                        deployAnalyzerModel.mMethodConfig = mMethodConfig;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                echoDeviceInfo();
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-            }
-        });
-    }
-
-    //回显设备信息
-    private void echoDeviceInfo() {
-        //TODO 刷线摄像头状态
-        getView().setUploadBtnStatus(checkCanUpload());
-        //TODO 信息回查
-        getView().setDeployInstallationLocation(deployAnalyzerModel.installationLocation);
-//        getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
-    }
 
     //
-    public void requestUpload() {
+    private void requestUpload() {
         final double lon = deployAnalyzerModel.latLng.get(0);
         final double lan = deployAnalyzerModel.latLng.get(1);
         doUploadImages(lon, lan);
@@ -331,34 +274,35 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
         //TODO 上传接口
         getView().showProgressDialog();
+
         //
-        RetrofitServiceHelper.getInstance().doUploadDeployCamera(deployAnalyzerModel.sn, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.tagList,
-                PreferencesHelper.getInstance().getUserData().phone, String.valueOf(lan), String.valueOf(lon), imgUrls, deployAnalyzerModel.address,
-                mMethodConfig.code, mOrientationConfig.code, deployAnalyzerModel.cameraStatus)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .safeSubscribe(new CityObserver<ResponseResult<DeployCameraUploadInfo>>(this) {
-                    @Override
-                    public void onCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
-                        freshSuccess(deployCameraUploadRsp);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                            getView().toastShort(errorMsg);
-                            deployRetryUtil.addTask(deployAnalyzerModel);
-                            getView().showRetryDialog();
-
-
-                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
-                        } else {
-                            freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
-                        }
-                        getView().dismissProgressDialog();
-                    }
-                });
+//        RetrofitServiceHelper.getInstance().doUploadDeployCamera(deployAnalyzerModel.sn, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.tagList,
+//                PreferencesHelper.getInstance().getUserData().phone, String.valueOf(lan), String.valueOf(lon), imgUrls, deployAnalyzerModel.address,
+//                mMethodConfig.code, mOrientationConfig.code, deployAnalyzerModel.cameraStatus)
+//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                .safeSubscribe(new CityObserver<ResponseResult<DeployCameraUploadInfo>>(this) {
+//                    @Override
+//                    public void onCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
+//                        freshSuccess(deployCameraUploadRsp);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+//                            getView().toastShort(errorMsg);
+//                            deployRetryUtil.addTask(deployAnalyzerModel);
+//                            getView().showRetryDialog();
+//
+//
+//                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+//                            freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+//                        } else {
+//                            freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+//                        }
+//                        getView().dismissProgressDialog();
+//                    }
+//                });
     }
 
     // TODO: 2019-09-12 重试
@@ -565,6 +509,13 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
                 }
                 getView().setUploadBtnStatus(checkCanUpload());
                 break;
+            case EVENT_DATA_DEPLOY_SETTING_FOREST_DEPLOY_INSTALL_POSITION:
+                if (data instanceof String) {
+                    deployAnalyzerModel.installationLocation = (String) data;
+                    getView().setDeployInstallationLocation(deployAnalyzerModel.installationLocation);
+                }
+                getView().setUploadBtnStatus(checkCanUpload());
+                break;
             case EVENT_DATA_DEPLOY_SETTING_TAG:
                 if (data instanceof List) {
                     deployAnalyzerModel.tagList.clear();
@@ -598,7 +549,23 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
                     this.deployAnalyzerModel = (DeployAnalyzerModel) data;
                     //TODO 刷新数据状态
                 }
-                getView().setDeployPosition(checkHasDeployPosition(), deployAnalyzerModel.address);
+                getView().setDeployPosition(checkHasNoDeployPosition(), deployAnalyzerModel.address);
+                getView().setUploadBtnStatus(checkCanUpload());
+                break;
+            case Constants.EVENT_DATA_DEPLOY_SETTING_CONTACT:
+                if (data instanceof List) {
+                    //TODO 联系人
+                    deployAnalyzerModel.deployContactModelList.clear();
+                    deployAnalyzerModel.deployContactModelList.addAll((List<DeployContactModel>) data);
+                    if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+                        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+                        String contact = deployContactModel.name;
+                        String content = deployContactModel.phone;
+                        getView().setFirstContact(contact + "(" + content + ")");
+                    }
+                    getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
+//                    getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+                }
                 getView().setUploadBtnStatus(checkCanUpload());
                 break;
             default:
@@ -661,33 +628,39 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
                 return false;
             }
         }
+        //联系人校验
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+                return false;
+            }
+            if (!RegexUtils.checkPhone(deployContactModel.phone)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
         //照片校验
         if (getRealImageSize() <= 0) {
             return false;
         }
-        //经纬度校验
-        if (!checkHasDeployPosition()) {
+        //位置校验
+        if (!checkHasNoDeployPosition()) {
             return false;
         }
-        if (!checkHasDeployMethod()) {
+        if (!checkHasNoDeployInstallPosition()) {
             return false;
         }
-        if (!checkHasDeployOrientation()) {
-            return false;
-        }
+
         return true;
     }
 
-
-    private boolean checkHasDeployMethod() {
-        return mMethodConfig != null;
+    private boolean checkHasNoDeployInstallPosition() {
+        return !TextUtils.isEmpty(deployAnalyzerModel.installationLocation);
     }
 
-    private boolean checkHasDeployOrientation() {
-        return mOrientationConfig != null;
-    }
 
-    private boolean checkHasDeployPosition() {
+    private boolean checkHasNoDeployPosition() {
         return deployAnalyzerModel.latLng.size() == 2;
     }
 
@@ -702,6 +675,18 @@ public class DeployForestCameraDetailActivityPresenter extends BasePresenter<IDe
 
 
     public void doDeployInstallPosition() {
-        getView().toastShort("安装位置");
+        Intent intent = new Intent(mContext, DeployForestCameraInstallPositionActivity.class);
+        if (!TextUtils.isEmpty(deployAnalyzerModel.installationLocation)) {
+            intent.putExtra(EXTRA_SETTING_FOREST_CAMERA_INSTALL_POSITION, deployAnalyzerModel.installationLocation);
+        }
+        getView().startAC(intent);
+    }
+
+    public void doAlarmContact() {
+        Intent intent = new Intent(mContext, DeployMonitorAlarmContactActivity.class);
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            intent.putExtra(Constants.EXTRA_SETTING_DEPLOY_CONTACT, (ArrayList<DeployContactModel>) deployAnalyzerModel.deployContactModelList);
+        }
+        getView().startAC(intent);
     }
 }

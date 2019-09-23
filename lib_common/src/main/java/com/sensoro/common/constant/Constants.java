@@ -31,6 +31,7 @@ public interface Constants {
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
     String PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION = "preference_key_deploy_we_chat_relation";
+    String PREFERENCE_KEY_DEPLOY_FOREST_CAMERA_INSTALL_POSITION = "preference_key_deploy_forest_camera_install_position";
     String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME = "preference_key_deploy_alarm_contact_name";
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE = "preference_key_deploy_alarm_contact_phone";
@@ -135,6 +136,7 @@ public interface Constants {
     String EXTRA_ACTIVITY_CANCEL = "extra_activity_cancel";
     String EXTRA_SETTING_NAME_ADDRESS = "extra_setting_name_address";
     String EXTRA_SETTING_WE_CHAT_RELATION = "extra_setting_we_chat_relation";
+    String EXTRA_SETTING_FOREST_CAMERA_INSTALL_POSITION = "extra_setting_forest_camera_install_position";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
     String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
     String EXTRA_SETTING_DEPLOY_DEVICE_TYPE = "extra_setting_deploy_device_type";
@@ -289,6 +291,7 @@ public interface Constants {
     int TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE = 0X37;
     int TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE = 0X44;
     int EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION = 0x48;
+    int EVENT_DATA_DEPLOY_SETTING_FOREST_DEPLOY_INSTALL_POSITION = 0x69;
     int TYPE_SCAN_INSPECTION = 0X38;
     int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
     int TYPE_SCAN_SIGNAL_CHECK = 0x42;
