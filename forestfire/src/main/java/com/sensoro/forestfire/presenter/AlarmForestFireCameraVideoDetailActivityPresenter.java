@@ -209,6 +209,7 @@ public class AlarmForestFireCameraVideoDetailActivityPresenter extends BasePrese
                                 setCreateTime(createTime);
 
                                 getView().doPlayLive(mediasBean.getMediaUrl());
+                                getLastCoverImage(mediasBean.getCoverUrl());
                             }
 
                         }
