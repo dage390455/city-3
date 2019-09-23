@@ -239,7 +239,7 @@ public interface Constants {
     //部署
     int REQUEST_CODE_INIT_CONFIG = 0x114;
 
-    int REQUEST_FOREST_DETAIL_LOCATION=0x115;
+    int REQUEST_FOREST_DETAIL_LOCATION = 0x115;
 
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
@@ -345,8 +345,6 @@ public interface Constants {
     int EVENT_DATA_PERMISSIONCHANGE = 0x65;
 
 
-
-
     //camera
     String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
     String EXTRA_PERSON_AVATAR_HISTORY_FACE_ID = "extra_person_avatar_history_face_id";
@@ -418,17 +416,13 @@ public interface Constants {
     String EXTRA_VIDEO_DEL = "video_del";
 
 
-
-
     //巡检url类型数值
-     String  RES_IMAGE="image";
-    String  RES_VIDEO="video";
+    String RES_IMAGE = "image";
+    String RES_VIDEO = "video";
 
 
-
-
-//    森林防火设备devicetype
-    String   FOREST_FIRE_DEVICE_TYPE="binocular";
+    //    森林防火设备devicetype
+    String FOREST_FIRE_DEVICE_TYPE = "binocular";
 
     //
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
