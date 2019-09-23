@@ -52,7 +52,7 @@ public class ForestFireCameraListAdapter extends RecyclerView.Adapter<ForestFire
     }
 
     public void updateAdapterItem(ForestFireCameraBean  item){
-        if(clickedItemPosition>0&&mData.size()>clickedItemPosition){
+        if(clickedItemPosition>=0&&mData.size()>clickedItemPosition){
             mData.set(clickedItemPosition,item);
             notifyItemChanged(clickedItemPosition);
             clickedItemPosition=-1;

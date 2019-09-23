@@ -26,6 +26,7 @@ import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.video.MultiSampleVideo;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -239,7 +240,8 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
     @Override
     public void updateLocation(double lon, double lat) {
-        tvLocation.setText(lat + "；" + lon);
+        DecimalFormat  decimalFormat=new DecimalFormat("#.######");
+        tvLocation.setText(decimalFormat.format(lat)+"；"+decimalFormat.format(lon));
     }
 
     private void initViewHeight() {
@@ -484,15 +486,5 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
         standardGSYVideoPlayer.startWindowFullscreen(mActivity, false, true);
     }
 
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode==Constants.REQUEST_FOREST_DETAIL_LOCATION){
-//            if(resultCode== Activity.RESULT_OK){
-//                mPresenter.freshLocation(data);
-//            }
-//        }
-//    }
 
 }

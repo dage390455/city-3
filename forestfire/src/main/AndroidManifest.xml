@@ -11,8 +11,11 @@
             android:screenOrientation="portrait"
 
             />
-        <activity android:name=".activity.AlarmForestFireCameraVideoDetailActivity" />
-        <activity android:name=".activity.AlarmForestFireCameraLiveDetailActivity" />
+        <activity android:name=".activity.AlarmForestFireCameraVideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.AlarmForestFireCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
     </application>
 
