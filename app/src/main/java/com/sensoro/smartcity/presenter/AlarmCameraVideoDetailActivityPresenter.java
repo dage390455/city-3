@@ -52,6 +52,7 @@ import java.util.Locale;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_AUTO_COMPLETE;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlarmCameraVideoDetailActivityView>
@@ -183,7 +184,17 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
             getView().setPlayVideoTime(mActivity.getString(R.string.time_parse_error));
         }
     }
-
+    public void doOnRestart() {
+        if (currentPlayUrl == null) {
+            getView().doPlayLive(currentPlayUrl);
+        } else {
+            if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                GSYVideoManager.onResume(false);
+            } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_AUTO_COMPLETE) {
+                getView().doPlayLive(currentPlayUrl);
+            }
+        }
+    }
     @Override
     public void onDestroy() {
         mList.clear();

@@ -537,7 +537,12 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         Log.d("======", "onResume");
 
     }
+    @Override
+    protected void onRestart() {
+        mPresenter.doOnRestart();
+        super.onRestart();
 
+    }
     @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.return_top_include})
     public void onViewClicked(View view) {
         switch (view.getId()) {

@@ -543,6 +543,12 @@ public class AlarmForestFireCameraVideoDetailActivity extends BaseActivity<IAlar
 
     }
 
+    @Override
+    protected void onRestart() {
+        mPresenter.doOnRestart();
+        super.onRestart();
+
+    }
     @OnClick({R2.id.include_imv_title_imv_arrows_left, R2.id.return_top_include})
     public void onViewClicked(View view) {
         int viewID=view.getId();
