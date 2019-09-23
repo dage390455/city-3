@@ -25,7 +25,6 @@ import com.sensoro.smartcity.presenter.AlarmDetailLogActivityPresenter;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -256,12 +255,10 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
-    public void setCameraLiveCount(List<String> liveCount) {
+    public void setCameraLiveCountAndContent(List<String> liveCount,String content) {
         if (liveCount != null && liveCount.size() > 0) {
             llCameraLiveAcAlert.setVisibility(View.VISIBLE);
-            tvLiveCameraCountAcAlert.setText(
-                    String.format(Locale.ROOT, "%s%d%s", mActivity.getString(R.string.relation_camera)
-                            , liveCount.size(), mActivity.getString(R.string.upload_photo_dialog_append_title3)));
+            tvLiveCameraCountAcAlert.setText(content);
         } else {
             llCameraLiveAcAlert.setVisibility(View.GONE);
         }
