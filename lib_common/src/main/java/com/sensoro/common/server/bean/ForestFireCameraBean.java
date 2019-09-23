@@ -210,24 +210,25 @@ public class ForestFireCameraBean implements Serializable {
          */
 
         @SerializedName("1")
-        private boolean _$1;
+        private boolean contorl1;
         @SerializedName("2")
-        private boolean _$2;
+        private boolean contorl2;
 
-        public boolean is_$1() {
-            return _$1;
+
+        public boolean isContorl1() {
+            return contorl1;
         }
 
-        public void set_$1(boolean _$1) {
-            this._$1 = _$1;
+        public void setContorl1(boolean contorl1) {
+            this.contorl1 = contorl1;
         }
 
-        public boolean is_$2() {
-            return _$2;
+        public boolean isContorl2() {
+            return contorl2;
         }
 
-        public void set_$2(boolean _$2) {
-            this._$2 = _$2;
+        public void setContorl2(boolean contorl2) {
+            this.contorl2 = contorl2;
         }
     }
 
@@ -238,24 +239,24 @@ public class ForestFireCameraBean implements Serializable {
          */
 
         @SerializedName("1")
-        private String _$1;
+        private String cid1;
         @SerializedName("2")
-        private String _$2;
+        private String cid2;
 
-        public String get_$1() {
-            return _$1;
+        public String getCid1() {
+            return cid1;
         }
 
-        public void set_$1(String _$1) {
-            this._$1 = _$1;
+        public void setCid1(String cid1) {
+            this.cid1 = cid1;
         }
 
-        public String get_$2() {
-            return _$2;
+        public String getCid2() {
+            return cid2;
         }
 
-        public void set_$2(String _$2) {
-            this._$2 = _$2;
+        public void setCid2(String cid2) {
+            this.cid2 = cid2;
         }
     }
 
