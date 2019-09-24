@@ -98,7 +98,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     private void getCloudVideo() {
 
-        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraList) {
             getView().setLlVideoSizeAndContent(-1, null);
             return;
         }
@@ -140,7 +140,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     private void getForestFireCameraLive() {
 
-        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList || !Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraList || !Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
             getView().setLlVideoSizeAndContent(-1, null);
             return;
         }
@@ -245,22 +245,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
 
         //TODO 如果是森林火灾，直播入口显示逻辑需要根据直播实时详情接口返回的结果判断
-        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-            if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
-                getView().setCameraLiveCountAndContent(mForestFireLiveList, "");
-            } else {
-                getView().setCameraLiveCountAndContent(mForestFireLiveList, String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.relation_camera), mForestFireLiveList.size(), mContext.getString(R.string.upload_photo_dialog_append_title3)));
-            }
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraList && Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+            getView().setCameraLiveCountAndContent(mForestFireLiveList, "");
+        } else if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            getView().setCameraLiveCountAndContent(mForestFireLiveList, String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.relation_camera), mForestFireLiveList.size(), mContext.getString(R.string.upload_photo_dialog_append_title3)));
         } else {
             getView().setCameraLiveCountAndContent(null, null);
         }
-
-//        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
-//            getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
-//        } else {
-//            getView().setCameraLiveCount(null);
-//        }
-
 
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
