@@ -3,11 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.imagepicker.ImagePicker;
@@ -33,8 +35,6 @@ import com.sensoro.common.utils.WidgetUtil;
 import com.sensoro.common.widgets.FireWaringCloseDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
-import com.sensoro.forestfire.activity.AlarmForestFireCameraLiveDetailActivity;
-import com.sensoro.forestfire.activity.AlarmForestFireCameraVideoDetailActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
@@ -534,9 +534,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
 
         if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
-            Intent intent = new Intent(mContext, AlarmForestFireCameraVideoDetailActivity.class);
-            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
-            getView().startAC(intent);
+//            Intent intent = new Intent(mContext, AlarmForestFireCameraVideoDetailActivity.class);
+//            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
+//            getView().startAC(intent);
+            Bundle bundle=new Bundle();
+            bundle.putSerializable(Constants.EXTRA_ALARM_CAMERA_VIDEO,mVideoBean);
+            startActivity(ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_VIDEO_DETAIL, bundle, mContext);
+
         } else {
             Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
             intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
@@ -552,9 +556,12 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
 
         if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
-            Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
-            intent.putExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS, devicesn);
-            getView().startAC(intent);
+//            Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
+//            intent.putExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS, devicesn);
+//            getView().startAC(intent);
+            Bundle bundle=new Bundle();
+            bundle.putString(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS,devicesn);
+            startActivity(ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIVE_DETAIL, bundle, mContext);
         } else {
             Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
             ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
