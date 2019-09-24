@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -22,7 +21,6 @@ import com.sensoro.common.imagepicker.util.BitmapUtil;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.response.ResponseResult;
@@ -35,9 +33,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -52,7 +51,8 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
 
     private String currentReTryClickCid;
     private ArrayList<String> urlList = new ArrayList<>();
-    String   device_sn;
+    String device_sn;
+
     /**
      * 网络改变状态
      *
@@ -137,27 +137,27 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
 
         EventBus.getDefault().register(this);
         Intent intent = mActivity.getIntent();
-        if (intent != null&& intent.getExtras()!=null&&intent.getExtras().containsKey(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS)) {
-            device_sn= intent.getStringExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS);
+        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS)) {
+            device_sn = intent.getStringExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS);
             requestData();
         }
     }
 
 
-    private void requestData(){
+    private void requestData() {
         RetrofitServiceHelper.getInstance().getForestFireDeviceCameraDetail(device_sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ForestFireCameraDetailInfo>>(this) {
             @Override
             public void onCompleted(ResponseResult<ForestFireCameraDetailInfo> deviceCameraDetailRsp) {
                 mList.clear();
-                ForestFireCameraDetailInfo  mForestFireCameraDetailInfo= deviceCameraDetailRsp.getData();
-                if(mForestFireCameraDetailInfo!=null&&mForestFireCameraDetailInfo.getList()!=null&&mForestFireCameraDetailInfo.getList().size()>0){
-                    ForestFireCameraDetailInfo.ListBean   mListBean= mForestFireCameraDetailInfo.getList().get(0);
+                ForestFireCameraDetailInfo mForestFireCameraDetailInfo = deviceCameraDetailRsp.getData();
+                if (mForestFireCameraDetailInfo != null && mForestFireCameraDetailInfo.getList() != null && mForestFireCameraDetailInfo.getList().size() > 0) {
+                    ForestFireCameraDetailInfo.ListBean mListBean = mForestFireCameraDetailInfo.getList().get(0);
 
-                   if(mListBean.getMultiVideoInfo()!=null&&mListBean.getMultiVideoInfo().size()>0){//说明是多目的
-                        for(ForestFireCameraDetailInfo.MultiVideoInfoBean item:mListBean.getMultiVideoInfo()){
+                    if (mListBean.getMultiVideoInfo() != null && mListBean.getMultiVideoInfo().size() > 0) {//说明是多目的
+                        for (ForestFireCameraDetailInfo.MultiVideoInfoBean item : mListBean.getMultiVideoInfo()) {
 
                             try {
-                                ForestFireCameraDetailInfo.ListBean  newListBean= (ForestFireCameraDetailInfo.ListBean) mListBean.clone();
+                                ForestFireCameraDetailInfo.ListBean newListBean = (ForestFireCameraDetailInfo.ListBean) mListBean.clone();
                                 newListBean.setCid(item.getCid());
                                 newListBean.setHls(item.getHls());
                                 newListBean.setFlv(item.getFlv());
@@ -167,9 +167,9 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
                                 e.printStackTrace();
                             }
                         }
-                    }else  if(mListBean.getCamera()!=null){//说明是单目的
-                       mList.add(mListBean);
-                   }
+                    } else if (mListBean.getCamera() != null) {//说明是单目的
+                        mList.add(mListBean);
+                    }
 
 
                     mItemClickPosition = 0;
@@ -205,8 +205,6 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     }
 
 
-
-
     public void doLive() {
         if (mList.size() > mItemClickPosition) {
             ForestFireCameraDetailInfo.ListBean dataBean = mList.get(mItemClickPosition);
@@ -239,10 +237,19 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
         mList.clear();
         mList = null;
         EventBus.getDefault().unregister(this);
+        Bitmap mBitmap = null;
+        for (String key : bitmapMap.keySet()) {
+            mBitmap = bitmapMap.get(key).get();
+            if (mBitmap != null) {
+                mBitmap.recycle();
+            }
+            bitmapMap.get(key).clear();
+        }
+        bitmapMap.clear();
     }
 
     public void doRefresh() {
-        currentReTryClickCid="";
+        currentReTryClickCid = "";
         requestData();
     }
 
@@ -288,11 +295,25 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
         });
     }
 
+
+    Map<String, WeakReference<Bitmap>> bitmapMap = new HashMap<>();
+
     private void getLastCoverImage(String lastCover) {
         Glide.with(mActivity).asBitmap().load(lastCover).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 if (isAttachedView()) {
+                    int screenWidth = ScreenUtils.getScreenWidth(mActivity);
+                    if (bitmapMap.containsKey(lastCover) && bitmapMap.get(lastCover).get() != null) {
+                        resource = bitmapMap.get(lastCover).get();
+                    } else if (resource != null && resource.getHeight() > 0 && resource.getWidth() > 0) {
+                        float rate = resource.getWidth() * 1.0f / resource.getHeight();
+                        if (rate < 16.0f / 9) {//说明要按照短边拉伸，横向无法充满
+                            float targetRate = screenWidth * 1.0f / 16 * 9 / resource.getHeight();
+                            resource = BitmapUtil.expandBitmapFull(BitmapUtil.scaleBitmap(resource, targetRate,false), screenWidth);
+                            bitmapMap.put(lastCover, new WeakReference<>(resource));
+                        }
+                    }
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
                     getView().setImage(bitmapDrawable);
                 }

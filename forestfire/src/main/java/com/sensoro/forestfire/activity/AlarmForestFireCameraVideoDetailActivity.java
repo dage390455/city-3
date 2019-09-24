@@ -388,6 +388,7 @@ public class AlarmForestFireCameraVideoDetailActivity extends BaseActivity<IAlar
             ivGsyCover.setImageDrawable(resource);
         }
         gsyPlayerAcAlarmCameraVideoDetail.setMobileFace(resource);
+//        gsyPlayerAcAlarmCameraVideoDetail.setMobileFace(resource,ImageView.ScaleType.FIT_XY);
 
     }
 

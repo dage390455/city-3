@@ -25,7 +25,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
-import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -34,7 +33,6 @@ import com.sensoro.forestfire.R2;
 import com.sensoro.forestfire.adapter.AlarmForestFireCameraLiveDetailAdapter;
 import com.sensoro.forestfire.imainviews.IAlarmForestFireCameraLiveDetailActivityView;
 import com.sensoro.forestfire.presenter.AlarmForestFireCameraLiveDetailActivityPresenter;
-import com.sensoro.forestfire.presenter.AlarmForestFireCameraVideoDetailActivityPresenter;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -49,7 +47,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.http.PATCH;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -230,6 +227,8 @@ public class AlarmForestFireCameraLiveDetailActivity extends BaseActivity<IAlarm
                 orientationUtils.setEnable(false);
             }
         });
+
+
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(ivGsyCover)
                 .setIsTouchWiget(true)
@@ -324,6 +323,7 @@ public class AlarmForestFireCameraLiveDetailActivity extends BaseActivity<IAlarm
     }
 
     private GSYBaseVideoPlayer getCurPlay() {
+//        gsyPlayerAcAlarmCameraLiveDetail.setGLRenderMode(GSYVideoGLView.MODE_RENDER_SIZE);
         if (gsyPlayerAcAlarmCameraLiveDetail.getFullWindowPlayer() != null) {
             return gsyPlayerAcAlarmCameraLiveDetail.getFullWindowPlayer();
         }

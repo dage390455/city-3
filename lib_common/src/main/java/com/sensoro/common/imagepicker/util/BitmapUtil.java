@@ -3,7 +3,13 @@ package com.sensoro.common.imagepicker.util;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -152,6 +158,61 @@ public class BitmapUtil {
         origin.recycle();
         return newBM;
     }
+    /**
+     * 按比例缩放图片
+     *
+     * @param origin 原图
+     * @param ratio  比例
+     * @return 新的bitmap
+     */
+    public static Bitmap scaleBitmap(Bitmap origin, float ratio,boolean originRecycled) {
+        if (origin == null) {
+            return null;
+        }
+        int width = origin.getWidth();
+        int height = origin.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.preScale(ratio, ratio);
+        Bitmap newBM = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
+        if (newBM.equals(origin)) {
+            return newBM;
+        }
+        if(originRecycled){
+            origin.recycle();
+        }
+        return newBM;
+    }
+    /**
+     * 根据原图和屏幕宽度，在原图的两边填充颜色达到铺满屏幕的效果
+     *
+     * @param origin 原图
+     * @param targetWidth  实际需要生成的bitmap宽度
+     * @return 新的bitmap
+     */
+    public static Bitmap expandBitmapFull(Bitmap origin, int targetWidth) {
+        if (origin == null) {
+            return null;
+        }
+        int width = origin.getWidth();
+        int height = origin.getHeight();
+
+        Paint  mSrcPaint = new Paint();
+        mSrcPaint.setAntiAlias(true);
+//        mSrcPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
+
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(targetBitmap);
+        canvas.drawColor(Color.BLACK);
+        Rect bitmapRect=new Rect();
+        bitmapRect.left=(targetWidth-width)/2;
+        bitmapRect.top=0;
+        bitmapRect.right=targetWidth-(targetWidth-width)/2;
+        bitmapRect.bottom=height;
+        canvas.drawBitmap(origin,null,bitmapRect,mSrcPaint);
+        origin.recycle();
+        return targetBitmap;
+    }
+
 
     /**
      * 裁剪
