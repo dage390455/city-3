@@ -70,7 +70,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setIBeaconVisible(userData.hasIBeaconSearchDemo);
 
             //TODO  是否显示森林防火管理
-            getView().setForestfireManagerVisible(userData.hasDeviceForestCameraList);
+            getView().setForestfireManagerVisible(userData.hasDeviceCameraList);
 
             getView().setDeployOfflineTaskVisible(userData.hasDeployOfflineTask);
         }
