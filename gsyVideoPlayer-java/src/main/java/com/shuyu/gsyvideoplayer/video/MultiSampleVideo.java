@@ -1,19 +1,32 @@
 package com.shuyu.gsyvideoplayer.video;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.sensoro.common.imagepicker.util.BitmapUtil;
+import com.sensoro.common.utils.ScreenUtils;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -106,18 +119,38 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
 //        return R.layout.video_layout_cover;
 //    }
 
+    Map<String, WeakReference<Bitmap>> bitmapMap = new HashMap<>();
     public void loadCoverImage(String url, int res) {
         mCoverOriginUrl = url;
         mDefaultRes = res;
-        Glide.with(getContext().getApplicationContext())
-                .setDefaultRequestOptions(
-                        new RequestOptions()
-                                .frame(1000000)
-                                .centerCrop()
-                                .error(res)
-                                .placeholder(res))
-                .load(url)
-                .into(mCoverImage);
+//        Glide.with(getContext().getApplicationContext())
+//                .setDefaultRequestOptions(
+//                        new RequestOptions()
+//                                .frame(1000000)
+//                                .centerCrop()
+//                                .error(res)
+//                                .placeholder(res))
+//                .load(url)
+//                .into(mCoverImage);
+
+        Glide.with(getContext().getApplicationContext()).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    int screenWidth = ScreenUtils.getScreenWidth(getContext());
+                    if (bitmapMap.containsKey(url) && bitmapMap.get(url).get() != null) {
+                        resource = bitmapMap.get(url).get();
+                    } else if (resource != null && resource.getHeight() > 0 && resource.getWidth() > 0) {
+                        float rate = resource.getWidth() * 1.0f / resource.getHeight();
+                        if (rate < 16.0f / 9) {//说明要按照短边拉伸，横向无法充满
+                            float targetRate = screenWidth * 1.0f / 16 * 9 / resource.getHeight();
+                            resource = BitmapUtil.expandBitmapFull(BitmapUtil.scaleBitmap(resource, targetRate,false), screenWidth);
+                            bitmapMap.put(url, new WeakReference<>(resource));
+                        }
+                    }
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+                    mCoverImage.setImageDrawable(bitmapDrawable);
+            }
+        });
     }
 
     @Override
@@ -152,7 +185,15 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-
+        Bitmap mBitmap = null;
+        for (String key : bitmapMap.keySet()) {
+            mBitmap = bitmapMap.get(key).get();
+            if (mBitmap != null) {
+                mBitmap.recycle();
+            }
+            bitmapMap.get(key).clear();
+        }
+        bitmapMap.clear();
     }
 
 }

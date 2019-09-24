@@ -16,6 +16,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
+import com.sensoro.common.utils.ScreenUtils;
 import com.sensoro.common.widgets.BoldTextView;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.R2;
@@ -92,6 +93,9 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
         gsyVideoPlayer = findViewById(R.id.video_player1);
         gsyVideoPlayerImg = findViewById(R.id.video_img_player2);
+        gsyVideoPlayer.getLayoutParams().height= ScreenUtils.getScreenWidth(mActivity)*9/16;
+        gsyVideoPlayerImg.getLayoutParams().height= ScreenUtils.getScreenWidth(mActivity)*9/16;
+
         initPlayer();
         initImgPlayer();
         mPresenter.initData(mActivity);
@@ -468,6 +472,9 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
                 updataeData(list);
             }, 100);
         }
+
+
+
     }
 
 
