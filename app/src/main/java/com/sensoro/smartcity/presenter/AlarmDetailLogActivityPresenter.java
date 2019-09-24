@@ -245,7 +245,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
 
         //TODO 如果是森林火灾，直播入口显示逻辑需要根据直播实时详情接口返回的结果判断
-        if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraList && Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList && Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType())) {
             getView().setCameraLiveCountAndContent(mForestFireLiveList, "");
         } else if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
             getView().setCameraLiveCountAndContent(mForestFireLiveList, String.format(Locale.ROOT, "%s%d%s", mContext.getString(R.string.relation_camera), mForestFireLiveList.size(), mContext.getString(R.string.upload_photo_dialog_append_title3)));
