@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.common.imagepicker.util.BitmapUtil;
 import com.sensoro.common.utils.ScreenUtils;
+import com.sensoro.common.utils.VideoCorverUtils;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.utils.CustomManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
@@ -57,11 +58,11 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
         super(context, attrs);
     }
 
-
+    VideoCorverUtils mVideoCorverUtils;
     @Override
     protected void init(Context context) {
         super.init(context);
-
+        mVideoCorverUtils=new VideoCorverUtils(context);
         mCoverImage = (ImageView) findViewById(R.id.thumbImage);
         if (mThumbImageViewLayout != null &&
                 (mCurrentState == -1 || mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR)) {
@@ -119,7 +120,6 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
 //        return R.layout.video_layout_cover;
 //    }
 
-    Map<String, WeakReference<Bitmap>> bitmapMap = new HashMap<>();
     public void loadCoverImage(String url, int res) {
         mCoverOriginUrl = url;
         mDefaultRes = res;
@@ -136,17 +136,7 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
         Glide.with(getContext().getApplicationContext()).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    int screenWidth = ScreenUtils.getScreenWidth(getContext());
-                    if (bitmapMap.containsKey(url) && bitmapMap.get(url).get() != null) {
-                        resource = bitmapMap.get(url).get();
-                    } else if (resource != null && resource.getHeight() > 0 && resource.getWidth() > 0) {
-                        float rate = resource.getWidth() * 1.0f / resource.getHeight();
-                        if (rate < 16.0f / 9) {//说明要按照短边拉伸，横向无法充满
-                            float targetRate = screenWidth * 1.0f / 16 * 9 / resource.getHeight();
-                            resource = BitmapUtil.expandBitmapFull(BitmapUtil.scaleBitmap(resource, targetRate,false), screenWidth);
-                            bitmapMap.put(url, new WeakReference<>(resource));
-                        }
-                    }
+                    resource=mVideoCorverUtils.getCorverBitmap(url,resource,false);
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
                     mCoverImage.setImageDrawable(bitmapDrawable);
             }
@@ -185,15 +175,7 @@ public class MultiSampleVideo extends MutilStandardGSYVideoPlayer {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Bitmap mBitmap = null;
-        for (String key : bitmapMap.keySet()) {
-            mBitmap = bitmapMap.get(key).get();
-            if (mBitmap != null) {
-                mBitmap.recycle();
-            }
-            bitmapMap.get(key).clear();
-        }
-        bitmapMap.clear();
+        mVideoCorverUtils.onDestory();
     }
 
 }

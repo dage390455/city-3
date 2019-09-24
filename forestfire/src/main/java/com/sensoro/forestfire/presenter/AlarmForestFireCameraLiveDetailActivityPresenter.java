@@ -25,6 +25,7 @@ import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.ForestFireCameraDetailInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.ScreenUtils;
+import com.sensoro.common.utils.VideoCorverUtils;
 import com.sensoro.forestfire.R;
 import com.sensoro.forestfire.imainviews.IAlarmForestFireCameraLiveDetailActivityView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -52,7 +53,7 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     private String currentReTryClickCid;
     private ArrayList<String> urlList = new ArrayList<>();
     String device_sn;
-
+    VideoCorverUtils mVideoCorverUtils;
     /**
      * 网络改变状态
      *
@@ -134,7 +135,7 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-
+        mVideoCorverUtils=new VideoCorverUtils(mActivity);
         EventBus.getDefault().register(this);
         Intent intent = mActivity.getIntent();
         if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS)) {
@@ -232,20 +233,14 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
 
     }
 
+
     @Override
     public void onDestroy() {
         mList.clear();
         mList = null;
         EventBus.getDefault().unregister(this);
-        Bitmap mBitmap = null;
-        for (String key : bitmapMap.keySet()) {
-            mBitmap = bitmapMap.get(key).get();
-            if (mBitmap != null) {
-                mBitmap.recycle();
-            }
-            bitmapMap.get(key).clear();
-        }
-        bitmapMap.clear();
+        mVideoCorverUtils.onDestory();
+
     }
 
     public void doRefresh() {
@@ -296,24 +291,13 @@ public class AlarmForestFireCameraLiveDetailActivityPresenter extends BasePresen
     }
 
 
-    Map<String, WeakReference<Bitmap>> bitmapMap = new HashMap<>();
 
     private void getLastCoverImage(String lastCover) {
         Glide.with(mActivity).asBitmap().load(lastCover).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 if (isAttachedView()) {
-                    int screenWidth = ScreenUtils.getScreenWidth(mActivity);
-                    if (bitmapMap.containsKey(lastCover) && bitmapMap.get(lastCover).get() != null) {
-                        resource = bitmapMap.get(lastCover).get();
-                    } else if (resource != null && resource.getHeight() > 0 && resource.getWidth() > 0) {
-                        float rate = resource.getWidth() * 1.0f / resource.getHeight();
-                        if (rate < 16.0f / 9) {//说明要按照短边拉伸，横向无法充满
-                            float targetRate = screenWidth * 1.0f / 16 * 9 / resource.getHeight();
-                            resource = BitmapUtil.expandBitmapFull(BitmapUtil.scaleBitmap(resource, targetRate,false), screenWidth);
-                            bitmapMap.put(lastCover, new WeakReference<>(resource));
-                        }
-                    }
+                    resource= mVideoCorverUtils.getCorverBitmap(lastCover,resource,false);
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
                     getView().setImage(bitmapDrawable);
                 }
