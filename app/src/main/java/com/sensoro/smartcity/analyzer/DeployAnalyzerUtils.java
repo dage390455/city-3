@@ -593,6 +593,16 @@ public class DeployAnalyzerUtils {
                                     doCamera();
                                 } else if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraDeploy) {
                                     doForestCamera();
+                                } else {
+                                    //不在账户下
+                                    Intent intent = new Intent();
+                                    intent.setClass(activity, DeployResultActivity.class);
+                                    DeployResultModel deployResultModel = new DeployResultModel();
+                                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                    deployResultModel.sn = scanSerialNumber;
+                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                    listener.onError(errorCode, intent, errorMsg);
                                 }
                             } else {
                                 //不在账户下
@@ -619,6 +629,16 @@ public class DeployAnalyzerUtils {
                                         doCamera();
                                     } else if (PreferencesHelper.getInstance().getUserData().hasDeviceForestCameraDeploy) {
                                         doForestCamera();
+                                    } else {
+                                        //不在账户下
+                                        Intent intent = new Intent();
+                                        intent.setClass(activity, DeployResultActivity.class);
+                                        DeployResultModel deployResultModel = new DeployResultModel();
+                                        deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                        deployResultModel.sn = scanSerialNumber;
+                                        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                        listener.onError(0, intent, null);
                                     }
                                 } else {
                                     //不在账户下

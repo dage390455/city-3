@@ -19,6 +19,7 @@ import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,7 +73,13 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
                 }
                 return;
             } else {
-                if (name.getBytes().length > 36) {
+                byte[] bytes = new byte[0];
+                try {
+                    bytes = name.getBytes("UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if (bytes.length > 36) {
                     if (isAttachedView()) {
                         getView().toastShort(mContext.getString(R.string.contact_name_length_to_long));
                     }
