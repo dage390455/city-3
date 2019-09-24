@@ -445,7 +445,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         sns.add(deployAnalyzerModel.sn);
         getView().showBleConfigDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", deployAnalyzerModel.settingData)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation2gDeploy(sns, "config", deployAnalyzerModel.settingData)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {

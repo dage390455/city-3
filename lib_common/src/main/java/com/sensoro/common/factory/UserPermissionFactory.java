@@ -746,12 +746,18 @@ public class UserPermissionFactory {
      * @return
      */
     private static boolean getHasDeviceForestCameraDeploy(GrantsInfo grants) {
-        //TODO 添加森林部署摄像头部署权限判断字段
-        return true;
+        if (grants != null) {
+            List<String> grantsCamera = grants.getCamera();
+            if (grantsCamera != null) {
+                return grantsCamera.contains("addGateway") && grantsCamera.contains("listGateway");
+            }
+        }
+        return false;
     }
 
     /**
      * 森林摄像头列表权限
+     *
      * @param grants
      * @return
      */

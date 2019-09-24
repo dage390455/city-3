@@ -1904,6 +1904,104 @@ public class RetrofitServiceHelper {
         return retrofitService.doMonitorPointOperation(body);
     }
 
+    /**
+     * 针对2g设备三相电部署
+     *
+     * @param snList
+     * @param type
+     * @param deployControlSettingData
+     * @return
+     */
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation2gDeploy(List<String> snList, String type, DeployControlSettingData deployControlSettingData) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONArray jsonSnList = new JSONArray();
+            for (String sn : snList) {
+                jsonSnList.put(sn);
+            }
+            jsonObject.put("snList", jsonSnList);
+            jsonObject.put("type", type);
+            if (deployControlSettingData != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    jsonObjectOut.put("switchSpec", switchSpec);
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    jsonObjectOut.put("wireDiameter", wireDiameter);
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    jsonObjectOut.put("wireMaterial", wireMaterial);
+                }
+                Integer inputValue = deployControlSettingData.getInputValue();
+                if (inputValue != null) {
+                    jsonObjectOut.put("inputValue", inputValue);
+                }
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    jsonObjectOut.put("transformer", transformer);
+                }
+                Integer recommTrans = deployControlSettingData.getRecommTrans();
+                if (recommTrans != null) {
+                    jsonObjectOut.put("recommTrans", recommTrans);
+                }
+                //
+                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+                if (input != null && input.size() > 0) {
+                    JSONArray jsonArrayInput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectInput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectInput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectInput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectInput.put("count", count);
+                        }
+                        jsonArrayInput.put(jsonObjectInput);
+                    }
+                    jsonObjectOut.put("input", jsonArrayInput);
+                }
+                //
+                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+                if (output != null && output.size() > 0) {
+                    JSONArray jsonArrayOutput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectOutput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectOutput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectOutput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectOutput.put("count", count);
+                        }
+                        jsonArrayOutput.put(jsonObjectOutput);
+                    }
+                    jsonObjectOut.put("output", jsonArrayOutput);
+                }
+                jsonObject.put("config", jsonObjectOut);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doMonitorPointOperation2gDeploy(body);
+    }
+
     public Observable<ResponseResult<DeviceInfo>> doDevicePositionCalibration(String sn, Double lon, Double lat) {
         JSONObject jsonObject = new JSONObject();
         try {
