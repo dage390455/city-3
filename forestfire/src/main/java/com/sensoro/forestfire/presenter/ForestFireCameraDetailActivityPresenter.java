@@ -3,6 +3,7 @@ package com.sensoro.forestfire.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
@@ -32,6 +33,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Author: jack
  * 时  间: 2019-09-17
@@ -58,9 +62,11 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
         getView().updateTitle(mContext.getString(R.string.forest_fire_camera_detail));
 
         if (null != mForestFireCameraDetailInfo.getList() && mForestFireCameraDetailInfo.getList().size() > 0) {
-            getView().updataeData(mForestFireCameraDetailInfo.getList().get(0).getMultiVideoInfo());
+            ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> multiVideoInfoBeanList=mForestFireCameraDetailInfo.getList().get(0).getMultiVideoInfo();
+            if(multiVideoInfoBeanList!=null){
+                getView().updataeData(multiVideoInfoBeanList);
+            }
         }
-
         EventBus.getDefault().register(this);
     }
 
@@ -81,20 +87,25 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
 
     public void initView() {
         if (mForestFireCameraBean != null) {
-            getView().updateCameraName(mForestFireCameraBean.getName());
+            String   cameraName=mForestFireCameraBean.getName();
+            if(TextUtils.isEmpty(cameraName)){
+                getView().updateCameraName(cameraName);
+            }
             getView().updateCameraType(mContext.getString(R.string.forest_fire_camera_detail_device_type_name));
             getView().updateDeviceSN(mForestFireCameraBean.getSn());
 
-            if (mForestFireCameraBean.getForestGateway() != null) {
-                getView().updateGateway(mForestFireCameraBean.getForestGateway().getName());
+            ForestFireCameraBean.ForestGatewayBean forestGateway = mForestFireCameraBean.getForestGateway();
+            if (forestGateway != null) {
+                String name = forestGateway.getName();
+                getView().updateGateway(name);
             }
 
             getView().updateTime(DateUtil.getStrTimeTodayByDevice(mContext, mForestFireCameraBean.getCreateTime()));
-            if (mForestFireCameraBean.getInfo() != null) {
-                getView().updateLocation(mForestFireCameraBean.getInfo().getLongitude(), mForestFireCameraBean.getInfo().getLatitude());
+            ForestFireCameraBean.InfoBean info = mForestFireCameraBean.getInfo();
+            if (info != null) {
+                getView().updateLocation(info.getLongitude(), info.getLatitude());
                 updateMap();
             }
-
 
             BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_cur);
             MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
@@ -102,7 +113,7 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
                     .draggable(true);
             deviceMarker = aMap.addMarker(markerOption);
 
-            deviceMarker.setPosition(new LatLng(mForestFireCameraBean.getInfo().getLatitude(), mForestFireCameraBean.getInfo().getLongitude()));
+            deviceMarker.setPosition(new LatLng(info.getLatitude(), info.getLongitude()));
         }
     }
 
@@ -148,7 +159,6 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
             deployAnalyzerModel.latLng.add(mForestFireCameraBean.getInfo().getLongitude());
             deployAnalyzerModel.latLng.add(mForestFireCameraBean.getInfo().getLatitude());
         }
-
 
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.FOREST_FIRE_DEVICE_DETAIL);

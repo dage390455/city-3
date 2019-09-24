@@ -53,7 +53,12 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-
+/**
+ * @Author: jack
+ * 时  间: 2019-09-17
+ * 包  名: com.sensoro.forestfire.activity
+ * 简  述: <功能简述:森林防火预警日志录像页面>
+ */
 @Route(path = ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_VIDEO_DETAIL)
 public class AlarmForestFireCameraVideoDetailActivity extends BaseActivity<IAlarmForestFireCameraVideoDetailActivityView,
         AlarmForestFireCameraVideoDetailActivityPresenter> implements IAlarmForestFireCameraVideoDetailActivityView, VideoDownloadDialogUtils.TipDialogUtilsClickListener {

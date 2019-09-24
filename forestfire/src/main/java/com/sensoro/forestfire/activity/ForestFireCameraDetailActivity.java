@@ -465,12 +465,13 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 //                }, 100);
 //            }
 
-
+            CustomManager.backFromWindowFull(mActivity, gsyVideoPlayer.getKey());
+            CustomManager.backFromWindowFull(mActivity, gsyVideoPlayerImg.getKey());
             CustomManager.clearAllVideo();
             viewTopAcAlarmCameraVideoDetail.postDelayed(() -> {
-
                 updataeData(list);
             }, 100);
+
         }
 
 
