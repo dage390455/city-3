@@ -306,6 +306,9 @@ public interface RetrofitService {
     @PUT(MONITOR_POINT_OPERATION)
     Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(@Body RequestBody requestBody);
 
+    @PUT("devices/list/taskForDeploy")
+    Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation2gDeploy(@Body RequestBody requestBody);
+
     @PUT("devices/gps/{sn}")
     Observable<ResponseResult<DeviceInfo>> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
 
