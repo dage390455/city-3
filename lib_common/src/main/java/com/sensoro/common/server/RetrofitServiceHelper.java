@@ -2872,20 +2872,10 @@ public class RetrofitServiceHelper {
     /**
      * 关闭火警接口
      *
-     * @param sn
      * @return
      */
-    public Observable<ResponseResult<Object>> doCloseFireWarn(String sn) {
-        JSONObject jsonObject = new JSONObject();
-        if (!TextUtils.isEmpty(sn)) {
-            try {
-                jsonObject.put("sn", sn);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.doCloseFireWarn(requestBody);
+    public Observable<ResponseResult<DeviceAlarmLogInfo>> doCloseFireWarn(String id) {
+        return retrofitService.doCloseFireWarn(id);
     }
 
     /**

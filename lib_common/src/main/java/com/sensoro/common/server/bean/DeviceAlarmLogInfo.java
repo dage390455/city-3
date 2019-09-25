@@ -39,7 +39,15 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private String event;
     //1正常
     private int alarmStatus;
+    private boolean isClosed =false;
 
+    public boolean getClosed() {
+        return isClosed;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
     public Metadata getMetadata() {
         return metadata;
     }
@@ -49,6 +57,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     }
 
     private Metadata metadata;
+
 
     //    "metadata": {
 //        "cids": [

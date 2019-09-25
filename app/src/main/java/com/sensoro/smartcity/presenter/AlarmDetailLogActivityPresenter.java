@@ -297,7 +297,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 }
             }
             boolean needShowCloseFire = false;
-            if (Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
+            boolean closed = deviceAlarmLogInfo.getClosed();
+            if (!closed && Constants.FOREST_FIRE_DEVICE_TYPE.equals(deviceAlarmLogInfo.getDeviceType()) && isAlarm) {
                 if (Constants.DISPLAY_STATUS_ALARM == displayStatus || Constants.DISPLAY_STATUS_RISKS == displayStatus) {
                     needShowCloseFire = true;
                 }
@@ -537,8 +538,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 //            Intent intent = new Intent(mContext, AlarmForestFireCameraVideoDetailActivity.class);
 //            intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
 //            getView().startAC(intent);
-            Bundle bundle=new Bundle();
-            bundle.putSerializable(Constants.EXTRA_ALARM_CAMERA_VIDEO,mVideoBean);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
             startActivity(ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_VIDEO_DETAIL, bundle, mContext);
 
         } else {
@@ -559,8 +560,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 //            Intent intent = new Intent(mContext, AlarmForestFireCameraLiveDetailActivity.class);
 //            intent.putExtra(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS, devicesn);
 //            getView().startAC(intent);
-            Bundle bundle=new Bundle();
-            bundle.putString(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS,devicesn);
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.EXTRA_ALARM_FOREST_FIRE_CAMERAS, devicesn);
             startActivity(ARouterConstants.ACTIVITY_FORESTFIRE_CAMERA_LIVE_DETAIL, bundle, mContext);
         } else {
             Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
@@ -590,11 +591,20 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     @Override
                     public void onConfirmClick() {
                         getView().showProgressDialog();
-                        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(AlarmDetailLogActivityPresenter.this) {
+                        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.get_id()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceAlarmLogInfo>>(AlarmDetailLogActivityPresenter.this) {
                             @Override
-                            public void onCompleted(ResponseResult<Object> objectResponseResult) {
-                                getView().toastShort("success");
+                            public void onCompleted(ResponseResult<DeviceAlarmLogInfo> responseResult) {
+                                DeviceAlarmLogInfo data = responseResult.getData();
+                                boolean closed = data.getClosed();
+                                String id = data.get_id();
+                                AlarmInfo.RecordInfo[] records = data.getRecords();
+                                deviceAlarmLogInfo.setClosed(closed);
+                                deviceAlarmLogInfo.set_id(id);
+                                deviceAlarmLogInfo.setRecords(records);
+                                //刷新逻辑
+                                refreshData(false);
                                 getView().dismissProgressDialog();
+                                firewaringCloseDialogUtils.dismiss();
                             }
 
                             @Override
@@ -603,6 +613,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                                 getView().dismissProgressDialog();
                             }
                         });
+
                     }
                 });
         firewaringCloseDialogUtils.show();

@@ -510,8 +510,8 @@ public interface RetrofitService {
     @POST("devices/blutoothMute")
     Observable<ResponseResult<Object>> doMonitorPointBLEUpdate(@Body RequestBody requestBody);
 
-    @POST("camera-center/fireForest/closeAlarm")
-    Observable<ResponseResult<Object>> doCloseFireWarn(@Body RequestBody requestBody);
+    @PUT("alarms/alarm/{id}/close")
+    Observable<ResponseResult<DeviceAlarmLogInfo>> doCloseFireWarn(@Path("id") String id);
 
 
     @POST("camera-center/forest/getForestGateway")

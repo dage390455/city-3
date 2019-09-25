@@ -20,6 +20,7 @@ import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
@@ -389,10 +390,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         Object data = eventData.data;
         switch (code) {
             case Constants.EVENT_DATA_ALARM_DETAIL_RESULT:
-                if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
-                    if (data instanceof DeviceAlarmLogInfo) {
-                        freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
-                    }
+                if (data instanceof DeviceAlarmLogInfo) {
+                    freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
                 }
                 break;
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
@@ -407,10 +406,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 break;
             case Constants.EVENT_DATA_ALARM_FRESH_ALARM_DATA:
                 //仅在无搜索状态和日历选择时进行刷新
-                if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
-                    if (data instanceof DeviceAlarmLogInfo) {
-                        freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
-                    }
+                if (data instanceof DeviceAlarmLogInfo) {
+                    freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
                 }
                 break;
         }
@@ -567,32 +564,41 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         }
         firewaringCloseDialogUtils.setTipTitleText(mContext.getString(R.string.confirm_to_turn_off_the_fire))
                 .setTipMessageText(mContext.getString(R.string.turn_off_the_fire_tips))
-                .setTipConfirmText(mContext.getString(R.string.confirm_close),mContext.getResources().getColor(R.color.c_f35a58))
-                .setTipCacnleText(mContext.getString(R.string.cancel),mContext.getResources().getColor(R.color.c_252525))
+                .setTipConfirmText(mContext.getString(R.string.confirm_close), mContext.getResources().getColor(R.color.c_f35a58))
+                .setTipCacnleText(mContext.getString(R.string.cancel), mContext.getResources().getColor(R.color.c_252525))
                 .setTipDialogUtilsClickListener(new FireWaringCloseDialogUtils.TipDialogUtilsClickListener() {
-            @Override
-            public void onCancelClick() {
-                firewaringCloseDialogUtils.dismiss();
-            }
-
-            @Override
-            public void onConfirmClick() {
-                getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Object>>(WarnFragmentPresenter.this) {
                     @Override
-                    public void onCompleted(ResponseResult<Object> objectResponseResult) {
-                        getView().toastShort("success");
-                        getView().dismissProgressDialog();
+                    public void onCancelClick() {
+                        firewaringCloseDialogUtils.dismiss();
                     }
 
                     @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().toastShort(errorMsg);
-                        getView().dismissProgressDialog();
+                    public void onConfirmClick() {
+                        getView().showProgressDialog();
+                        RetrofitServiceHelper.getInstance().doCloseFireWarn(deviceAlarmLogInfo.get_id()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceAlarmLogInfo>>(WarnFragmentPresenter.this) {
+                            @Override
+                            public void onCompleted(ResponseResult<DeviceAlarmLogInfo> responseResult) {
+                                DeviceAlarmLogInfo data = responseResult.getData();
+                                boolean closed = data.getClosed();
+                                String id = data.get_id();
+                                AlarmInfo.RecordInfo[] records = data.getRecords();
+                                //
+                                deviceAlarmLogInfo.setClosed(closed);
+                                deviceAlarmLogInfo.set_id(id);
+                                deviceAlarmLogInfo.setRecords(records);
+                                freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
+                                firewaringCloseDialogUtils.dismiss();
+                                getView().dismissProgressDialog();
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().toastShort(errorMsg);
+                                getView().dismissProgressDialog();
+                            }
+                        });
                     }
                 });
-            }
-        });
         firewaringCloseDialogUtils.show();
 
 
