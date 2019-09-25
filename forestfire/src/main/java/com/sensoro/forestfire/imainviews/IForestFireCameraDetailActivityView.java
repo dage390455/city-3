@@ -30,7 +30,7 @@ public interface IForestFireCameraDetailActivityView {
 
     void updataAdapterState(int state);
 
-    void updataeData(ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> list);
+    void updateData(ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> list);
 
 
 }
