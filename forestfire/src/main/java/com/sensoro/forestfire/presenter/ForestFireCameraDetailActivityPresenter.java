@@ -64,7 +64,7 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
         if (null != mForestFireCameraDetailInfo.getList() && mForestFireCameraDetailInfo.getList().size() > 0) {
             ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> multiVideoInfoBeanList=mForestFireCameraDetailInfo.getList().get(0).getMultiVideoInfo();
             if(multiVideoInfoBeanList!=null){
-                getView().updataeData(multiVideoInfoBeanList);
+                getView().updateData(multiVideoInfoBeanList);
             }
         }
         EventBus.getDefault().register(this);

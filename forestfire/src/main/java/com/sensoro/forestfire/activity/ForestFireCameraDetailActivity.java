@@ -260,7 +260,7 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
 
     @Override
-    public void updataeData(ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> list) {
+    public void updateData(ArrayList<ForestFireCameraDetailInfo.MultiVideoInfoBean> list) {
         this.list = list;
         playFirst(list);
         playSecond(list);
@@ -469,7 +469,7 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
             CustomManager.backFromWindowFull(mActivity, gsyVideoPlayerImg.getKey());
             CustomManager.clearAllVideo();
             viewTopAcAlarmCameraVideoDetail.postDelayed(() -> {
-                updataeData(list);
+                updateData(list);
             }, 100);
 
         }
@@ -481,10 +481,9 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
     @Override
     public void onBackPressed() {
-        if (CustomManager.backFromWindowFull(this, gsyVideoPlayer.getKey())) {
-            return;
-        }
-        if (CustomManager.backFromWindowFull(this, gsyVideoPlayerImg.getKey())) {
+        if (CustomManager.backFromWindowFull(this, gsyVideoPlayer.getKey())||CustomManager.backFromWindowFull(this, gsyVideoPlayerImg.getKey())) {
+            CustomManager.backFromWindowFull(mActivity, gsyVideoPlayer.getKey());
+            CustomManager.backFromWindowFull(mActivity, gsyVideoPlayerImg.getKey());
             return;
         }
         super.onBackPressed();
