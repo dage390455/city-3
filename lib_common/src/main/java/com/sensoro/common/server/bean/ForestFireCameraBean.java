@@ -31,15 +31,15 @@ public class ForestFireCameraBean implements Serializable {
     private String sn;
     private String name;
     private long createTime;
-    private String _id;
-    private String userid;
+//    private String _id;
+//    private String userid;
     private int state;
     private InfoBean info;
 //    private PtzControlBean ptzControl;
 //    private ForestCidBean forestCid;
     private ForestGatewayBean forestGateway;
-    private List<String> label;
-    private List<Integer> channelIds;
+//    private List<String> label;
+//    private List<Integer> channelIds;
 
     public String getSn() {
         return sn;
@@ -65,21 +65,21 @@ public class ForestFireCameraBean implements Serializable {
         this.createTime = createTime;
     }
 
-    public String get_id() {
-        return _id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
+//    public String get_id() {
+//        return _id;
+//    }
+//
+//    public void set_id(String _id) {
+//        this._id = _id;
+//    }
+//
+//    public String getUserid() {
+//        return userid;
+//    }
+//
+//    public void setUserid(String userid) {
+//        this.userid = userid;
+//    }
 
     public int getState() {
         return state;
@@ -121,21 +121,21 @@ public class ForestFireCameraBean implements Serializable {
         this.forestGateway = forestGateway;
     }
 
-    public List<String> getLabel() {
-        return label;
-    }
-
-    public void setLabel(List<String> label) {
-        this.label = label;
-    }
-
-    public List<Integer> getChannelIds() {
-        return channelIds;
-    }
-
-    public void setChannelIds(List<Integer> channelIds) {
-        this.channelIds = channelIds;
-    }
+//    public List<String> getLabel() {
+//        return label;
+//    }
+//
+//    public void setLabel(List<String> label) {
+//        this.label = label;
+//    }
+//
+//    public List<Integer> getChannelIds() {
+//        return channelIds;
+//    }
+//
+//    public void setChannelIds(List<Integer> channelIds) {
+//        this.channelIds = channelIds;
+//    }
 
     public static class InfoBean implements Serializable{
         /**

@@ -88,7 +88,7 @@ public class ForestFireCameraDetailActivityPresenter extends BasePresenter<IFore
     public void initView() {
         if (mForestFireCameraBean != null) {
             String   cameraName=mForestFireCameraBean.getName();
-            if(TextUtils.isEmpty(cameraName)){
+            if(!TextUtils.isEmpty(cameraName)){
                 getView().updateCameraName(cameraName);
             }
             getView().updateCameraType(mContext.getString(R.string.forest_fire_camera_detail_device_type_name));
