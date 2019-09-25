@@ -481,10 +481,9 @@ public class ForestFireCameraDetailActivity extends BaseActivity<IForestFireCame
 
     @Override
     public void onBackPressed() {
-        if (CustomManager.backFromWindowFull(this, gsyVideoPlayer.getKey())) {
-            return;
-        }
-        if (CustomManager.backFromWindowFull(this, gsyVideoPlayerImg.getKey())) {
+        if (CustomManager.backFromWindowFull(this, gsyVideoPlayer.getKey())||CustomManager.backFromWindowFull(this, gsyVideoPlayerImg.getKey())) {
+            CustomManager.backFromWindowFull(mActivity, gsyVideoPlayer.getKey());
+            CustomManager.backFromWindowFull(mActivity, gsyVideoPlayerImg.getKey());
             return;
         }
         super.onBackPressed();
