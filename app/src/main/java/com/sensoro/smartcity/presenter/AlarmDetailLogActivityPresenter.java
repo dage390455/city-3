@@ -596,10 +596,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                             public void onCompleted(ResponseResult<DeviceAlarmLogInfo> responseResult) {
                                 DeviceAlarmLogInfo data = responseResult.getData();
                                 boolean closed = data.getClosed();
-                                String id = data.get_id();
                                 AlarmInfo.RecordInfo[] records = data.getRecords();
                                 deviceAlarmLogInfo.setClosed(closed);
-                                deviceAlarmLogInfo.set_id(id);
                                 deviceAlarmLogInfo.setRecords(records);
                                 //刷新逻辑
                                 refreshData(false);

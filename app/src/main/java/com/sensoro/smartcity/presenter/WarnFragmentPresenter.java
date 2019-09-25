@@ -330,7 +330,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             boolean canRefresh = false;
             for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
                 DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
-                if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
+                String id = tempLogInfo.get_id();
+                if (!TextUtils.isEmpty(id) && id.equals(deviceAlarmLogInfo.get_id())) {
                     mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
                     canRefresh = true;
                     break;
@@ -580,11 +581,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                             public void onCompleted(ResponseResult<DeviceAlarmLogInfo> responseResult) {
                                 DeviceAlarmLogInfo data = responseResult.getData();
                                 boolean closed = data.getClosed();
-                                String id = data.get_id();
                                 AlarmInfo.RecordInfo[] records = data.getRecords();
                                 //
                                 deviceAlarmLogInfo.setClosed(closed);
-                                deviceAlarmLogInfo.set_id(id);
                                 deviceAlarmLogInfo.setRecords(records);
                                 freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
                                 firewaringCloseDialogUtils.dismiss();
